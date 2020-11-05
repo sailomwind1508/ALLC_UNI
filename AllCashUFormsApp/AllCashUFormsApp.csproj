@@ -1,0 +1,1054 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3623CCB4-29F7-40FF-B037-F57B6DB05049}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>AllCashUFormsApp</RootNamespace>
+    <AssemblyName>All Cash Back End</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>uni_fXG_1.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controller\BaseControl.cs" />
+    <Compile Include="Controller\Branch.cs" />
+    <Compile Include="Controller\BranchWarehouse.cs" />
+    <Compile Include="Controller\Customer.cs" />
+    <Compile Include="Controller\DistributionCenter.cs" />
+    <Compile Include="Controller\DocTypeCode.cs" />
+    <Compile Include="Controller\Employee.cs" />
+    <Compile Include="Controller\give_disc_perc_amt.cs" />
+    <Compile Include="Controller\give_fix_baht_qty.cs" />
+    <Compile Include="Controller\give_disc_baht_qty.cs" />
+    <Compile Include="Controller\give_free_free.cs" />
+    <Compile Include="Controller\give_reward.cs" />
+    <Compile Include="Controller\Igive_reward.cs" />
+    <Compile Include="Controller\IM.cs" />
+    <Compile Include="Controller\IV.cs" />
+    <Compile Include="Controller\Login.cs" />
+    <Compile Include="Controller\MenuBU.cs" />
+    <Compile Include="Controller\OD.cs" />
+    <Compile Include="Controller\PRDPromotion.cs" />
+    <Compile Include="Controller\Product.cs" />
+    <Compile Include="Controller\ProductMovement.cs" />
+    <Compile Include="Controller\Promotion.cs" />
+    <Compile Include="Controller\PromotionBase.cs" />
+    <Compile Include="Controller\RB.cs" />
+    <Compile Include="Controller\RE.cs" />
+    <Compile Include="Controller\RJ.cs" />
+    <Compile Include="Controller\RL.cs" />
+    <Compile Include="Controller\RT.cs" />
+    <Compile Include="Controller\SaleArea.cs" />
+    <Compile Include="Controller\SaleAreaDistrict.cs" />
+    <Compile Include="Controller\Supplier.cs" />
+    <Compile Include="Controller\TabletSales.cs" />
+    <Compile Include="Controller\TR.cs" />
+    <Compile Include="Controller\TXNPromotion.cs" />
+    <Compile Include="Controller\Users.cs" />
+    <Compile Include="Dal\AdmFormListDao.cs" />
+    <Compile Include="Dal\ApSupplierDao.cs" />
+    <Compile Include="Dal\ApSupplierTypeDao.cs" />
+    <Compile Include="Dal\ArCustomer.cs" />
+    <Compile Include="Dal\BaseDao.cs" />
+    <Compile Include="Dal\BranchDao.cs" />
+    <Compile Include="Dal\BranchGroupDao.cs" />
+    <Compile Include="Dal\BranchWarehouseDao.cs" />
+    <Compile Include="Dal\CauseDao.cs" />
+    <Compile Include="Dal\CompanyDao.cs" />
+    <Compile Include="Dal\DepartmentDao.cs" />
+    <Compile Include="Dal\DiscountTypeDao.cs" />
+    <Compile Include="Dal\DocRunningDao.cs" />
+    <Compile Include="Dal\DocumentStatusDao.cs" />
+    <Compile Include="Dal\DocumentTypeDao.cs" />
+    <Compile Include="Dal\EmployeeDao.cs" />
+    <Compile Include="Dal\ErrorLogsDao.cs" />
+    <Compile Include="Dal\HQ_SKUGroupDao.cs" />
+    <Compile Include="Dal\HQ_SKUGroup_EXCDao.cs" />
+    <Compile Include="Dal\HQ_Promotion_MasterDao.cs" />
+    <Compile Include="Dal\HQ_RewardDao.cs" />
+    <Compile Include="Dal\InvMovementDao.cs" />
+    <Compile Include="Dal\InvTransactionDao.cs" />
+    <Compile Include="Dal\InvWarehouseDao.cs" />
+    <Compile Include="Dal\IVDetailDao.cs" />
+    <Compile Include="Dal\IVMasterDao.cs" />
+    <Compile Include="Dal\MenuDao.cs" />
+    <Compile Include="Dal\MstAreaDao.cs" />
+    <Compile Include="Dal\MstDistrictDao.cs" />
+    <Compile Include="Dal\MstProvince.cs" />
+    <Compile Include="Dal\MstPartDao.cs" />
+    <Compile Include="Dal\PODetailDao.cs" />
+    <Compile Include="Dal\POMasterDao.cs" />
+    <Compile Include="Dal\PositionDao.cs" />
+    <Compile Include="Dal\PRDetailDao.cs" />
+    <Compile Include="Dal\PriceGroupDao.cs" />
+    <Compile Include="Dal\PRMasterDao.cs" />
+    <Compile Include="Dal\ProductDao.cs" />
+    <Compile Include="Dal\ProductGroupDao.cs" />
+    <Compile Include="Dal\ProductPriceGroupDao.cs" />
+    <Compile Include="Dal\ProductSubGroupDao.cs" />
+    <Compile Include="Dal\ProductUomDao.cs" />
+    <Compile Include="Dal\ProductUomSetDao.cs" />
+    <Compile Include="Dal\HQ_PromotionDao.cs" />
+    <Compile Include="Dal\RolesDao.cs" />
+    <Compile Include="Dal\SalAreaDao.cs" />
+    <Compile Include="Dal\SalAreaDistrictDao.cs" />
+    <Compile Include="Dal\SaleBranchSummaryDao.cs" />
+    <Compile Include="Dal\ShopTypeDao.cs" />
+    <Compile Include="Dal\UserDao.cs" />
+    <Compile Include="Dal\VanTypeDao.cs" />
+    <Compile Include="Dal\ZoneDao.cs" />
+    <Compile Include="Model\BranchEmployeeModel.cs" />
+    <Compile Include="Model\DBModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\DBModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\DBModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ProductMovementModel.cs" />
+    <Compile Include="Model\PromotionRuleModel.cs" />
+    <Compile Include="Model\tbl_AdmAuthorize.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AdmControlList.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AdmFormList.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AdmMenuList.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AdmRoleControl.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AmtArCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_AmtArCustomerDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ApSupplier.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ApSupplierType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ArCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ArCustomerShelf.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ArCustomerType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Banknote.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Branch.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchLog.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchRental.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchSupervisor.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchTerritory.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchWarehouse.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchWarehouseData.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Cause.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgConnection.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgFixedHolidays.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgFloatingHolidays.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgKeyField.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgPosMachine.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CfgSetting.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Company.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DelArCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Department.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DiscountType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DisplayImage.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DocRunning.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DocSendUpdate.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DocSignature.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DocumentStatus.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_DocumentType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Employee.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ErrorLog.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_error_logs.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Expense.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_Promotion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_Promotion_Master.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_Reward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_SKUGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_SKUGroup_EXC.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_InvMovement.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_InvTransaction.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_InvWarehouse.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_IVDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_IVMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LtyQuestion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytAnswer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytChoice.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytCustTypeReward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytMember.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointBonus.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointByProduct.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointCycle.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointMovement.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytPointTypePerBill.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytRedeem.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytReportGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytReportMenu.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_LytReward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstArea.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstCycle.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstDistrict.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstGrade.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstMenu.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstPart.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstProvince.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PaidDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PaidMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PayDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PayMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PODetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_POMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Position.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PRDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PreSaleWarehouse.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PriceGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PRMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Product.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductBrand.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductChanged.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductCompany.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductCostHistory.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductCostSupplier.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductFlavour.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductPriceBranch.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductPriceCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductPriceGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductPriceHistory.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductPromotionBom.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductRemarkReject.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductSubGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductUom.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ProductUomSet.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Promotion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionBranch.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionPack.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionProduct.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionReward.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionVan.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_PromotionVanProduct.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ReportGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ReportMenu.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Roles.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_RouteOnsite.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SalArea.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SalAreaDistrict.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SalAreaVisit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleBranchDaily.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleBranchSummary.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleExpenseDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleExpenseMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleYearTarget.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SendData.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ShopType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_ShopTypeGroup.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SimCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SimOrder.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SimOrderItem.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TargetDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TargetMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TLDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TLMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_ArCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_ArCustomerShelf.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_ArCustomer_Test.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_DocSignature.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_PODetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_POMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_PRDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_PRMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_PromotionCustomer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_Visit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_VisitStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TmpPRDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TRDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TRMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Users.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VanType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Visit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VisitStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VMIDetail.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VMIMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VMISafety.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VMISetting.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_Zone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ValidateRL.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\CCBoxItem.cs" />
+    <Compile Include="Utilities\Connection.cs" />
+    <Compile Include="Utilities\ConvertHelper.cs" />
+    <Compile Include="Utilities\DataGridColumn.cs" />
+    <Compile Include="Utilities\EnumClass.cs" />
+    <Compile Include="Utilities\IFormEvent.cs" />
+    <Compile Include="Utilities\FormHelper.cs" />
+    <Compile Include="Utilities\GridViewHelper.cs" />
+    <Compile Include="Utilities\Helper.cs" />
+    <Compile Include="Utilities\IObject.cs" />
+    <Compile Include="Utilities\IPromotion.cs" />
+    <Compile Include="Utilities\ObjectFactory.cs" />
+    <Compile Include="Utilities\ObjectHelper.cs" />
+    <Compile Include="Utilities\SerializeHelper.cs" />
+    <Compile Include="View\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmAddMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmAddMenu.Designer.cs">
+      <DependentUpon>frmAddMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmDistributionCenter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmDistributionCenter.Designer.cs">
+      <DependentUpon>frmDistributionCenter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmEmployeeInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmEmployeeInfo.Designer.cs">
+      <DependentUpon>frmEmployeeInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmProductMovement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmProductMovement.Designer.cs">
+      <DependentUpon>frmProductMovement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmOD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmOD.Designer.cs">
+      <DependentUpon>frmOD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRB.Designer.cs">
+      <DependentUpon>frmRB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRE.Designer.cs">
+      <DependentUpon>frmRE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRJ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRJ.Designer.cs">
+      <DependentUpon>frmRJ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRL.Designer.cs">
+      <DependentUpon>frmRL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRT.Designer.cs">
+      <DependentUpon>frmRT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSupplierInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSupplierInfo.Designer.cs">
+      <DependentUpon>frmSupplierInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmTabletSales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmTabletSales.Designer.cs">
+      <DependentUpon>frmTabletSales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmTR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmTR.Designer.cs">
+      <DependentUpon>frmTR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmVanSales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmVanSales.Designer.cs">
+      <DependentUpon>frmVanSales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\Test.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\Test.Designer.cs">
+      <DependentUpon>Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\AddButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\AddButton.Designer.cs">
+      <DependentUpon>AddButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\BunttonCtrlBC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\UControl\BunttonCtrlBC.Designer.cs">
+      <DependentUpon>BunttonCtrlBC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\ButtonCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\UControl\ButtonCtrl.Designer.cs">
+      <DependentUpon>ButtonCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CancelButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CancelButton.Designer.cs">
+      <DependentUpon>CancelButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CCBoxItem.cs" />
+    <Compile Include="View\UControl\CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CloseButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CloseButton.Designer.cs">
+      <DependentUpon>CloseButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CopyButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CopyButton.Designer.cs">
+      <DependentUpon>CopyButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\EditButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\EditButton.Designer.cs">
+      <DependentUpon>EditButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\ExcelButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\ExcelButton.Designer.cs">
+      <DependentUpon>ExcelButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\FlatButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\FlatButton.Designer.cs">
+      <DependentUpon>FlatButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchSupp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchSupp.Designer.cs">
+      <DependentUpon>frmSearchSupp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\PrintButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\PrintButton.Designer.cs">
+      <DependentUpon>PrintButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\RemoveButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\RemoveButton.Designer.cs">
+      <DependentUpon>RemoveButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\SaveButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\SaveButton.Designer.cs">
+      <DependentUpon>SaveButton.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmAddMenu.resx">
+      <DependentUpon>frmAddMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmDistributionCenter.resx">
+      <DependentUpon>frmDistributionCenter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmEmployeeInfo.resx">
+      <DependentUpon>frmEmployeeInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductMovement.resx">
+      <DependentUpon>frmProductMovement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmOD.resx">
+      <DependentUpon>frmOD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRB.resx">
+      <DependentUpon>frmRB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRE.resx">
+      <DependentUpon>frmRE.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRJ.resx">
+      <DependentUpon>frmRJ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRL.resx">
+      <DependentUpon>frmRL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRT.resx">
+      <DependentUpon>frmRT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSupplierInfo.resx">
+      <DependentUpon>frmSupplierInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmTabletSales.resx">
+      <DependentUpon>frmTabletSales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmTR.resx">
+      <DependentUpon>frmTR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmVanSales.resx">
+      <DependentUpon>frmVanSales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\Test.resx">
+      <DependentUpon>Test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\BunttonCtrlBC.resx">
+      <DependentUpon>BunttonCtrlBC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\ButtonCtrl.resx">
+      <DependentUpon>ButtonCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchSupp.resx">
+      <DependentUpon>frmSearchSupp.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Model\DBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Model\DBModel.edmx.diagram">
+      <DependentUpon>DBModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Images\cancelSt.ico" />
+    <None Include="Images\closeST.ico" />
+    <None Include="Images\power-off.ico" />
+    <Content Include="Images\power.ico" />
+    <None Include="Images\search.ico" />
+    <None Include="Images\share.ico" />
+    <Content Include="Model\DBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\DBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="uni_fXG_1.ico" />
+    <None Include="Images\account.png" />
+    <None Include="Images\advance.png" />
+    <Content Include="Images\addBtn.ico" />
+    <Content Include="Images\AllCashLogo-Design-PixTeller.png" />
+    <None Include="Images\back-up.png" />
+    <None Include="Images\banking.png" />
+    <None Include="Images\Body-PixTeller.png" />
+    <Content Include="Images\buy.png" />
+    <None Include="Images\cash.png" />
+    <Content Include="Images\cancelSaveBtn.ico" />
+    <Content Include="Images\check.png" />
+    <None Include="Images\closeBtn.ico" />
+    <Content Include="Images\cloud-computing.png" />
+    <None Include="Images\company.png" />
+    <None Include="Images\customer.png" />
+    <None Include="Images\cycle.png" />
+    <None Include="Images\database.png" />
+    <Content Include="Images\copyBtn.ico" />
+    <Content Include="Images\database_a.png" />
+    <Content Include="Images\database_d.png" />
+    <None Include="Images\dataCenter.png" />
+    <None Include="Images\department.png" />
+    <None Include="Images\depo.png" />
+    <None Include="Images\display.png" />
+    <None Include="Images\docType.png" />
+    <None Include="Images\deleteBtn.ico" />
+    <Content Include="Images\editBtn.ico" />
+    <Content Include="Images\edit_i.png" />
+    <None Include="Images\employee.png" />
+    <None Include="Images\endDay.png" />
+    <Content Include="Images\excelBtn.ico" />
+    <Content Include="Images\exitBtn.ico" />
+    <Content Include="Images\files-and-folders.png" />
+    <None Include="Images\Header-PixTeller.png" />
+    <Content Include="Images\home.png" />
+    <None Include="Images\invoice.png" />
+    <None Include="Images\invoiceFull.png" />
+    <None Include="Images\location.png" />
+    <Content Include="Images\log-in.png" />
+    <Content Include="Images\Login-Text-PixTeller.png" />
+    <Content Include="Images\login.png" />
+    <Content Include="Images\LoginLogodesign-PixTeller.png" />
+    <None Include="Images\logOff.png" />
+    <Content Include="Images\logout.png" />
+    <None Include="Images\mainData.png" />
+    <Content Include="Images\man.png" />
+    <None Include="Images\menu.png" />
+    <None Include="Images\map.png" />
+    <None Include="Images\maximize.png" />
+    <None Include="Images\minimize.png" />
+    <None Include="Images\MTM.png" />
+    <Content Include="Images\OD.png" />
+    <None Include="Images\other.png" />
+    <Content Include="Images\out_i.png" />
+    <Content Include="Images\paper-plane.png" />
+    <None Include="Images\RE.png" />
+    <None Include="Images\permission.png" />
+    <None Include="Images\place.png" />
+    <None Include="Images\preorder.png" />
+    <None Include="Images\presentation.png" />
+    <None Include="Images\process.png" />
+    <None Include="Images\product.png" />
+    <None Include="Images\productData.png" />
+    <None Include="Images\productInfo.png" />
+    <None Include="Images\productPriceTable.png" />
+    <None Include="Images\promotion.png" />
+    <None Include="Images\province.png" />
+    <None Include="Images\RB.png" />
+    <None Include="Images\RE2.png" />
+    <None Include="Images\reasonBroken.png" />
+    <None Include="Images\receivedTablet.png" />
+    <None Include="Images\report.png" />
+    <Content Include="Images\printBtn.ico" />
+    <Content Include="Images\report_i.png" />
+    <None Include="Images\RJ.png" />
+    <None Include="Images\RL.png" />
+    <None Include="Images\RT.png" />
+    <Content Include="Images\sale.png" />
+    <None Include="Images\sales.png" />
+    <None Include="Images\salesunit.png" />
+    <Content Include="Images\save.png" />
+    <Content Include="Images\saveBtn.ico" />
+    <Content Include="Images\setting.png" />
+    <None Include="Images\SUP-INFO.png" />
+    <None Include="Images\stockBalance.png" />
+    <None Include="Images\sup2.png" />
+    <None Include="Images\target.png" />
+    <None Include="Images\taste.png" />
+    <None Include="Images\transaction.png" />
+    <None Include="Images\transCustomer.png" />
+    <None Include="Images\transEmployee.png" />
+    <Content Include="Images\timeBtn.ico" />
+    <Content Include="Images\uni_fXG_1.ico" />
+    <None Include="Images\unlock.png" />
+    <None Include="Images\UOM.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
