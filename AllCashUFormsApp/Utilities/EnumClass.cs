@@ -8,6 +8,8 @@ namespace AllCashUFormsApp
     enum ObjectType
     {
         Supplier,
+        Promotion,
+        PromotionTemp,
         ODProduct,
         REProduct,
         RLProduct,

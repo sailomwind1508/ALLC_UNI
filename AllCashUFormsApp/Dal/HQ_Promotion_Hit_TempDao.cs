@@ -1,38 +1,43 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Windows.Forms;
 
 namespace AllCashUFormsApp
 {
-    public static class PODetailDao
+    public static class HQ_Promotion_Hit_TempDao
     {
         /// <summary>
         /// select data
         /// </summary>
-        /// <param name="tbl_PODetail"></param>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
         /// <returns></returns>
-        public static List<tbl_PODetail> Select(this tbl_PODetail tbl_PODetail, Func<tbl_PODetail, bool> predicate)
+        public static IEnumerable<tbl_HQ_Promotion_Hit_Temp> Select(this tbl_HQ_Promotion_Hit_Temp obj, object condition)
         {
-            List<tbl_PODetail> list = new List<tbl_PODetail>();
+            return new tbl_HQ_Promotion_Hit_Temp().Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
+        /// <returns></returns>
+        public static List<tbl_HQ_Promotion_Hit_Temp> Select(this tbl_HQ_Promotion_Hit_Temp tbl_HQ_Promotion_Hit_Temp, Func<tbl_HQ_Promotion_Hit_Temp, bool> predicate)
+        {
+            List<tbl_HQ_Promotion_Hit_Temp> list = new List<tbl_HQ_Promotion_Hit_Temp>();
             try
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    list = db.tbl_PODetail.Where(predicate).AsQueryable().ToList();
-
-                    //list = db.tbl_PODetail.Where(predicate).ToList();
+                    list = db.tbl_HQ_Promotion_Hit_Temp.Where(predicate).ToList();
                 }
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_PODetail.GetType());
+                ex.WriteLog(tbl_HQ_Promotion_Hit_Temp.GetType());
             }
 
             return list;
@@ -41,46 +46,47 @@ namespace AllCashUFormsApp
         /// <summary>
         /// select all data
         /// </summary>
-        /// <param name="tbl_PODetail"></param>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
         /// <returns></returns>
-        public static List<tbl_PODetail> SelectAll(this tbl_PODetail tbl_PODetail)
+        public static List<tbl_HQ_Promotion_Hit_Temp> SelectAll(this tbl_HQ_Promotion_Hit_Temp tbl_HQ_Promotion_Hit_Temp)
         {
-            List<tbl_PODetail> list = new List<tbl_PODetail>();
+            List<tbl_HQ_Promotion_Hit_Temp> list = new List<tbl_HQ_Promotion_Hit_Temp>();
             try
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    list = db.tbl_PODetail.OrderBy(x => x.DocNo).ToList();
+                    list = db.tbl_HQ_Promotion_Hit_Temp.ToList();
                 }
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_PODetail.GetType());
+                ex.WriteLog(tbl_HQ_Promotion_Hit_Temp.GetType());
             }
 
             return list;
         }
 
+
         /// <summary>
         /// add new data
         /// </summary>
-        /// <param name="tbl_PODetail"></param>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
         /// <returns></returns>
-        public static int Insert(this tbl_PODetail tbl_PODetail)
+        public static int Insert(this tbl_HQ_Promotion_Hit_Temp tbl_HQ_Promotion_Hit_Temp)
         {
             int ret = 0;
             try
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    db.tbl_PODetail.Attach(tbl_PODetail);
-                    db.tbl_PODetail.Add(tbl_PODetail);
+                    db.tbl_HQ_Promotion_Hit_Temp.Attach(tbl_HQ_Promotion_Hit_Temp);
+                    db.tbl_HQ_Promotion_Hit_Temp.Add(tbl_HQ_Promotion_Hit_Temp);
                     ret = db.SaveChanges();
                 }
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_PODetail.GetType());
+                ex.WriteLog(tbl_HQ_Promotion_Hit_Temp.GetType());
             }
 
             return ret;
@@ -89,25 +95,25 @@ namespace AllCashUFormsApp
         /// <summary>
         /// update data
         /// </summary>
-        /// <param name="tbl_PODetail"></param>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
         /// <returns></returns>
-        public static int Update(this tbl_PODetail tbl_PODetail)
+        public static int Update(this tbl_HQ_Promotion_Hit_Temp tbl_HQ_Promotion_Hit_Temp)
         {
             int ret = 0;
             try
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_PODetail.FirstOrDefault(x => x.DocNo == tbl_PODetail.DocNo && x.ProductID == tbl_PODetail.ProductID && tbl_PODetail.Line == x.Line);
+                    var updateData = db.tbl_HQ_Promotion_Hit_Temp.FirstOrDefault(x => x.PromotionID == tbl_HQ_Promotion_Hit_Temp.PromotionID);
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
                         {
-                            foreach (PropertyInfo tbl_PODetailItem in tbl_PODetail.GetType().GetProperties())
+                            foreach (PropertyInfo tbl_HQ_Promotion_Hit_TempItem in tbl_HQ_Promotion_Hit_Temp.GetType().GetProperties())
                             {
-                                if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_PODetailItem.Name)
+                                if (updateDataItem.Name == tbl_HQ_Promotion_Hit_TempItem.Name)
                                 {
-                                    var value = tbl_PODetailItem.GetValue(tbl_PODetail, null);
+                                    var value = tbl_HQ_Promotion_Hit_TempItem.GetValue(tbl_HQ_Promotion_Hit_Temp, null);
 
                                     Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
                                     object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
@@ -116,18 +122,19 @@ namespace AllCashUFormsApp
                                 }
                             }
                         }
+
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
                     }
                     else
                     {
-                        ret = tbl_PODetail.Insert();
+                        ret = tbl_HQ_Promotion_Hit_Temp.Insert();
                     }
                 }
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_PODetail.GetType());
+                ex.WriteLog(tbl_HQ_Promotion_Hit_Temp.GetType());
             }
 
             return ret;
@@ -136,23 +143,23 @@ namespace AllCashUFormsApp
         /// <summary>
         /// remove data
         /// </summary>
-        /// <param name="tbl_PODetail"></param>
+        /// <param name="tbl_HQ_Promotion_Hit_Temp"></param>
         /// <returns></returns>
-        public static int Delete(this tbl_PODetail tbl_PODetail)
+        public static int Delete(this tbl_HQ_Promotion_Hit_Temp tbl_HQ_Promotion_Hit_Temp)
         {
             int ret = 0;
             try
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    db.Entry(tbl_PODetail).State = EntityState.Deleted;
-                    db.tbl_PODetail.Remove(tbl_PODetail);
+                    db.Entry(tbl_HQ_Promotion_Hit_Temp).State = EntityState.Deleted;
+                    db.tbl_HQ_Promotion_Hit_Temp.Remove(tbl_HQ_Promotion_Hit_Temp);
                     ret = db.SaveChanges();
                 }
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_PODetail.GetType());
+                ex.WriteLog(tbl_HQ_Promotion_Hit_Temp.GetType());
             }
 
             return ret;

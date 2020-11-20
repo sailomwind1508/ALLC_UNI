@@ -800,6 +800,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_DelArCustomer' does not ha
           <Property Name="SKUGroupID2" Type="int" />
           <Property Name="RewardID" Type="nvarchar" MaxLength="50" />
           <Property Name="PromotionPriority" Type="int" />
+          <Property Name="Limit" Type="int" />
           <Property Name="Recomputable" Type="bit" />
           <Property Name="IgnoreApplied" Type="bit" />
           <Property Name="IsUseCoupon" Type="bit" />
@@ -810,6 +811,47 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_DelArCustomer' does not ha
           <Property Name="UpdateDate" Type="datetime" />
           <Property Name="CreateBy" Type="nvarchar" MaxLength="50" />
           <Property Name="UpdateBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_HQ_Promotion_Hit">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="PromotionID" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoundHit" Type="int" />
+          <Property Name="SKUGroupID" Type="nvarchar" MaxLength="50" />
+          <Property Name="SKUID" Type="nvarchar" MaxLength="50" />
+          <Property Name="DisCountAmt" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SKUGroupRewardID" Type="nvarchar" MaxLength="50" />
+          <Property Name="SKUGroupRewardAmt" Type="int" />
+          <Property Name="RewardID" Type="nvarchar" MaxLength="50" />
+          <Property Name="FlagDel" Type="bit" />
+          <Property Name="FlagSend" Type="bit" />
+          <Property Name="CrDate" Type="datetime" />
+          <Property Name="CrUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="EdDate" Type="datetime" />
+          <Property Name="EdUser" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_HQ_Promotion_Hit_Temp">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="PromotionID" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoundHit" Type="int" />
+          <Property Name="SKUGroupID" Type="nvarchar" MaxLength="50" />
+          <Property Name="DisCountAmt" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SKUGroupRewardID" Type="nvarchar" MaxLength="50" />
+          <Property Name="SKUGroupRewardAmt" Type="int" />
+          <Property Name="RewardID" Type="nvarchar" MaxLength="50" />
+          <Property Name="FlagDel" Type="bit" />
+          <Property Name="FlagSend" Type="bit" />
+          <Property Name="CrDate" Type="datetime" />
+          <Property Name="CrUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="EdDate" Type="datetime" />
+          <Property Name="EdUser" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tbl_HQ_Promotion_Master">
           <Key>
@@ -3342,6 +3384,8 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
           <EntitySet Name="tbl_ErrorLog" EntityType="Self.tbl_ErrorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Expense" EntityType="Self.tbl_Expense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_HQ_Promotion" EntityType="Self.tbl_HQ_Promotion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_HQ_Promotion_Hit" EntityType="Self.tbl_HQ_Promotion_Hit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_HQ_Promotion_Hit_Temp" EntityType="Self.tbl_HQ_Promotion_Hit_Temp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_HQ_Promotion_Master" EntityType="Self.tbl_HQ_Promotion_Master" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_HQ_Reward" EntityType="Self.tbl_HQ_Reward" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_HQ_SKUGroup" EntityType="Self.tbl_HQ_SKUGroup" Schema="dbo" store:Type="Tables" />
@@ -6935,6 +6979,8 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
           <EntitySet Name="tbl_HQ_Reward" EntityType="DB_ALL_CASH_UNIModel.tbl_HQ_Reward" />
           <EntitySet Name="tbl_HQ_SKUGroup" EntityType="DB_ALL_CASH_UNIModel.tbl_HQ_SKUGroup" />
           <EntitySet Name="tbl_HQ_SKUGroup_EXC" EntityType="DB_ALL_CASH_UNIModel.tbl_HQ_SKUGroup_EXC" />
+          <EntitySet Name="tbl_HQ_Promotion_Hit" EntityType="DB_ALL_CASH_UNIModel.tbl_HQ_Promotion_Hit" />
+          <EntitySet Name="tbl_HQ_Promotion_Hit_Temp" EntityType="DB_ALL_CASH_UNIModel.tbl_HQ_Promotion_Hit_Temp" />
         </EntityContainer>
         <EntityType Name="tbl_ArCustomer">
           <Key>
@@ -7083,6 +7129,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
           <Property Name="CreateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UpdateBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Limit" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_HQ_Promotion_Master">
           <Key>
@@ -7113,6 +7160,47 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
           </Key>
           <Property Name="SKUGroupID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SKU_ID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_HQ_Promotion_Hit">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PromotionID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoundHit" Type="Int32" />
+          <Property Name="SKUGroupID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisCountAmt" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SKUGroupRewardID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SKUGroupRewardAmt" Type="Int32" />
+          <Property Name="RewardID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FlagDel" Type="Boolean" />
+          <Property Name="FlagSend" Type="Boolean" />
+          <Property Name="CrDate" Type="DateTime" Precision="3" />
+          <Property Name="CrUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+          <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SKUID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_HQ_Promotion_Hit_Temp">
+          <Key>
+            <PropertyRef Name="PK" />
+          </Key>
+          <Property Name="PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PromotionID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoundHit" Type="Int32" />
+          <Property Name="SKUGroupID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisCountAmt" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SKUGroupRewardID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SKUGroupRewardAmt" Type="Int32" />
+          <Property Name="RewardID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FlagDel" Type="Boolean" />
+          <Property Name="FlagSend" Type="Boolean" />
+          <Property Name="CrDate" Type="DateTime" Precision="3" />
+          <Property Name="CrUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+          <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -10267,6 +10355,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
           <EntitySetMapping Name="tbl_HQ_Promotion">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNIModel.tbl_HQ_Promotion">
               <MappingFragment StoreEntitySet="tbl_HQ_Promotion">
+                <ScalarProperty Name="Limit" ColumnName="Limit" />
                 <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
                 <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
@@ -10324,6 +10413,49 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI.dbo.tbl_VMISetting' does not have 
               <MappingFragment StoreEntitySet="tbl_HQ_SKUGroup_EXC">
                 <ScalarProperty Name="SKU_ID" ColumnName="SKU_ID" />
                 <ScalarProperty Name="SKUGroupID" ColumnName="SKUGroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_HQ_Promotion_Hit">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNIModel.tbl_HQ_Promotion_Hit">
+              <MappingFragment StoreEntitySet="tbl_HQ_Promotion_Hit">
+                <ScalarProperty Name="SKUID" ColumnName="SKUID" />
+                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="CrUser" ColumnName="CrUser" />
+                <ScalarProperty Name="CrDate" ColumnName="CrDate" />
+                <ScalarProperty Name="FlagSend" ColumnName="FlagSend" />
+                <ScalarProperty Name="FlagDel" ColumnName="FlagDel" />
+                <ScalarProperty Name="RewardID" ColumnName="RewardID" />
+                <ScalarProperty Name="SKUGroupRewardAmt" ColumnName="SKUGroupRewardAmt" />
+                <ScalarProperty Name="SKUGroupRewardID" ColumnName="SKUGroupRewardID" />
+                <ScalarProperty Name="DisCountAmt" ColumnName="DisCountAmt" />
+                <ScalarProperty Name="SKUGroupID" ColumnName="SKUGroupID" />
+                <ScalarProperty Name="RoundHit" ColumnName="RoundHit" />
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+                <ScalarProperty Name="DocNo" ColumnName="DocNo" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_HQ_Promotion_Hit_Temp">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNIModel.tbl_HQ_Promotion_Hit_Temp">
+              <MappingFragment StoreEntitySet="tbl_HQ_Promotion_Hit_Temp">
+                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="CrUser" ColumnName="CrUser" />
+                <ScalarProperty Name="CrDate" ColumnName="CrDate" />
+                <ScalarProperty Name="FlagSend" ColumnName="FlagSend" />
+                <ScalarProperty Name="FlagDel" ColumnName="FlagDel" />
+                <ScalarProperty Name="RewardID" ColumnName="RewardID" />
+                <ScalarProperty Name="SKUGroupRewardAmt" ColumnName="SKUGroupRewardAmt" />
+                <ScalarProperty Name="SKUGroupRewardID" ColumnName="SKUGroupRewardID" />
+                <ScalarProperty Name="DisCountAmt" ColumnName="DisCountAmt" />
+                <ScalarProperty Name="SKUGroupID" ColumnName="SKUGroupID" />
+                <ScalarProperty Name="RoundHit" ColumnName="RoundHit" />
+                <ScalarProperty Name="PromotionID" ColumnName="PromotionID" />
+                <ScalarProperty Name="DocNo" ColumnName="DocNo" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

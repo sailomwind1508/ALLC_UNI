@@ -10,24 +10,19 @@ namespace AllCashUFormsApp.Controller
 {
     public class give_free_free : give_reward, Igive_reward
     {
-        public PromotionRuleModel Give(tbl_HQ_Promotion pro, decimal totalUnitAmt, int roundHit)
+        public PromotionRuleModel Give(tbl_HQ_Promotion pro, decimal totalUnitAmt, int roundHit, bool isPeriod, ProductPromotionModel pp = null)
         {
             PromotionRuleModel give = Give_Reward;
             try
             {
-                give.PromotionID = pro.PromotionID;
-                give.ProductGroupID = pro.SKUGroupID1;
-                give.ProductGroupBeforeCalc = totalUnitAmt;
-                give.ConditionAmount = pro.ConditionStart.Value;
-                give.DisCountPattern = pro.DisCountPattern;
-                //give.DisCountAmt = (totalUnitAmt - (totalUnitAmt * (pro.DisCountAmt.Value / 100))) * roundHit;
-                give.RewardID = pro.RewardID;
+                decimal _disCountAmt = 0;
+                int _useAmount = pro.ConditionEnd.Value * roundHit;
+                decimal _productGroupAfterCalc = give.ProductGroupBeforeCalc - give.DisCountAmt;
+
+                SetSubGive(give, pro, totalUnitAmt, roundHit, pro.ConditionStart.Value, _disCountAmt, _useAmount, totalUnitAmt, pp);
+                give.ConditionAmount = pro.ConditionEnd.Value;
                 give.PruductGroupRewardID = pro.PruductGroupRewardID;
                 give.PruductGroupRewardAmt = pro.PruductGroupRewardAmt.Value * roundHit;
-
-                give.UseAmount = pro.ConditionStart.Value * roundHit;
-
-                give.ProductGroupAfterCalc = totalUnitAmt;
             }
             catch (Exception ex)
             {

@@ -87,6 +87,7 @@
     <Compile Include="Controller\PRDPromotion.cs" />
     <Compile Include="Controller\Product.cs" />
     <Compile Include="Controller\ProductMovement.cs" />
+    <Compile Include="Controller\PromotionTemp.cs" />
     <Compile Include="Controller\Promotion.cs" />
     <Compile Include="Controller\PromotionBase.cs" />
     <Compile Include="Controller\RB.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Dal\DocumentTypeDao.cs" />
     <Compile Include="Dal\EmployeeDao.cs" />
     <Compile Include="Dal\ErrorLogsDao.cs" />
+    <Compile Include="Dal\HQ_Promotion_HitDao.cs" />
+    <Compile Include="Dal\HQ_Promotion_Hit_TempDao.cs" />
     <Compile Include="Dal\HQ_SKUGroupDao.cs" />
     <Compile Include="Dal\HQ_SKUGroup_EXCDao.cs" />
     <Compile Include="Dal\HQ_Promotion_MasterDao.cs" />
@@ -170,7 +173,9 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model\ProductMovementModel.cs" />
+    <Compile Include="Model\ProductPromotionModel.cs" />
     <Compile Include="Model\PromotionRuleModel.cs" />
+    <Compile Include="Model\PromotionUseModel.cs" />
     <Compile Include="Model\tbl_AdmAuthorize.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -298,6 +303,12 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_HQ_Promotion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_Promotion_Hit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_HQ_Promotion_Hit_Temp.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_HQ_Promotion_Master.cs">

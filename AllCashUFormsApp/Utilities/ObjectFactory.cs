@@ -26,6 +26,16 @@ namespace AllCashUFormsApp
             //string code = Convert.ToString(_data["Code"]);
             switch (_type)
             {
+                case ObjectType.Promotion:
+                    {
+                        obj = new Promotion();
+                    }
+                    break;
+                case ObjectType.PromotionTemp:
+                    {
+                        obj = new PromotionTemp();
+                    }
+                    break;
                 case ObjectType.Supplier:
                     {
                         obj = new Supplier();

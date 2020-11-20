@@ -97,6 +97,8 @@ namespace AllCashUFormsApp.View.UControl
             switch (type)
             {
                 case "Supplier": { _objType = ObjectType.Supplier; } break;
+                case "Promotion": { _objType = ObjectType.Promotion; } break;
+                case "PromotionTemp": { _objType = ObjectType.PromotionTemp; } break;
                 case "ODProduct": { _objType = ObjectType.ODProduct; rowindex = _rowIndex.Value; } break;
                 case "REProduct": { _objType = ObjectType.REProduct; rowindex = _rowIndex.Value; } break;
                 case "RLProduct": { _objType = ObjectType.RLProduct; rowindex = _rowIndex.Value; } break;
@@ -287,6 +289,8 @@ namespace AllCashUFormsApp.View.UControl
             switch (_objType)
             {
                 case ObjectType.Supplier: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
+                case ObjectType.Promotion: SubSelectProductItem(text, ref _dt, ref filteredRows, "PromotionID", "PromotionName"); break;
+                case ObjectType.PromotionTemp: SubSelectProductItem(text, ref _dt, ref filteredRows, "PromotionID", "PromotionName"); break;
                 case ObjectType.ODProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.REProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.RLProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
@@ -487,6 +491,8 @@ namespace AllCashUFormsApp.View.UControl
                                 switch (_objType)
                                 {
                                     case ObjectType.Supplier: frm.BindData("Supplier", controlList, selectCode); break;
+                                    case ObjectType.Promotion: frm.BindData("Promotion", controlList, selectCode); break;
+                                    case ObjectType.PromotionTemp: frm.BindData("PromotionTemp", controlList, selectCode); break;
                                     case ObjectType.ODProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.REProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.RLProduct: BindProduct(frm, _objType, selectCode); break;

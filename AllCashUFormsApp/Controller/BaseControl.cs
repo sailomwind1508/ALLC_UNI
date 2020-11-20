@@ -8,7 +8,7 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class BaseControl : Promotion
+    public class BaseControl
     {
         private tbl_POMaster _tbl_POMaster = null;
         private List<tbl_PODetail> _tbl_PODetails = null;
@@ -22,7 +22,7 @@ namespace AllCashUFormsApp.Controller
         private List<tbl_IVDetail> _tbl_IVDetails = null;
         private List<tbl_DocRunning> _tbl_DocRunning = null;
         private Func<tbl_POMaster, bool> _docTypepredicate = null;
-
+ 
         private string _docTypeCode;
 
         public virtual tbl_POMaster tbl_POMaster
@@ -176,7 +176,7 @@ namespace AllCashUFormsApp.Controller
                         tbl_PODetails.Clear();
                     }
                 }
-                
+
             }
         }
 
@@ -247,6 +247,8 @@ namespace AllCashUFormsApp.Controller
                         ret.Add(tbl_InvTransactions.Insert());
                     }
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -330,6 +332,8 @@ namespace AllCashUFormsApp.Controller
                     }
                 }
                 //IV--------------------------------------------------------------------------------
+
+
 
                 //DocRunning--------------------------------------------------------------------------------
                 if (_tbl_DocRunning != null && _tbl_DocRunning.Count > 0)

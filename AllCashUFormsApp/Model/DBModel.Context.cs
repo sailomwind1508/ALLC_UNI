@@ -12,7 +12,7 @@ namespace AllCashUFormsApp.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+
     public partial class DB_ALL_CASH_UNIEntities : DbContext
     {
         public DB_ALL_CASH_UNIEntities(string conStr)
@@ -24,7 +24,7 @@ namespace AllCashUFormsApp.Model
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
         public virtual DbSet<tbl_AdmAuthorize> tbl_AdmAuthorize { get; set; }
         public virtual DbSet<tbl_AdmControlList> tbl_AdmControlList { get; set; }
         public virtual DbSet<tbl_AdmFormList> tbl_AdmFormList { get; set; }
@@ -181,5 +181,8 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_HQ_Reward> tbl_HQ_Reward { get; set; }
         public virtual DbSet<tbl_HQ_SKUGroup> tbl_HQ_SKUGroup { get; set; }
         public virtual DbSet<tbl_HQ_SKUGroup_EXC> tbl_HQ_SKUGroup_EXC { get; set; }
+        public virtual DbSet<tbl_HQ_Promotion_Hit> tbl_HQ_Promotion_Hit { get; set; }
+        public virtual DbSet<tbl_HQ_Promotion_Hit_Temp> tbl_HQ_Promotion_Hit_Temp { get; set; }
     }
 }
+

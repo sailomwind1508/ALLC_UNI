@@ -461,6 +461,54 @@ namespace AllCashUFormsApp
         }
 
         /// <summary>
+        /// Pop up Promotion Temp form creater
+        /// </summary>
+        /// <param name="frm"></param>
+        /// <param name="_controls"></param>
+        /// <param name="popupName"></param>
+        public static void OpenPromotionTempPopup(this Form frm, List<Control> _controls, string popupName)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            AddPromotionPopupCols(_frm, colList);
+
+            _frm.PreparePopupForm("PromotionTemp", frm.Name, popupName, colList, null, _controls, null);
+            _frm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Pop up Promotion form creater
+        /// </summary>
+        /// <param name="frm"></param>
+        /// <param name="_controls"></param>
+        /// <param name="popupName"></param>
+        public static void OpenPromotionPopup(this Form frm, List<Control> _controls, string popupName)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            AddPromotionPopupCols(_frm, colList);
+            _frm.PreparePopupForm("Promotion", frm.Name, popupName, colList, null, _controls, null);
+            _frm.ShowDialog();
+        }
+
+        public static void AddPromotionPopupCols(frmSearchSupp _frm, List<DataGridColumn> colList)
+        {
+            //colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "No", HeaderText = "ลำดับ", Name = "No", Width = 50, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
+            colList.Add(new DataGridColumn() { DataPropertyName = "PromotionID", HeaderText = "รหัสโปรโมชั่น", Name = "PromotionID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "PromotionName", HeaderText = "ชื่อโปรโมชั่น", Name = "PromotionName", Width = 150, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+            //colList.Add(new DataGridColumn() { DataPropertyName = "SKUGroupID", HeaderText = "กลุ่มสินค้า", Name = "SKUGroupID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "RewardName", HeaderText = "ชื่อส่วนลด", Name = "RewardName", Width = 150, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DisCountAmt", HeaderText = "ส่วนลด", Name = "DisCountAmt", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N2" });
+            //colList.Add(new DataGridColumn() { DataPropertyName = "SKUGroupRewardID", HeaderText = "สินค้าที่แจก", Name = "SKUGroupRewardID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "SKUGroupRewardAmt", HeaderText = "จำนวนสินค้าที่แจก", Name = "SKUGroupRewardAmt", Width = 60, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "EffectiveDate", HeaderText = "วันที่เริ่มโปรโมชั่น", Name = "EffectiveDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ExpireDate", HeaderText = "วันที่สิ้นสุดโปรโมชั่น", Name = "ExpireDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
+        }
+
+        /// <summary>
         /// Pop up Customer form creater
         /// </summary>
         /// <param name="frm"></param>
@@ -912,6 +960,25 @@ namespace AllCashUFormsApp
                 var ctrl = obj as NumericUpDown;
 
                 ctrl.ValueChanged += Obj_ValueChanged;
+            }
+        }
+
+        public static void SetObjectFromObject<T>(this tbl_HQ_Promotion_Hit obj, T targetObj)
+        {
+            foreach (PropertyInfo updateDataItem in targetObj.GetType().GetProperties())
+            {
+                foreach (PropertyInfo item in obj.GetType().GetProperties())
+                {
+                    if (updateDataItem.Name == item.Name)
+                    {
+                        var value = item.GetValue(item.PropertyType, null);
+
+                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                        updateDataItem.SetValue(item, safeValue, null);
+                    }
+                }
             }
         }
 

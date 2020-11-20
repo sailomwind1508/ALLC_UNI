@@ -18,6 +18,14 @@ namespace AllCashUFormsApp.Model
         public string PruductGroupRewardID { get; set; }
         public int PruductGroupRewardAmt { get; set; }
         public string RewardID { get; set; }
-        
+
+        public int RoundHit { get; set; }
+        public string PromotionPattern { get; set; }
+        public string StepCondition { get; set; }
+
+        public bool IgnoreApplied { get; set; }
+
+        public PromotionUseModel Use { get; set; }
+
     }
 }

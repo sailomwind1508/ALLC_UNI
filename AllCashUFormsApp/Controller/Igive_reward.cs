@@ -8,6 +8,6 @@ namespace AllCashUFormsApp.Controller
 {
     interface Igive_reward
     {
-        PromotionRuleModel Give(tbl_HQ_Promotion pro, decimal totalUnitAmt, int roundHit);
+        PromotionRuleModel Give(tbl_HQ_Promotion pro, decimal totalUnitAmt, int roundHit, bool isPeriod, ProductPromotionModel pp = null);
     }
 }

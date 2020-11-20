@@ -8,80 +8,45 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class Promotion : PromotionBase, IObject
+    public class PromotionTemp : PromotionBase, IObject
     {
-        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail> productList)
+        public List<tbl_HQ_Promotion_Hit_Temp> GetAllData()
         {
-            List<PromotionRuleModel> hitProList = new List<PromotionRuleModel>();
-
-            try
-            {
-                var cDate = DateTime.Now;
-
-                PRDPromotion prdPro = new PRDPromotion();
-                prdPro.PreCalcPromotion(this, productList, hitProList);
-
-                TXNPromotion txnPro = new TXNPromotion();
-                txnPro.PreCalcPromotion(this, productList, hitProList);
-
-            }
-            catch (Exception ex)
-            {
-                hitProList = null;
-                throw;
-            }
-
-            return hitProList;
-        }
-
-        public List<tbl_HQ_Promotion_Hit> GetAllData(Func<tbl_HQ_Promotion_Hit, bool> predicate = null)
-        {
-            if (predicate == null)
-                return (new tbl_HQ_Promotion_Hit()).SelectAll();
-            else
-                return (new tbl_HQ_Promotion_Hit()).Select(predicate);
-        }
-
-        public virtual int AddData(tbl_HQ_Promotion_Hit tbl_HQ_Promotion_Hit)
-        {
-            return tbl_HQ_Promotion_Hit.Insert();
-        }
-
-        public int UpdateData(tbl_HQ_Promotion_Hit tbl_HQ_Promotion_Hit)
-        {
-            return tbl_HQ_Promotion_Hit.Update();
-        }
-
-        public int RemoveData(tbl_HQ_Promotion_Hit tbl_HQ_Promotion_Hit)
-        {
-            return tbl_HQ_Promotion_Hit.Delete();
+            return (new tbl_HQ_Promotion_Hit_Temp()).SelectAll();
         }
 
         public virtual DataTable GetDataTable(bool isPopup = true)
         {
             try
             {
-                List<tbl_HQ_Promotion_Hit> tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
-                tbl_HQ_Promotion_Hits = (new tbl_HQ_Promotion_Hit()).SelectAll();
-                var allOfPromotionIDs = tbl_HQ_Promotion_Hits.Select(a => a.PromotionID).ToList();
-                var allOfRewardIDs = tbl_HQ_Promotion_Hits.Select(a => a.RewardID).ToList();
+                List<tbl_HQ_Promotion_Hit_Temp> tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                tbl_HQ_Promotion_Hit_Temps = GetAllData();
+                var allOfPromotionIDs = tbl_HQ_Promotion_Hit_Temps.Select(a => a.PromotionID).ToList();
+                var allOfRewardIDs = tbl_HQ_Promotion_Hit_Temps.Select(a => a.RewardID).ToList();
 
-                List<tbl_HQ_Promotion_Master> tbl_HQ_Promotion_Masters = new List<tbl_HQ_Promotion_Master>();
                 Func<tbl_HQ_Promotion_Master, bool> proMTFunc = (x => allOfPromotionIDs.Contains(x.PromotionID));
-                tbl_HQ_Promotion_Masters = (new tbl_HQ_Promotion_Master()).Select(proMTFunc);
+                List<tbl_HQ_Promotion_Master> tbl_HQ_Promotion_Masters = GetHQPromotionMaster(proMTFunc);
 
-                List<tbl_HQ_Promotion> tbl_HQ_Promotions = new List<tbl_HQ_Promotion>();
+                //List<tbl_HQ_SKUGroup> tbl_HQ_SKUGroups = new List<tbl_HQ_SKUGroup>();
+                //Func<tbl_HQ_SKUGroup, bool> grpFunc = (x => tbl_HQ_Promotion_Hit_Temps.Select(a => a.SKUGroupID).Contains(x.SKUGroupID));
+                //tbl_HQ_SKUGroups = (new tbl_HQ_SKUGroup()).Select(grpFunc);
+
+                //List<tbl_Product> tbl_Products = new List<tbl_Product>();
+                //Func<tbl_Product, bool> prdFunc = (x => tbl_HQ_SKUGroups.Select(a => a.SKU_ID).Contains(x.ProductCode));
+                //tbl_Products = (new tbl_Product()).Select(prdFunc);
+
                 Func<tbl_HQ_Promotion, bool> proFunc = (x => allOfPromotionIDs.Contains(x.PromotionID));
-                tbl_HQ_Promotions = (new tbl_HQ_Promotion()).Select(proFunc);
+                List<tbl_HQ_Promotion> tbl_HQ_Promotions = GetHQPromotion(proFunc);
 
-                List<tbl_HQ_Reward> tbl_HQ_Rewards = new List<tbl_HQ_Reward>();
                 Func<tbl_HQ_Reward, bool> rewardFunc = (x => allOfRewardIDs.Contains(x.RewardID));
-                tbl_HQ_Rewards = (new tbl_HQ_Reward()).Select(rewardFunc);
+                List<tbl_HQ_Reward> tbl_HQ_Rewards = GetHQReward(rewardFunc);
 
-                var query = from pt in tbl_HQ_Promotion_Hits
+                var query = from pt in tbl_HQ_Promotion_Hit_Temps
                             join pm in tbl_HQ_Promotion_Masters on pt.PromotionID equals pm.PromotionID
                             join p in tbl_HQ_Promotions on pt.PromotionID equals p.PromotionID
                             join r in tbl_HQ_Rewards on pt.RewardID equals r.RewardID
+                            //join g in tbl_HQ_SKUGroups on pt.SKUGroupID equals g.SKUGroupID
+                            //join prd in tbl_Products on g.SKU_ID equals prd.ProductCode
                             select new
                             {
                                 No = 0,
@@ -91,6 +56,7 @@ namespace AllCashUFormsApp.Controller
                                 SKUGroupID = pt.SKUGroupID,
                                 DisCountAmt = pt.DisCountAmt,
                                 SKUGroupRewardID = pt.SKUGroupRewardID,
+                                //SKUGroupRewardName = prd.ProductName,
                                 SKUGroupRewardAmt = pt.SKUGroupRewardAmt,
                                 RewardName = r.RewardName,
                                 EffectiveDate = p.EffectiveDate,
@@ -121,12 +87,12 @@ namespace AllCashUFormsApp.Controller
         public virtual DataTable GetDataTableByCondition(string[] filters)
         {
             DataTable dt = new DataTable();
-            List<tbl_HQ_Promotion_Hit> tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
+            List<tbl_HQ_Promotion_Hit_Temp> tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
 
             if (filters != null)
             {
-                tbl_HQ_Promotion_Hits = (new tbl_HQ_Promotion_Hit()).SelectAll().Where(x => filters.Contains(x.PromotionID)).ToList();
-                dt = tbl_HQ_Promotion_Hits.ToDataTable();
+                tbl_HQ_Promotion_Hit_Temps = (new tbl_HQ_Promotion_Hit_Temp()).SelectAll().Where(x => filters.Contains(x.PromotionID)).ToList();
+                dt = tbl_HQ_Promotion_Hit_Temps.ToDataTable();
             }
             else
             {
