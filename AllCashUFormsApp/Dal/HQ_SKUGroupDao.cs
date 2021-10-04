@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +19,7 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_SKUGroup> Select(this tbl_HQ_SKUGroup obj, object condition)
         {
-            return new tbl_HQ_SKUGroup().Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -30,10 +32,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_SKUGroup> list = new List<tbl_HQ_SKUGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_SKUGroup.Where(predicate).ToList();
-                }
+                list = tbl_HQ_SKUGroup.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_SKUGroup.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -53,10 +57,16 @@ namespace AllCashUFormsApp
             List<tbl_HQ_SKUGroup> list = new List<tbl_HQ_SKUGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_SKUGroup.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_SKUGroup] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_SKUGroup), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_SKUGroup>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_SKUGroup.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -163,7 +173,27 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+        public static DataTable GetHQ_SKUGroupData(this tbl_HQ_SKUGroup tbl_HQ_SKUGroup, string search)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_HQ_SKUGroup";
 
+                if (!string.IsNullOrEmpty(search))
+                {
+                    sql += " WHERE SKUGroupID like '%" + search + "%'";
+                    sql += " OR SKU_ID like '%" + search + "%'";
+                }
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
     }
 }

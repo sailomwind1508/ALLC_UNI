@@ -1,15 +1,31 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace AllCashUFormsApp
 {
     public static class BranchDao
     {
+        public static DataTable GetDataTable(this tbl_Branch tbl_Branch)
+        {
+            try
+            {
+                List<tbl_Branch> tbl_Branchs = new List<tbl_Branch>();
+                tbl_Branchs = (new tbl_Branch()).SelectAll();
+
+                return tbl_Branchs.ToDataTable();
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+                return null;
+            }
+        }
         /// <summary>
         /// select data
         /// </summary>
@@ -20,10 +36,12 @@ namespace AllCashUFormsApp
             List<tbl_Branch> list = new List<tbl_Branch>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Branch.Where(predicate).ToList();
-                }
+                list = tbl_Branch.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Branch.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +61,18 @@ namespace AllCashUFormsApp
             List<tbl_Branch> list = new List<tbl_Branch>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Branch.ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_Branch";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Branch), sql);
+                list = dynamicListReturned.Cast<tbl_Branch>().ToList();
+
+                //list = ConvertHelper.ConvertDataTable<tbl_Branch>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Branch.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -152,6 +178,23 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable Get_proc_SendProductInfo_GetDataTable(this tbl_Branch tbl_Branch)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_SendProductInfo_GetDataTable";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

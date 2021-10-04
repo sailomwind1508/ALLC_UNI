@@ -14,6 +14,29 @@ namespace AllCashUFormsApp
 {
     public static class InvWarehouseDao
     {
+        public static List<tbl_InvWarehouse> Select(this tbl_InvWarehouse tbl_InvWarehouse, string productID, string whID)
+        {
+            List<tbl_InvWarehouse> list = new List<tbl_InvWarehouse>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_InvWarehouse] ";
+                sql += " WHERE ProductID = '"+ productID.Trim() + "' ";
+                sql += " AND WHID = '" + whID.Trim() + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvWarehouse), sql);
+                list = dynamicListReturned.Cast<tbl_InvWarehouse>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_InvWarehouse.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -24,10 +47,12 @@ namespace AllCashUFormsApp
             List<tbl_InvWarehouse> list = new List<tbl_InvWarehouse>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_InvWarehouse.Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_InvWarehouse.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_InvWarehouse.Where(predicate).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -47,10 +72,23 @@ namespace AllCashUFormsApp
             List<tbl_InvWarehouse> list = new List<tbl_InvWarehouse>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_InvWarehouse.ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_InvWarehouse] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvWarehouse), sql);
+                list = dynamicListReturned.Cast<tbl_InvWarehouse>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_InvWarehouse>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_InvWarehouse.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -58,6 +96,167 @@ namespace AllCashUFormsApp
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_InvWarehouse"></param>
+        /// <returns></returns>
+        public static void Insert(this tbl_InvWarehouse tbl_InvWarehouse, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                db.tbl_InvWarehouse.Attach(tbl_InvWarehouse);
+                db.tbl_InvWarehouse.Add(tbl_InvWarehouse);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_InvWarehouse.GetType());
+            }
+        }
+
+        public static void Insert(this List<tbl_InvWarehouse> tbl_InvWarehouses, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                foreach (var tbl_InvWarehouse in tbl_InvWarehouses)
+                {
+                    db.tbl_InvWarehouse.Attach(tbl_InvWarehouse);
+                    db.tbl_InvWarehouse.Add(tbl_InvWarehouse);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(db.GetType());
+            }
+        }
+
+        public static int UpdateEntity(this List<tbl_InvWarehouse> tbl_InvWarehouses, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
+        {
+            int ret = 0;
+
+            try
+            {
+                List<tbl_InvWarehouse> tbl_InvWarehouseList = new List<tbl_InvWarehouse>();
+                foreach (var whid in tbl_InvWarehouses.Select(x => x.WHID).Distinct().ToList())
+                {
+                    tbl_InvWarehouseList.AddRange(db.tbl_InvWarehouse.Where(x => x.WHID == whid).ToList());
+                }
+
+                if (tbl_InvWarehouseList.Count > 0)
+                {
+                    foreach (var tbl_InvWarehouse in tbl_InvWarehouses)
+                    {
+                        var updateData = tbl_InvWarehouseList.FirstOrDefault(x => x.ProductID == tbl_InvWarehouse.ProductID && x.WHID == tbl_InvWarehouse.WHID);// db.tbl_InvWarehouse.FirstOrDefault(x => x.ProductID == tbl_InvWarehouse.ProductID && x.WHID == tbl_InvWarehouse.WHID);
+                        if (updateData != null)
+                        {
+                            foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                            {
+                                foreach (PropertyInfo tbl_InvWarehouseItem in tbl_InvWarehouse.GetType().GetProperties())
+                                {
+                                    if (updateDataItem.Name == tbl_InvWarehouseItem.Name)
+                                    {
+                                        var value = tbl_InvWarehouseItem.GetValue(tbl_InvWarehouse, null);
+
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
+                                }
+                            }
+
+                            db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        }
+                        else
+                        {
+                            //tbl_InvWarehouse.Delete(db);
+                            tbl_InvWarehouse.Insert(db);
+                        }
+                    }
+                }
+                else
+                    tbl_InvWarehouses.Insert(db);
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(db.GetType());
+                ret = 0;
+            }
+
+            return ret;
+        }
+
+
+        public static int Update(this List<tbl_InvWarehouse> tbl_InvWarehouses)
+        {
+            int ret = 0;
+
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    foreach (var tbl_InvWarehouse in tbl_InvWarehouses)
+                    {
+                        var updateData = db.tbl_InvWarehouse.FirstOrDefault(x => x.ProductID == tbl_InvWarehouse.ProductID && x.WHID == tbl_InvWarehouse.WHID);
+                        if (updateData != null)
+                        {
+                            foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                            {
+                                foreach (PropertyInfo tbl_InvWarehouseItem in tbl_InvWarehouse.GetType().GetProperties())
+                                {
+                                    if (updateDataItem.Name == tbl_InvWarehouseItem.Name)
+                                    {
+                                        var value = tbl_InvWarehouseItem.GetValue(tbl_InvWarehouse, null);
+
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
+                                }
+                            }
+
+                            db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        }
+                        else
+                        {
+                            tbl_InvWarehouse.Delete(db);
+                            tbl_InvWarehouse.Insert(db);
+                        }
+
+                    }
+
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                //ex.WriteLog(tbl_InvWarehouse);
+            }
+
+            return ret != 0 ? 1 : 0;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_InvWarehouse"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_InvWarehouse tbl_InvWarehouse, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                db.Entry(tbl_InvWarehouse).State = EntityState.Deleted;
+                db.tbl_InvWarehouse.Remove(tbl_InvWarehouse);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_InvWarehouse.GetType());
+            }
         }
 
         /// <summary>

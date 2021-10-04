@@ -25,20 +25,23 @@ namespace AllCashUFormsApp.Model
         public Nullable<decimal> DisCountAmt { get; set; }
         public string PruductGroupRewardID { get; set; }
         public Nullable<int> PruductGroupRewardAmt { get; set; }
+        public string PruductGroupRewardID2 { get; set; }
+        public Nullable<int> PruductGroupRewardAmt2 { get; set; }
         public string StepCondition2 { get; set; }
         public Nullable<int> SKUGroupID2 { get; set; }
         public string RewardID { get; set; }
         public Nullable<int> PromotionPriority { get; set; }
+        public Nullable<int> HitLimit { get; set; }
         public Nullable<bool> Recomputable { get; set; }
         public Nullable<bool> IgnoreApplied { get; set; }
         public Nullable<bool> IsUseCoupon { get; set; }
         public Nullable<System.DateTime> EffectiveDate { get; set; }
         public Nullable<System.DateTime> ExpireDate { get; set; }
         public Nullable<int> PlusSaleFrom { get; set; }
+        public Nullable<int> ShopTypeID { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public string CreateBy { get; set; }
         public string UpdateBy { get; set; }
-        public Nullable<int> Limit { get; set; }
     }
 }

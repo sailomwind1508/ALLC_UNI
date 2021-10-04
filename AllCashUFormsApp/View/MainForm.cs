@@ -16,16 +16,40 @@ namespace AllCashUFormsApp.View
     public partial class MainForm : Form
     {
         MenuBU menuBU = new MenuBU();
+        Permission permBU = new Permission();
         List<tbl_MstMenu> menuList = new List<tbl_MstMenu>();
-        
+
         public MainForm()
         {
             InitializeComponent();
             this.Text = "หน้าหลัก" + " - " + ConfigurationManager.AppSettings["Version"];
+
+            menuStrip1.Cursor = Cursors.Hand;
+            //menuStrip1.MouseLeave += new EventHandler(SetCursorToHandOn_MouseLeave);
+            //menuStrip1.MouseEnter += new EventHandler(SetCursorToArrowOn_MouseEnter);
         }
+
+        //private void SetCursorToArrowOn_MouseHover(object sender, EventArgs e)
+        //{
+        //    this.Cursor = Cursors.Hand;
+        //}
+
+        //private void SetCursorToArrowOn_DragOver(object sender, EventArgs e)
+        //{
+        //    this.Cursor = Cursors.Hand;
+        //}
+
+        //private void SetCursorToHandOn_MouseLeave(object sender, EventArgs e)
+        //{
+        //    this.Cursor = Cursors.Arrow;
+        //}
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //FlexibleMessageBox.MAX_WIDTH_FACTOR = Math.Round(100 * 0.1, 1);
+            //FlexibleMessageBox.MAX_HEIGHT_FACTOR = Math.Round(100 * 0.1, 1);
+            FlexibleMessageBox.FONT = new Font("Tahoma", 10, FontStyle.Regular);
+
             if (Helper.tbl_Users != null)
             {
                 toolStripStatusLabel1.Text = "ฐานข้อมูล : " + Helper.BranchName + ", ผู้ใช้งานระบบ : " + Helper.tbl_Users.Username;
@@ -34,38 +58,59 @@ namespace AllCashUFormsApp.View
             var menuImage = new Bitmap(AllCashUFormsApp.Properties.Resources.menu);
 
             menuList = menuBU.GetAllData().OrderBy(x => x.Seq).ToList();
-            
+
+            var permission = permBU.VerifyPermission(Helper.tbl_Users.RoleID.Value);
 
             foreach (var topParent in menuList.Where(x => string.IsNullOrEmpty(x.MenuParent.ToString())).ToList())
             {
+                var pr_perm = permission.FirstOrDefault(x => x.ControlID == topParent.MenuID);
                 var topItem = new System.Windows.Forms.ToolStripMenuItem()
                 {
                     Name = topParent.MenuName,
                     Text = topParent.MenuText,
-                    Image = topParent.MenuImage.byteArrayToImage()
+                    Image = topParent.MenuImage.byteArrayToImage(),
+                    Visible = pr_perm != null ? pr_perm.Visible.Value : false,
+                    Enabled = pr_perm != null ? pr_perm.Enable.Value : false
                 };
+
+                //allow super admin only edit by sailom .k 27/07/2021
+                if (topItem.Name == "frmDataMigration" || topItem.Name == "frmAddMenu")
+                {
+                    if (Helper.tbl_Users.RoleID != 10)
+                    {
+                        topItem.Visible = false;
+                        topItem.Enabled = false;
+                    }
+                }
 
                 foreach (var menuParent in menuList.Where(x => x.MenuParent == topParent.MenuID))
                 {
+                    var mpr_perm = permission.FirstOrDefault(x => x.ControlID == menuParent.MenuID);
                     var parentItem = new System.Windows.Forms.ToolStripMenuItem()
                     {
                         Name = menuParent.MenuName,
                         Text = menuParent.MenuText,
-                        Image = menuParent.MenuImage.byteArrayToImage()
+                        Image = menuParent.MenuImage.byteArrayToImage(),
+                        Visible = mpr_perm != null ? mpr_perm.Visible.Value : false,
+                        Enabled = mpr_perm != null ? mpr_perm.Enable.Value : false
                     };
 
                     parentItem.Click += ToolStripMenuItem_Click;
 
                     foreach (var menuParent2 in menuList.Where(x => x.MenuParent == menuParent.MenuID))
                     {
+                        var mpr2_perm = permission.FirstOrDefault(x => x.ControlID == menuParent.MenuID);
                         var parentItem2 = new System.Windows.Forms.ToolStripMenuItem()
                         {
                             Name = menuParent2.MenuName,
                             Text = menuParent2.MenuText,
-                            Image = menuParent2.MenuImage.byteArrayToImage()
+                            Image = menuParent2.MenuImage.byteArrayToImage(),
+                            Visible = mpr2_perm != null ? mpr2_perm.Visible.Value : false,
+                            Enabled = mpr2_perm != null ? mpr2_perm.Enable.Value : false,
                         };
 
                         parentItem2.Click += ToolStripMenuItem_Click;
+
                         parentItem.DropDownItems.Add(parentItem2);
                     }
 
@@ -80,7 +125,7 @@ namespace AllCashUFormsApp.View
                 menuStrip1.Items.Add(topItem);
             }
 
-            
+
             menuStrip1.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
         }
@@ -100,13 +145,59 @@ namespace AllCashUFormsApp.View
                 if (f.Name.ToLower() == name.ToLower()) //(f.Name == "frmOD")
                 {
                     isOpen = true;
-                    f.Focus();
+                    if (f.Visible == false)
+                    {
+                        f.Visible = true;
+
+                        f.MdiParent = this;
+                        f.StartPosition = FormStartPosition.CenterParent;
+                        f.WindowState = FormWindowState.Minimized;
+                        //frm.Dock = DockStyle.Fill;
+                        f.Text = ((ToolStripItem)sender).Text;
+
+                        MemoryManagement.FlushMemory();
+
+                        f.Show();
+                        f.WindowState = FormWindowState.Maximized;
+
+                        f.Focus();
+                    }
+                    else
+                    {
+                        f.Focus();
+                    }
                     break;
                 }
             }
 
             if (!isOpen)
             {
+                if (name == "frmLogOff")
+                {
+                    List<Form> openForms = new List<Form>();
+
+                    foreach (Form f in Application.OpenForms)
+                    {
+                        openForms.Add(f);
+                    }
+
+                    frmLogin login = new frmLogin();
+                    foreach (Form f in openForms)
+                    {
+                        if (f.Name != login.Name)
+                        {
+                            f.Hide();
+                            f.Dispose();
+                        }
+                    }
+
+                    if (login != null)
+                    {
+                        login.Show();
+                        return;
+                    }
+                }
+
                 Form frm = name.GetFormByName();
                 if (frm != null)
                 {
@@ -115,10 +206,13 @@ namespace AllCashUFormsApp.View
                     frm.WindowState = FormWindowState.Minimized;
                     //frm.Dock = DockStyle.Fill;
                     frm.Text = ((ToolStripItem)sender).Text;
+
+                    MemoryManagement.FlushMemory();
+
                     frm.Show();
                     frm.WindowState = FormWindowState.Maximized;
                 }
-               
+
             }
         }
 

@@ -366,6 +366,7 @@
             this.panel3.BackColor = System.Drawing.Color.Azure;
             this.panel3.Controls.Add(this.pnlTop);
             this.panel3.Controls.Add(this.pnlCen);
+            this.panel3.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.panel3.Location = new System.Drawing.Point(7, 41);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(992, 462);
@@ -617,6 +618,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCen.BackColor = System.Drawing.Color.Azure;
             this.pnlCen.Controls.Add(this.grdList);
+            this.pnlCen.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.pnlCen.Location = new System.Drawing.Point(0, 125);
             this.pnlCen.Name = "pnlCen";
             this.pnlCen.Size = new System.Drawing.Size(992, 321);
@@ -685,7 +687,6 @@
             this.colUnit.DefaultCellStyle = dataGridViewCellStyle4;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
-            this.colUnit.ReadOnly = true;
             this.colUnit.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colUnit.Width = 70;
             // 
@@ -699,6 +700,7 @@
             this.colOrderQty.HeaderText = "จำนวนทำลาย";
             this.colOrderQty.MaxInputLength = 6;
             this.colOrderQty.Name = "colOrderQty";
+            this.colOrderQty.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colOrderQty.Width = 150;
             // 
             // colCause
@@ -709,7 +711,6 @@
             this.colCause.DefaultCellStyle = dataGridViewCellStyle6;
             this.colCause.HeaderText = "สาเหตุ";
             this.colCause.Name = "colCause";
-            this.colCause.ReadOnly = true;
             this.colCause.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colCause.Width = 150;
             // 
@@ -719,6 +720,7 @@
             this.colUomSetID.HeaderText = "UomSetID";
             this.colUomSetID.Name = "colUomSetID";
             this.colUomSetID.ReadOnly = true;
+            this.colUomSetID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colUomSetID.Visible = false;
             this.colUomSetID.Width = 80;
             // 
@@ -730,9 +732,11 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmRJ";
             this.Text = "frmRJ";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRJ_FormClosed);
             this.Load += new System.EventHandler(this.frmRJ_Load);
             this.panel5.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

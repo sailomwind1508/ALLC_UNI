@@ -29,23 +29,10 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_Branch.Delete();
         }
-
-        public virtual DataTable GetDataTable(bool isPopup = true)
+        public DataTable GetDataTable(bool isPopup = true)
         {
-            try
-            {
-                List<tbl_Branch> tbl_Branchs = new List<tbl_Branch>();
-                tbl_Branchs = (new tbl_Branch()).SelectAll();
-
-                return tbl_Branchs.ToDataTable();
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-                return null;
-            }
+            return new tbl_Branch().GetDataTable();
         }
-
         public virtual DataTable GetDataTableByCondition(string[] filters)
         {
             DataTable dt = new DataTable();

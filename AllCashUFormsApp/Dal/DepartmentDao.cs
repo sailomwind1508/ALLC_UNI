@@ -23,10 +23,12 @@ namespace AllCashUFormsApp
             List<tbl_Department> list = new List<tbl_Department>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Department.Where(predicate).Where(x => x.FlagDel == false).ToList();
-                }
+                list = tbl_Department.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Department.Where(predicate).Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -46,10 +48,16 @@ namespace AllCashUFormsApp
             List<tbl_Department> list = new List<tbl_Department>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Department.Where(x => x.FlagDel == false).OrderBy(x => x.DepartmentID).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_Department] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Department), sql);
+                list = dynamicListReturned.Cast<tbl_Department>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Department.Where(x => x.FlagDel == false).OrderBy(x => x.DepartmentID).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -118,6 +126,10 @@ namespace AllCashUFormsApp
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
                     }
+                    else
+                    {
+                        ret = tbl_Department.Insert();
+                    }
                 }
             }
             catch (Exception ex)
@@ -151,6 +163,47 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static List<tbl_Department> SelectAllNonFlag(this tbl_Department tbl_Department)
+        {
+            List<tbl_Department> list = new List<tbl_Department>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_Department";
+                
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Department), sql);
+                list = dynamicListReturned.Cast<tbl_Department>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Department.GetType());
+            }
+            return list;
+        }
+        public static List<tbl_Department> SelectNonFlag(this tbl_Department tbl_Department, Func<tbl_Department, bool> predicate)
+        {
+            List<tbl_Department> list = new List<tbl_Department>();
+            try
+            {
+                list = tbl_Department.SelectAllNonFlag().Where(predicate).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Department.GetType());
+            }
+            return list;
+        }
+        public static DataTable GetDepartmentData(this tbl_Department tbl_Department, int flagDel, string Search)
+        {
+            DataTable dt = new DataTable();
+            string sql = "SELECT * FROM tbl_Department WHERE FlagDel = " + flagDel + "";
+            if (!string.IsNullOrEmpty(Search))
+            {
+                sql += " AND (DepartmentCode like '%" + Search + "%'";
+                sql += " OR DepartmentName like '%" + Search + "%')";
+            }
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            return dt;
         }
     }
 }

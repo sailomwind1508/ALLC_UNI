@@ -18,14 +18,16 @@ namespace AllCashUFormsApp.View.Page
     {
         MenuBU menuBU = new MenuBU();
         TabletSales bu = new TabletSales();
+        CustomerShelf buShelf = new CustomerShelf();
         Promotion pro = new Promotion();
-        PromotionTemp proTmp = new PromotionTemp();
+        static PromotionTemp proTmp = new PromotionTemp();
         DataTable dt = new DataTable();
         ObjectFactory objectFactory = new ObjectFactory();
         List<tbl_ProductUom> uoms = new List<tbl_ProductUom>();
         List<tbl_SalArea> saleAreaList = new List<tbl_SalArea>();
         List<tbl_SalAreaDistrict> salAreaDistrictList = new List<tbl_SalAreaDistrict>();
         Dictionary<string, decimal> listDiscount = new Dictionary<string, decimal>();
+        Dictionary<string, decimal> lineTotalDisc = new Dictionary<string, decimal>();
 
         bool validateNewRow = true;
         string docTypeCode = "";
@@ -37,14 +39,25 @@ namespace AllCashUFormsApp.View.Page
         List<Control> searchEmpControls = new List<Control>();
         List<string> readOnlyControls = new List<string>();
 
-        int[] cellEdit = new int[] { 0, 3, 4, 5, 7, 8 };
-        int[] numberCell = new int[] { 4 };
+        int[] cellEdit = new int[] { 0, 3, 4, 5 }; // new int[] { 0, 3, 4, 5, 7, 8 };
+        int[] numberCell = new int[] { 4, 5, 8 };
+        int[] uOnlineShopType = new int[] { 8, 9, 10 };
 
         Dictionary<int, string> dataGridList = new Dictionary<int, string>();
         Dictionary<int, string> initDataGridList = new Dictionary<int, string>();
 
         Func<tbl_BranchWarehouse, bool> whFunc = (x => x.VanType != 0); // x.WHID.Contains("V"));
         Func<tbl_Employee, bool> empFunc = (x => x.PositionID == 4);
+        List<tbl_Product> allProduct = new List<tbl_Product>();
+        List<tbl_ProductUomSet> allUomSet = new List<tbl_ProductUomSet>();
+        List<tbl_ProductUom> allUOM = new List<tbl_ProductUom>();
+        List<tbl_ProductPriceGroup> allProductPrice = new List<tbl_ProductPriceGroup>();
+        List<tbl_ProductGroup> allProdGroup = new List<tbl_ProductGroup>();
+        List<tbl_ProductSubGroup> allProdSubGroup = new List<tbl_ProductSubGroup>();
+
+        List<tbl_PODetail> allPODetails = new List<tbl_PODetail>();
+        List<tbl_ProductUom> prodUOMs = new List<tbl_ProductUom>();
+        bool isAdd = false;
 
         public frmVanSales()
         {
@@ -60,6 +73,7 @@ namespace AllCashUFormsApp.View.Page
 
             txdDocNo.KeyDown += TxdDocNo_KeyDown;
             txtWHCode.KeyDown += TxtWHCode_KeyDown;
+            txtWHCode.TextChanged += TxtWHCode_TextChanged;
             txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
 
             dtpDocDate.ValueChanged += DtpDocDate_ValueChanged;
@@ -77,11 +91,11 @@ namespace AllCashUFormsApp.View.Page
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode == "IM");
+            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "IM");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
-                runDigit = documentType.DocFormat.Length - 2;
+                runDigit = Convert.ToInt32(documentType.RunLength);
 
                 this.ClearControl(bu, docTypeCode, runDigit);
                 txtComment.Text = documentType.DocRemark;
@@ -110,10 +124,12 @@ namespace AllCashUFormsApp.View.Page
             btnSearchDoc.Enabled = true;
 
             dtpDocDate.SetDateTimePickerFormat();
-            dtpDueDate.SetDateTimePickerFormat();
+            //dtpDueDate.SetDateTimePickerFormat();
+
+            allUOM = bu.GetUOM();
 
             uoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
-            uoms.AddRange(bu.GetUOM());
+            uoms.AddRange(allUOM);
 
             saleAreaList.AddRange(bu.GetAllSaleArea());
             salAreaDistrictList.AddRange(bu.GetAllSaleAreaDistrict());
@@ -121,11 +137,25 @@ namespace AllCashUFormsApp.View.Page
             //data gridview
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
+
+            allProduct = bu.GetProduct();
+            allUomSet = bu.GetUOMSet();
+
+            allProductPrice = bu.GetProductPriceGroup();
+            allProdGroup = bu.GetProductGroup();
+            allProdSubGroup = bu.GetProductSubGroup();
+
+            ClearPromotionTemp();
+        }
+
+        private void ClearPromotionTemp()
+        {
+            pro.RemoveTempData();
         }
 
         public void BindVanSalesData(string ivDocNo)
         {
-            bu.GetDocData(ivDocNo);
+            bu.GetDocData(ivDocNo, docTypeCode);
 
             var po = bu.tbl_POMaster;
             var poDts = bu.tbl_PODetails;
@@ -155,7 +185,8 @@ namespace AllCashUFormsApp.View.Page
 
             txdDocNo.DisableTextBox(false);
             txdDocNo.BackColor = Color.Turquoise;
-            btnReCalc.Enabled = true;
+            btnReCalc.Enabled = false;
+            btnShowPromotion.Enabled = false;
 
             grdList.CellContentClick -= grdList_CellContentClick;
 
@@ -168,6 +199,9 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindPOMaster(tbl_POMaster po)
         {
+            var allEmp = bu.GetEmployee();
+            var allBranchWarehouse = bu.GetAllBranchWarehouse();
+
             txdDocNo.Text = po.DocNo;
 
             dtpDocDate.Value = po.DocDate.ToDateTimeFormat();
@@ -180,17 +214,17 @@ namespace AllCashUFormsApp.View.Page
             txtCustPONo.Text = po.CustPONo;
             txtCustInvNO.Text = po.CustInvNO;
 
-            var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
+            var employee = allEmp.FirstOrDefault(x => x.EmpID == Helper.tbl_Users.EmpID); // bu.GetEmployee(Helper.tbl_Users.EmpID);
             if (employee != null)
                 txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
 
-            var emp = bu.GetEmployee().FirstOrDefault(x => x.EmpID == po.SaleEmpID);
+            var emp = allEmp.FirstOrDefault(x => x.EmpID == po.SaleEmpID);
             if (emp != null)
                 txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
 
             txtWHCode.Text = po.WHID;
             Func<tbl_BranchWarehouse, bool> func = (x => x.WHID == po.WHID);
-            var wh = bu.GetBranchWarehouse(func);
+            var wh = allBranchWarehouse.FirstOrDefault(func);// bu.GetBranchWarehouse(func);
             if (wh != null)
             {
                 txtWHName.Text = wh.WHName;
@@ -200,11 +234,27 @@ namespace AllCashUFormsApp.View.Page
             ddlDocStatus.BindDropdownDocStatus(bu, po.DocStatus);
 
             txtComment.Text = po.Comment;
-
+            txtRemark.Text = po.Remark;
             txnAmount.Text = po.Amount.Value.ToStringN2();
-            txnDiscountType.Text = "0";// po.DiscountType;
+            //txnDiscountType.Text = "0";// po.DiscountType;
             txnDiscountAmt.Text = po.Discount.Value.ToStringN2();
-            txnBeforeVat.Text = (po.IncVat.Value - po.VatAmt.Value).ToStringN2();
+
+            decimal amt = 0;
+            decimal excVat = 0;
+            decimal discount = 0;
+            decimal vatRate = 0;
+            if (po.Amount != null)
+                amt = po.Amount.Value;
+            if (po.ExcVat != null)
+                excVat = po.ExcVat.Value;
+            if (po.Discount != null)
+                discount = po.Discount.Value;
+            if (po.VatRate != null)
+                vatRate = po.VatRate.Value;
+
+            decimal incVat = ((amt - excVat - discount) * 100) / (100 + vatRate);
+
+            txnBeforeVat.Text = incVat.ToStringN2();
             txnVatAmt.Text = po.VatAmt.Value.ToStringN2();
             lblVatType.Text = po.VatRate.Value.ToStringN0();
             txnExcVat.Text = po.ExcVat.Value.ToStringN2();
@@ -215,8 +265,20 @@ namespace AllCashUFormsApp.View.Page
         {
             grdList.Rows.Clear();
 
-            var allUOM = bu.GetUOM();
+            //var allUOM = bu.GetUOM();
             var allProduct = bu.GetProduct();
+            //var allProductPrice = bu.GetProductPriceGroup();
+
+            //Last edit by sailom.k 14/09/2021 tunning performance-------------------------
+            isAdd = false;
+            allPODetails = poDts;
+
+            List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
+            disTypeList = bu.GetDiscountType();
+
+            var listPrdID = allPODetails.Select(x => x.ProductID).ToList();
+            prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
+            //Last edit by sailom.k 14/09/2021 tunning performance--------------------
 
             for (int i = 0; i < poDts.Count; i++)
             {
@@ -240,7 +302,9 @@ namespace AllCashUFormsApp.View.Page
 
                 grdList.Rows[i].Cells[2].Value = productName;
 
-                grdList.BindComboBoxCell(grdList.Rows[i], i, false, 3, uoms, this, bu, 0);
+                //grdList.BindComboBoxCell(allProduct, grdList.Rows[i], i, false, 3, uoms, this, bu, 0);
+                grdList.BindComboBoxDiscountTypeCell(allProduct, grdList.Rows[i], i, false, 3, uoms, this, bu, 0, disTypeList, 7); //Last edit by sailom.k 14/09/2021 tunning performance
+
                 grdList.Rows[i].Cells[3].Value = poDts[i].OrderUom;
 
                 grdList.Rows[i].Cells[4].Value = poDts[i].OrderQty;
@@ -254,8 +318,8 @@ namespace AllCashUFormsApp.View.Page
                 if (poDts[i].OrderUom != -1)
                 {
                     string prdCode = poDts[i].ProductID;
-                    Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDts[i].OrderUom && x.ProductID == prdCode);
-                    var prdPriceList = bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                    //Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDts[i].OrderUom && x.ProductID == prdCode);
+                    var prdPriceList = allProductPrice.Where(x => x.ProductUomID == poDts[i].OrderUom && x.ProductID == prdCode).ToList(); //bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
 
                     if (prdPriceList != null && prdPriceList.Count > 0)
                         grdList.Rows[i].Cells[11].Value = prdPriceList[0].SellPrice.Value;
@@ -266,77 +330,197 @@ namespace AllCashUFormsApp.View.Page
         public void BindSearchProduct(DataTable productDT, int rowIndex)
         {
             validateNewRow = true;
-            grdList.ValidateDuplicateSKU(productDT.Rows[0]["ProductID"].ToString(), 0, rowIndex, ref validateNewRow);
+            if (Helper.tbl_Users.RoleID != 10) //allow super admin add duplicate item for support promotion 24022021
+            {
+                grdList.ValidateDuplicateSKU(productDT.Rows[0]["ProductID"].ToString(), 0, rowIndex, ref validateNewRow);
+            }
 
-
-            grdList.BindDataGrid(dataGridList, initDataGridList, productDT, 0, rowIndex, validateNewRow, this, uoms, bu, 0);
+            var allProduct = bu.GetProduct();
+            grdList.BindDataGrid(allProduct, dataGridList, initDataGridList, productDT, 0, rowIndex, validateNewRow, this, uoms, bu, 0);
         }
 
-        private decimal CalcReceiveQry(List<tbl_POMaster> poList, List<tbl_PODetail> poDts, string productID, decimal? orderQty, bool hasRefOD)
+        private void CalcPromotion(bool isShowPopup = false)
         {
-            decimal ret = 0;
-
-            if (poList != null && poList.Count > 0)
+            try
             {
-                decimal totalQty = 0;
-                foreach (var po in poList)
+                pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+                var ret = pro.RemoveTempData();
+
+                if (ret == 1)
                 {
-                    if (poDts != null && poDts.Count > 0)
+                    //var allProduct = bu.GetProduct();
+                    bool validateQty = true;
+                    if (grdList.RowCount > 0)
                     {
-                        foreach (var poDt in poDts.Where(x => x.DocNo == po.DocNo && x.ProductID == productID).ToList())
+                        for (int i = 0; i < grdList.RowCount; i++)
                         {
-                            totalQty += poDt.ReceivedQty.Value;
+                            var prdCodeCell = grdList.Rows[i].Cells[0];
+                            var qtyCell = grdList.Rows[i].Cells[4];
+                            var discountType = grdList.Rows[i].Cells[6];
+                            if (prdCodeCell.IsNotNullOrEmptyCell() && discountType.IsNotNullOrEmptyCell()
+                                && discountType.EditedFormattedValue.ToString() != "F" && discountType.EditedFormattedValue.ToString() != "S")
+                            {
+                                if (qtyCell.IsNotNullOrEmptyCell() && Convert.ToDecimal(qtyCell.EditedFormattedValue.ToString()) <= 0) //check qty
+                                {
+                                    var message = "จำนวนสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง !!!";
+                                    message.ShowWarningMessage();
+                                    validateQty = false;
+                                    break;
+                                }
+                            }
                         }
                     }
+                    //validateQty = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, null, "", false);
+
+                    if (txtCustName.Text.Contains("ไม่ระบุ")) //validate except customer
+                    {
+                        return;
+                    }
+                    if (string.IsNullOrEmpty(txtCustName.Text))
+                    {
+                        var message = "กรุณาเลือกร้านค้า !!!";
+                        message.ShowWarningMessage();
+                        txtCustomerCode.ErrorTextBox();
+                        return;
+                    }
+
+                    decimal totalDiscount = 0.00m;
+
+                    if (validateQty)
+                    {
+                        pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                        pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
+
+                        proTmp.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                        bu.tbl_POMaster = new tbl_POMaster();
+                        bu.tbl_PODetails = new List<tbl_PODetail>();
+
+                        PreparePOMaster(false);
+                        PreparePODetail(0, false);
+
+                        //var proList = pro.CalculatePromotion(bu.tbl_PODetails.Where(x => x.UnitPrice > 0).ToList(), txtCustomerCode.Text.Trim());
+                        var proList = pro.CalculatePromotion(bu.tbl_PODetails, txtCustomerCode.Text.Trim());
+                        if (proList != null && proList.Count > 0)
+                        {
+                            var delFlag = pro.RemoveTempData();
+                            if (delFlag == 1)
+                            {
+                                PreparePromotionTemp(proList);
+                                var addFlag = pro.AddTempData();
+
+                                var po = bu.tbl_POMaster;
+
+                                proTmp.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+                                if (proTmp.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+                                    po.Discount = proTmp.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value);
+
+                                //po.Discount = pro.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value);
+                                totalDiscount = po.Discount.Value;
+
+                                //decimal reCaclBeforeVat = Convert.ToDecimal(txnBeforeVat.Text) - po.Discount.Value;
+                                //txnBeforeVat.Text = reCaclBeforeVat.ToStringN2();
+                                if (isShowPopup && addFlag == 1)
+                                {
+                                    if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
+                                    {
+                                        ValidateInputShelf();
+
+                                        this.OpenPromotionTempPopup(searchPromotionControls, "โปรโมชั่น");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    txnDiscountAmt.Text = totalDiscount.ToStringN2();
+
+                    CalculateTotal();
                 }
-
-                ret = hasRefOD ? (orderQty.Value - totalQty) : totalQty;
             }
-            else
+            catch (Exception ex)
             {
-                ret = orderQty.Value;
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage(); ;
+            }
+        }
+
+        private void CalcPromotionBeforeSave()
+        {
+
+
+            CalcPromotion(true);
+
+            PreparePODetail(2, false); //Calc Pro
+
+            DistributeFreePromotion(bu.tbl_PODetails);
+
+            BindPODetail(bu.tbl_PODetails);
+
+            for (int i = 0; i < grdList.Rows.Count; i++)
+            {
+                CalculateRow(grdList, i);
             }
 
-            return ret;
+            CalculateTotal();
+
+            //decimal totalDiscount = 0.00m;
+            //proTmp.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+            //if (proTmp.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+            //    totalDiscount = proTmp.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value);
+
+            //txnDiscountAmt.Text = totalDiscount.ToStringN2();
         }
 
         private void CalculateRow(DataGridView grd, int rowIndex)
         {
-            decimal orderQty = 0;
-            decimal unitPrice = 0;
-            decimal unitSellPrice = 0;
-            decimal discount = 0;
-            int orderUom = -1;
-            decimal discountSellPrice = 0;
-
-            var cell0 = grd.Rows[rowIndex].Cells[0];
-            var cell3 = grd.Rows[rowIndex].Cells[3];
-            var cell4 = grd.Rows[rowIndex].Cells[4];
-            var cell5 = grd.Rows[rowIndex].Cells[5];
-            var cell6 = grd.Rows[rowIndex].Cells[6];
-            var cell7 = grd.Rows[rowIndex].Cells[7];
-            var cell8 = grd.Rows[rowIndex].Cells[8];
-            var cell9 = grd.Rows[rowIndex].Cells[9];
-            var cell11 = grd.Rows[rowIndex].Cells[11];
-
-            if (cell3.IsNotNullOrEmptyCell())
+            try
             {
-                //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
-                var allPrdUOM = bu.GetUOM(); //bu.GetUOM(tbl_ProductUomPre);
-                var prdUOM = allPrdUOM.FirstOrDefault(x => x.ProductUomName == cell3.EditedFormattedValue.ToString());
-                if (prdUOM != null)
-                {
-                    orderUom = prdUOM.ProductUomID;
-                    if (orderUom != -1)
-                    {
-                        string prdCode = cell0.EditedFormattedValue.ToString();
-                        Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == orderUom && x.ProductID == prdCode);
-                        var prdPriceList = bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                decimal orderQty = 0;
+                decimal unitPrice = 0;
+                decimal unitSellPrice = 0;
+                decimal discount = 0;
+                int orderUom = -1;
+                decimal discountSellPrice = 0;
 
-                        if (prdPriceList != null && prdPriceList.Count > 0)
+                var cell0 = grd.Rows[rowIndex].Cells[0];
+                var cell3 = grd.Rows[rowIndex].Cells[3];
+                var cell4 = grd.Rows[rowIndex].Cells[4];
+                var cell5 = grd.Rows[rowIndex].Cells[5];
+                var cell6 = grd.Rows[rowIndex].Cells[6];
+                var cell7 = grd.Rows[rowIndex].Cells[7];
+                var cell8 = grd.Rows[rowIndex].Cells[8];
+                var cell9 = grd.Rows[rowIndex].Cells[9];
+                var cell11 = grd.Rows[rowIndex].Cells[11];
+
+                if (cell3.IsNotNullOrEmptyCell())
+                {
+                    //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
+                    //var allPrdUOM = bu.GetUOM(); //bu.GetUOM(tbl_ProductUomPre);
+
+                    var prdUOM = allUOM.FirstOrDefault(x => x.ProductUomName == cell3.EditedFormattedValue.ToString());
+                    if (prdUOM != null)
+                    {
+                        orderUom = prdUOM.ProductUomID;
+                        if (orderUom != -1)
                         {
-                            cell5.Value = prdPriceList[0].SellPriceVat.Value;
-                            cell11.Value = prdPriceList[0].SellPrice.Value;
+                            string prdCode = cell0.EditedFormattedValue.ToString();
+                            Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == orderUom && x.ProductID == prdCode);
+                            var prdPriceList = allProductPrice.Where(tbl_ProductPriceGroupPre).ToList(); // bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+
+                            if (prdPriceList != null && prdPriceList.Count > 0)
+                            {
+                                cell5.Value = prdPriceList[0].SellPriceVat.Value;
+                                cell11.Value = prdPriceList[0].SellPrice.Value;
+                            }
+                        }
+                        else
+                        {
+                            cell5.Value = 0;
+                            cell11.Value = 0;
                         }
                     }
                     else
@@ -345,173 +529,219 @@ namespace AllCashUFormsApp.View.Page
                         cell11.Value = 0;
                     }
                 }
-                else
+                if (cell4.IsNotNullOrEmptyCell())
                 {
-                    cell5.Value = 0;
-                    cell11.Value = 0;
+                    orderQty = Convert.ToDecimal(cell4.EditedFormattedValue);
                 }
-            }
-            if (cell4.IsNotNullOrEmptyCell())
-            {
-                orderQty = Convert.ToDecimal(cell4.EditedFormattedValue);
-            }
-            if (cell5.IsNotNullOrEmptyCell())
-            {
-                unitPrice = Convert.ToDecimal(cell5.EditedFormattedValue);
-            }
-            if (cell11.IsNotNullOrEmptyCell())
-            {
-                unitSellPrice = Convert.ToDecimal(cell11.EditedFormattedValue);
-            }
-            if (cell8.IsNotNullOrEmptyCell())
-            {
-                if (cell7.IsNotNullOrEmptyCell())
+                if (cell5.IsNotNullOrEmptyCell())
                 {
-                    discount = bu.CalDiscountType(cell7.EditedFormattedValue.ToString(), cell8.EditedFormattedValue.ToString(), orderQty, unitPrice);
-
-                    if (cell6.FormattedValue.ToString() != "0")
-                        discountSellPrice = bu.CalDiscountType(cell7.EditedFormattedValue.ToString(), cell8.EditedFormattedValue.ToString(), orderQty, unitSellPrice);
+                    unitPrice = Convert.ToDecimal(cell5.EditedFormattedValue);
                 }
-                else
+                if (cell11.IsNotNullOrEmptyCell())
                 {
-                    discount = 0;
+                    unitSellPrice = Convert.ToDecimal(cell11.EditedFormattedValue);
                 }
-
-                if (discountSellPrice != 0)
+                if (cell8.IsNotNullOrEmptyCell())
                 {
-                    listDiscount.Remove(cell0.EditedFormattedValue.ToString());
-                    listDiscount.Add(cell0.EditedFormattedValue.ToString(), discountSellPrice);
-                }
-                else
-                    listDiscount.Remove(cell0.EditedFormattedValue.ToString());
+                    if (cell7.IsNotNullOrEmptyCell())
+                    {
+                        discount = bu.CalDiscountType(cell7.EditedFormattedValue.ToString(), cell8.EditedFormattedValue.ToString(), orderQty, unitPrice);
 
-                cell9.Value = ((orderQty * unitPrice) - discount).ToDecimalN2().ToStringN2();
+                        //edit by sailom 21-06-2021
+                        discountSellPrice = discount;
+                        //if (cell6.FormattedValue.ToString() != "0")
+                        //    discountSellPrice = bu.CalDiscountType(cell7.EditedFormattedValue.ToString(), cell8.EditedFormattedValue.ToString(), orderQty, unitSellPrice);
+                    }
+                    else
+                    {
+                        discount = 0;
+                    }
+
+                    if (discountSellPrice != 0)
+                    {
+                        listDiscount.Remove(cell0.EditedFormattedValue.ToString());
+                        listDiscount.Add(cell0.EditedFormattedValue.ToString(), discountSellPrice);
+                    }
+                    else
+                        listDiscount.Remove(cell0.EditedFormattedValue.ToString());
+
+                    //edit by sailom 21-06-2021
+                    cell9.Value = ((orderQty * unitPrice) - discountSellPrice).ToDecimalN2().ToStringN2();
+                    //cell9.Value = (orderQty * unitPrice).ToDecimalN2().ToStringN2();
+                }
+
+                CalculateTotal();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
             }
 
-            CalculateTotal();
         }
 
         private void CalculateTotal()
         {
-            decimal amount = 0;
-            decimal excVat = 0;
-            decimal incVat = 0;
-            decimal vatAmt = 0;
-            decimal totalDue = 0;
-            decimal vatRate = 0;
-            string discountType = "";
-            decimal totalDiscountAmt = 0;
-
-            var allPrdUOM = bu.GetUOM();
-            var allPrdPriceList = bu.GetProductPriceGroup();
-
-            //Dictionary<string, decimal> listVAT0List = new Dictionary<string, decimal>();
-
-            for (int i = 0; i < grdList.RowCount; i++)
+            try
             {
-                var cell0 = grdList.Rows[i].Cells[0];
-                var cell3 = grdList.Rows[i].Cells[3];
-                var cell4 = grdList.Rows[i].Cells[4];
-                var vatCell = grdList.Rows[i].Cells[6];
-                var lineTotalCell = grdList.Rows[i].Cells[9];
-                var discountTypeCell = grdList.Rows[i].Cells[7];
-                var discountAmtCell = grdList.Rows[i].Cells[8];
-                var sellPriceCell = grdList.Rows[i].Cells[11];
+                decimal amount = 0;
+                decimal excVat = 0;
+                decimal incVat = 0;
+                decimal vatAmt = 0;
+                decimal totalDue = 0;
+                decimal vatRate = 0;
+                string discountType = "";
+                decimal totalDiscountAmt = 0;
 
-                if (lineTotalCell.IsNotNullOrEmptyCell())
+                //for support U-Online
+                bool isUOnline = false;
+                //if (!string.IsNullOrEmpty(txtCustomerCode.Text))
+                //{
+                //    var cust = bu.GetCustomer(txtCustomerCode.Text);
+                //    if (cust != null && cust.Count > 0)
+                //    {
+                //        if (cust.FirstOrDefault(x => uOnlineShopType.Contains(x.ShopTypeID)) != null)
+                //            isUOnline = true; 
+                //    }
+                //}
+
+                //var allPrdUOM = bu.GetUOM();
+                //var allProductPrice = bu.GetProductPriceGroup();
+
+                //edit by sailom 21-06-2021
+                decimal totalDiscount = 0;
+                //if (!string.IsNullOrEmpty(txnDiscountAmt.Text) && Convert.ToDecimal(txnDiscountAmt.Text) > 0)
+                //    totalDiscount = Convert.ToDecimal(txnDiscountAmt.Text).ToDecimalN2();
+
+                pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+                if (pro.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+                    totalDiscount = pro.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value).ToDecimalN2();
+                else
+                    totalDiscount = 0;
+
+                for (int i = 0; i < grdList.RowCount; i++)
                 {
-                    amount += Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
-                }
-                if (vatCell.IsNotNullOrEmptyCell())
-                {
-                    decimal _vateRate = Convert.ToDecimal(vatCell.EditedFormattedValue);
-                    if (_vateRate > 0) //have VAT
+                    var prodIDCell = grdList.Rows[i].Cells[0];
+                    var unitCell = grdList.Rows[i].Cells[3];
+                    var qtyCell = grdList.Rows[i].Cells[4];
+                    var priceCell = grdList.Rows[i].Cells[5];
+                    var vatCell = grdList.Rows[i].Cells[6];
+                    var lineTotalCell = grdList.Rows[i].Cells[9];
+                    var discountTypeCell = grdList.Rows[i].Cells[7];
+                    var discountAmtCell = grdList.Rows[i].Cells[8];
+                    var sellPriceCell = grdList.Rows[i].Cells[11];
+                    string prdCode = prodIDCell.EditedFormattedValue.ToString();
+                    var _qty = Convert.ToDecimal(qtyCell.EditedFormattedValue);
+
+                    if (!string.IsNullOrEmpty(prdCode))
                     {
-                        //incVat += Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
-                        vatRate = _vateRate;
-                        var _qty = Convert.ToDecimal(cell4.EditedFormattedValue);
+                        //edit by sailom 21-06-2021
+                        //if (totalDiscount > 0)
+                        //{
+                        //    decimal discountPerSku = totalDiscount / (_qty <= 0 ? 1 : _qty);
+                        //    if (listDiscount.Count(x => x.Key == prdCode) == 0)
+                        //        listDiscount.Add(prdCode, discountPerSku);
+                        //}
 
-                        var prdUOM = allPrdUOM.FirstOrDefault(x => x.ProductUomName == cell3.EditedFormattedValue.ToString());
-                        if (prdUOM != null)
+                        if (lineTotalCell.IsNotNullOrEmptyCell())
                         {
-                            var orderUom = prdUOM.ProductUomID;
-                            if (orderUom != -1)
+                            //edit by sailom 21-06-2021
+                            amount += (_qty * Convert.ToDecimal(priceCell.EditedFormattedValue));
+                            //amount += Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
+                        }
+                        if (vatCell.IsNotNullOrEmptyCell())
+                        {
+                            decimal _vateRate = Convert.ToDecimal(vatCell.EditedFormattedValue);
+                            if (_vateRate > 0) //have VAT
                             {
-                                string prdCode = cell0.EditedFormattedValue.ToString();
-                                Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == orderUom && x.ProductID == prdCode);
-                                var prdPriceList = allPrdPriceList.Where(tbl_ProductPriceGroupPre).ToList();
-
-                                if (prdPriceList != null && prdPriceList.Count > 0)
-                                {
-                                    if (listDiscount.Count > 0)
-                                    {
-                                        var _discount = listDiscount.FirstOrDefault(x => x.Key == prdCode);
-                                        if (_discount.Key != null)
-                                        {
-                                            var _sellPricetmp = ((prdPriceList[0].SellPrice.Value * _qty) - _discount.Value);
-
-                                            incVat += _sellPricetmp;
-                                            vatAmt += (_sellPricetmp * (vatRate / 100));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        incVat += prdPriceList[0].SellPrice.Value * _qty; //Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
-                                        vatAmt += (prdPriceList[0].SellPriceVat.Value - prdPriceList[0].SellPrice.Value) * _qty;
-                                    }
-                                }
+                                vatRate = _vateRate;
+                            }
+                            else //No VAT
+                            {
+                                excVat += Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
                             }
                         }
-                    }
-                    else //No VAT
-                    {
-                        excVat += Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
+                        if (discountTypeCell.IsNotNullOrEmptyCell())
+                        {
+                            if (discountTypeCell.EditedFormattedValue.ToString() != "ไม่มี")
+                            {
+                                discountType += discountTypeCell.EditedFormattedValue.ToString() + ", ";
+                            }
+                            else
+                            {
+                                discountAmtCell.Value = 0;
+                            }
+                        }
+                        if (discountAmtCell.IsNotNullOrEmptyCell())
+                        {
+                            //edit by sailom 21-06-2021
+                            //totalDiscountAmt += Convert.ToDecimal(discountAmtCell.EditedFormattedValue);
+
+                            if (isUOnline)
+                            {
+                                decimal unitPrice = 0;
+                                unitPrice = Convert.ToDecimal(priceCell.EditedFormattedValue);
+
+                                var _discount = bu.CalDiscountType(discountTypeCell.EditedFormattedValue.ToString(), discountAmtCell.EditedFormattedValue.ToString(), _qty, unitPrice);
+
+                                totalDiscountAmt += _discount;
+                            }
+
+                        }
                     }
                 }
-                if (discountTypeCell.IsNotNullOrEmptyCell())
-                {
-                    if (discountTypeCell.EditedFormattedValue.ToString() != "ไม่มี")
-                    {
-                        discountType += discountTypeCell.EditedFormattedValue.ToString() + ", ";
-                    }
-                }
-                if (discountAmtCell.IsNotNullOrEmptyCell())
-                {
-                    totalDiscountAmt += Convert.ToDecimal(discountAmtCell.EditedFormattedValue);
-                }
+
+                excVat = excVat.ToDecimalN2();
+
+                //edit by sailom 21-06-2021
+                totalDiscount += totalDiscountAmt;
+                totalDue = amount - totalDiscount; //edit by sailom 21-06-2021
+
+                incVat = ((amount - excVat - totalDiscount) * 100) / (100 + vatRate);
+
+                vatAmt = incVat * (vatRate / 100).ToDecimalN2();
+
+                lblVatType.Text = vatRate.ToDecimalN0().ToString();
+                txnAmount.Text = amount.ToDecimalN2().ToStringN2();
+                txnBeforeVat.Text = incVat.ToStringN2();
+                txnVatAmt.Text = vatAmt.ToStringN2();
+                txnExcVat.Text = excVat.ToStringN2();
+                txnTotalDue.Text = totalDue.ToStringN2();
+                txnCommission.Text = "0.00";
+
+                //edit by sailom 21-06-2021
+                txnDiscountAmt.Text = totalDiscount.ToStringN2();
             }
-
-            excVat = excVat.ToDecimalN2();
-            incVat = incVat.ToDecimalN2();
-
-            //vatAmt = listVAT0List.Sum(x => x.Value).ToDecimalN2(); //(incVat * (vatRate / 100.00m)).ToDecimalN2();
-            totalDue = incVat + vatAmt + excVat; // (amount - totalDiscountAmt).ToDecimalN2();
-            lblVatType.Text = vatRate.ToDecimalN0().ToString();
-
-            txnAmount.Text = amount.ToDecimalN2().ToStringN2();
-            txnDiscountType.Text = "0"; //discountType;
-            txnDiscountAmt.Text = "0.00";  //totalDiscountAmt.ToDecimalN2().ToStringN2();
-            txnBeforeVat.Text = incVat.ToStringN2(); // (incVat - vatAmt).ToDecimalN2().ToStringN2();
-            txnVatAmt.Text = vatAmt.ToStringN2();
-            txnExcVat.Text = excVat.ToStringN2();
-            txnTotalDue.Text = totalDue.ToStringN2();
-            txnCommission.Text = "0.00";
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
         }
 
         private void FilterSaleArea(string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                Func<tbl_ArCustomer, bool> func = (x => x.CustomerID == text.Trim());
-                var cust = bu.GetCustomer(func);
+                //Func<tbl_ArCustomer, bool> func = (x => x.CustomerID == text.Trim());
+                var cust = bu.GetCustomer(text.Trim());
                 if (cust != null && cust.Count > 0)
                 {
                     var _saleAreaList = salAreaDistrictList.Where(x => x.WHID == cust[0].WHID);
                     var listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
-                    saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+                    //saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+                    saleAreaList = bu.GetAllSaleArea(listOfSalAreaID); //Last edit by sailom.k 14/09/2021 tunning performance
 
-                    Predicate<tbl_SalArea> predicate = delegate (tbl_SalArea p) { return p.SalAreaID == cust[0].SalAreaID; };
-                    ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID", null, predicate);
+                    //edit by sailom 07-06-2021---------------------------------------
+                    saleAreaList = saleAreaList.Where(p => p.SalAreaID == cust[0].SalAreaID).ToList();
+
+                    if (saleAreaList.Count == 0)
+                        saleAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(cust[0].WHID.Substring(3, 3)));
+
+                    if (saleAreaList.Count > 0)
+                    {
+                        Predicate<tbl_SalArea> defaultSelect = delegate (tbl_SalArea p) { return p.SalAreaID == cust[0].SalAreaID; };
+                        ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID", null, defaultSelect);
+                    }
+                    //edit by sailom 07-06-2021---------------------------------------
 
                     var emp = bu.GetEmployee(cust[0].EmpID);
                     if (emp != null)
@@ -525,7 +755,126 @@ namespace AllCashUFormsApp.View.Page
                         txtWHName.Text = wh.WHName;
                     }
                 }
+                else
+                {
+                    var _saleAreaList = salAreaDistrictList.Where(x => x.WHID == text);
+                    var listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
+                    //saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+                    saleAreaList = bu.GetAllSaleArea(listOfSalAreaID); //Last edit by sailom.k 14/09/2021 tunning performance
+
+                    ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID");
+
+                    string empFullName = "";
+                    var bwh = bu.GetBranchWarehouse(x => x.WHID == text);
+                    if (bwh != null)
+                    {
+                        var emp = bu.GetEmployee(bwh.SaleEmpID);
+                        if (emp != null)
+                            empFullName = emp.TitleName + " " + emp.FirstName;
+                    }
+
+                    txtEmpCode.Text = empFullName;
+                }
             }
+        }
+
+        /// <summary>
+        /// Last edit by sailom.k 14/09/2021 tunning performance //for support U-Online
+        /// </summary>
+        private void ValidateUCustomer(string customerID, int currentRowIndex)
+        {
+            //try
+            //{
+            //    int i = currentRowIndex;
+            //    var cust = bu.GetCustomer(customerID);
+            //    if (cust != null && cust.Count > 0)
+            //    {
+            //        bool isReadOnly = true;
+            //        if (cust.FirstOrDefault(x => uOnlineShopType.Contains(x.ShopTypeID)) != null)
+            //            isReadOnly = false;
+
+            //        CalculateRow(grdList, i);
+
+            //        grdList.Rows[i].Cells["colLineDiscountType"].ReadOnly = isReadOnly;
+            //        grdList.Rows[i].Cells["colLineDiscount"].ReadOnly = isReadOnly;
+
+            //        if (isReadOnly) //normal
+            //        {
+            //            grdList.Rows[i].Cells["colLineDiscountType"].Style.BackColor = ColorTranslator.FromHtml("#DCDCDC");
+            //            grdList.Rows[i].Cells["colLineDiscount"].Style.BackColor = ColorTranslator.FromHtml("#DCDCDC");
+
+
+            //            grdList.Rows[i].Cells["colLineDiscount"].Value = 0;
+            //            CalculateTotal();
+            //        }
+            //        else //u-online
+            //        {
+            //            grdList.Rows[i].Cells["colLineDiscountType"].Style.BackColor = Color.White;
+            //            grdList.Rows[i].Cells["colLineDiscount"].Style.BackColor = Color.White;
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ex.WriteLog(this.GetType());
+
+            //    string msg = ex.Message;
+            //    msg.ShowErrorMessage();
+            //}
+        }
+
+        /// <summary>
+        /// for support U-Online
+        /// </summary>
+        /// <param name="customerID"></param>
+        private void ValidateUCustomer(string customerID)
+        {
+            //try
+            //{
+            //    var cust = bu.GetCustomer(customerID);
+            //    if (cust != null && cust.Count > 0)
+            //    {
+            //        bool isReadOnly = true;
+            //        if (cust.FirstOrDefault(x => uOnlineShopType.Contains(x.ShopTypeID)) != null)
+            //            isReadOnly = false;
+
+            //        for (int i = 0; i < grdList.RowCount; i++)
+            //        {
+            //            CalculateRow(grdList, i);
+
+            //            grdList.Rows[i].Cells["colLineDiscountType"].ReadOnly = isReadOnly;
+            //            grdList.Rows[i].Cells["colLineDiscount"].ReadOnly = isReadOnly;
+
+            //            if (isReadOnly) //normal
+            //            {
+            //                grdList.Rows[i].Cells["colLineDiscountType"].Style.BackColor = ColorTranslator.FromHtml("#DCDCDC");
+            //                grdList.Rows[i].Cells["colLineDiscount"].Style.BackColor = ColorTranslator.FromHtml("#DCDCDC");
+
+            //                //if (grdList.Rows[i].Cells["colLineDiscountType"] is DataGridViewComboBoxCell)
+            //                //{
+            //                //    var cbo = (DataGridViewComboBoxCell)grdList.Rows[i].Cells["colLineDiscountType"];
+            //                //    cbo.Value = "N";
+            //                //}
+
+            //                grdList.Rows[i].Cells["colLineDiscount"].Value = 0;
+            //                CalculateTotal();
+            //            }
+            //            else //u-online
+            //            {
+            //                grdList.Rows[i].Cells["colLineDiscountType"].Style.BackColor = Color.White;
+            //                grdList.Rows[i].Cells["colLineDiscount"].Style.BackColor = Color.White;
+            //            }
+
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ex.WriteLog(this.GetType());
+
+            //    string msg = ex.Message;
+            //    msg.ShowErrorMessage();
+            //}
         }
 
         private void InitHeader()
@@ -541,6 +890,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitialData()
         {
+            allProduct = bu.GetProduct();
+
             this.ClearControl(bu, docTypeCode, runDigit);
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
@@ -557,10 +908,17 @@ namespace AllCashUFormsApp.View.Page
 
             grdList.Rows.Clear();
             //AddNewRow(grdList, 0);
-            grdList.AddNewRow(initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
+            grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
+            isAdd = true; //Last edit by sailom.k 14/09/2021 tunning performance
 
             var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
             txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+            btnShowPromotion.Enabled = true;
+            btnReCalc.Enabled = true;
+
+            ClearPromotionTemp();
+
+
 
             //txtCustomerCode.Focus();
         }
@@ -574,9 +932,10 @@ namespace AllCashUFormsApp.View.Page
             var supp = bu.GetSupplier(txtCustomerCode.Text);
 
             Dictionary<string, string> allEmp = new Dictionary<string, string>();
+            KeyValuePair<string, string> selEmp = new KeyValuePair<string, string>();
 
             bu.GetEmployee().ForEach(x => allEmp.Add(x.EmpID, (x.TitleName.Replace(" ", string.Empty) + x.FirstName.Replace(" ", string.Empty))));
-            var selEmp = allEmp.FirstOrDefault(x => x.Value == txtEmpCode.Text.Replace(" ", string.Empty));
+            selEmp = allEmp.FirstOrDefault(x => x.Value == txtEmpCode.Text.Replace(" ", string.Empty));
             var vanWH = bu.GetAllBranchWarehouse().FirstOrDefault(x => x.SaleEmpID == selEmp.Key);
 
             var po = bu.tbl_POMaster;
@@ -595,10 +954,27 @@ namespace AllCashUFormsApp.View.Page
             po.StatusInOut = null;
             po.SupplierID = "0";
             po.SuppName = "";
-            po.WHID = vanWH.WHID;
-            po.EmpID = emp.EmpID;
-            po.SaleEmpID = selEmp.Key;
-            po.SalAreaID = ddlSaleArea.SelectedValue.ToString();
+
+            if (vanWH != null)
+                po.WHID = vanWH.WHID;
+
+            if (emp != null)
+                po.EmpID = emp.EmpID;
+
+            if (!string.IsNullOrEmpty(selEmp.Key))
+                po.SaleEmpID = selEmp.Key;
+
+            //if (ddlSaleArea.SelectedValue == null)
+            //{
+            //    saleAreaList.AddRange(bu.GetAllSaleArea());
+            //    ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID", null, null);
+            //}
+
+            if (ddlSaleArea.SelectedValue != null)
+            {
+                po.SalAreaID = ddlSaleArea.SelectedValue.ToString();
+            }
+           
             po.Address = txtBillTo.Text;
             po.ContactName = txtContact.Text;
             po.ContactTel = txtTelephone.Text;
@@ -615,7 +991,7 @@ namespace AllCashUFormsApp.View.Page
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
             po.CustomerID = txtCustomerCode.Text;
             po.CustName = txtCustName.Text;
-            po.CustInvNO = txtCustInvNO.Text;
+            po.CustInvNO = string.IsNullOrEmpty(txtCustInvNO.Text) ? null : txtCustInvNO.Text; //05022021
             po.CustInvDate = null;
             po.CustPODate = dtpDocDate.Value;
             po.CustPONo = txtCustPONo.Text;
@@ -644,9 +1020,18 @@ namespace AllCashUFormsApp.View.Page
 
             po.VatAmt = Convert.ToDecimal(txnVatAmt.Text);
             po.Freight = 0.00m;
-            po.DiscountType = "";
+            po.DiscountType = "A";
             po.OldDiscount = null;
-            po.Discount = 0.00m;
+
+            //if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
+            //po.Discount = pro.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt).Value.ToDecimalN2();
+
+            proTmp.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+            if (proTmp.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+                po.Discount = proTmp.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value).ToDecimalN2();
+            else
+                po.Discount = 0;
+
             po.TotalDue = Convert.ToDecimal(txnTotalDue.Text);
             po.ApprovedBy = null;
             po.ApprovedDate = null;
@@ -668,12 +1053,13 @@ namespace AllCashUFormsApp.View.Page
             po.DiscountRate = 0.00m;
         }
 
-        private void PreparePODetail(bool editFlag = false)
+        private void PreparePODetail(int isSave, bool editFlag = false)
         {
             bu.tbl_PODetails.Clear();
 
             var poDts = bu.tbl_PODetails;
             DateTime crDate = DateTime.Now;
+            lineTotalDisc = new Dictionary<string, decimal>();
 
             for (int i = 0; i < grdList.RowCount; i++)
             {
@@ -688,94 +1074,162 @@ namespace AllCashUFormsApp.View.Page
                 var discountTypeCell = grdList.Rows[i].Cells[7];
                 var discountAmtCell = grdList.Rows[i].Cells[8];
                 var lineAmt = grdList.Rows[i].Cells[9];
+                var lineTotalDiscCell = grdList.Rows[i].Cells["colLineDiscount"];
 
-                if (prdCodeCell.IsNotNullOrEmptyCell() && prdNameCell.IsNotNullOrEmptyCell())
+                if (prdCodeCell.IsNotNullOrEmptyCell() && prdNameCell.IsNotNullOrEmptyCell() && priceCell.IsNotNullOrEmptyCell() && discountTypeCell.IsNotNullOrEmptyCell())
                 {
-                    int lineNo = Convert.ToInt32(poDt.Line) + 1;
-
-                    poDt.DocNo = bu.tbl_POMaster.DocNo;
-                    poDt.Line = Convert.ToInt16(lineNo);
-                    poDt.ProductID = prdCodeCell.EditedFormattedValue.ToString();
-                    poDt.ProductName = prdNameCell.EditedFormattedValue.ToString();
-
-                    var uom = bu.GetUOM().FirstOrDefault(x => x.ProductUomName == uomTypeCell.EditedFormattedValue.ToString());
-                    if (uom != null)
+                    decimal _unitPrice = 0;
+                    if (decimal.TryParse(priceCell.Value.ToString(), out _unitPrice))
                     {
-                        poDt.OrderUom = Convert.ToInt32(uom.ProductUomID);
-                    }
-
-                    poDt.OrderQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue);
-                    poDt.ReceivedQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue); ;
-                    poDt.RejectedQty = 0;
-                    poDt.StockedQty = 0;
-
-                    decimal unitCost = 0;
-                    Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDt.OrderUom && x.ProductID == poDt.ProductID);
-                    var prdPriceGroup = bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
-                    if (prdPriceGroup != null && prdPriceGroup.Count > 0)
-                        unitCost = prdPriceGroup[0].BuyPrice.Value;
-
-                    poDt.LineTotal = Convert.ToDecimal(lineAmt.EditedFormattedValue);
-                    poDt.UnitCost = unitCost.ToDecimalN5();
-                    poDt.UnitPrice = Convert.ToDecimal(priceCell.EditedFormattedValue);
-                    poDt.VatType = Convert.ToByte(vatCell.EditedFormattedValue);
-
-                    //var allLineDiscountType = bu.GetDiscountType();
-                    //var ldt = allLineDiscountType.FirstOrDefault(x => x.DiscountTypeName == discountTypeCell.EditedFormattedValue.ToString());
-                    //if (ldt != null)
-                    //{
-                    //    poDt.LineDiscountType = ldt.DiscountTypeCode;
-                    //    poDt.LineDiscountRate = 0;
-                    //    poDt.LineDiscount = Convert.ToDecimal(discountAmtCell.EditedFormattedValue);
-                    //}
-
-                    poDt.CustType = "";
-                    poDt.CrDate = crDate;
-                    poDt.CrUser = Helper.tbl_Users.Username;
-
-                    if (editFlag)
-                    {
-                        poDt.EdDate = crDate;
-                        poDt.EdUser = Helper.tbl_Users.Username;
-                    }
-
-                    poDt.FlagDel = false;
-                    poDt.FlagSend = false;
-                    poDt.UnitComPrice = 0;
-                    poDt.LineComTotal = 0;
-                    poDt.LineRemark = "";
-                    poDt.FreeQty = 0;
-                    poDt.FreeUom = 0;
-                    poDt.FreeUnit = 0;
-                    CalcLineDiscountPromotion(poDt);
-
-                    poDts.Add(poDt);
-
-                    if (pro.tbl_HQ_Promotion_Hits != null && pro.tbl_HQ_Promotion_Hits.Any(x => !string.IsNullOrEmpty(x.SKUGroupRewardID)))
-                    {
-                        var freeProList = new List<tbl_HQ_Promotion_Hit>();
-                        freeProList = pro.tbl_HQ_Promotion_Hits.Where(x => bu.tbl_PODetails.Select(a => a.DocNo).Contains(x.DocNo) && !string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
-                        if (freeProList.Count > 0)
+                        if (!string.IsNullOrEmpty(prdNameCell.EditedFormattedValue.ToString()) && (discountTypeCell.Value.ToString() == "N" || discountTypeCell.Value.ToString() == "A")) //(_unitPrice > 0) //05022021
                         {
-                            foreach (tbl_HQ_Promotion_Hit item in freeProList)
+                            int lineNo = poDts.Count > 0 ? Convert.ToInt32(poDts.Max(x => x.Line)) + 1 : 0;
+
+                            poDt.DocNo = bu.tbl_POMaster.DocNo;
+                            poDt.Line = Convert.ToInt16(lineNo);
+                            poDt.ProductID = prdCodeCell.EditedFormattedValue.ToString();
+                            poDt.ProductName = prdNameCell.EditedFormattedValue.ToString();
+
+                            var uom = allUOM.FirstOrDefault(x => x.ProductUomName == uomTypeCell.EditedFormattedValue.ToString());
+                            if (uom != null)
                             {
-                                var itemGroup = pro.GetHQSKUGroup(x => x.SKU_ID == poDt.ProductID);
-                                if (itemGroup.Count > 0 && itemGroup.Any(x => x.SKUGroupID == item.SKUGroupRewardID))
+                                poDt.OrderUom = Convert.ToInt32(uom.ProductUomID);
+                            }
+
+                            poDt.OrderQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue);
+                            poDt.ReceivedQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue); ;
+                            poDt.RejectedQty = 0;
+                            poDt.StockedQty = 0;
+
+                            decimal unitCost = 0;
+                            Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDt.OrderUom && x.ProductID == poDt.ProductID);
+                            var prdPriceGroup = allProductPrice.Where(tbl_ProductPriceGroupPre).ToList();// bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                            if (prdPriceGroup != null && prdPriceGroup.Count > 0)
+                                unitCost = prdPriceGroup[0].BuyPrice.Value;
+
+                            poDt.LineTotal = Convert.ToDecimal(lineAmt.EditedFormattedValue);
+                            poDt.UnitCost = unitCost.ToDecimalN5();
+                            poDt.UnitPrice = Convert.ToDecimal(priceCell.EditedFormattedValue);
+                            poDt.VatType = Convert.ToByte(vatCell.EditedFormattedValue);
+
+                            //var allLineDiscountType = bu.GetDiscountType();
+                            //var ldt = allLineDiscountType.FirstOrDefault(x => x.DiscountTypeName == discountTypeCell.EditedFormattedValue.ToString());
+                            //if (ldt != null)
+                            //{
+                            //    poDt.LineDiscountType = ldt.DiscountTypeCode;
+                            //    poDt.LineDiscountRate = 0;
+                            //    poDt.LineDiscount = Convert.ToDecimal(discountAmtCell.EditedFormattedValue);
+                            //}
+
+                            poDt.CustType = "";
+                            poDt.CrDate = crDate;
+                            poDt.CrUser = Helper.tbl_Users.Username;
+
+                            if (editFlag)
+                            {
+                                poDt.EdDate = crDate;
+                                poDt.EdUser = Helper.tbl_Users.Username;
+                            }
+
+                            poDt.FlagDel = false;
+                            poDt.FlagSend = false;
+                            poDt.UnitComPrice = 0;
+                            poDt.LineComTotal = 0;
+                            poDt.LineRemark = "";
+                            poDt.FreeQty = 0;
+                            poDt.FreeUom = 0;
+                            poDt.FreeUnit = 0;
+                            poDt.LineDiscountType = "N";
+
+                            //Distribute discount prd promotion edit by sailom 30402021-------------------------------------------------------------------------------------------------------------------------------
+                            bool isDistributeDiscountPromotion = false;
+                            if (pro.tbl_HQ_Promotion_Hits.Count > 0)
+                            {
+                                foreach (var item in pro.tbl_HQ_Promotion_Hits)
                                 {
-                                    var _poDt = new tbl_PODetail();
-                                    poDt.CopyTo(_poDt);
-                                    if (_poDt != null)
+                                    var promotions = pro.GetHQPromotion(x => x.PromotionID == item.PromotionID);
+
+                                    if (promotions != null && promotions.Count > 0)
                                     {
-                                        int _lineNo = Convert.ToInt32(_poDt.Line) + 1;
-                                        _poDt.Line = Convert.ToInt16(_lineNo);
-                                        _poDt.LineTotal = 0;
-                                        _poDt.LineDiscount = _poDt.UnitComPrice;
-                                        _poDt.LineDiscountRate = 0;
-                                        _poDt.LineDiscountType = "F";
-                                        _poDt.LineRemark = pro.GetHQReward(x => x.RewardID == item.RewardID)[0].RewardName;
-                                        bu.tbl_PODetails.Add(_poDt);
-                                    }  
-                                }                              
+                                        var prdProItems = promotions.Where(x => x.PromotionPattern == "prd").ToList();
+                                        var txnProItems = promotions.Where(x => x.PromotionPattern == "txn").ToList();
+
+                                        if (prdProItems.Count > 0 &&
+                                            prdProItems.All(x => string.IsNullOrEmpty(x.PruductGroupRewardID)) &&
+                                            prdProItems.Sum(x => x.DisCountAmt) > 0) //prd + discount
+                                        {
+                                            var skuG = pro.GetHQSKUGroup(x => prdProItems.Select(y => y.SKUGroupID1).ToList().Contains(x.SKUGroupID));
+                                            foreach (var prdItem in skuG)
+                                            {
+                                                if (poDt.ProductID == prdItem.SKU_ID)
+                                                {
+                                                    isDistributeDiscountPromotion = true;
+                                                }
+                                            }
+                                        }
+                                        if (txnProItems.Count > 0 && txnProItems[0].DisCountAmt != null && txnProItems[0].DisCountAmt > 0) //txn + discount
+                                        {
+                                            var excList = pro.GetHQSKUGroup_EXC().Select(x => x.SKU_ID).ToList(); //No Distribute discount to except product 02032021 by sailom
+                                            if (!excList.Contains(poDt.ProductID))
+                                            {
+                                                isDistributeDiscountPromotion = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (isDistributeDiscountPromotion)
+                            {
+                                if (isSave == 1)
+                                    DistributeDiscountPromotion(poDt);
+                                else if (isSave == 2)
+                                    DistributeDiscountPromotionTemp(poDt);
+
+                                lineTotalDisc.Add(poDt.ProductID, poDt.LineDiscount);
+                            }
+                            //Distribute discount prd promotion edit by sailom 30402021-------------------------------------------------------------------------------------------------------------------------------
+
+                            poDts.Add(poDt);
+
+                            //if (isSave == 1)
+                            //    DistributeFreePromotion(poDts, poDt);
+                        }
+                    }
+                }
+            }
+
+
+            //Distribute discount 02032021 by sailom
+            decimal totalDiscount = 0.00m;
+            proTmp.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+            if (proTmp.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+                totalDiscount = proTmp.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value);
+
+            decimal totalDisc = totalDiscount;
+            //if (decimal.TryParse(totalDiscount, out totalDisc))
+            {
+                if (totalDiscount > 0 && lineTotalDisc.Sum(x => x.Value) > 0)
+                {
+                    if (totalDisc != lineTotalDisc.Sum(x => x.Value))
+                    {
+                        decimal diff = 0.00m;
+                        diff = lineTotalDisc.Sum(x => x.Value) - totalDisc;
+
+                        if (diff < 0)
+                            diff = diff * -1;
+
+                        var updateDisc = poDts.FirstOrDefault(x => x.ProductID == lineTotalDisc.Last().Key);
+                        if (updateDisc != null)
+                        {
+                            if (lineTotalDisc.Sum(x => x.Value) > totalDisc)
+                            {
+                                updateDisc.LineDiscount -= diff;
+                            }
+                            else if (totalDisc > lineTotalDisc.Sum(x => x.Value))
+                            {
+                                updateDisc.LineDiscount += diff;
                             }
                         }
                     }
@@ -783,45 +1237,339 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void CalcLineDiscountPromotion(tbl_PODetail poDt)
+        private void SubDistributeFreePromotion(List<tbl_PODetail> poDts, tbl_HQ_Promotion_Hit_Temp item, string sKUGroupRewardID, int? sKUGroupRewardAmt, DateTime crDate)
         {
-            poDt.LineDiscountType = "A";
-            poDt.LineDiscountRate = 0;
-
-            decimal _lineDiscount = 0;
-            List<string> _lineRemarkList = new List<string>();
-
-            if (pro != null && pro.tbl_HQ_Promotion_Hits != null)
+            var itemGroup = pro.GetHQSKUGroup(x => x.SKUGroupID == sKUGroupRewardID);
+            if (itemGroup.Count > 0)
             {
-                foreach (var item in pro.tbl_HQ_Promotion_Hits)
+                var _poDt = new tbl_PODetail();
+                //poDt.CopyTo(_poDt);
+                if (_poDt != null)
                 {
-                    Func<tbl_HQ_SKUGroup, bool> grpFunc = (x => x.SKU_ID == poDt.ProductID);
-                    var skuGroups = pro.GetHQSKUGroup(grpFunc);
+                    int _lineNo = poDts.Count > 0 ? Convert.ToInt32(poDts.Max(x => x.Line)) + 1 : 0;
+                    _poDt.DocNo = bu.tbl_POMaster.DocNo;
+                    _poDt.ProductID = itemGroup[0].SKU_ID;
 
-                    if (skuGroups != null && skuGroups.Count > 0)
+                    var allProduct = bu.GetProduct();
+                    var freePrd = allProduct.Where(x => x.ProductID == itemGroup[0].SKU_ID).ToList(); //bu.GetProduct(x => x.ProductID == itemGroup[0].SKU_ID);
+                    if (freePrd != null && freePrd.Count > 0)
                     {
-                        if (skuGroups.Select(x => x.SKU_ID).Contains(poDt.ProductID))
+                        var prd = freePrd[0];
+                        _poDt.ProductName = prd.ProductName;
+
+                        if (prd.SaleUomID == 1 || prd.SaleUomID == 2)
+                            _poDt.OrderUom = 2;
+                        else
+                            _poDt.OrderUom = prd.SaleUomID;
+
+                        _poDt.OrderQty = sKUGroupRewardAmt;
+                        _poDt.ReceivedQty = sKUGroupRewardAmt;
+                        _poDt.VatType = 0;
+                        _poDt.RejectedQty = 0;
+                        _poDt.StockedQty = 0;
+
+                        _poDt.Line = Convert.ToInt16(_lineNo);
+                        _poDt.LineTotal = 0;
+
+                        var prdPrices = allProductPrice.Where(x => x.ProductUomID == prd.SaleUomID && x.ProductID == itemGroup[0].SKU_ID).ToList(); // bu.GetProductPriceGroup(x => x.ProductUomID == prd.SaleUomID && x.ProductID == itemGroup[0].SKU_ID);
+                        if (prdPrices != null && prdPrices.Count > 0)
                         {
-                            Func<tbl_HQ_Promotion, bool> proFunc = (x => x.PromotionID == item.PromotionID);
-                            var promotions = pro.GetHQPromotion(proFunc);
+                            _poDt.LineDiscount = prdPrices[0].SellPriceVat.Value;
+                            _poDt.UnitPrice = prdPrices[0].SellPriceVat.Value;
+                            _poDt.UnitCost = prdPrices[0].BuyPrice.Value;
+                        }
+                        else
+                        {
+                            _poDt.LineDiscount = 0.00m;
+                            _poDt.UnitPrice = 0.00m;
+                            _poDt.UnitPrice = 0.00m;
+                        }
 
-                            if (promotions != null && promotions.Count > 0)
-                            {
-                                _lineDiscount = item.DisCountAmt.Value / poDt.OrderQty.Value;
-                                poDt.LineDiscount += _lineDiscount;
+                        _poDt.LineDiscountRate = 0;
+                        _poDt.LineDiscountType = "F";
+                        _poDt.FlagDel = false;
+                        _poDt.FlagSend = false;
+                        _poDt.UnitComPrice = 0;
+                        _poDt.LineComTotal = 0;
+                        _poDt.LineRemark = "";
+                        _poDt.FreeQty = 0;
+                        _poDt.FreeUom = 0;
+                        _poDt.FreeUnit = 0;
 
-                                _lineRemarkList.AddRange(promotions.Select(x => x.RewardID).ToList());
-                                
-                            }
+                        _poDt.CustType = "";
+                        _poDt.CrDate = crDate;
+                        _poDt.CrUser = Helper.tbl_Users.Username;
+
+                        _poDt.LineRemark = pro.GetHQReward(x => x.RewardID == item.RewardID)[0].RewardName;
+                        bu.tbl_PODetails.Add(_poDt);
+                    }
+                }
+            }
+        }
+
+        private void DistributeFreePromotion(List<tbl_PODetail> poDts)
+        {
+            DateTime crDate = DateTime.Now;
+
+            pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+            pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+            RemoveShelfItem(); //remove null shelf
+
+            if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
+            {
+                List<tbl_HQ_Promotion_Hit_Temp> proHits = pro.tbl_HQ_Promotion_Hit_Temps.Where(x => !string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
+
+                if (proHits != null && proHits.Count > 0)
+                {
+                    foreach (tbl_HQ_Promotion_Hit_Temp item in proHits)
+                    {
+                        SubDistributeFreePromotion(poDts, item, item.SKUGroupRewardID, item.SKUGroupRewardAmt, crDate);
+
+                        if (!string.IsNullOrEmpty(item.SKUGroupRewardID2))
+                        {
+                            SubDistributeFreePromotion(poDts, item, item.SKUGroupRewardID2, item.SKUGroupRewardAmt2, crDate);
                         }
                     }
                 }
             }
+        }
 
-            if (_lineRemarkList.Count > 0)
+        private void DistributeDiscountPromotion(tbl_PODetail poDt)
+        {
+            if (pro.tbl_HQ_Promotion_Hits != null && pro.tbl_HQ_Promotion_Hits.Count > 0)
             {
-                poDt.LineRemark = string.Join(",", _lineRemarkList.Distinct().ToList());
+                List<tbl_HQ_Promotion_Hit> proHits = new List<tbl_HQ_Promotion_Hit>();
+
+                proHits = pro.tbl_HQ_Promotion_Hits.Where(x => x.DocNo == poDt.DocNo && string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
+
+                var newObj = proHits.Select(x => new PromotionHitTempModel { SKUGroupID = x.SKUGroupID, PromotionID = x.PromotionID, DisCountAmt = x.DisCountAmt }).ToList();
+                SubDistributeDiscountPro(newObj, poDt);
             }
+        }
+
+        private void DistributeDiscountPromotionTemp(tbl_PODetail poDt)
+        {
+            pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+            pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+            if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
+            {
+                List<tbl_HQ_Promotion_Hit_Temp> proHits = new List<tbl_HQ_Promotion_Hit_Temp>();
+
+                proHits = pro.tbl_HQ_Promotion_Hit_Temps.Where(x => string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
+
+                var newObj = proHits.Select(x => new PromotionHitTempModel { SKUGroupID = x.SKUGroupID, PromotionID = x.PromotionID, DisCountAmt = x.DisCountAmt }).ToList();
+                SubDistributeDiscountPro(newObj, poDt);
+            }
+        }
+
+        private void SubDistributeDiscountPro(List<PromotionHitTempModel> proHits, tbl_PODetail poDt)
+        {
+            Dictionary<decimal, decimal> _allDiscount = new Dictionary<decimal, decimal>();
+            List<string> _lineRemarkList = new List<string>();
+            var skuExcept = pro.GetHQSKUGroup_EXC();
+
+            if (proHits != null && proHits.Count > 0)
+            {
+                _allDiscount = CalcTotalDiscountPro(proHits, _lineRemarkList, poDt.ProductID);
+
+                var allHQSKUGroup = pro.GetHQSKUGroup();
+
+                decimal totalPrdQty = 0;
+                decimal totalTxnQty = 0;
+                //Dictionary<string, decimal> lineTotal = new Dictionary<string, decimal>();
+                decimal lineTotal = 0;
+                decimal exceptAmt = 0;
+
+                for (int i = 0; i < grdList.RowCount; i++)
+                {
+                    string prdID = "";
+                    string uomName = "";
+                    decimal _orderQty = 0.00m;
+                    decimal unitPrc = 0;
+                    decimal _lineTotal = 0.00m;
+
+                    var prdCodeCell = grdList.Rows[i].Cells[0];
+                    var prdNameCell = grdList.Rows[i].Cells[2];
+                    var uomTypeCell = grdList.Rows[i].Cells[3];
+                    var orderQtyCell = grdList.Rows[i].Cells[4];
+                    var unitPriceCell = grdList.Rows[i].Cells[5];
+                    var lineTotalCell = grdList.Rows[i].Cells["colTotal"];
+
+                    if (prdCodeCell.IsNotNullOrEmptyCell() && prdNameCell.IsNotNullOrEmptyCell())
+                    {
+                        prdID = prdCodeCell.EditedFormattedValue.ToString();
+                        uomName = uomTypeCell.EditedFormattedValue.ToString();
+                        _orderQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue);
+                        unitPrc = Convert.ToDecimal(unitPriceCell.EditedFormattedValue);
+                        _lineTotal = Convert.ToDecimal(lineTotalCell.EditedFormattedValue);
+
+                        //02032021 by sailom
+                        if (poDt.ProductID == prdID)
+                        {
+                            lineTotal = _lineTotal;
+                            //lineTotal.Add(poDt.ProductID, _lineTotal);
+                        }
+
+                        var excList = skuExcept.Select(x => x.SKU_ID).ToList(); //No Distribute discount to except product 02032021 by sailom
+                        if (excList.Contains(prdID))
+                        {
+                            exceptAmt += _lineTotal;
+                        }
+
+                        decimal unitQty = 0;
+                        if (unitPrc > 0)
+                        {
+                            var prdUOMSets = bu.GetProductUOMSet(allUomSet, prdID);
+                            int _orderUom = 0;
+
+                            var uom = allUOM.FirstOrDefault(x => x.ProductUomName == uomName);
+                            if (uom != null)
+                                _orderUom = Convert.ToInt32(uom.ProductUomID);
+
+                            if (_orderUom == 1 && prdUOMSets != null && prdUOMSets.Count > 0)
+                                unitQty = (_orderQty * prdUOMSets.First().BaseQty);
+                            else
+                                unitQty = _orderQty;
+
+                            totalTxnQty += unitQty;
+                        }
+
+                        foreach (var item in proHits)
+                        {
+                            var prdList = allHQSKUGroup.Where(x => x.SKUGroupID == item.SKUGroupID).ToList();
+                            if (prdList.Select(x => x.SKU_ID).ToList().Contains(prdID))
+                            {
+                                totalPrdQty += unitQty;
+                            }
+                        }
+                    }
+                }
+
+                if (_allDiscount.Count > 0 && _lineRemarkList.Count > 0)
+                {
+                    decimal _lineDisount = 0.00m;
+
+                    string prdID = poDt.ProductID;
+                    decimal _orderQty = poDt.OrderQty.Value;
+
+                    decimal _unitQty = 0;
+                    var _prdUOMSets = bu.GetProductUOMSet(allUomSet, prdID);
+
+                    if (poDt.OrderUom == 1 && _prdUOMSets != null && _prdUOMSets.Count > 0)
+                        _unitQty = (_orderQty * _prdUOMSets.First().BaseQty);
+                    else
+                        _unitQty = _orderQty;
+
+                    if (_allDiscount.First().Key > 0) //prd
+                    {
+                        var prdDis = _allDiscount.Sum(x => x.Key);
+                        var prdDiscount = (prdDis / totalPrdQty) * (_unitQty);/////////////////////////////////////////////////////////// cal prd promotion
+                        _lineDisount += prdDiscount.ToDecimalN2();
+                    }
+                    if (_allDiscount.Last().Value > 0) //txn
+                    {
+                        bool isPlusDiscount = true;
+
+                        var txtPro = pro.GetHQPromotion(x => proHits.Select(a => a.PromotionID).ToList().Contains(x.PromotionID));
+                        if (txtPro != null && txtPro.Count > 0)
+                        {
+                            if (txtPro.Any(x => x.PromotionPattern.ToLower() == "txn"))
+                            {
+                                var exSku = pro.GetHQSKUGroup_EXC(x => x.SKU_ID == poDt.ProductID);
+                                if (exSku != null && exSku.Count > 0)
+                                {
+                                    isPlusDiscount = false;
+                                }
+                            }
+                        }
+
+                        if (isPlusDiscount)
+                        {
+                            var txnDis = _allDiscount.Sum(x => x.Value);//////////////////////////////////////////////////////////////must except prd except put-------------------------------------
+                                                                        //02032021 by sailom
+                            decimal totalDue = 1;
+                            if (decimal.TryParse(txnAmount.Text, out totalDue))
+                            {
+                                totalDue = totalDue - exceptAmt;
+                                _lineDisount += txnDis * (lineTotal / totalDue);
+                            }
+
+                            //var txnDiscount = (txnDis / totalTxnQty) * (_unitQty);
+                            //_lineDisount += txnDiscount.ToDecimalN2();
+                        }
+                    }
+
+                    poDt.LineDiscount = _lineDisount.ToDecimalN2();
+                    poDt.LineRemark = string.Join(",", _lineRemarkList.Distinct().ToList());
+                    if (poDt.LineDiscount > 0)
+                    {
+                        poDt.LineDiscountType = "A";
+                        poDt.LineDiscountRate = 0;
+                    }
+                }
+            }
+        }
+
+        private Dictionary<decimal, decimal> CalcTotalDiscountPro(List<PromotionHitTempModel> proHits, List<string> _lineRemarkList, string productID)
+        {
+            Dictionary<decimal, decimal> ret = new Dictionary<decimal, decimal>();
+            decimal _linePrdDiscount = 0;
+            decimal _lineTxnDiscount = 0;
+            try
+            {
+                foreach (var item in proHits)
+                {
+                    var promotions = pro.GetHQPromotion(x => x.PromotionID == item.PromotionID);
+
+                    if (promotions != null && promotions.Count > 0)
+                    {
+                        var prdProItems = promotions.Where(x => x.PromotionPattern == "prd").ToList();
+                        var txnProItems = promotions.Where(x => x.PromotionPattern == "txn").ToList();
+
+                        if (prdProItems.Count > 0)
+                        {
+                            foreach (tbl_HQ_Promotion prdItem in prdProItems)
+                            {
+                                var skuGroups = pro.GetHQSKUGroup(x => x.SKU_ID == productID);
+
+                                if (skuGroups != null && skuGroups.Count > 0)
+                                {
+                                    var listGroup = skuGroups.Select(x => x.SKUGroupID).ToList();
+                                    if (listGroup.Contains(prdItem.SKUGroupID1))
+                                    {
+                                        _linePrdDiscount += item.DisCountAmt.Value;
+
+                                        if (_lineRemarkList.All(x => x != prdItem.RewardID))
+                                            _lineRemarkList.Add(prdItem.RewardID);
+                                    }
+                                }
+
+                            }
+                        }
+                        if (txnProItems.Count > 0)
+                        {
+                            _lineTxnDiscount += item.DisCountAmt.Value;
+
+                            foreach (tbl_HQ_Promotion txnItem in txnProItems)
+                            {
+                                if (_lineRemarkList.All(x => x != txnItem.RewardID))
+                                    _lineRemarkList.Add(txnItem.RewardID);
+                            }
+                        }
+                    }
+                }
+
+                ret.Add(_linePrdDiscount, _lineTxnDiscount);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return ret;
         }
 
         private void PrepareInvMovement(bool editFlag = false)
@@ -829,11 +1577,11 @@ namespace AllCashUFormsApp.View.Page
             bu.tbl_InvMovements.Clear();
 
             var invMms = bu.tbl_InvMovements;
-            var poDts = bu.tbl_PODetails.Where(x => x.LineTotal != 0).ToList();
+            var poDts = bu.tbl_PODetails; //05022021 remove stock like a tablet. //bu.tbl_PODetails.Where(x => x.LineTotal != 0 || x.LineDiscountType == "F").ToList();  //for free product from promotion
             var po = bu.tbl_POMaster;
-            var prod = bu.GetProduct();
-            var prodGroup = bu.GetProductGroup();
-            var prodSubGroup = bu.GetProductSubGroup();
+            var allProduct = bu.GetProduct();
+            //var prodGroup = bu.GetProductGroup();
+            //var prodSubGroup = bu.GetProductSubGroup();
 
             DateTime crDate = DateTime.Now;
 
@@ -844,7 +1592,7 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = poDt.ProductID;
                 invMm.ProductName = poDt.ProductName;
                 invMm.RefDocNo = poDt.DocNo;
-                invMm.TrnDate = crDate.ToDateTimeFormat();
+                invMm.TrnDate = Helper.tbl_Users.RoleID == 10 ? dtpDocDate.Value.ToDateTimeFormat() : crDate.ToDateTimeFormat(); //31012021
                 invMm.TrnType = "S";
                 invMm.DocTypeCode = po.DocTypeCode;
                 invMm.WHID = po.WHID;
@@ -852,11 +1600,15 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ToWHID = "";
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -877,9 +1629,9 @@ namespace AllCashUFormsApp.View.Page
                     invMm.TrnType = ddlDocStatus.SelectedValue.ToString() == "5" ? "X" : "S";
                 }
 
-                var prodItem = prod.FirstOrDefault(x => x.ProductID == poDt.ProductID);
-                var prodGroupItem = prodGroup.FirstOrDefault(x => x.ProductGroupID == prodItem.ProductGroupID);
-                var prodSubGroupItem = prodSubGroup.FirstOrDefault(x => x.ProductSubGroupID == prodItem.ProductSubGroupID);
+                var prodItem = allProduct.FirstOrDefault(x => x.ProductID == poDt.ProductID);
+                var prodGroupItem = allProdGroup.FirstOrDefault(x => x.ProductGroupID == prodItem.ProductGroupID);
+                var prodSubGroupItem = allProdSubGroup.FirstOrDefault(x => x.ProductSubGroupID == prodItem.ProductSubGroupID);
 
                 invMm.ProductGroupCode = prodGroupItem.ProductGroupCode;
                 invMm.ProductGroupName = prodGroupItem.ProductGroupName;
@@ -897,11 +1649,11 @@ namespace AllCashUFormsApp.View.Page
             bu.tbl_InvTransactions.Clear();
 
             var invTrs = bu.tbl_InvTransactions;
-            var poDts = bu.tbl_PODetails.Where(x => x.LineTotal != 0).ToList();
+            var poDts = bu.tbl_PODetails; //05022021 remove stock like a tablet. //bu.tbl_PODetails.Where(x => x.LineTotal != 0 || x.LineDiscountType == "F").ToList();  //for free product from promotion
             var po = bu.tbl_POMaster;
-            var prod = bu.GetProduct();
-            var prodGroup = bu.GetProductGroup();
-            var prodSubGroup = bu.GetProductSubGroup();
+            //var prod = bu.GetProduct();
+            //var prodGroup = bu.GetProductGroup();
+            //var prodSubGroup = bu.GetProductSubGroup();
             var comp = bu.GetCompany();
 
             DateTime crDate = DateTime.Now;
@@ -924,11 +1676,15 @@ namespace AllCashUFormsApp.View.Page
                 invtr.BringQty = 0;
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -940,7 +1696,7 @@ namespace AllCashUFormsApp.View.Page
 
                 decimal unitCost = 0;
                 Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDt.OrderUom && x.ProductID == poDt.ProductID);
-                var prdPriceGroup = bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                var prdPriceGroup = allProductPrice.Where(tbl_ProductPriceGroupPre).ToList(); // bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
                 if (prdPriceGroup != null && prdPriceGroup.Count > 0)
                     unitCost = prdPriceGroup[0].BuyPrice.Value;
 
@@ -966,8 +1722,8 @@ namespace AllCashUFormsApp.View.Page
                 invtr.ModifiedDate = crDate;
                 invtr.FlagDel = false;
                 invtr.FlagSend = false;
-                invtr.LineDiscount = poDt.LineDiscount;
-                invtr.LineDiscountType = poDt.LineDiscountType;
+                //invtr.LineDiscount = poDt.LineDiscount;
+                //invtr.LineDiscountType = poDt.LineDiscountType;
 
                 invTrs.Add(invtr);
             }
@@ -978,7 +1734,7 @@ namespace AllCashUFormsApp.View.Page
             bu.tbl_InvWarehouses.Clear();
 
             var invWhs = bu.tbl_InvWarehouses;
-            var poDts = bu.tbl_PODetails.Where(x => x.LineTotal != 0).ToList();
+            var poDts = bu.tbl_PODetails; //05022021 remove stock like a tablet. //bu.tbl_PODetails.Where(x => x.LineTotal != 0 || x.LineDiscountType == "F").ToList();  //for free product from promotion
             var po = bu.tbl_POMaster;
 
             DateTime crDate = DateTime.Now;
@@ -992,11 +1748,15 @@ namespace AllCashUFormsApp.View.Page
                 //invWh.QtyOnHand = 0;
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -1028,40 +1788,52 @@ namespace AllCashUFormsApp.View.Page
                 invWh.FlagDel = false;
                 invWh.FlagSend = false;
 
-                invWhs.Add(invWh);
+                if (invWhs.Any(x => x.ProductID == poDt.ProductID && x.WHID == po.WHID))
+                {
+                    var whItem = invWhs.FirstOrDefault(x => x.ProductID == poDt.ProductID && x.WHID == po.WHID);
+                    whItem.QtyOnHand += invWh.QtyOnHand;
+                }
+                else
+                    invWhs.Add(invWh);
             }
         }
 
         private void PreparePromotion()
         {
-            
-            pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
-            var _pro = new List<tbl_HQ_Promotion_Hit>();
-
-            DateTime crDate = DateTime.Now;
-
-            foreach (var pItem in pro.tbl_HQ_Promotion_Hit_Temps)
+            if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
             {
-                var p = new tbl_HQ_Promotion_Hit();
+                pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
+                var _pro = new List<tbl_HQ_Promotion_Hit>();
 
-                p.DocNo = bu.tbl_POMaster.DocNo;
-                p.PromotionID = pItem.PromotionID;
-                p.RoundHit = pItem.RoundHit;
-                p.SKUGroupID = pItem.SKUGroupID;
-                p.DisCountAmt = pItem.DisCountAmt;
-                //p.SKUGroupID = pItem.
-                p.SKUGroupRewardID = pItem.SKUGroupRewardID;
-                p.SKUGroupRewardAmt = pItem.SKUGroupRewardAmt;
-                p.RewardID = pItem.RewardID;
-                p.CrDate = crDate;
-                p.CrUser = Helper.tbl_Users.Username;
-                p.FlagDel = false;
-                p.FlagSend = false;
+                DateTime crDate = DateTime.Now;
 
-                _pro.Add(p);
+                foreach (var pItem in pro.tbl_HQ_Promotion_Hit_Temps)
+                {
+                    var p = new tbl_HQ_Promotion_Hit();
+
+                    p.DocNo = bu.tbl_POMaster.DocNo;
+                    p.PromotionID = pItem.PromotionID;
+                    p.RoundHit = pItem.RoundHit;
+                    p.SKUGroupID = pItem.SKUGroupID;
+                    p.DisCountAmt = pItem.DisCountAmt;
+                    //p.SKUGroupID = pItem.
+                    p.ShelfID = pItem.ShelfID;
+                    p.SKUGroupRewardID = pItem.SKUGroupRewardID;
+                    p.SKUGroupRewardAmt = pItem.SKUGroupRewardAmt;
+                    p.SKUGroupRewardID2 = pItem.SKUGroupRewardID2;
+                    p.SKUGroupRewardAmt2 = pItem.SKUGroupRewardAmt2;
+                    p.RewardID = pItem.RewardID;
+                    p.CrDate = crDate;
+                    p.CrUser = Helper.tbl_Users.Username;
+                    p.FlagDel = false;
+                    p.FlagSend = false;
+
+                    _pro.Add(p);
+                }
+
+                pro.tbl_HQ_Promotion_Hits = _pro;
             }
 
-            pro.tbl_HQ_Promotion_Hits = _pro;
         }
 
         private void PreparePromotionTemp(List<PromotionRuleModel> proList)
@@ -1082,6 +1854,8 @@ namespace AllCashUFormsApp.View.Page
                 p.DisCountAmt = pItem.DisCountAmt;
                 p.SKUGroupRewardID = pItem.PruductGroupRewardID;
                 p.SKUGroupRewardAmt = pItem.PruductGroupRewardAmt;
+                p.SKUGroupRewardID2 = pItem.PruductGroupRewardID2;
+                p.SKUGroupRewardAmt2 = pItem.PruductGroupRewardAmt2;
                 p.RewardID = pItem.RewardID;
                 p.CrDate = crDate;
                 p.CrUser = Helper.tbl_Users.Username;
@@ -1094,9 +1868,47 @@ namespace AllCashUFormsApp.View.Page
             pro.tbl_HQ_Promotion_Hit_Temps = _pro;
         }
 
+        private void PrepareArCustomerShelf()
+        {
+            var cDate = DateTime.Now;
+            var po = bu.tbl_POMaster;
+            if (po != null)
+            {
+                bu.tbl_ArCustomerShelfs = new List<tbl_ArCustomerShelf>();
+                var proShelf = pro.tbl_HQ_Promotion_Hits.Where(x => !string.IsNullOrEmpty(x.ShelfID)).ToList();
+
+                foreach (var item in proShelf)
+                {
+                    var obj = new tbl_ArCustomerShelf();
+                    obj.CustomerID = po.CustomerID;
+                    obj.ShelfID = item.ShelfID;
+                    obj.WHID = po.WHID;
+
+                    var skuGroupRewardID = pro.GetHQSKUGroup(x => x.SKUGroupID == item.SKUGroupRewardID);
+                    if (skuGroupRewardID != null && skuGroupRewardID.Count > 0)
+                    {
+                        obj.ProductID = skuGroupRewardID[0].SKU_ID;
+                    }
+
+                    obj.FlagNew = true;
+                    obj.FlagEdit = false;
+                    obj.CrDate = cDate;
+                    obj.CrUser = item.CrUser;
+                    obj.EdDate = null;
+                    obj.EdUser = null;
+                    obj.FlagDel = false;
+                    obj.FlagSend = false;
+
+                    bu.tbl_ArCustomerShelfs.Add(obj);
+                }
+            }
+        }
+
         private void PrepareInvMaster(tbl_POMaster po)
         {
             bu.tbl_IVMaster = new tbl_IVMaster();
+
+            var bwh = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType == 1);
 
             var iv = bu.tbl_IVMaster;
 
@@ -1110,8 +1922,19 @@ namespace AllCashUFormsApp.View.Page
             iv.SupplierID = "0";
             iv.SuppName = "";
             iv.WHID = po.WHID;
-            iv.EmpID = po.EmpID;
-            iv.SaleEmpID = po.SaleEmpID;
+
+            if (bwh != null && bwh.Count > 0)
+            {
+                string saleEmpID = bwh.First(x => x.WHID == po.WHID).SaleEmpID;
+                iv.EmpID = saleEmpID;
+                iv.SaleEmpID = saleEmpID;
+            }
+            else
+            {
+                iv.EmpID = "";
+                iv.SaleEmpID = "";
+            }
+
             iv.SalAreaID = po.SalAreaID;
             iv.Address = po.Address;
             iv.ContactName = po.ContactName;
@@ -1126,7 +1949,7 @@ namespace AllCashUFormsApp.View.Page
             iv.CustInvDate = null;
             iv.CustPODate = po.CustPODate;
             iv.CustPONo = po.DocRef;
-            iv.Remark = "สร้างใบกำกับจากการใบกำกับภาษีอย่างย่อ : " + po.DocRef;
+            iv.Remark = "สร้างใบกำกับจากการใบกำกับภาษีอย่างย่อ : " + po.DocNo;
             iv.Comment = po.Comment;
             iv.OldAmount = 0;
             iv.Amount = po.Amount;
@@ -1139,7 +1962,7 @@ namespace AllCashUFormsApp.View.Page
             iv.Freight = 0.00m;
             iv.DiscountType = "";
             iv.OldDiscount = null;
-            iv.Discount = 0.00m;
+            iv.Discount = bu.tbl_POMaster.Discount; //pro.GetAllData().Sum(x => x.DisCountAmt);
             iv.TotalDue = po.TotalDue;
             iv.ApprovedBy = null;
             iv.ApprovedDate = null;
@@ -1149,7 +1972,7 @@ namespace AllCashUFormsApp.View.Page
             iv.EdDate = null;
             iv.EdUser = Helper.tbl_Users.Username;
             iv.FlagDel = false;
-            iv.FlagSend = true;
+            iv.FlagSend = false;
             iv.OldTotalCom = 0.00m;
             iv.TotalCom = 0.00m;
             iv.CNType = 0;
@@ -1167,6 +1990,9 @@ namespace AllCashUFormsApp.View.Page
         private void PrepareInvDetail(List<tbl_PODetail> poDts)
         {
             bu.tbl_IVDetails = new List<tbl_IVDetail>();
+            //var allUomSet = bu.GetUOMSet();
+            var allProduct = bu.GetProduct();
+            //var allProductPrice = bu.GetProductPriceGroup();
 
             var ivDts = bu.tbl_IVDetails;
             DateTime crDate = DateTime.Now;
@@ -1178,36 +2004,59 @@ namespace AllCashUFormsApp.View.Page
                 ivDt.Line = _podt.Line;
                 ivDt.ProductID = _podt.ProductID;
                 ivDt.ProductName = _podt.ProductName;
-                ivDt.OrderUom = 2;// _podt.OrderUom;
+
+                //if (_podt.OrderUom == 1 || _podt.OrderUom == 2)
+                //    ivDt.OrderUom = 2;// _podt.OrderUom;
+                //else
+                //    ivDt.OrderUom = _podt.OrderUom;
+
+                //decimal unitQty = 0;
+
+                //var prdUOMSets = bu.GetProductUOMSet(ivDt.ProductID);
+                //if (_podt.OrderUom == 1 && prdUOMSets != null && prdUOMSets.Count > 0)
+                //    unitQty = (_podt.OrderQty.Value * prdUOMSets.First().BaseQty);
+                //else
+                //    unitQty = _podt.OrderQty.Value;
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == ivDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
-                if (prdUOMSets != null && prdUOMSets.Count > 0)
-                    unitQty = (_podt.OrderQty.Value * prdUOMSets.First(x => x.BaseUomID == 2).BaseQty);
+
+                var prdUOMSets = allUomSet.Where(x => x.ProductID == _podt.ProductID).ToList();
+                if (_podt.OrderUom == 1 && prdUOMSets != null && prdUOMSets.Count > 0)
+                    unitQty = (_podt.OrderQty.Value * prdUOMSets.First().BaseQty);
+                else
+                    unitQty = _podt.OrderQty.Value;
+
+                int tmpOrderUom = _podt.OrderUom;
+
+                var prd = allProduct.FirstOrDefault(x => x.ProductID == _podt.ProductID);
+                if (prd != null)
+                {
+                    var saleUom = allUomSet.FirstOrDefault(x => x.ProductID == prd.ProductID && x.UomSetID == prd.SaleUomID);
+                    if (saleUom != null)
+                        tmpOrderUom = saleUom.UomSetID; //25012021
+                }
+
+                ivDt.OrderUom = tmpOrderUom; //25012021
 
                 ivDt.OrderQty = unitQty;
                 ivDt.ReceivedQty = unitQty;
 
-                //ivDt.OrderQty = _podt.OrderQty;
-                //ivDt.ReceivedQty = _podt.ReceivedQty;
+                decimal unitPrice = 0;
+                Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == tmpOrderUom && x.ProductID == _podt.ProductID);
+                var prdPriceGroup = allProductPrice.FirstOrDefault(tbl_ProductPriceGroupPre); //29012021
+                if (prdPriceGroup != null)
+                    unitPrice = prdPriceGroup.SellPriceVat.Value;
+
+                ivDt.UnitPrice = unitPrice;
+
                 ivDt.RejectedQty = 0;
                 ivDt.StockedQty = 0;
                 ivDt.LineTotal = _podt.LineTotal;
                 ivDt.UnitCost = 0;
-
-                decimal unitPrice = 0;
-                var prodPriceGroups = bu.GetAllPriceGroup();
-                //if (prodPriceGroups )
-                //{
-
-                //}
-
-                //ivDt.UnitPrice = _podt.UnitPrice;
                 ivDt.VatType = _podt.VatType;
-                ivDt.LineDiscountType = "N";
+                ivDt.LineDiscountType = _podt.LineDiscountType;
                 ivDt.LineDiscount = _podt.LineDiscount;
-                ivDt.CustType = "";
+                ivDt.CustType = _podt.CustType;
                 ivDt.CrDate = crDate;
                 ivDt.CrUser = Helper.tbl_Users.Username;
                 ivDt.EdDate = null;
@@ -1240,7 +2089,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    invWh.QtyOnHand = unitQty;
+                    invWh.QtyOnHand = -unitQty;
                 }
             }
         }
@@ -1249,6 +2098,9 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
+                if (!ValidateSave())
+                    return;
+
                 string docno = string.Empty;
                 bool editFlag = true;
                 int ret = 0;
@@ -1263,12 +2115,27 @@ namespace AllCashUFormsApp.View.Page
 
                     bu = new TabletSales();
 
+                    //CalcPromotion(true);
+                    //var promotions = pro.GetAllData(x => x.DocNo == txdDocNo.Text);
+                    //if (promotions != null && promotions.Count > 0)
+                    //{
+                    //    BindPOPromotion(promotions);
+                    //}
+
                     docno = txdDocNo.Text;
                     editFlag = true;
                     bu.tbl_DocRunning = new List<tbl_DocRunning>();
 
                     bu.tbl_POMaster = null;
                     bu.tbl_POMaster = bu.GetPOMaster(docno);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 12)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
                     bu.tbl_POMaster.DocStatus = ddlDocStatus.SelectedValue.ToString();
 
                     bu.tbl_InvMovements.Clear();
@@ -1295,11 +2162,15 @@ namespace AllCashUFormsApp.View.Page
                         invWh = invWhs[0];
 
                         decimal unitQty = 0;
-                        Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                        var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                        var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                         if (prdUOMSets != null && prdUOMSets.Count > 0)
                         {
-                            if (poDt.OrderUom != 2)
+                            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                            var minUomID = 2;
+                            minUomID = allUomSet.GetMinUOM(poDt);
+
+                            if (poDt.OrderUom != minUomID)
                                 unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                             else
                                 unitQty = poDt.ReceivedQty.Value;
@@ -1314,46 +2185,105 @@ namespace AllCashUFormsApp.View.Page
                         bu.tbl_InvWarehouses.Add(invWh);
                     }
 
-                    pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
-                    pro.tbl_HQ_Promotion_Hits = pro.GetAllData(x => x.DocNo == docno);
+                    //pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
+                    //pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                    ////pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+                    ////pro.tbl_HQ_Promotion_Hits = pro.GetAllData(x => x.DocNo == docno);
+                    //PreparePromotion();
 
-                    ret = bu.UpdateData();
-                    if (ret == 1)
-                    {
-                        int rev = pro.RemoveTempData();
-                        if (rev == 1)
-                            ret = pro.UpdateData();
-                    }
+                    ret = bu.UpdateData(docTypeCode);
+
+                    //ลบข้อมูลใน arCustomer Shlef เมื่อยกเลิกเอกสาร //by sailom 24/08/2021
+                    //if (ret == 1)
+                    //{
+                    //    var shelfList = new List<tbl_ArCustomerShelf>();
+                    //    foreach (var item in poDts)
+                    //    {
+
+                    //    }
+
+                    //    shelfList = buShelf.GetCustomerShelf(x => x.ShelfID == shelf_id && x.CustomerID == txtCustomerID.Text && x.FlagDel == false);
+
+                    //    if (shelfList.Count > 0)
+                    //    {
+                    //        shelfList[0].FlagDel = true;
+                    //        shelfList[0].EdDate = DateTime.Now;
+                    //        shelfList[0].EdUser = Helper.tbl_Users.Username;
+
+                    //        foreach (var item in shelfList)
+                    //        {
+                    //            ret = buShelf.UpdateData(item);
+                    //        }
+                    //    }
+                    //}
+
+                    //if (ret == 1 && pro.tbl_HQ_Promotion_Hits != null && pro.tbl_HQ_Promotion_Hits.Count > 0)
+                    //{
+                    //    ret = pro.RemoveTempData();
+                    //    if (ret == 1)
+                    //    {
+                    //        ret = pro.RemoveData();
+                    //        if (ret == 1)
+                    //            ret = pro.UpdateData();
+                    //    }
+                    //}
                 }
                 else
                 {
-                    if (!ValidateSave())
-                        return;
-
                     string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
                     string title = "ยืนยันการบันทึก!!";
                     if (!cfMsg.ConfirmMessageBox(title))
                         return;
 
                     bu = new TabletSales();
+                    CalcPromotion(true);
+
+                    //ValidateInputShelf();
 
                     docno = bu.GenDocNo(docTypeCode, txtWHCode.Text);
                     editFlag = false;
                     bu.PrepareDocRunning(docTypeCode);
 
                     PreparePOMaster(editFlag);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 12)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
                     PreparePromotion();
-                    PreparePODetail(editFlag); //Calc Pro
+                    PreparePODetail(1, editFlag); //Calc Pro
+
+                    DistributeFreePromotion(bu.tbl_PODetails);
+
                     PrepareInvMovement(editFlag);
                     PrepareInvTransaction(); //Calc Pro
                     PrepareInvWarehouse();
 
-                    ret = bu.UpdateData();
-                    if (ret == 1)
+
+                    ret = bu.UpdateData(docTypeCode);
+                    if (ret == 1 && pro.tbl_HQ_Promotion_Hits != null && pro.tbl_HQ_Promotion_Hits.Count > 0)
                     {
-                        int rev = pro.RemoveTempData();
-                        if (rev == 1)
-                            ret = pro.UpdateData();
+                        pro.tbl_HQ_Promotion_Hits = new List<tbl_HQ_Promotion_Hit>();
+                        pro.tbl_HQ_Promotion_Hit_Temps = new List<tbl_HQ_Promotion_Hit_Temp>();
+                        pro.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+                        RemoveShelfItem();
+
+                        PreparePromotion();
+                        PrepareArCustomerShelf();
+
+                        ret = pro.RemoveTempData();
+                        if (ret == 1)
+                        {
+                            ret = pro.RemoveData();
+                            if (ret == 1)
+                                ret = pro.UpdateData();
+                            if (ret == 1)
+                                ret = bu.UpdateCustomerShelf();
+                        }
                     }
                 }
 
@@ -1375,6 +2305,10 @@ namespace AllCashUFormsApp.View.Page
 
                     btnUpdateAddress.Enabled = true;
                     btnGenCustIVNo.Enabled = true;
+                    btnReCalc.Enabled = false;
+                    btnShowPromotion.Enabled = false;
+
+                    BindVanSalesData(txdDocNo.Text);
                 }
                 else
                 {
@@ -1388,6 +2322,88 @@ namespace AllCashUFormsApp.View.Page
 
                 string msg = ex.Message;
                 msg.ShowErrorMessage();
+            }
+        }
+
+        private void ValidateInputShelf()
+        {
+            var allProduct = bu.GetProduct();
+
+            bool isValidateShelf = true;
+            var proFreeList = pro.tbl_HQ_Promotion_Hit_Temps.Where(x => !string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
+            foreach (var proFree in proFreeList)
+            {
+                var skuGroups = pro.GetHQSKUGroup(x => x.SKUGroupID == proFree.SKUGroupRewardID).ToList();
+                foreach (var g in skuGroups)
+                {
+                    var prd = allProduct.Where(x => x.ProductID == g.SKU_ID).ToList(); // bu.GetProduct(x => x.ProductID == g.SKU_ID).ToList();
+                    if (prd != null && prd.Count > 0)
+                    {
+                        bool isShelf = prd.Any(x => x.Flavour == "ชั้นวาง" || x.ProductName.Contains("ชั้นวาง"));
+
+                        if (string.IsNullOrEmpty(proFree.ShelfID) && isShelf)
+                        {
+                            isValidateShelf = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!isValidateShelf)
+            {
+                var message = "กรุณากรอกเลขที่ Shelf !!!";
+                message.ShowWarningMessage();
+            }
+        }
+
+        private void RemoveShelfItem()
+        {
+            var allProduct = bu.GetProduct();
+
+            var proFreeList = pro.tbl_HQ_Promotion_Hit_Temps.Where(x => !string.IsNullOrEmpty(x.SKUGroupRewardID)).ToList();
+            foreach (var proFree in proFreeList)
+            {
+                var skuGroups = pro.GetHQSKUGroup(x => x.SKUGroupID == proFree.SKUGroupRewardID).ToList();
+                foreach (var g in skuGroups)
+                {
+                    var prd = allProduct.Where(x => x.ProductID == g.SKU_ID).ToList(); // bu.GetProduct(x => x.ProductID == g.SKU_ID).ToList();
+                    if (prd != null && prd.Count > 0)
+                    {
+                        Dictionary<tbl_HQ_Promotion_Hit_Temp, bool> validateShelf = new Dictionary<tbl_HQ_Promotion_Hit_Temp, bool>();
+                        bool isRemove = false;
+
+                        var _cust = new tbl_ArCustomerShelf().Select(x => x.ProductID == g.SKU_ID && x.FlagDel == false && x.CustomerID == txtCustomerCode.Text).ToList();
+                        if (_cust != null && _cust.Count > 0)
+                        {
+                            var _custGroup = _cust.GroupBy(x => new { x.CustomerID, x.ProductID }).Select(a => a.First()).ToList();
+
+                            foreach (var item in _custGroup)
+                            {
+                                var cust = _cust.Where(x => x.ProductID == item.ProductID).ToList();
+                                if (cust != null && cust.Count > 0)
+                                {
+                                    if (cust.Count >= 2)
+                                    {
+                                        validateShelf.Add(proFree, false);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (validateShelf.Any(x => !x.Value))
+                                isRemove = true;
+                        }
+
+                        bool isShelf = prd.Any(x => x.Flavour == "ชั้นวาง" || x.ProductName.Contains("ชั้นวาง"));
+
+                        if (isRemove && string.IsNullOrEmpty(proFree.ShelfID) && isShelf)
+                            isRemove = true;
+
+                        if ((isRemove && isShelf) || proFree.ShelfID == "000")
+                            pro.tbl_HQ_Promotion_Hit_Temps.Remove(proFree);
+                    }
+                }
             }
         }
 
@@ -1422,7 +2438,10 @@ namespace AllCashUFormsApp.View.Page
                     txtCustInvNO.Text = bu.GenDocNo("V", txtWHCode.Text);
 
                     if (!string.IsNullOrEmpty(txtCustInvNO.Text))
+                    {
                         temptbl_POMaster.CustInvNO = txtCustInvNO.Text;
+                        temptbl_POMaster.FlagSend = false;
+                    }
 
                     bu.tbl_POMaster = temptbl_POMaster;
                     PrepareInvMaster(bu.tbl_POMaster);
@@ -1433,8 +2452,18 @@ namespace AllCashUFormsApp.View.Page
 
                     if (ret == 1)
                     {
-                        string msg = "สร้างใบกำกับภาษีเรียบร้อยแล้ว";
+                        bool result = bu.UpdateCustomerSAPCode(txtCustomerCode.Text); //update customer SAP code
+                        if (result)
+                        {
+                            string msg = "สร้างใบกำกับภาษีเรียบร้อยแล้ว";
+                            msg.ShowInfoMessage();
+                        }
+                    }
+                    else
+                    {
+                        string msg = "สร้างใบกำกับภาษีไม่สำเร็จ";
                         msg.ShowInfoMessage();
+                        txtCustInvNO.Text = "";
                     }
                 }
                 else
@@ -1479,8 +2508,12 @@ namespace AllCashUFormsApp.View.Page
         {
             bool ret = true;
             List<string> errList = new List<string>();
+            var allProduct = bu.GetProduct();
 
-            if (dtpDocDate.Value != null && dtpDocDate.Value.Ticks < DateTime.Now.ToDateTimeFormat().Ticks)
+            var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
+            var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
+
+            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -1494,6 +2527,33 @@ namespace AllCashUFormsApp.View.Page
                     string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
                     message.ShowWarningMessage();
                     ret = false;
+                }
+            }
+
+
+            if (ret) //validate customer shelf
+            {
+                var _cust = new tbl_ArCustomerShelf().Select(x => x.FlagDel == false && x.CustomerID == txtCustomerCode.Text).ToList();
+                var _custGroup = _cust.GroupBy(x => new { x.CustomerID, x.ProductID }).Select(a => a.First()).ToList();
+                bool validateShelf = true;
+
+                foreach (var item in _custGroup)
+                {
+                    var cust = _cust.Where(x => x.ProductID == item.ProductID).ToList();
+                    if (cust != null && cust.Count > 0)
+                    {
+                        if (cust.Count >= 2)
+                        {
+                            validateShelf = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!validateShelf)
+                {
+                    string message = "ร้านค้านี้ได้ Shelf ครบตามจำนวนที่กำหนดแล้ว ห้ามแถม Shelf ให้ลูกค้าอีก !!!";
+                    message.ShowWarningMessage();
                 }
             }
 
@@ -1515,6 +2575,12 @@ namespace AllCashUFormsApp.View.Page
                         errList.Add(string.Format("--> {0}", t));
                         txtCustomerCode.ErrorTextBox();
                     }
+                    if (sup.Count == 0) //edit by sailom 21-06-2021
+                    {
+                        string message = "ไม่พบข้อมูลร้านค้านี้ในระบบ!!!";
+                        errList.Add(message);
+                        txtCustomerCode.ErrorTextBox();
+                    }
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == txtWHCode.Text);
                     var wh = bu.GetBranchWarehouse(whFunc);
@@ -1534,8 +2600,95 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else //validate data grid
                 {
-                    var allProduct = bu.GetProduct();
-                    ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, null, "", false);
+                    //var allProduct = bu.GetProduct();
+                    ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, bu, "", false);
+
+                    if (ret)
+                    {
+                        List<bool> checkEmptyCell = new List<bool>();
+                        List<bool> checkPrdCode = new List<bool>();
+                        List<bool> checkQty = new List<bool>();
+                        List<bool> checkPrice = new List<bool>();
+
+                        var validateRLList = new List<ValidateRL>();
+
+                        if (grdList.RowCount > 0)
+                        {
+                            for (int i = 0; i < grdList.RowCount; i++)
+                            {
+                                var prdCodeCell = grdList.Rows[i].Cells[0];
+                                var qtyCell = grdList.Rows[i].Cells[4];
+                                var uomCell = grdList.Rows[i].Cells[3];
+
+                                if (prdCodeCell.IsNotNullOrEmptyCell() && qtyCell.IsNotNullOrEmptyCell()) //check over recieve
+                                {
+                                    decimal qtyValue = 0;
+                                    if (decimal.TryParse(qtyCell.EditedFormattedValue.ToString(), out qtyValue))
+                                    {
+                                        if (qtyValue > 0)
+                                        {
+                                            var productID = prdCodeCell.EditedFormattedValue.ToString();
+                                            var productUomName = uomCell.EditedFormattedValue.ToString();
+                                            Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => x.ProductUomName == productUomName);
+                                            var prdUOMs = allUOM.Where(tbl_ProductUomPre).ToList();
+
+                                            decimal unitQty = 0;
+
+                                            var prdUOMSets = bu.GetProductUOMSet(allUomSet, productID);
+                                            if (prdUOMSets != null && prdUOMSets.Count > 0 && prdUOMs != null && prdUOMs.Count > 0)
+                                            {
+                                                if (prdUOMs[0].ProductUomID == prdUOMSets[0].UomSetID) //if (prdUOMs[0].ProductUomID != 2) //15022021
+                                                    unitQty = (qtyValue * prdUOMSets[0].BaseQty);
+                                                else
+                                                    unitQty = qtyValue;
+                                            }
+                                            else
+                                                unitQty = qtyValue;
+
+                                            //var invWhItem = bu.GetInvWarehouse(productID, txtWHCode.Text);
+                                            //decimal whQty = 0;
+
+                                            //if (invWhItem != null && invWhItem.Count > 0)
+                                            //    whQty = invWhItem[0].QtyOnHand;
+
+                                            var invWhItem = bu.GetStockMovement(productID, txtWHCode.Text);
+                                            decimal whQty = 0;
+
+                                            if (invWhItem != null && invWhItem.Count > 0)
+                                                whQty = invWhItem.Sum(x => x.TrnQty);
+
+                                            if (unitQty > whQty)
+                                            {
+                                                validateRLList.Add(new ValidateRL
+                                                {
+                                                    ProductID = productID,
+                                                    StockQty = whQty,
+                                                    InputQty = unitQty
+                                                });
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (validateRLList.Count > 0)
+                            {
+                                var message = "";
+                                var tempMsg = "";
+
+                                tempMsg += string.Format("ไม่สามารถทำรายการสินค้านี้ได้ \n\n");
+                                foreach (var item in validateRLList)
+                                {
+                                    tempMsg += string.Format("--> เนื่องจากสินค้า {0} ใน Stock มีแค่ {1} หีบ \n", item.ProductID, item.StockQty.ToStringN2());
+                                }
+                                message = tempMsg;
+
+                                message.ShowWarningMessage();
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -1579,6 +2732,8 @@ namespace AllCashUFormsApp.View.Page
             txdDocNo.BackColor = Color.Turquoise; // Translator.FromHtml("#7FFFD4");
             ddlDocStatus.Enabled = true;
             btnCancel.Enabled = true;
+            btnReCalc.Enabled = false;
+            btnShowPromotion.Enabled = false;
 
             validateNewRow = true;
 
@@ -1591,6 +2746,7 @@ namespace AllCashUFormsApp.View.Page
             }
 
             dtpDocDate.Focus();
+            isAdd = true; //Last edit by sailom.k 14/09/2021 tunning performance
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -1612,6 +2768,9 @@ namespace AllCashUFormsApp.View.Page
             txtCustInvNO.Text = string.Empty;
 
             validateNewRow = true;
+            ddlSaleArea.Enabled = true;
+
+            ClearPromotionTemp();
 
             grdList.CellContentClick -= grdList_CellContentClick;
             grdList.CellContentClick += grdList_CellContentClick;
@@ -1619,6 +2778,29 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            //CalcPromotion(false);
+
+            //PreparePODetail(2);
+
+            //DistributeFreePromotion(bu.tbl_PODetails);
+
+            //BindPODetail(bu.tbl_PODetails);
+
+            //for (int i = 0; i < grdList.Rows.Count; i++)
+            //{
+            //    CalculateRow(grdList, i);
+            //}
+
+            //CalculateTotal();
+
+            //decimal totalDiscount = 0.00m;
+            //proTmp.tbl_HQ_Promotion_Hit_Temps = proTmp.GetAllData();
+
+            //if (proTmp.tbl_HQ_Promotion_Hit_Temps.Any(x => x.DisCountAmt.Value > 0))
+            //    totalDiscount = proTmp.tbl_HQ_Promotion_Hit_Temps.Sum(x => x.DisCountAmt.Value);
+
+            //txnDiscountAmt.Text = totalDiscount.ToStringN2();
+
             Save();
         }
 
@@ -1638,11 +2820,16 @@ namespace AllCashUFormsApp.View.Page
             txdDocNo.DisableTextBox(false);
             txdDocNo.BackColor = Color.Turquoise;
 
+            ClearPromotionTemp();
+
             grdList.CellContentClick -= grdList_CellContentClick;
         }
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@DocNo", txdDocNo.Text);
+            this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -1671,9 +2858,11 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchCust_Click(object sender, EventArgs e)
         {
-            this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า");
+            this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า", x => x.FlagDel == false);
 
             FilterSaleArea(txtCustomerCode.Text);
+
+            //ValidateUCustomer(txtCustomerCode.Text);
         }
 
         private void btnCustInfo_Click(object sender, EventArgs e)
@@ -1687,29 +2876,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnReCalc_Click(object sender, EventArgs e)
         {
-            CalculateRow(grdList, grdList.CurrentRow.Index);
-
-            //PreparePOMaster(false);
-            PreparePODetail(false);
-
-            var proList = pro.CalculatePromotion(bu.tbl_PODetails);
-            if (proList != null && proList.Count > 0)
-            {
-                var delFlag = pro.RemoveTempData();
-                if (delFlag == 1)
-                {
-                    PreparePromotionTemp(proList);
-                    var addFlag = pro.AddTempData();
-
-                    if (addFlag == 1)
-                    {
-                        if (pro.tbl_HQ_Promotion_Hit_Temps != null && pro.tbl_HQ_Promotion_Hit_Temps.Count > 0)
-                        {
-                            this.OpenPromotionTempPopup(searchPromotionControls, "โปรโมชั่น");
-                        }
-                    }
-                }
-            }
+            ClearPromotionTemp();
+            CalcPromotionBeforeSave();
         }
 
         private void TxtCustomerCode_KeyDown(object sender, KeyEventArgs e)
@@ -1717,9 +2885,14 @@ namespace AllCashUFormsApp.View.Page
             if (e.KeyCode == Keys.Enter)
             {
                 TextBox txt = (TextBox)sender;
-                this.BindData("Customer", searchCustControls, txt.Text);
+                if (!string.IsNullOrEmpty(txt.Text))
+                {
+                    this.BindData("Customer", searchCustControls, txt.Text);
+                }
 
                 FilterSaleArea(txt.Text);
+
+                //ValidateUCustomer(txt.Text);
             }
         }
 
@@ -1729,6 +2902,23 @@ namespace AllCashUFormsApp.View.Page
             {
                 TextBox txt = (TextBox)sender;
                 this.BindData("BranchWarehouse", searchBWHControls, txt.Text);
+
+                FilterSaleArea(txt.Text);
+            }
+        }
+
+        private void TxtWHCode_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            if (!string.IsNullOrEmpty(txt.Text))
+            {
+                var bwh = bu.GetBranchWarehouse(x => x.WHID == txt.Text);
+                if (bwh != null)
+                {
+                    this.BindData("BranchWarehouse", searchBWHControls, txt.Text);
+
+                    FilterSaleArea(txt.Text);
+                }
             }
         }
 
@@ -1755,8 +2945,22 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
-                grdList.ModifyComboBoxCell(e.RowIndex, bu, 3, 0);
+            //Last edit by sailom.k 14/09/2021 tunning performance
+            if (isAdd) //when click add button
+            {
+                if (e.ColumnIndex == 0)
+                    grdList.ModifyComboBoxCell(allProduct, e.RowIndex, bu, 3, 0);
+            }
+            else //when search data
+            {
+                if (e.ColumnIndex == 0)
+                {
+                    if (allPODetails.Count > 0 && prodUOMs.Count > 0)
+                    {
+                        grdList.ModifyComboBoxCell_Tunning(allProduct, e.RowIndex, bu, 3, 0, prodUOMs);
+                    }
+                }
+            }
         }
 
         private void grdList_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -1826,41 +3030,88 @@ namespace AllCashUFormsApp.View.Page
                 grd.ClearSelection();
 
                 var cell0 = grd.Rows[currentRowIndex].Cells[0];
+                var cell2 = grd.Rows[currentRowIndex].Cells[2];
+
                 if (curentColIndex == 0)
                 {
+                    bool isNewRow = true;
                     if (cell0.IsNotNullOrEmptyCell())
                     {
                         validateNewRow = true;
 
-                        grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
-                        grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "REProduct");
+                        if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                        {
+                            var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                            if (!checkDup)
+                            {
+                                GridViewHelper.ShowDupSKUMessage();
+                                cell0.Value = "";
+                                grd.Rows.RemoveAt(currentRowIndex);
+                                isNewRow = false;
+                                validateNewRow = false;
+                            }
+                        }
+
+                        if (isNewRow)
+                        {
+                            grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "IMProduct", false);
+                            //if (!validateNewRow)
+                            //{
+                            //    isNewRow = false;
+                            //}
+                        }
                     }
 
-                    grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 3];
+                    if (isNewRow)
+                    {
+                        grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 3];
+                        grd.BeginEdit(true);
+                    }
                 }
                 else if (curentColIndex == 3 || curentColIndex == 4)
                 {
                     grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 1];
+                    grd.BeginEdit(true);
                 }
-                else if (curentColIndex == 5)
+                else if (curentColIndex == 5 || curentColIndex == 8)
                 {
-                    if (cell0.IsNotNullOrEmptyCell())
+                    isAdd = true;
+
+                    if (cell2.IsNotNullOrEmptyCell())
                     {
                         if ((grd.RowCount - 1) == currentRowIndex)
                         {
-                            grdList.AddNewRow(initDataGridList, 0, "", currentRowIndex + 1, validateNewRow, uoms, bu, this, 0);
+                            validateNewRow = true;
+
+                            if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                            {
+                                var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                                if (!checkDup)
+                                {
+                                    validateNewRow = false;
+                                }
+                            }
+
+                            grdList.AddNewRow(allProduct, initDataGridList, 0, "", currentRowIndex + 1, validateNewRow, uoms, bu, this, 0);
 
                             if (validateNewRow)
                             {
                                 if (grd.RowCount > currentRowIndex + 1)
+                                {
                                     grd.CurrentCell = grd.Rows[currentRowIndex + 1].Cells[0];
+                                    grd.BeginEdit(true);
+                                }
                             }
                         }
                         else
                         {
                             if (grd.RowCount > currentRowIndex + 1)
+                            {
                                 grd.CurrentCell = grd.Rows[currentRowIndex + 1].Cells[0];
+                                grd.BeginEdit(true);
+                            }
                         }
+
                     }
                 }
             }
@@ -1891,6 +3142,8 @@ namespace AllCashUFormsApp.View.Page
                         var cell4 = grd.Rows[currentRowIndex].Cells[4];
                         if (cell4.IsNotNullOrEmptyCell())
                             CalculateRow(grd, currentRowIndex);
+
+                        //ValidateUCustomer(txtCustomerCode.Text, currentRowIndex);
                     }
                 }
             }
@@ -1929,10 +3182,48 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetCellClick(sender, e, cellEdit, 0);
         }
 
+        private void btnShowPromotion_Click(object sender, EventArgs e)
+        {
+            CalcPromotionBeforeSave();
+        }
+
+        private void btnUpdateAddress_Click(object sender, EventArgs e)
+        {
+            string cfMsg = "ต้องการปรับปรุงที่อยู่ใช่หรือไม่?";
+            string title = "ยืนยันการบันทึก!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            bool checkEditMode = bu.CheckExistsPO(txdDocNo.Text);
+            if (checkEditMode)
+            {
+                bool ret = bu.UpdateCustomerAddress(txdDocNo.Text);
+                if (ret)
+                {
+                    //bu.tbl_POMaster = bu.GetPOMaster(txdDocNo.Text);
+                    //if (bu.tbl_POMaster != null)
+                    {
+                        var cust = bu.GetCustomer(txtCustomerCode.Text);
+                        if (cust != null && cust.Count > 0)
+                        {
+                            txtBillTo.Text = cust[0].BillTo;
+                            txtCustName.Text = cust[0].CustName;
+                            txtTelephone.Text = cust[0].Telephone;
+                            txtContact.Text = cust[0].Contact;
+                        }
+
+                    }
+
+                }
+            }
+        }
 
 
         #endregion
 
-
+        private void frmVanSales_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

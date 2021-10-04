@@ -1,4 +1,5 @@
 ﻿using AllCashUFormsApp.Controller;
+using AllCashUFormsApp.Dal;
 using AllCashUFormsApp.Model;
 using AllCashUFormsApp.View.Page;
 using AllCashUFormsApp.View.UControl;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
@@ -47,7 +49,127 @@ namespace AllCashUFormsApp
         private static List<Control> empControlList = new List<Control>();
         private static List<Control> custControlList = new List<Control>();
         private static List<Control> prdControlList = new List<Control>();
+        private static List<Control> supDistictControlList = new List<Control>();
+        private static List<Control> whIDControlList = new List<Control>();
+
         private static Form frm;
+
+        public static void ClearListBoxItem(this ListBox ltbs)
+        {
+            if (ltbs.Items.Count > 0)
+            {
+                ltbs.Items.Clear();
+            }
+        }
+
+        public static void CheckOverStok1000(DateTime datetime)
+        {
+            //Check Over Stock in main stock(1000)---------------------------
+            var dtOverStck = odBU.GetOverStockData(datetime);
+            if (dtOverStck != null && dtOverStck.Rows.Count > 0)
+            {
+                string msgError = "";
+                foreach (DataRow row in dtOverStck.Rows)
+                {
+                    msgError += "แวน : " + row["WHID"].ToString() + " สินค้า : " + row["ProductID"].ToString() + ":" + row["ProductShortName"].ToString() + " ใน Stock เหลือ "
+                        + Convert.ToDecimal(row["Diff"]).ToStringN2() + " (หน่วยเล็ก) \n"; // "กรุณาเลือกตลาดที่ต้องการย้ายลูกค้าไป\n";
+                }
+
+                if (msgError != "")
+                {
+                    FlexibleMessageBox.Show(msgError, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+            }
+            //Check Over Stock in main stock(1000)---------------------------
+        }
+
+        public static bool CheckOverStok1000PreOrder(DateTime datetime)
+        {
+            //Check Over Stock in main stock(1000)---------------------------
+            bool isOverStock = false;
+            var dtOverStck = odBU.GetOverStockPreOrderData(datetime);
+            if (dtOverStck != null && dtOverStck.Rows.Count > 0)
+            {
+                string msgError = "";
+                foreach (DataRow row in dtOverStck.Rows)
+                {
+                    msgError += "แวน : " + row["WHID"].ToString() + " สินค้า : " + row["ProductID"].ToString() + ":" + row["ProductShortName"].ToString() + " ใน Stock เหลือ "
+                        + Convert.ToDecimal(row["Diff"]).ToStringN2() + " (หน่วยเล็ก) \n"; // "กรุณาเลือกตลาดที่ต้องการย้ายลูกค้าไป\n";
+
+                    isOverStock = true;
+                }
+
+                if (msgError != "")
+                {
+                    FlexibleMessageBox.Show(msgError, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+
+            return isOverStock;
+            //Check Over Stock in main stock(1000)---------------------------
+        }
+
+        public static int GetMinUOM(this List<tbl_ProductUomSet> allUomSet, tbl_PODetail poDt)
+        {
+            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+            var minUomID = allUomSet.GetMinUOM(poDt.ProductID);
+
+            return minUomID;
+        }
+
+        public static int GetMinUOM(this List<tbl_ProductUomSet> allUomSet, tbl_PRDetail prDt)
+        {
+            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+            var minUomID = allUomSet.GetMinUOM(prDt.ProductID);
+
+            return minUomID;
+        }
+
+        public static int GetMinUOM(this List<tbl_ProductUomSet> allUomSet, tbl_PODetail_PRE poDt)
+        {
+            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+            var minUomID = allUomSet.GetMinUOM(poDt.ProductID);
+
+            return minUomID;
+        }
+
+        public static int GetMinUOM(this List<tbl_ProductUomSet> allUomSet, string productID)
+        {
+            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+            var minUomID = 2;
+
+            var minUom = allUomSet.Where(x => x.ProductID == productID).ToList();
+            if (minUom.Count > 0)
+            {
+                var minItem = minUom.OrderBy(x => x.BaseQty).First();
+                if (minItem != null)
+                {
+                    minUomID = minItem.UomSetID;
+                }
+            }
+
+            return minUomID;
+        }
+
+        public static List<tbl_ProductUomSet> GetProductUOMSet(this BaseControl bu, List<tbl_ProductUomSet> obj, string productID)
+        {
+            //List<tbl_ProductUomSet> ret = new List<tbl_ProductUomSet>();
+            //var prd = bu.GetProduct().FirstOrDefault(x => x.ProductID == productID);
+            //if (prd != null)
+            //{
+            //    var saleUom = bu.GetUOMSet(x => x.ProductID == prd.ProductID && x.UomSetID == prd.PurchaseUomID);
+            //    if (saleUom != null)
+            //        ret = saleUom; //25012021
+            //}
+
+            List<tbl_ProductUomSet> ret = new List<tbl_ProductUomSet>();
+            //Func<tbl_ProductUomSet, bool> condition = (x => x.BaseUomID == 2 && x.UomSetID == 1 && x.ProductID == productID);
+            int maxBaseQty = obj.Where(x => x.ProductID == productID).Max(a => a.BaseQty); //; bu.GetUOMSet(x => x.ProductID == productID).Max(a => a.BaseQty);
+            ret = obj.Where(x => x.ProductID == productID && x.BaseQty == maxBaseQty).ToList();// bu.GetUOMSet(x => x.ProductID == productID && x.BaseQty == maxBaseQty);
+
+            return ret;
+        }
 
         public static void SetColumnStyle(this DataGridViewColumn col, int width, DataGridViewAutoSizeColumnMode sizeMod, DataGridViewContentAlignment alignment, string format = "", int minWidth = 0, DataGridViewColumn colType = null)
         {
@@ -76,15 +198,16 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void BindStockOnHand(this TextBox txt, BaseControl bu, string whid, string productID, decimal orderQty, TextBox qtyText = null, Label uomType = null)
+        public static void BindStockOnHand(this TextBox txt, List<tbl_ProductUomSet> allUOMSet, BaseControl bu, string whid, string productID, decimal orderQty, TextBox qtyText = null, Label uomType = null)
         {
             //var whid = txtBranchCode.Text + txtFromWHCode.Text;
 
             //string productID = productDT.Rows[0]["ProductID"].ToString();
-            var invWhItem = bu.GetInvWarehouse(productID, whid);
+
+            var invWhItem = bu.GetStockMovement(productID, whid); // bu.GetInvWarehouse(productID, whid); //15-05-2021 by sailom.k
             if (invWhItem != null && invWhItem.Count > 0)
             {
-                txt.Text = invWhItem[0].QtyOnHand.ToStringN0();
+                txt.Text = invWhItem.Sum(x => x.TrnQty).ToStringN0();  //invWhItem[0].QtyOnHand.ToStringN0(); //15-05-2021 by sailom.k
             }
             else
                 txt.Text = "0";
@@ -95,17 +218,37 @@ namespace AllCashUFormsApp
             }
             if (uomType != null)
             {
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.ProductID == productID && x.UomSetID == 2);
-                var prodUomSetPack = bu.GetUOMSet(tbl_ProductUomSetPre);
+                var minUomID = 2;
+                minUomID = allUOMSet.GetMinUOM(productID);
+
+                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.ProductID == productID && x.UomSetID == minUomID);
+                var prodUomSetPack = allUOMSet.Where(tbl_ProductUomSetPre).ToList();
                 if (prodUomSetPack != null && prodUomSetPack.Count > 0)
                     uomType.Text = prodUomSetPack[0].UomSetName;
                 else
                 {
                     Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPreOriginal = (x => x.ProductID == productID);
-                    var prodUomSetOri = bu.GetUOMSet(tbl_ProductUomSetPreOriginal);
-                    uomType.Text = prodUomSetPack[0].UomSetName;
+                    var prodUomSetOri = allUOMSet.Where(tbl_ProductUomSetPreOriginal).ToList();
+                    if (prodUomSetOri.Count > 0)
+                        uomType.Text = prodUomSetOri[0].UomSetName;
                 }
             }
+        }
+
+        public static void BindDropdown3DocStatus(this ComboBox ddl, BaseControl bu, string selDocStatus = "")
+        {
+            if (ddl.DataSource == null)
+            {
+                var allDocStatus = bu.GetDocStatus().Where(x => x.DocStatusCode == "3" || x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList();
+                ddl.BindDropdownList(allDocStatus, "DocStatusName", "DocStatusCode", 0);
+            }
+
+            if (!string.IsNullOrEmpty(selDocStatus))
+            {
+                Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == selDocStatus; };
+                ddl.SelectedValueDropdownList(condition);
+            }
+
         }
 
         public static void BindDropdownDocStatus(this ComboBox ddl, BaseControl bu, string selDocStatus = "")
@@ -184,6 +327,12 @@ namespace AllCashUFormsApp
             txt.BackColor = txt.ReadOnly ? ColorTranslator.FromHtml("#DCDCDC") : Color.White;
         }
 
+        public static void DisableTextBox(this ListBox txt, bool mode)
+        {
+            txt.Enabled = !mode;
+            txt.BackColor = txt.Enabled ? Color.White : ColorTranslator.FromHtml("#DCDCDC");
+        }
+
         public static void DefaultNumber(this TextBox txt)
         {
             txt.Text = string.Empty;
@@ -219,7 +368,7 @@ namespace AllCashUFormsApp
                 var ddl = ctrl as ComboBox;
                 if (ddl.Items != null && ddl.Items.Count > 0)
                 {
-                    if (ddl.SelectedValue.ToString() == "-1")
+                    if (ddl.SelectedValue != null && ddl.SelectedValue.ToString() == "-1")
                     {
                         if (lbl != null)
                         {
@@ -229,7 +378,57 @@ namespace AllCashUFormsApp
                         }
                     }
                 }
+                if (ddl.SelectedIndex == -1) //
+                {
+                    if (lbl != null)
+                    {
+                        string t = lbl.Text;
+                        errList.Add(string.Format("--> {0}", t));
+                        ddl.ErrorTextBox();
+                    }
+                }
+
             }
+
+            else if (ctrl is MaskedTextBox)//new
+            {
+                var mtb = ctrl as MaskedTextBox;
+                if (mtb.MaskCompleted == false)
+                {
+                    if (lbl != null)
+                    {
+                        string t = lbl.Text;
+                        errList.Add(string.Format("--> {0}", t));
+                        mtb.ErrorMaskedTextBox();
+                    }
+                }
+            }
+
+            else if (ctrl is ListBox)//new
+            {
+                var lsb = ctrl as ListBox;
+                if (lsb.Items.Count == 0)
+                {
+                    if (lbl != null)
+                    {
+                        string t = lbl.Text;
+                        errList.Add(string.Format("--> {0}", t));
+                        lsb.ErrorListBox();
+                    }
+                }
+            }
+        }
+
+        public static void ErrorListBox(this ListBox lsb)//new
+        {
+            lsb.BackColor = Color.MistyRose;
+            lsb.TextChanged += Lsb_TextChanged;//new
+        }
+
+        public static void ErrorMaskedTextBox(this MaskedTextBox mtb)//new
+        {
+            mtb.BackColor = Color.MistyRose;
+            mtb.TextChanged += Mtb_TextChanged;//new
         }
 
         public static void ErrorTextBox(this TextBox txt)
@@ -242,6 +441,15 @@ namespace AllCashUFormsApp
         {
             ddl.BackColor = Color.MistyRose;
             ddl.SelectedIndexChanged += Ddl_SelectedIndexChanged;
+        }
+        private static void Lsb_TextChanged(object sender, EventArgs e)//new
+        {
+            ((ListBox)sender).BackColor = Color.White;
+        }
+
+        private static void Mtb_TextChanged(object sender, EventArgs e)//new
+        {
+            ((MaskedTextBox)sender).BackColor = Color.White;
         }
 
         private static void Txt_TextChanged(object sender, EventArgs e)
@@ -307,17 +515,17 @@ namespace AllCashUFormsApp
 
         public static DialogResult ShowWarningMessage(this string msg)
         {
-            return MessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return FlexibleMessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public static DialogResult ShowErrorMessage(this string msg)
         {
-            return MessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return FlexibleMessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static DialogResult ShowInfoMessage(this string msg)
         {
-            return MessageBox.Show(msg, "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return FlexibleMessageBox.Show(msg, "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static void SelectedValueDropdownList<T>(this ComboBox ddl, Predicate<T> selectValue)
@@ -336,10 +544,29 @@ namespace AllCashUFormsApp
             EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, conditionText);
         }
 
+        public static void EnableButton(this AddButton btnAdd, EditButton btnEdit, RemoveButton btnRemove,
+            SaveButton btnSave, CancelButton btnCancel, CopyButton btnCopy, string conditionText = "")
+        {
+            btnAdd.Enabled = false;
+
+            EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, conditionText);
+        }
+
         public static void EnableButton(this EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
             AddButton btnAdd, CopyButton btnCopy, PrintButton btnPrint, string conditionText = "")
         {
             EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, conditionText);
+
+            btnSave.Enabled = true;
+
+            btnAdd.Enabled = false;
+            btnEdit.Enabled = false;
+        }
+
+        public static void EnableButton(this EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
+            AddButton btnAdd, CopyButton btnCopy, string conditionText = "")
+        {
+            EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, conditionText);
 
             btnSave.Enabled = true;
 
@@ -364,10 +591,39 @@ namespace AllCashUFormsApp
             btnCancel.Enabled = true;
         }
 
+        public static void EnableButton(this SaveButton btnSave, EditButton btnEdit, RemoveButton btnRemove, CancelButton btnCancel,
+            AddButton btnAdd, CopyButton btnCopy, ExcelButton btnExcel, string conditionText = "")
+        {
+            btnAdd.Enabled = true;
+
+            EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, conditionText);
+
+            btnEdit.Enabled = true;
+            btnRemove.Enabled = false;
+            btnCopy.Enabled = true;
+            btnExcel.Enabled = false;
+
+            btnSave.Enabled = false;
+            btnCancel.Enabled = true;
+        }
+
         public static void EnableButton(this CopyButton btnCopy, EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
             AddButton btnAdd, PrintButton btnPrint, string conditionText = "")
         {
             EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, conditionText);
+
+            btnSave.Enabled = true;
+            btnCancel.Enabled = true;
+
+            btnAdd.Enabled = false;
+            btnEdit.Enabled = false;
+            btnCopy.Enabled = false;
+        }
+
+        public static void EnableButton(this CopyButton btnCopy, EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
+            AddButton btnAdd, string conditionText = "")
+        {
+            EnableSubButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, conditionText);
 
             btnSave.Enabled = true;
             btnCancel.Enabled = true;
@@ -397,6 +653,20 @@ namespace AllCashUFormsApp
             btnAdd.Enabled = false;
         }
 
+        public static void EnableButton(this Button btnSearchDoc, AddButton btnAdd, EditButton btnEdit, RemoveButton btnRemove,
+            SaveButton btnSave, CancelButton btnCancel, CopyButton btnCopy, ExcelButton btnExcel)
+        {
+            btnSearchDoc.Enabled = true;
+            btnEdit.Enabled = true;
+            btnCopy.Enabled = true;
+            btnExcel.Enabled = false;
+            btnCancel.Enabled = true;
+
+            btnSave.Enabled = false;
+            btnRemove.Enabled = false;
+            btnAdd.Enabled = false;
+        }
+
         private static void EnableSubButton(EditButton btnEdit, RemoveButton btnRemove,
         SaveButton btnSave, CancelButton btnCancel, AddButton btnAdd, CopyButton btnCopy, PrintButton btnPrint, string conditionText = "")
         {
@@ -410,9 +680,27 @@ namespace AllCashUFormsApp
             btnPrint.Enabled = false;
         }
 
+        private static void EnableSubButton(EditButton btnEdit, RemoveButton btnRemove,
+        SaveButton btnSave, CancelButton btnCancel, AddButton btnAdd, CopyButton btnCopy, string conditionText = "")
+        {
+            btnEdit.Enabled = !string.IsNullOrEmpty(conditionText);
+            btnRemove.Enabled = false;
+            btnSave.Enabled = !btnEdit.Enabled && !btnAdd.Enabled;
+            btnCancel.Enabled = !btnAdd.Enabled;
+            btnAdd.Enabled = !btnSave.Enabled && !btnEdit.Enabled;
+
+            btnCopy.Enabled = false;
+        }
+
         public static void ShowProcessErr(this Form frm)
         {
             string msg = "เกิดข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ กรุณาติดต่อ IT United Foods!";
+            msg.ShowErrorMessage();
+        }
+
+        public static void ShowDocNoProcessErr(this Form frm)
+        {
+            string msg = "การสร้างเลขที่เอกสารผิดพลาด กรุณาติดต่อ IT United Foods!";
             msg.ShowErrorMessage();
         }
 
@@ -468,7 +756,7 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenPromotionTempPopup(this Form frm, List<Control> _controls, string popupName)
         {
-            frmSearchSupp _frm = new frmSearchSupp();
+            frmPromotion _frm = new frmPromotion();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
             AddPromotionPopupCols(_frm, colList);
@@ -485,17 +773,18 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenPromotionPopup(this Form frm, List<Control> _controls, string popupName)
         {
-            frmSearchSupp _frm = new frmSearchSupp();
+            frmPromotion _frm = new frmPromotion();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            AddPromotionPopupCols(_frm, colList);
+            //AddPromotionPopupCols(_frm, colList);
             _frm.PreparePopupForm("Promotion", frm.Name, popupName, colList, null, _controls, null);
             _frm.ShowDialog();
         }
 
-        public static void AddPromotionPopupCols(frmSearchSupp _frm, List<DataGridColumn> colList)
+        public static void AddPromotionPopupCols(frmPromotion _frm, List<DataGridColumn> colList)
         {
             //colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "Choose", HeaderText = "เลือก", Name = "Choose", Width = 50, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, ColoumnType = new DataGridViewCheckBoxColumn() });
             colList.Add(new DataGridColumn() { DataPropertyName = "No", HeaderText = "ลำดับ", Name = "No", Width = 50, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
             colList.Add(new DataGridColumn() { DataPropertyName = "PromotionID", HeaderText = "รหัสโปรโมชั่น", Name = "PromotionID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "PromotionName", HeaderText = "ชื่อโปรโมชั่น", Name = "PromotionName", Width = 150, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
@@ -504,8 +793,8 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "DisCountAmt", HeaderText = "ส่วนลด", Name = "DisCountAmt", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N2" });
             //colList.Add(new DataGridColumn() { DataPropertyName = "SKUGroupRewardID", HeaderText = "สินค้าที่แจก", Name = "SKUGroupRewardID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "SKUGroupRewardAmt", HeaderText = "จำนวนสินค้าที่แจก", Name = "SKUGroupRewardAmt", Width = 60, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
-            colList.Add(new DataGridColumn() { DataPropertyName = "EffectiveDate", HeaderText = "วันที่เริ่มโปรโมชั่น", Name = "EffectiveDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
-            colList.Add(new DataGridColumn() { DataPropertyName = "ExpireDate", HeaderText = "วันที่สิ้นสุดโปรโมชั่น", Name = "ExpireDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "EffectiveDate", HeaderText = "วันที่เริ่มโปรโมชั่น", Name = "EffectiveDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "dd/MM/yyyy" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ExpireDate", HeaderText = "วันที่สิ้นสุดโปรโมชั่น", Name = "ExpireDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "dd/MM/yyyy" });
         }
 
         /// <summary>
@@ -514,7 +803,7 @@ namespace AllCashUFormsApp
         /// <param name="frm"></param>
         /// <param name="_controls"></param>
         /// <param name="popupName"></param>
-        public static void OpenCustomerPopup(this Form frm, List<Control> _controls, string popupName)
+        public static void OpenCustomerPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_ArCustomer, bool> predicate = null)
         {
             frmSearchSupp _frm = new frmSearchSupp();
 
@@ -529,7 +818,34 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { ColoumnType = new DataGridViewCheckBoxColumn(), DataPropertyName = "FlagMember", HeaderText = "สมาชิก", Name = "FlagMember", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
             colList.Add(new DataGridColumn() { DataPropertyName = "CreditDay", HeaderText = "เครดิต(วัน)", Name = "CreditDay", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
 
-            _frm.PreparePopupForm("Customer", frm.Name, popupName, colList, null, _controls, null);
+            if (predicate != null)
+                _frm.PreparePopupFormWithPredicate("Customer", frm.Name, popupName, colList, null, _controls, predicate);
+            else
+                _frm.PreparePopupForm("Customer", frm.Name, popupName, colList, null, _controls, null);
+
+            _frm.ShowDialog();
+        }
+
+        public static void OpenCustomerPrePopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_ArCustomer, bool> predicate = null)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerCode", HeaderText = "รหัสลูกค้า", Name = "CustomerCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "CustName", HeaderText = "ชื่อลูกค้า", Name = "CustName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerRefCode", HeaderText = "รหัสเดิม", Name = "CustomerRefCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ShopTypeName", HeaderText = "ประเภทร้านค้า", Name = "ShopTypeName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "SalAreaName", HeaderText = "ตลาด", Name = "SalAreaName", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "คลัง Van", Name = "WHID", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "Seq", HeaderText = "ลำดับ", Name = "Seq", Width = 60, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
+            colList.Add(new DataGridColumn() { ColoumnType = new DataGridViewCheckBoxColumn(), DataPropertyName = "FlagMember", HeaderText = "สมาชิก", Name = "FlagMember", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
+            colList.Add(new DataGridColumn() { DataPropertyName = "CreditDay", HeaderText = "เครดิต(วัน)", Name = "CreditDay", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
+
+            if (predicate != null)
+                _frm.PreparePopupFormWithPredicate("CustomerPre", frm.Name, popupName, colList, null, _controls, predicate);
+            else
+                _frm.PreparePopupForm("CustomerPre", frm.Name, popupName, colList, null, _controls, null);
+
             _frm.ShowDialog();
         }
 
@@ -600,6 +916,16 @@ namespace AllCashUFormsApp
             _frm.ShowDialog();
         }
 
+        public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            colList.AddBranchWarehouseColumnID();
+
+            _frm.PreparePopupForm("BranchWarehouseID", frm.Name, popupName, colList, null, _controls);
+            _frm.ShowDialog();
+        }
         /// <summary>
         /// Pop up Branch Warehouse form patern 2
         /// </summary>
@@ -607,6 +933,7 @@ namespace AllCashUFormsApp
         /// <param name="_controls"></param>
         /// <param name="popupName"></param>
         /// <param name="consitionString"></param>
+        
         public static void OpenBranchWarehousePopup(this Form frm, List<Control> _controls, string popupName, string[] consitionString)
         {
             frmSearchSupp _frm = new frmSearchSupp();
@@ -615,6 +942,17 @@ namespace AllCashUFormsApp
             colList.AddBranchWarehousColumn();
 
             _frm.PreparePopupForm("BranchWarehouse", frm.Name, popupName, colList, null, _controls, consitionString);
+            _frm.ShowDialog();
+        }
+        
+        public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName, string[] consitionString)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            colList.AddBranchWarehouseColumnID();
+
+            _frm.PreparePopupForm("BranchWarehouseID", frm.Name, popupName, colList, null, _controls, consitionString);
             _frm.ShowDialog();
         }
 
@@ -635,6 +973,55 @@ namespace AllCashUFormsApp
             _frm.PreparePopupFormWithPredicate("BranchWarehouse", frm.Name, popupName, colList, null, _controls, predicate);
             _frm.ShowDialog();
         }
+        
+        public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_BranchWarehouse, bool> predicate)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+            colList.AddBranchWarehouseColumnID();
+
+            _frm.PreparePopupFormWithPredicate("BranchWarehouseID", frm.Name, popupName, colList, null, _controls, predicate);
+            _frm.ShowDialog();
+        }
+        
+        public static void OpenCrystalReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+            frmCrystalReport _frm = new frmCrystalReport();
+
+            _frm.PrepareReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            _frm.ShowDialog();
+        }
+        
+        public static void OpenExcelReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+            //for support excel report
+            frmWait wait = new frmWait();
+            wait.Show();
+
+            frmCrystalReport _frm = new frmCrystalReport();
+
+            _frm.PrepareExcelReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            //_frm.ShowDialog();
+
+            wait.Dispose();
+            wait.Close();
+        }
+
+        public static void OpenManualExcelReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+            //for support excel report
+            frmWait wait = new frmWait();
+            wait.Show();
+
+            frmCrystalReport _frm = new frmCrystalReport();
+
+            _frm.PrepareManualExcelReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            //_frm.ShowDialog();
+
+            wait.Dispose();
+            wait.Close();
+        }
 
         /// <summary>
         /// Pop up Branch Warehous Column form creater
@@ -645,13 +1032,51 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
         }
+        /// <summary>
+        /// Pop up Branch Warehous Column form creater
+        /// </summary>
+        /// <param name="colList"></param>
+        /// 
+        
+        private static void AddBranchWarehouseColumnID(this List<DataGridColumn> colList)
+        {
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "รหัสคลังสินค้า", Name = "WHID", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+        }
 
+        private static void AddBranchWarehouseColumn(this List<DataGridColumn> colList)
+        {
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+        }
+
+        private static void AddDistrictColumn(this List<DataGridColumn> colList)
+        {
+            colList.Add(new DataGridColumn() { DataPropertyName = "DistrictCode", HeaderText = "รหัสตำบล", Name = "DistrictCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DistrictName", HeaderText = "ชื่อตำบล", Name = "DistrictName", Width = 30, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DistrictID", HeaderText = "รหัสตำบล", Name = "DistrictID", Visibility = false });
+
+        }
+        
+        public static void OpenDistrictPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_MstDistrict, bool> predicate)
+        {
+            frmSearchSupp _frm = new frmSearchSupp();
+
+            List<DataGridColumn> colList = new List<DataGridColumn>();
+
+            colList.AddDistrictColumn();
+
+            _frm.PreparePopupFormWithPredicate("SubDistict", frm.Name, popupName, colList, null, _controls, predicate);
+
+            _frm.ShowDialog();
+        }
         /// <summary>
         /// Pop up From Branch ID form creater
         /// </summary>
         /// <param name="frm"></param>
         /// <param name="_controls"></param>
         /// <param name="popupName"></param>
+        
         public static void OpenFromBranchIDPopup(this Form frm, List<Control> _controls, string popupName)
         {
             frmSearchSupp _frm = new frmSearchSupp();
@@ -701,14 +1126,23 @@ namespace AllCashUFormsApp
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, AddNumberInFirstRow = true });
+            bool addSearchAd = false;
+            if (docTypeCode.Trim() == "RL")
+                addSearchAd = true;
+
+            colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, AddNumberInFirstRow = true, AddSearchAddOn = addSearchAd });
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatusImg", HeaderText = "", Name = "DocStatusImg", Width = 30, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, ColoumnType = new DataGridViewImageColumn() });
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatus", HeaderText = "สถานะ", Name = "DocStatus", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
+
+            if (docTypeCode.Trim() == "RL")
+                colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "แวน", Name = "WHID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
+
+
             colList.Add(new DataGridColumn() { DataPropertyName = "DocRef", HeaderText = "DocRef", Name = "DocRef", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
-            colList.Add(new DataGridColumn() { DataPropertyName = "DocDate", HeaderText = "วันที่เอกสาร", Name = "DocDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DocDate", HeaderText = "วันที่เอกสาร", Name = "DocDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "dd/MM/yyyy" });
             colList.Add(new DataGridColumn() { DataPropertyName = "SuppName", HeaderText = "ผู้จำหน่าย", Name = "SuppName", Width = 160, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "CreditDay", HeaderText = "เครดิต(วัน)", Name = "CreditDay", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
-            colList.Add(new DataGridColumn() { DataPropertyName = "DueDate", HeaderText = "ครบกำหนด", Name = "DueDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "d" });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DueDate", HeaderText = "ครบกำหนด", Name = "DueDate", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, Format = "dd/MM/yyyy" });
             colList.Add(new DataGridColumn() { DataPropertyName = "TotalDue", HeaderText = "จำนวนรวมทั้งสิ้น", Name = "TotalDue", Width = 130, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N2" });
             colList.Add(new DataGridColumn() { DataPropertyName = "CrUser", HeaderText = "ผู้จัดทำ", Name = "CrUser", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "Remark", HeaderText = "หมายเหตุ", Name = "Remark", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -783,6 +1217,14 @@ namespace AllCashUFormsApp
 
         private static void PrepareBindData(string type, List<Control> _controls)
         {
+            if (_controls[0].Name.Contains("txtDistrictCode"))
+            {
+                _objType = ObjectType.SubDistict;
+            }
+            if (_controls[0].Name.Contains("WHID"))
+            {
+                _objType = ObjectType.BranchWarehouseID;
+            }
             if (_controls[0].Name.Contains("SupplierCode"))
             {
                 _objType = ObjectType.Supplier;
@@ -792,6 +1234,10 @@ namespace AllCashUFormsApp
                 _objType = ObjectType.BranchWarehouse;
             }
             else if (_controls[0].Name.Contains("BranchCode"))
+            {
+                _objType = ObjectType.FromBranchID;
+            }
+            else if (_controls[0].Name.Contains("BranchID"))//
             {
                 _objType = ObjectType.FromBranchID;
             }
@@ -814,6 +1260,8 @@ namespace AllCashUFormsApp
 
             switch (type)
             {
+                case "BranchWarehouseID": { _objType = ObjectType.BranchWarehouseID; whIDControlList = _controls; } break;
+                case "SubDistict": { _objType = ObjectType.SubDistict; supDistictControlList = _controls; } break;
                 case "Supplier": { _objType = ObjectType.Supplier; supControlList = _controls; } break;
                 case "ODProduct": { _objType = ObjectType.ODProduct; } break;
                 case "REProduct": { _objType = ObjectType.REProduct; } break;
@@ -830,7 +1278,11 @@ namespace AllCashUFormsApp
                     break;
             }
 
-            if (_controls[0].Name.Contains("SupplierCode"))
+            if (_controls[0].Name.Contains("txtDistrictCode"))
+            {
+                controlList = supDistictControlList;
+            }
+            else if (_controls[0].Name.Contains("SupplierCode"))
             {
                 controlList = supControlList;
             }
@@ -891,10 +1343,22 @@ namespace AllCashUFormsApp
         {
             switch (_objType)
             {
+                case ObjectType.BranchWarehouseID:
+                    var bwhID = objectFactory.Get(_objType, null) as BranchWarehouse;
+                    var bwhDataID = bwhID.GetAllData().FirstOrDefault(x => x.WHID.ToString().ToLower() == code.ToLower());
+                    SetControlValue(bwhDataID, code);
+
+                    break;
                 case ObjectType.Supplier:
                     var sup = objectFactory.Get(_objType, null) as Supplier;
                     var supData = sup.GetAllData().FirstOrDefault(x => x.SupplierCode.ToLower() == code.ToLower());
                     SetControlValue(supData, code);
+
+                    break;
+                case ObjectType.SubDistict:
+                    var supD = objectFactory.Get(_objType, null) as SubDistict;
+                    var supDData = supD.GetAllData().FirstOrDefault(x => x.DistrictCode.ToLower() == code.ToLower());
+                    SetControlValue(supDData, code);
 
                     break;
                 case ObjectType.BranchWarehouse:
@@ -923,8 +1387,14 @@ namespace AllCashUFormsApp
                     break;
                 case ObjectType.Customer:
                     var cust = objectFactory.Get(_objType, null) as Customer;
-                    var custData = cust.GetAllData().FirstOrDefault(x => x.CustomerCode.ToLower() == code.ToLower());
-                    SetControlValue(custData, code);
+                    var custData = cust.GetAllData(x => x.CustomerCode.ToLower() == code.ToLower());
+                    if (custData.Count > 0)
+                        SetControlValue(custData[0], code);
+                    else
+                    {
+                        ShowWarningMessage("ไม่พบข้อมูลร้านค้านี้ในระบบ!!!");
+                        return;
+                    }
 
                     break;
                 case ObjectType.TRProduct:
@@ -942,9 +1412,40 @@ namespace AllCashUFormsApp
 
         public static void BindData(this Form frm, string type, List<Control> _controls, string code)
         {
-            PrepareBindData(type, _controls);
+            if (type == "PromotionTemp") //pop up shelf
+            {
+                var bu = new PromotionTemp();
+                var allPro = bu.GetAllData();
+                if (allPro != null && allPro.Count > 0)
+                {
+                    var item = allPro.FirstOrDefault(x => x.PromotionID == code);
+                    if (item != null)
+                    {
+                        var skuList = bu.GetHQSKUGroup(x => x.SKUGroupID == item.SKUGroupRewardID);
+                        if (skuList != null && skuList.Count > 0)
+                        {
+                            var prd = bu.GetProduct(x => skuList.Select(a => a.SKU_ID).Contains(x.ProductID)).ToList();
+                            if (prd != null && prd.Count > 0)
+                            {
+                                if (prd.Any(x => x.Flavour == "ชั้นวาง" || x.ProductName.Contains("ชั้นวาง")))
+                                {
+                                    frmShelfPopup _frm = new frmShelfPopup();
+                                    _frm.SetPromotionTemp(item);
+                                    _frm.Text = "รหัส Shelf";
+                                    _frm.ShowDialog();
+                                }
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+            else
+            {
+                PrepareBindData(type, _controls);
 
-            BindData(code);
+                BindData(code);
+            }
         }
 
         private static void SetEventControl(this Control obj)
@@ -1057,7 +1558,8 @@ namespace AllCashUFormsApp
                                 }
                                 else
                                 {
-                                    safeValue = string.IsNullOrEmpty(value.ToString()) ? Convert.ChangeType(0, _type) : Convert.ChangeType(value, _type);
+                                    if (value != null)
+                                        safeValue = string.IsNullOrEmpty(value.ToString()) ? Convert.ChangeType(0, _type) : Convert.ChangeType(value, _type);
                                 }
 
                                 dataItem.SetValue(data, safeValue, null);
@@ -1151,7 +1653,31 @@ namespace AllCashUFormsApp
                 Func<tbl_SalArea, bool> func = (x => x.SalAreaID == code);
                 ret = new tbl_SalArea().Select(func).Count > 0;
             }
-
+            if (obj is tbl_ArCustomer)
+            {
+                //Func<tbl_ArCustomer, bool> func = (x => x.CustomerID == code);
+                ret = new tbl_ArCustomer().SelectSingle(code).Count > 0;
+            }
+            if (obj is tbl_PriceGroup)
+            {
+                Func<tbl_PriceGroup, bool> func = (x => x.PriceGroupID.ToString() == code);
+                ret = new tbl_PriceGroup().Select(func).Count > 0;
+            }
+            if (obj is tbl_ShopType)
+            {
+                Func<tbl_ShopType, bool> func = (x => x.ShopTypeID.ToString() == code);
+                ret = new tbl_ShopType().Select(func).Count > 0;
+            }
+            if (obj is tbl_ArCustomerShelf)
+            {
+                Func<tbl_ArCustomerShelf, bool> func = (x => x.ShelfID == code);
+                ret = new tbl_ArCustomerShelf().Select(func).Count > 0;
+            }
+            if (obj is tbl_PayMaster)
+            {
+                Func<tbl_PayMaster, bool> func = (x => x.DocNo == code);
+                ret = new tbl_PayMaster().Select(func).Count > 0;
+            }
             return ret;
         }
 
@@ -1168,7 +1694,8 @@ namespace AllCashUFormsApp
                     {
                         if ((item.Name == "txtSaleEmpID" && dataItem.Name == "EmpID") ||
                             (item.Name == "txtDriverEmpID" && dataItem.Name == "EmpID") ||
-                            (item.Name == "txtHelperEmpID" && dataItem.Name == "EmpID"))
+                            (item.Name == "txtHelperEmpID" && dataItem.Name == "EmpID") ||
+                            (item.Name == "txtBranchCode_" && dataItem.Name == "BranchCode"))
                         {
                             var value = dataItem.GetValue(data, null);
 
@@ -1218,6 +1745,13 @@ namespace AllCashUFormsApp
                             obj.Text = empName;
                         }
                     }
+                    if (_objType == ObjectType.BranchWarehouse)
+                    {
+                        if (item.Name.Contains("txtBranchName_"))
+                        {
+                            obj.Text = safeValue != null ? safeValue.ToString() : "";
+                        }
+                    }
                 }
                 else if (item is DateTimePicker)
                 {
@@ -1265,6 +1799,7 @@ namespace AllCashUFormsApp
             if (dueDateCtrl != null && docDateCtrl != null && creditDayCtrl != null)
             {
                 dueDateCtrl.Value = docDateCtrl.Value.AddDays(Convert.ToInt32(creditDayCtrl.Value));
+                dueDateCtrl.SetDateTimePickerFormat();
             }
         }
 
@@ -1335,17 +1870,24 @@ namespace AllCashUFormsApp
             var grds = GetAll(frm, typeof(DataGridView));
             foreach (DataGridView item in grds)
             {
-                if (item.RowCount > 0)
+                bool isEdit = true;
+                if (item.Tag != null && item.Tag.ToString() == "ReadOnly")
+                    isEdit = false;
+
+                if (isEdit)
                 {
-                    for (int i = 0; i < item.RowCount; i++)
+                    if (item.RowCount > 0)
                     {
-                        for (int j = 0; j < item.ColumnCount; j++)
+                        for (int i = 0; i < item.RowCount; i++)
                         {
-                            if (editCols.Contains(item.Rows[i].Cells[j].ColumnIndex))
+                            for (int j = 0; j < item.ColumnCount; j++)
                             {
-                                Color c = mode ? Color.White : ColorTranslator.FromHtml("#E3E3E3");
-                                item.Rows[i].Cells[j].Style.BackColor = c;
-                                item.Rows[i].Cells[j].ReadOnly = !mode;
+                                if (editCols.Contains(item.Rows[i].Cells[j].ColumnIndex))
+                                {
+                                    Color c = mode ? Color.White : ColorTranslator.FromHtml("#E3E3E3");
+                                    item.Rows[i].Cells[j].Style.BackColor = c;
+                                    item.Rows[i].Cells[j].ReadOnly = !mode;
+                                }
                             }
                         }
                     }
@@ -1412,6 +1954,16 @@ namespace AllCashUFormsApp
             foreach (MaskedTextBox item in mtbs)
             {
                 item.Enabled = mode;
+                if (item.Enabled)
+                {
+                    item.BackColor = Color.White;
+                }
+            }
+
+            var chkboxs = GetAll(ctrls, typeof(CheckBox));
+            foreach (CheckBox item in chkboxs)
+            {
+                item.Enabled = mode;
             }
 
             //var grds = GetAll(ctrls, typeof(DataGridView));
@@ -1434,6 +1986,87 @@ namespace AllCashUFormsApp
             //    }
             //}
         }
+        //public static void OpenControl(this Control ctrls, bool mode, string[] tagName)
+        //{
+        //    var textboxs = GetAll(ctrls, typeof(TextBox));
+        //    foreach (TextBox item in textboxs)
+        //    {
+        //        if (item.Name.Contains("txt"))
+        //        {
+        //            item.DisableTextBox(!mode);
+        //        }
+        //        else if (item.Name.Contains("txd"))
+        //        {
+        //            item.DisableTextBox(!mode);
+        //            item.BackColor = Color.Turquoise;
+        //        }
+        //        else if (item.Name.Contains("txn"))
+        //        {
+        //            item.DisableTextBox(true);
+        //        }
+
+        //        if (tagName.Contains(item.Name))
+        //        {
+        //            item.DisableTextBox(true);
+        //        }
+        //    }
+
+        //    var dtps = GetAll(ctrls, typeof(DateTimePicker));
+        //    foreach (DateTimePicker item in dtps)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    var nuds = GetAll(ctrls, typeof(NumericUpDown));
+        //    foreach (NumericUpDown item in nuds)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    var btns = GetAll(ctrls, typeof(Button));
+        //    foreach (Button item in btns)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    var rdos = GetAll(ctrls, typeof(RadioButton));
+        //    foreach (RadioButton item in rdos)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    var ddls = GetAll(ctrls, typeof(ComboBox));
+        //    foreach (ComboBox item in ddls)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    var mtbs = GetAll(ctrls, typeof(MaskedTextBox));
+        //    foreach (MaskedTextBox item in mtbs)
+        //    {
+        //        item.Enabled = mode;
+        //    }
+
+        //    //var grds = GetAll(ctrls, typeof(DataGridView));
+        //    //foreach (DataGridView item in grds)
+        //    //{
+        //    //    if (item.RowCount > 0)
+        //    //    {
+        //    //        for (int i = 0; i < item.RowCount; i++)
+        //    //        {
+        //    //            for (int j = 0; j < item.ColumnCount; j++)
+        //    //            {
+        //    //                if (editCols.Contains(item.Rows[i].Cells[j].ColumnIndex))
+        //    //                {
+        //    //                    Color c = mode ? Color.White : ColorTranslator.FromHtml("#E3E3E3");
+        //    //                    item.Rows[i].Cells[j].Style.BackColor = c;
+        //    //                    item.Rows[i].Cells[j].ReadOnly = !mode;
+        //    //                }
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //}
+        //}
 
         public static void ClearControl(this Form frm, BaseControl bu, string docTypeCode, int digit)
         {
@@ -1461,20 +2094,28 @@ namespace AllCashUFormsApp
                 item.ClearTextBox();
                 string digitStr = "";
                 string digitStr2 = "";
-                if (docTypeCode == "IM")
+                if (docTypeCode == "IM" || docTypeCode == "V")
                 {
-                    var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode == docTypeCode);
+                    var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
                     if (documentType != null)
                     {
                         docTypeCode = documentType.DocTypeCode;
-                        int runDigit = (documentType.DocFormat.Length - documentType.RunLength.Value) - 1;
+                        int runDigit = 0;
+
+                        runDigit = (documentType.DocFormat.Length - documentType.RunLength.Value) - 1;
 
                         for (int i = 0; i < runDigit; i++)
                         {
                             digitStr += "0";
                         }
 
-                        for (int i = 0; i < documentType.RunLength.Value; i++)
+                        int len = documentType.RunLength.Value;
+                        if (docTypeCode == "V")
+                        {
+                            len = len + 3;
+                        }
+
+                        for (int i = 0; i < len; i++)
                         {
                             digitStr2 += "0";
                         }
@@ -1484,10 +2125,18 @@ namespace AllCashUFormsApp
                 string realDocTypeCode = "";
                 realDocTypeCode = docTypeCode;
 
-                if (docTypeCode != "IM")
-                    item.Mask = realDocTypeCode + digitStr;
-                else
+                if (docTypeCode == "IM")
+                {
                     item.Mask = digitStr + "M" + digitStr2;
+                }
+                else if (docTypeCode == "V")
+                {
+                    item.Mask = "V" + digitStr2;
+                }
+                else
+                {
+                    item.Mask = realDocTypeCode + digitStr;
+                }
 
                 item.BackColor = Color.Turquoise;
             }
@@ -1540,6 +2189,9 @@ namespace AllCashUFormsApp
                 item.ClearTextBox();
                 string digitStr = "";
 
+                if (docTypeCode == "RL") //for RL from teblet pattern
+                    digit += 2;
+
                 for (int i = 0; i < digit; i++)
                 {
                     digitStr += "0";
@@ -1569,7 +2221,27 @@ namespace AllCashUFormsApp
                 }
 
                 if (docTypeCode != "IV")
-                    item.Mask = realDocTypeCode + digitStr;
+                {
+                    if (docTypeCode == "RL")
+                    {
+                        string _digitStr = "";
+                        var tmp = digitStr.ToCharArray();
+                        for (int i = 0; i < tmp.Count(); i++)
+                        {
+                            //if (i == 3)
+                            //{
+                            //    tmp[i] = 'V';
+                            //}
+                            _digitStr += "C";
+                        }
+
+                        item.Mask = realDocTypeCode + _digitStr;
+                    }
+                    else
+                        item.Mask = realDocTypeCode + digitStr;
+                }
+                else
+                    item.Mask = digitStr;
 
                 item.BackColor = Color.Turquoise;
             }
@@ -1633,11 +2305,22 @@ namespace AllCashUFormsApp
                 item.Value = 0;
             }
 
-
             var mtbs = GetAll(ctrls, typeof(MaskedTextBox));
             foreach (MaskedTextBox item in mtbs)
             {
                 item.ClearTextBox();
+            }
+
+            var ltbs = GetAll(ctrls, typeof(ListBox));//
+            foreach (ListBox item in ltbs)
+            {
+                item.Items.Clear();
+            }
+
+            var pics = GetAll(ctrls, typeof(PictureBox));//
+            foreach (PictureBox item in pics)
+            {
+                item.Image = null;
             }
 
             //var grds = GetAll(ctrls, typeof(DataGridView));
@@ -1648,6 +2331,53 @@ namespace AllCashUFormsApp
             //    item.Refresh();
             //}
         }
+        //public static void ClearControl(this Control ctrls)
+        //{
+        //    var textboxs = GetAll(ctrls, typeof(TextBox));
+        //    foreach (TextBox item in textboxs)
+        //    {
+        //        if (item.Name.Contains("txt"))
+        //        {
+        //            item.ClearTextBox();
+        //        }
+        //        else if (item.Name.Contains("txd"))
+        //        {
+        //            item.ClearTextBox();
+        //            item.BackColor = Color.Turquoise;
+        //        }
+        //        else if (item.Name.Contains("txn"))
+        //        {
+        //            item.DefaultNumber();
+        //        }
+        //    }
+
+        //    var dtps = GetAll(ctrls, typeof(DateTimePicker));
+        //    foreach (DateTimePicker item in dtps)
+        //    {
+        //        item.Value = DateTime.Now;
+        //    }
+
+        //    var nuds = GetAll(ctrls, typeof(NumericUpDown));
+        //    foreach (NumericUpDown item in nuds)
+        //    {
+        //        item.Value = 0;
+        //    }
+
+
+        //    var mtbs = GetAll(ctrls, typeof(MaskedTextBox));
+        //    foreach (MaskedTextBox item in mtbs)
+        //    {
+        //        item.ClearTextBox();
+        //    }
+
+        //    //var grds = GetAll(ctrls, typeof(DataGridView));
+        //    //foreach (DataGridView item in grds)
+        //    //{
+        //    //    item.DataSource = null;
+        //    //    item.Rows.Clear();
+        //    //    item.Refresh();
+        //    //}
+        //}
 
         public static IEnumerable<Control> GetAll(Control control, Type type)
         {
@@ -1669,6 +2399,18 @@ namespace AllCashUFormsApp
             btnPrint.Enabled = false;
         }
 
+        public static void EnableButton(this Form frm, EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
+            AddButton btnAdd, CopyButton btnCopy, string conditionText)
+        {
+            btnEdit.Enabled = !string.IsNullOrEmpty(conditionText);
+            btnRemove.Enabled = !string.IsNullOrEmpty(conditionText);
+            btnSave.Enabled = !btnEdit.Enabled && !btnAdd.Enabled;
+            btnCancel.Enabled = !btnAdd.Enabled;
+            btnAdd.Enabled = !btnSave.Enabled && !btnEdit.Enabled;
+
+            btnCopy.Enabled = false;
+        }
+
         //public static List<tbl_DiscountType> Gettbl_DiscountType(this Form frm)
         //{
         //    List<tbl_DiscountType> ret = new List<tbl_DiscountType>();
@@ -1680,27 +2422,28 @@ namespace AllCashUFormsApp
         //    return ret;
         //}
 
-        public static void PrepareDocRunning(this BaseControl bu, string docTypeCode)
+        public static void PrepareDocRunning(this BaseControl bu, string docTypeCode, bool isReverse = false)
         {
             bu.tbl_DocRunning.Clear();
 
             var docRunList = bu.tbl_DocRunning;
 
-            CultureInfo cultures = CultureInfo.CreateSpecificCulture("th-TH");
+            CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
 
             string year = "";
             string month = "";
-            DateTime cDate = Convert.ToDateTime(DateTime.Now, cultures);
+            DateTime cDate = DateTime.Now; // Convert.ToDateTime(DateTime.Now, cultures);
 
             year = cDate.ToString("yy", cultures);
             month = cDate.Month.ToString();
 
-            Func<tbl_DocRunning, bool> tbl_DocRunningPre = (x => x.DocTypeCode.Replace(" ", string.Empty) == docTypeCode && x.YearDoc.Replace(" ", string.Empty) == year && x.MonthDoc.Replace(" ", string.Empty) == month);
+            Func<tbl_DocRunning, bool> tbl_DocRunningPre = (x => x.DocTypeCode.Replace(" ", string.Empty).Trim() == docTypeCode.Trim() && x.YearDoc.Replace(" ", string.Empty) == year && x.MonthDoc.Replace(" ", string.Empty) == month);
             var docRunningList = bu.GetDocRunning(tbl_DocRunningPre);
 
-            Func<tbl_POMaster, bool> tbl_POMasterPre = (x => x.DocTypeCode == docTypeCode);
-            var poList = bu.GetPOMaster(tbl_POMasterPre);
-            if (poList != null && poList.Count > 0)
+            //Func<tbl_POMaster, bool> tbl_POMasterPre = (x => x.DocTypeCode == docTypeCode);
+            //var poList = bu.GetPOMaster(tbl_POMasterPre);
+            var docList = new DocTypeCode().GenDocNo(docTypeCode);
+            if (docList != null)
             {
                 tbl_DocRunning docRunning = new tbl_DocRunning();
                 if (docRunningList != null && docRunningList.Count > 0)
@@ -1718,22 +2461,26 @@ namespace AllCashUFormsApp
 
                 docRunning.DayDoc = "0"; // CountDocDate(poList).ToString();
 
-                string maxDocNo = GetMaxODDoc(bu, poList);
+                string maxDocNo = docList;// bu.GenDocNo(docTypeCode); //GetMaxODDoc(bu, poList);
                 string runDoc = "";
 
-                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode == docTypeCode);
+                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
                 if (tbl_DocumentType != null)
                 {
                     int runLength = tbl_DocumentType.RunLength.Value;
-                    runDoc = maxDocNo.Substring(maxDocNo.Length - runLength, runLength);
+                    if (runLength != 0)
+                        runDoc = maxDocNo.Substring(maxDocNo.Length - runLength, runLength);
                 }
 
-                int runningNo = Convert.ToInt32(runDoc) + 1;
-                docRunning.RunDoc = runningNo;
+                if (!string.IsNullOrEmpty(runDoc))
+                {
+                    int runningNo = isReverse ? Convert.ToInt32(runDoc) - 1 : Convert.ToInt32(runDoc) + 1;
+                    docRunning.RunDoc = runningNo;
 
-                docRunning.ModifiledDate = DateTime.Now.ToDateTimeFormat();
+                    docRunning.ModifiledDate = cDate.ToDateTimeFormat();
 
-                docRunList.Add(docRunning);
+                    docRunList.Add(docRunning);
+                }
             }
         }
 
@@ -1749,13 +2496,15 @@ namespace AllCashUFormsApp
 
         public static bool ConfirmMessageBox(this string msg, string title)
         {
-            var confirmResult = MessageBox.Show(msg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            var confirmResult = FlexibleMessageBox.Show(msg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             return (confirmResult == DialogResult.Yes);
         }
 
         public static bool ValiadteDataGridView(this DataGridView grdList, List<tbl_Product> allProduct, int _prdCodeCell, int _uomCell, int _qtyCell, int _priceCell, BaseControl bu, string whid, bool isValidateOverRecieve = false, bool isRJ = false)
         {
             bool ret = true;
+
+            var allprdUOMSets = bu.GetUOMSet();
 
             List<bool> checkEmptyCell = new List<bool>();
             List<bool> checkPrdCode = new List<bool>();
@@ -1812,35 +2561,36 @@ namespace AllCashUFormsApp
                                     var productUomName = uomCell.EditedFormattedValue.ToString();
                                     Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => x.ProductUomName == productUomName);
                                     var prdUOMs = bu.GetUOM(tbl_ProductUomPre);
-
-                                    decimal unitQty = 0;
-
-                                    Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == productID);
-                                    var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
-                                    if (prdUOMSets != null && prdUOMSets.Count > 0 && prdUOMs != null && prdUOMs.Count > 0)
+                                    if (prdUOMs != null && prdUOMs.Count > 0)
                                     {
-                                        if (prdUOMs[0].ProductUomID != 2)
-                                            unitQty = (qtyValue * prdUOMSets[0].BaseQty);
+                                        decimal unitQty = 0;
+
+                                        var prdUOMSets = bu.GetProductUOMSet(allprdUOMSets, productID);
+                                        if (prdUOMSets != null && prdUOMSets.Count > 0 && prdUOMs != null && prdUOMs.Count > 0)
+                                        {
+                                            if (prdUOMs[0].ProductUomID == prdUOMSets[0].UomSetID) // prdUOMs[0].ProductUomID != 2)
+                                                unitQty = (qtyValue * prdUOMSets[0].BaseQty);
+                                            else
+                                                unitQty = qtyValue;
+                                        }
                                         else
                                             unitQty = qtyValue;
-                                    }
-                                    else
-                                        unitQty = qtyValue;
 
-                                    var invWhItem = bu.GetInvWarehouse(productID, whid);
-                                    decimal whQty = 0;
+                                        var invWhItem = bu.GetStockMovement(productID, whid); //  bu.GetInvWarehouse(productID, whid);
+                                        decimal whQty = 0;
 
-                                    if (invWhItem != null && invWhItem.Count > 0)
-                                        whQty = invWhItem[0].QtyOnHand;
+                                        if (invWhItem != null && invWhItem.Count > 0)
+                                            whQty = invWhItem.Sum(x => x.TrnQty);  //invWhItem[0].QtyOnHand;
 
-                                    if (unitQty > whQty)
-                                    {
-                                        validateRLList.Add(new ValidateRL
+                                        if (unitQty > whQty)
                                         {
-                                            ProductID = productID,
-                                            StockQty = whQty,
-                                            InputQty = unitQty
-                                        });
+                                            validateRLList.Add(new ValidateRL
+                                            {
+                                                ProductID = productID,
+                                                StockQty = whQty,
+                                                InputQty = unitQty
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -1949,7 +2699,107 @@ namespace AllCashUFormsApp
 
             return discount;
         }
+        
+        public static List<DataTable> ReadExcelToDataTable(this List<DataTable> dtList, string fileName, List<string> SheetName)
+        {
+            List<DataTable> DataList = new List<DataTable>();
+            try
+            {
+                DataSet ds = new DataSet();
 
+                OleDbDataAdapter cmd;
+
+                string connStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source = " + fileName + ";";
+                connStr += "Extended Properties=Excel 12.0;";//Debug x86 
+
+                OleDbConnection MyConnection = new OleDbConnection(connStr);
+
+                foreach (var name in SheetName)
+                {
+                    ds = new DataSet();
+                    string cSql = "SELECT * FROM " + name;
+                    cmd = new OleDbDataAdapter(cSql, MyConnection);
+                    cmd.Fill(ds, name);
+                    DataList.Add(ds.Tables[0]);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                DataList = null;
+            }
+
+            return DataList;
+        }
+
+
+        public static List<DataTable> ReadExxel(this List<DataTable> dtList, string fileName, List<string> SheetName)
+        {
+            List<DataTable> DataList = new List<DataTable>();
+            bool headers = true;
+
+            try
+            {
+                var _xl = new Microsoft.Office.Interop.Excel.Application();
+                var wb = _xl.Workbooks.Open(fileName);
+                var sheets = wb.Sheets;
+                DataSet dataSet = null;
+                if (sheets != null && sheets.Count != 0)
+                {
+                    dataSet = new DataSet();
+                    foreach (var item in sheets)
+                    {
+                        var sheet = (Microsoft.Office.Interop.Excel.Worksheet)item;
+                        DataTable dt = null;
+                        if (sheet != null)
+                        {
+                            dt = new DataTable();
+                            var ColumnCount = ((Microsoft.Office.Interop.Excel.Range)sheet.UsedRange.Rows[1, Type.Missing]).Columns.Count;
+                            var rowCount = ((Microsoft.Office.Interop.Excel.Range)sheet.UsedRange.Columns[1, Type.Missing]).Rows.Count;
+
+                            for (int j = 0; j < ColumnCount; j++)
+                            {
+                                var cell = (Microsoft.Office.Interop.Excel.Range)sheet.Cells[1, j + 1];
+                                var column = new DataColumn(headers ? cell.Value : string.Empty);
+                                dt.Columns.Add(column);
+                            }
+
+                            for (int i = 0; i < rowCount; i++)
+                            {
+                                var r = dt.NewRow();
+                                for (int j = 0; j < ColumnCount; j++)
+                                {
+                                    var cell = (Microsoft.Office.Interop.Excel.Range)sheet.Cells[i + 1 + (headers ? 1 : 0), j + 1];
+                                    r[j] = cell.Value;
+                                }
+                                dt.Rows.Add(r);
+                            }
+
+                        }
+                        DataList.Add(dt);
+                    }
+                }
+                _xl.Quit();
+            }
+            catch (Exception ex)
+            {
+                DataList = null;
+            }
+
+            return DataList;
+        }
+
+        public static string[] GetRange(string range, Microsoft.Office.Interop.Excel.Worksheet excelWorksheet)
+        {
+            Microsoft.Office.Interop.Excel.Range workingRangeCells =
+              excelWorksheet.get_Range(range, Type.Missing);
+            //workingRangeCells.Select();
+
+            System.Array array = (System.Array)workingRangeCells.Cells.Value2;
+            string[] arrayS = (string[])array;
+
+            return arrayS;
+        }
 
         //private static int CountDocDate(List<tbl_POMaster> poList)
         //{

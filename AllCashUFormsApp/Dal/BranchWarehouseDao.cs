@@ -1,10 +1,11 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace AllCashUFormsApp
 {
@@ -20,10 +21,12 @@ namespace AllCashUFormsApp
             List<tbl_BranchWarehouse> list = new List<tbl_BranchWarehouse>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_BranchWarehouse.Where(predicate).ToList();
-                }
+                list = tbl_BranchWarehouse.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_BranchWarehouse.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +46,23 @@ namespace AllCashUFormsApp
             List<tbl_BranchWarehouse> list = new List<tbl_BranchWarehouse>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_BranchWarehouse.ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_BranchWarehouse] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_BranchWarehouse), sql);
+                list = dynamicListReturned.Cast<tbl_BranchWarehouse>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_BranchWarehouse>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_BranchWarehouse.ToList();
+                //}
             }
             catch (Exception ex)
             {

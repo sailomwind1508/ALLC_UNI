@@ -22,7 +22,7 @@ namespace AllCashUFormsApp.Controller
 
         public TR() : base("TR")
         {
-            _trDocTypePredicate = (x => x.DocTypeCode == "TR");
+            _trDocTypePredicate = (x => x.DocTypeCode.Trim() == "TR");
         }
 
         public List<tbl_SalArea> GetAllSaleArea()
@@ -37,7 +37,7 @@ namespace AllCashUFormsApp.Controller
 
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> predicate)
         {
-            return new tbl_ArCustomer().Select(predicate);
+            return new tbl_ArCustomer().SelectAll().Where(predicate).ToList();
         }
 
         public virtual DataTable GetDataTable(bool isPopup = true)
@@ -48,6 +48,8 @@ namespace AllCashUFormsApp.Controller
                 tbl_PRMaster = (new tbl_PRMaster()).Select(trDocTypePredicate);
 
                 var docStatus = GetDocStatus();
+                var allEmp = GetEmployee();
+                var allBranch = GetBranch();
 
                 DataTable newTable = new DataTable();
                 newTable.Columns.Add("DocNo", typeof(string));
@@ -69,15 +71,17 @@ namespace AllCashUFormsApp.Controller
                     Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
 
                     string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
-                    tbl_Employee emp = GetEmployee(r.EmpID);
-                    string crUser = string.Join(" ", emp.TitleName, emp.FirstName);
+                    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
+                    string crUser = "";
+                    if (emp != null)
+                        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
 
                     string SuppName = "";
                     short CreditDay = 0;
                     DateTime DueDate = DateTime.MinValue;
                     decimal TotalDue = 0;
 
-                    var branch = GetBranch();
+                    var branch = allBranch;
                     if (branch != null && branch.Count > 0)
                     {
                         SuppName = branch.FirstOrDefault(x => x.BranchCode == r.FromBranchID).BranchName;

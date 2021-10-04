@@ -49,6 +49,7 @@ namespace AllCashUFormsApp.Controller
                             //join prd in tbl_Products on g.SKU_ID equals prd.ProductCode
                             select new
                             {
+                                Choose = false,
                                 No = 0,
                                 DocNo = pt.DocNo,
                                 PromotionID = pt.PromotionID,
@@ -71,7 +72,7 @@ namespace AllCashUFormsApp.Controller
                 foreach (var r in data)
                 {
                     index++;
-                    newTable.Rows.Add(index, r.DocNo, r.PromotionID, r.PromotionName, r.SKUGroupID, r.DisCountAmt, r.SKUGroupRewardID, r.SKUGroupRewardAmt,
+                    newTable.Rows.Add(false, index, r.DocNo, r.PromotionID, r.PromotionName, r.SKUGroupID, r.DisCountAmt, r.SKUGroupRewardID, r.SKUGroupRewardAmt,
                         r.RewardName, r.EffectiveDate, r.ExpireDate);
                 }
 

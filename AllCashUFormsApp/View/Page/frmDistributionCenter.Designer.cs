@@ -30,12 +30,23 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDistributionCenter));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
+            this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
+            this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
+            this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
+            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
+            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
+            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
+            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
+            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.pnlBot = new System.Windows.Forms.Panel();
@@ -164,13 +175,13 @@
             this.splcEmp = new System.Windows.Forms.SplitContainer();
             this.grdEmpList = new System.Windows.Forms.DataGridView();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.btnSearchEmp = new System.Windows.Forms.Button();
             this.ddlPosition = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
             this.rdoEmpC = new System.Windows.Forms.RadioButton();
             this.rdoEmpN = new System.Windows.Forms.RadioButton();
             this.ddlDepartment = new System.Windows.Forms.ComboBox();
-            this.btnSearchEmp = new System.Windows.Forms.Button();
             this.label37 = new System.Windows.Forms.Label();
             this.txtSearchEmp = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -227,14 +238,17 @@
             this.label80 = new System.Windows.Forms.Label();
             this.grdBWHList = new System.Windows.Forms.DataGridView();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.btnSearchWarehouse = new System.Windows.Forms.Button();
             this.panel22 = new System.Windows.Forms.Panel();
             this.rdoWHCancel = new System.Windows.Forms.RadioButton();
             this.rdoWHNormal = new System.Windows.Forms.RadioButton();
             this.label57 = new System.Windows.Forms.Label();
             this.label56 = new System.Windows.Forms.Label();
-            this.btnSearchWarehouse = new System.Windows.Forms.Button();
             this.txtSearchWarehouse = new System.Windows.Forms.TextBox();
             this.pnlBWH = new System.Windows.Forms.Panel();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.label48 = new System.Windows.Forms.Label();
             this.panel15 = new System.Windows.Forms.Panel();
             this.rdoBWHStatusC = new System.Windows.Forms.RadioButton();
             this.rdoBWHStatusN = new System.Windows.Forms.RadioButton();
@@ -249,20 +263,25 @@
             this.label50 = new System.Windows.Forms.Label();
             this.tabVan = new System.Windows.Forms.TabPage();
             this.sprcVan = new System.Windows.Forms.SplitContainer();
+            this.grdVanList = new System.Windows.Forms.DataGridView();
             this.panel33 = new System.Windows.Forms.Panel();
             this.lblVanCount = new System.Windows.Forms.Label();
             this.label81 = new System.Windows.Forms.Label();
             this.panel23 = new System.Windows.Forms.Panel();
+            this.btnSearchVan = new System.Windows.Forms.Button();
             this.ddlWHType_SVan = new System.Windows.Forms.ComboBox();
             this.label60 = new System.Windows.Forms.Label();
             this.panel24 = new System.Windows.Forms.Panel();
             this.rdoVanC = new System.Windows.Forms.RadioButton();
             this.rdoVanN = new System.Windows.Forms.RadioButton();
             this.label58 = new System.Windows.Forms.Label();
-            this.btnSearchVan = new System.Windows.Forms.Button();
             this.txtSearchVan = new System.Windows.Forms.TextBox();
             this.label59 = new System.Windows.Forms.Label();
             this.pnlVANDT = new System.Windows.Forms.Panel();
+            this.label62 = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.label55 = new System.Windows.Forms.Label();
+            this.label54 = new System.Windows.Forms.Label();
             this.txtWHSeq_Van = new System.Windows.Forms.TextBox();
             this.panel16 = new System.Windows.Forms.Panel();
             this.rdoStatusVanC = new System.Windows.Forms.RadioButton();
@@ -299,17 +318,18 @@
             this.label51 = new System.Windows.Forms.Label();
             this.tabMarket = new System.Windows.Forms.TabPage();
             this.sprcMKT = new System.Windows.Forms.SplitContainer();
+            this.grdSaleAreaList = new System.Windows.Forms.DataGridView();
             this.panel34 = new System.Windows.Forms.Panel();
             this.lblMKTCount = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
             this.panel27 = new System.Windows.Forms.Panel();
+            this.btnSearchMKT = new System.Windows.Forms.Button();
             this.ddlZone = new System.Windows.Forms.ComboBox();
             this.label69 = new System.Windows.Forms.Label();
             this.panel28 = new System.Windows.Forms.Panel();
             this.rdoMKTC = new System.Windows.Forms.RadioButton();
             this.rdoMKTN = new System.Windows.Forms.RadioButton();
             this.label70 = new System.Windows.Forms.Label();
-            this.btnSearchMKT = new System.Windows.Forms.Button();
             this.txtSearchMKT = new System.Windows.Forms.TextBox();
             this.label71 = new System.Windows.Forms.Label();
             this.panel30 = new System.Windows.Forms.Panel();
@@ -318,11 +338,21 @@
             this.label83 = new System.Windows.Forms.Label();
             this.grdSaleDistrictList = new System.Windows.Forms.DataGridView();
             this.pnlMKT = new System.Windows.Forms.Panel();
+            this.label68 = new System.Windows.Forms.Label();
+            this.lblWHID = new System.Windows.Forms.Label();
+            this.ddlWHID = new System.Windows.Forms.ComboBox();
+            this.panel21 = new System.Windows.Forms.Panel();
+            this.rdoMKTStatusC = new System.Windows.Forms.RadioButton();
+            this.rdoMKTStatusN = new System.Windows.Forms.RadioButton();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
+            this.label65 = new System.Windows.Forms.Label();
+            this.label64 = new System.Windows.Forms.Label();
+            this.label63 = new System.Windows.Forms.Label();
             this.lblSalAreaID = new System.Windows.Forms.Label();
             this.btnDistrict = new System.Windows.Forms.Button();
             this.txtSalAreaCode = new System.Windows.Forms.TextBox();
             this.lblSalAreaCode = new System.Windows.Forms.Label();
-            this.lblCountCustomer = new System.Windows.Forms.Label();
             this.txtSalAreaID = new System.Windows.Forms.TextBox();
             this.txtCountCustomer = new System.Windows.Forms.TextBox();
             this.ddlZoneID = new System.Windows.Forms.ComboBox();
@@ -331,38 +361,10 @@
             this.txtSeq = new System.Windows.Forms.TextBox();
             this.txtSalAreaName = new System.Windows.Forms.TextBox();
             this.lblSalAreaName = new System.Windows.Forms.Label();
+            this.lblCountCustomer = new System.Windows.Forms.Label();
             this.panel20 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.label52 = new System.Windows.Forms.Label();
-            this.label48 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label54 = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.label61 = new System.Windows.Forms.Label();
-            this.label62 = new System.Windows.Forms.Label();
-            this.label63 = new System.Windows.Forms.Label();
-            this.label64 = new System.Windows.Forms.Label();
-            this.label65 = new System.Windows.Forms.Label();
-            this.label66 = new System.Windows.Forms.Label();
-            this.panel21 = new System.Windows.Forms.Panel();
-            this.rdoMKTStatusC = new System.Windows.Forms.RadioButton();
-            this.rdoMKTStatusN = new System.Windows.Forms.RadioButton();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label68 = new System.Windows.Forms.Label();
-            this.lblWHID = new System.Windows.Forms.Label();
-            this.ddlWHID = new System.Windows.Forms.ComboBox();
-            this.grdSaleAreaList = new System.Windows.Forms.DataGridView();
-            this.grdVanList = new System.Windows.Forms.DataGridView();
-            this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
-            this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
-            this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
-            this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
-            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
-            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
-            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
-            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
-            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -416,6 +418,7 @@
             this.sprcVan.Panel1.SuspendLayout();
             this.sprcVan.Panel2.SuspendLayout();
             this.sprcVan.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdVanList)).BeginInit();
             this.panel33.SuspendLayout();
             this.panel23.SuspendLayout();
             this.panel24.SuspendLayout();
@@ -428,6 +431,7 @@
             this.sprcMKT.Panel1.SuspendLayout();
             this.sprcMKT.Panel2.SuspendLayout();
             this.sprcMKT.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdSaleAreaList)).BeginInit();
             this.panel34.SuspendLayout();
             this.panel27.SuspendLayout();
             this.panel28.SuspendLayout();
@@ -435,10 +439,8 @@
             this.panel35.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdSaleDistrictList)).BeginInit();
             this.pnlMKT.SuspendLayout();
-            this.panel20.SuspendLayout();
             this.panel21.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdSaleAreaList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.grdVanList)).BeginInit();
+            this.panel20.SuspendLayout();
             this.SuspendLayout();
             // 
             // FormPic
@@ -505,6 +507,191 @@
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
             // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnClose.BackColor = System.Drawing.Color.Azure;
+            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Black;
+            this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
+            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnClose.Location = new System.Drawing.Point(600, 3);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(57, 23);
+            this.btnClose.TabIndex = 17;
+            this.btnClose.Text = "ออก";
+            this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnAdd.BackColor = System.Drawing.Color.Azure;
+            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAdd.FlatAppearance.BorderSize = 0;
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.ForeColor = System.Drawing.Color.Black;
+            this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
+            this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdd.Location = new System.Drawing.Point(7, 3);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(56, 23);
+            this.btnAdd.TabIndex = 23;
+            this.btnAdd.Text = "เพิ่ม";
+            this.btnAdd.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // btnExcel
+            // 
+            this.btnExcel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnExcel.BackColor = System.Drawing.Color.Azure;
+            this.btnExcel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExcel.Enabled = false;
+            this.btnExcel.FlatAppearance.BorderSize = 0;
+            this.btnExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExcel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExcel.ForeColor = System.Drawing.Color.Black;
+            this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
+            this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExcel.Location = new System.Drawing.Point(485, 3);
+            this.btnExcel.Name = "btnExcel";
+            this.btnExcel.Size = new System.Drawing.Size(109, 23);
+            this.btnExcel.TabIndex = 17;
+            this.btnExcel.Text = "Import Excel";
+            this.btnExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnExcel.UseVisualStyleBackColor = false;
+            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnEdit.BackColor = System.Drawing.Color.Azure;
+            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEdit.FlatAppearance.BorderSize = 0;
+            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEdit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.ForeColor = System.Drawing.Color.Black;
+            this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
+            this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEdit.Location = new System.Drawing.Point(69, 3);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(63, 23);
+            this.btnEdit.TabIndex = 25;
+            this.btnEdit.Text = "แก้ไข";
+            this.btnEdit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnEdit.UseVisualStyleBackColor = false;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrint.BackColor = System.Drawing.Color.Azure;
+            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrint.Enabled = false;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrint.ForeColor = System.Drawing.Color.Black;
+            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
+            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrint.Location = new System.Drawing.Point(418, 3);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(61, 23);
+            this.btnPrint.TabIndex = 17;
+            this.btnPrint.Text = "พิมพ์";
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnRemove.BackColor = System.Drawing.Color.Azure;
+            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRemove.Enabled = false;
+            this.btnRemove.FlatAppearance.BorderSize = 0;
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemove.ForeColor = System.Drawing.Color.Black;
+            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
+            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRemove.Location = new System.Drawing.Point(138, 3);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(49, 23);
+            this.btnRemove.TabIndex = 25;
+            this.btnRemove.Text = "ลบ";
+            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCancel.BackColor = System.Drawing.Color.Azure;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(344, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(68, 23);
+            this.btnCancel.TabIndex = 17;
+            this.btnCancel.Text = "ยกเลิก";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCopy.BackColor = System.Drawing.Color.Azure;
+            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCopy.Enabled = false;
+            this.btnCopy.FlatAppearance.BorderSize = 0;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopy.ForeColor = System.Drawing.Color.Black;
+            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
+            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCopy.Location = new System.Drawing.Point(193, 3);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(75, 23);
+            this.btnCopy.TabIndex = 25;
+            this.btnCopy.Text = "คัดลอก";
+            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCopy.UseVisualStyleBackColor = false;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSave.BackColor = System.Drawing.Color.Azure;
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.Black;
+            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
+            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSave.Location = new System.Drawing.Point(274, 3);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(64, 23);
+            this.btnSave.TabIndex = 24;
+            this.btnSave.Text = "บันทึก";
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // panel2
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -551,6 +738,7 @@
             // 
             this.splcBranch.Panel1.Controls.Add(this.grdDepo);
             this.splcBranch.Panel1.Controls.Add(this.panel7);
+            this.splcBranch.Panel1.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.splcBranch.Panel1MinSize = 298;
             // 
             // splcBranch.Panel2
@@ -565,6 +753,8 @@
             this.grdDepo.AllowUserToAddRows = false;
             this.grdDepo.AllowUserToDeleteRows = false;
             this.grdDepo.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdDepo.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.grdDepo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdDepo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdDepo.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
@@ -601,11 +791,14 @@
             this.btnSearchBranch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearchBranch.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearchBranch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchBranch.Location = new System.Drawing.Point(239, 6);
+            this.btnSearchBranch.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchBranch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchBranch.Location = new System.Drawing.Point(221, 6);
             this.btnSearchBranch.Name = "btnSearchBranch";
-            this.btnSearchBranch.Size = new System.Drawing.Size(50, 25);
-            this.btnSearchBranch.TabIndex = 41;
+            this.btnSearchBranch.Size = new System.Drawing.Size(70, 26);
+            this.btnSearchBranch.TabIndex = 219;
             this.btnSearchBranch.Text = "ค้นหา";
+            this.btnSearchBranch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchBranch.UseVisualStyleBackColor = false;
             this.btnSearchBranch.Click += new System.EventHandler(this.btnSearchBranch_Click);
             // 
@@ -665,7 +858,7 @@
             this.txtSearchBranch.Location = new System.Drawing.Point(62, 8);
             this.txtSearchBranch.MaxLength = 255;
             this.txtSearchBranch.Name = "txtSearchBranch";
-            this.txtSearchBranch.Size = new System.Drawing.Size(173, 23);
+            this.txtSearchBranch.Size = new System.Drawing.Size(152, 23);
             this.txtSearchBranch.TabIndex = 40;
             this.txtSearchBranch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchBranch_KeyDown);
             // 
@@ -1964,6 +2157,8 @@
             this.grdEmpList.AllowUserToAddRows = false;
             this.grdEmpList.AllowUserToDeleteRows = false;
             this.grdEmpList.AllowUserToResizeRows = false;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdEmpList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.grdEmpList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdEmpList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdEmpList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
@@ -1981,11 +2176,11 @@
             // 
             this.panel11.BackColor = System.Drawing.Color.Azure;
             this.panel11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel11.Controls.Add(this.btnSearchEmp);
             this.panel11.Controls.Add(this.ddlPosition);
             this.panel11.Controls.Add(this.label38);
             this.panel11.Controls.Add(this.panel8);
             this.panel11.Controls.Add(this.ddlDepartment);
-            this.panel11.Controls.Add(this.btnSearchEmp);
             this.panel11.Controls.Add(this.label37);
             this.panel11.Controls.Add(this.txtSearchEmp);
             this.panel11.Controls.Add(this.label27);
@@ -1995,6 +2190,25 @@
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(572, 122);
             this.panel11.TabIndex = 159;
+            // 
+            // btnSearchEmp
+            // 
+            this.btnSearchEmp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchEmp.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchEmp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchEmp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchEmp.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnSearchEmp.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearchEmp.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchEmp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchEmp.Location = new System.Drawing.Point(397, 5);
+            this.btnSearchEmp.Name = "btnSearchEmp";
+            this.btnSearchEmp.Size = new System.Drawing.Size(70, 26);
+            this.btnSearchEmp.TabIndex = 218;
+            this.btnSearchEmp.Text = "ค้นหา";
+            this.btnSearchEmp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchEmp.UseVisualStyleBackColor = false;
+            this.btnSearchEmp.Click += new System.EventHandler(this.btnSearchEmp_Click);
             // 
             // ddlPosition
             // 
@@ -2063,22 +2277,6 @@
             this.ddlDepartment.Size = new System.Drawing.Size(208, 24);
             this.ddlDepartment.TabIndex = 19;
             this.ddlDepartment.SelectedIndexChanged += new System.EventHandler(this.ddlDepartment_SelectedIndexChanged);
-            // 
-            // btnSearchEmp
-            // 
-            this.btnSearchEmp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearchEmp.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchEmp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchEmp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchEmp.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnSearchEmp.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchEmp.Location = new System.Drawing.Point(394, 5);
-            this.btnSearchEmp.Name = "btnSearchEmp";
-            this.btnSearchEmp.Size = new System.Drawing.Size(50, 25);
-            this.btnSearchEmp.TabIndex = 16;
-            this.btnSearchEmp.Text = "ค้นหา";
-            this.btnSearchEmp.UseVisualStyleBackColor = false;
-            this.btnSearchEmp.Click += new System.EventHandler(this.btnSearchEmp_Click);
             // 
             // label37
             // 
@@ -2715,16 +2913,35 @@
             // panel9
             // 
             this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel9.Controls.Add(this.btnSearchWarehouse);
             this.panel9.Controls.Add(this.panel22);
             this.panel9.Controls.Add(this.label57);
             this.panel9.Controls.Add(this.label56);
-            this.panel9.Controls.Add(this.btnSearchWarehouse);
             this.panel9.Controls.Add(this.txtSearchWarehouse);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(515, 65);
             this.panel9.TabIndex = 166;
+            // 
+            // btnSearchWarehouse
+            // 
+            this.btnSearchWarehouse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchWarehouse.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchWarehouse.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchWarehouse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchWarehouse.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnSearchWarehouse.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearchWarehouse.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchWarehouse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchWarehouse.Location = new System.Drawing.Point(347, 5);
+            this.btnSearchWarehouse.Name = "btnSearchWarehouse";
+            this.btnSearchWarehouse.Size = new System.Drawing.Size(70, 26);
+            this.btnSearchWarehouse.TabIndex = 219;
+            this.btnSearchWarehouse.Text = "ค้นหา";
+            this.btnSearchWarehouse.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchWarehouse.UseVisualStyleBackColor = false;
+            this.btnSearchWarehouse.Click += new System.EventHandler(this.btnSearchWarehouse_Click);
             // 
             // panel22
             // 
@@ -2784,22 +3001,6 @@
             this.label56.TabIndex = 164;
             this.label56.Text = "คำค้นหา : ";
             // 
-            // btnSearchWarehouse
-            // 
-            this.btnSearchWarehouse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearchWarehouse.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchWarehouse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchWarehouse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchWarehouse.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnSearchWarehouse.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchWarehouse.Location = new System.Drawing.Point(344, 5);
-            this.btnSearchWarehouse.Name = "btnSearchWarehouse";
-            this.btnSearchWarehouse.Size = new System.Drawing.Size(50, 25);
-            this.btnSearchWarehouse.TabIndex = 7;
-            this.btnSearchWarehouse.Text = "ค้นหา";
-            this.btnSearchWarehouse.UseVisualStyleBackColor = false;
-            this.btnSearchWarehouse.Click += new System.EventHandler(this.btnSearchWarehouse_Click);
-            // 
             // txtSearchWarehouse
             // 
             this.txtSearchWarehouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2830,6 +3031,39 @@
             this.pnlBWH.Name = "pnlBWH";
             this.pnlBWH.Size = new System.Drawing.Size(499, 399);
             this.pnlBWH.TabIndex = 179;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label53.ForeColor = System.Drawing.Color.Red;
+            this.label53.Location = new System.Drawing.Point(25, 94);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(16, 16);
+            this.label53.TabIndex = 206;
+            this.label53.Text = "*";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label49.ForeColor = System.Drawing.Color.Red;
+            this.label49.Location = new System.Drawing.Point(20, 67);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(16, 16);
+            this.label49.TabIndex = 205;
+            this.label49.Text = "*";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label48.ForeColor = System.Drawing.Color.Red;
+            this.label48.Location = new System.Drawing.Point(34, 40);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(16, 16);
+            this.label48.TabIndex = 204;
+            this.label48.Text = "*";
             // 
             // panel15
             // 
@@ -2991,6 +3225,24 @@
             this.sprcVan.SplitterDistance = 550;
             this.sprcVan.TabIndex = 164;
             // 
+            // grdVanList
+            // 
+            this.grdVanList.AllowUserToAddRows = false;
+            this.grdVanList.AllowUserToDeleteRows = false;
+            this.grdVanList.AllowUserToResizeRows = false;
+            this.grdVanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdVanList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdVanList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.grdVanList.Location = new System.Drawing.Point(0, 95);
+            this.grdVanList.MultiSelect = false;
+            this.grdVanList.Name = "grdVanList";
+            this.grdVanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdVanList.Size = new System.Drawing.Size(550, 280);
+            this.grdVanList.TabIndex = 22;
+            this.grdVanList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdVanList_CellClick);
+            this.grdVanList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdVanList_RowPostPaint);
+            this.grdVanList.SelectionChanged += new System.EventHandler(this.grdVanList_SelectionChanged);
+            // 
             // panel33
             // 
             this.panel33.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -3025,11 +3277,11 @@
             // panel23
             // 
             this.panel23.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel23.Controls.Add(this.btnSearchVan);
             this.panel23.Controls.Add(this.ddlWHType_SVan);
             this.panel23.Controls.Add(this.label60);
             this.panel23.Controls.Add(this.panel24);
             this.panel23.Controls.Add(this.label58);
-            this.panel23.Controls.Add(this.btnSearchVan);
             this.panel23.Controls.Add(this.txtSearchVan);
             this.panel23.Controls.Add(this.label59);
             this.panel23.Dock = System.Windows.Forms.DockStyle.Top;
@@ -3037,6 +3289,25 @@
             this.panel23.Name = "panel23";
             this.panel23.Size = new System.Drawing.Size(550, 95);
             this.panel23.TabIndex = 167;
+            // 
+            // btnSearchVan
+            // 
+            this.btnSearchVan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchVan.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchVan.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchVan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchVan.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnSearchVan.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearchVan.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchVan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchVan.Location = new System.Drawing.Point(470, 5);
+            this.btnSearchVan.Name = "btnSearchVan";
+            this.btnSearchVan.Size = new System.Drawing.Size(70, 26);
+            this.btnSearchVan.TabIndex = 219;
+            this.btnSearchVan.Text = "ค้นหา";
+            this.btnSearchVan.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchVan.UseVisualStyleBackColor = false;
+            this.btnSearchVan.Click += new System.EventHandler(this.btnSearchVan_Click);
             // 
             // ddlWHType_SVan
             // 
@@ -3105,22 +3376,6 @@
             this.label58.TabIndex = 166;
             this.label58.Text = "สถานะ : ";
             // 
-            // btnSearchVan
-            // 
-            this.btnSearchVan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearchVan.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchVan.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchVan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchVan.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnSearchVan.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchVan.Location = new System.Drawing.Point(484, 5);
-            this.btnSearchVan.Name = "btnSearchVan";
-            this.btnSearchVan.Size = new System.Drawing.Size(50, 25);
-            this.btnSearchVan.TabIndex = 18;
-            this.btnSearchVan.Text = "ค้นหา";
-            this.btnSearchVan.UseVisualStyleBackColor = false;
-            this.btnSearchVan.Click += new System.EventHandler(this.btnSearchVan_Click);
-            // 
             // txtSearchVan
             // 
             this.txtSearchVan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -3128,7 +3383,7 @@
             this.txtSearchVan.Location = new System.Drawing.Point(82, 7);
             this.txtSearchVan.MaxLength = 255;
             this.txtSearchVan.Name = "txtSearchVan";
-            this.txtSearchVan.Size = new System.Drawing.Size(399, 23);
+            this.txtSearchVan.Size = new System.Drawing.Size(382, 23);
             this.txtSearchVan.TabIndex = 17;
             this.txtSearchVan.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchVan_KeyDown);
             // 
@@ -3179,6 +3434,50 @@
             this.pnlVANDT.Name = "pnlVANDT";
             this.pnlVANDT.Size = new System.Drawing.Size(464, 399);
             this.pnlVANDT.TabIndex = 0;
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label62.ForeColor = System.Drawing.Color.Red;
+            this.label62.Location = new System.Drawing.Point(22, 92);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(16, 16);
+            this.label62.TabIndex = 210;
+            this.label62.Text = "*";
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label61.ForeColor = System.Drawing.Color.Red;
+            this.label61.Location = new System.Drawing.Point(13, 120);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(16, 16);
+            this.label61.TabIndex = 209;
+            this.label61.Text = "*";
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label55.ForeColor = System.Drawing.Color.Red;
+            this.label55.Location = new System.Drawing.Point(47, 65);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(16, 16);
+            this.label55.TabIndex = 208;
+            this.label55.Text = "*";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label54.ForeColor = System.Drawing.Color.Red;
+            this.label54.Location = new System.Drawing.Point(40, 38);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(16, 16);
+            this.label54.TabIndex = 207;
+            this.label54.Text = "*";
             // 
             // txtWHSeq_Van
             // 
@@ -3596,6 +3895,25 @@
             this.sprcMKT.SplitterDistance = 570;
             this.sprcMKT.TabIndex = 166;
             // 
+            // grdSaleAreaList
+            // 
+            this.grdSaleAreaList.AllowUserToAddRows = false;
+            this.grdSaleAreaList.AllowUserToDeleteRows = false;
+            this.grdSaleAreaList.AllowUserToResizeColumns = false;
+            this.grdSaleAreaList.AllowUserToResizeRows = false;
+            this.grdSaleAreaList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdSaleAreaList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdSaleAreaList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.grdSaleAreaList.Location = new System.Drawing.Point(0, 95);
+            this.grdSaleAreaList.MultiSelect = false;
+            this.grdSaleAreaList.Name = "grdSaleAreaList";
+            this.grdSaleAreaList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdSaleAreaList.Size = new System.Drawing.Size(570, 280);
+            this.grdSaleAreaList.TabIndex = 17;
+            this.grdSaleAreaList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSaleAreaList_CellClick);
+            this.grdSaleAreaList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSaleAreaList_RowPostPaint);
+            this.grdSaleAreaList.SelectionChanged += new System.EventHandler(this.grdSaleAreaList_SelectionChanged);
+            // 
             // panel34
             // 
             this.panel34.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -3630,11 +3948,11 @@
             // panel27
             // 
             this.panel27.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel27.Controls.Add(this.btnSearchMKT);
             this.panel27.Controls.Add(this.ddlZone);
             this.panel27.Controls.Add(this.label69);
             this.panel27.Controls.Add(this.panel28);
             this.panel27.Controls.Add(this.label70);
-            this.panel27.Controls.Add(this.btnSearchMKT);
             this.panel27.Controls.Add(this.txtSearchMKT);
             this.panel27.Controls.Add(this.label71);
             this.panel27.Dock = System.Windows.Forms.DockStyle.Top;
@@ -3642,6 +3960,25 @@
             this.panel27.Name = "panel27";
             this.panel27.Size = new System.Drawing.Size(570, 95);
             this.panel27.TabIndex = 168;
+            // 
+            // btnSearchMKT
+            // 
+            this.btnSearchMKT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchMKT.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchMKT.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchMKT.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchMKT.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnSearchMKT.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearchMKT.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchMKT.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchMKT.Location = new System.Drawing.Point(487, 5);
+            this.btnSearchMKT.Name = "btnSearchMKT";
+            this.btnSearchMKT.Size = new System.Drawing.Size(70, 26);
+            this.btnSearchMKT.TabIndex = 219;
+            this.btnSearchMKT.Text = "ค้นหา";
+            this.btnSearchMKT.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchMKT.UseVisualStyleBackColor = false;
+            this.btnSearchMKT.Click += new System.EventHandler(this.btnSearchMKT_Click);
             // 
             // ddlZone
             // 
@@ -3710,22 +4047,6 @@
             this.label70.TabIndex = 166;
             this.label70.Text = "สถานะ : ";
             // 
-            // btnSearchMKT
-            // 
-            this.btnSearchMKT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearchMKT.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchMKT.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchMKT.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchMKT.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnSearchMKT.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchMKT.Location = new System.Drawing.Point(510, 5);
-            this.btnSearchMKT.Name = "btnSearchMKT";
-            this.btnSearchMKT.Size = new System.Drawing.Size(50, 25);
-            this.btnSearchMKT.TabIndex = 13;
-            this.btnSearchMKT.Text = "ค้นหา";
-            this.btnSearchMKT.UseVisualStyleBackColor = false;
-            this.btnSearchMKT.Click += new System.EventHandler(this.btnSearchMKT_Click);
-            // 
             // txtSearchMKT
             // 
             this.txtSearchMKT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -3733,7 +4054,7 @@
             this.txtSearchMKT.Location = new System.Drawing.Point(82, 7);
             this.txtSearchMKT.MaxLength = 255;
             this.txtSearchMKT.Name = "txtSearchMKT";
-            this.txtSearchMKT.Size = new System.Drawing.Size(425, 23);
+            this.txtSearchMKT.Size = new System.Drawing.Size(399, 23);
             this.txtSearchMKT.TabIndex = 12;
             this.txtSearchMKT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchMKT_KeyDown);
             // 
@@ -3835,6 +4156,129 @@
             this.pnlMKT.Size = new System.Drawing.Size(444, 204);
             this.pnlMKT.TabIndex = 201;
             // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label68.ForeColor = System.Drawing.Color.Red;
+            this.label68.Location = new System.Drawing.Point(236, 98);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(16, 16);
+            this.label68.TabIndex = 217;
+            this.label68.Text = "*";
+            // 
+            // lblWHID
+            // 
+            this.lblWHID.AutoSize = true;
+            this.lblWHID.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.lblWHID.Location = new System.Drawing.Point(49, 94);
+            this.lblWHID.Name = "lblWHID";
+            this.lblWHID.Size = new System.Drawing.Size(43, 16);
+            this.lblWHID.TabIndex = 216;
+            this.lblWHID.Text = "แวน : ";
+            // 
+            // ddlWHID
+            // 
+            this.ddlWHID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlWHID.FormattingEnabled = true;
+            this.ddlWHID.Location = new System.Drawing.Point(95, 90);
+            this.ddlWHID.Name = "ddlWHID";
+            this.ddlWHID.Size = new System.Drawing.Size(139, 24);
+            this.ddlWHID.TabIndex = 5;
+            this.ddlWHID.SelectedIndexChanged += new System.EventHandler(this.ddlWHID_SelectedIndexChanged);
+            // 
+            // panel21
+            // 
+            this.panel21.BackColor = System.Drawing.Color.LightCyan;
+            this.panel21.Controls.Add(this.rdoMKTStatusC);
+            this.panel21.Controls.Add(this.rdoMKTStatusN);
+            this.panel21.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.panel21.Location = new System.Drawing.Point(95, 7);
+            this.panel21.Name = "panel21";
+            this.panel21.Size = new System.Drawing.Size(139, 25);
+            this.panel21.TabIndex = 214;
+            // 
+            // rdoMKTStatusC
+            // 
+            this.rdoMKTStatusC.AutoSize = true;
+            this.rdoMKTStatusC.Enabled = false;
+            this.rdoMKTStatusC.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.rdoMKTStatusC.Location = new System.Drawing.Point(69, 3);
+            this.rdoMKTStatusC.Name = "rdoMKTStatusC";
+            this.rdoMKTStatusC.Size = new System.Drawing.Size(62, 20);
+            this.rdoMKTStatusC.TabIndex = 2;
+            this.rdoMKTStatusC.Text = "ยกเลิก";
+            this.rdoMKTStatusC.UseVisualStyleBackColor = true;
+            // 
+            // rdoMKTStatusN
+            // 
+            this.rdoMKTStatusN.AutoSize = true;
+            this.rdoMKTStatusN.BackColor = System.Drawing.Color.LightCyan;
+            this.rdoMKTStatusN.Checked = true;
+            this.rdoMKTStatusN.Enabled = false;
+            this.rdoMKTStatusN.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.rdoMKTStatusN.Location = new System.Drawing.Point(10, 3);
+            this.rdoMKTStatusN.Name = "rdoMKTStatusN";
+            this.rdoMKTStatusN.Size = new System.Drawing.Size(50, 20);
+            this.rdoMKTStatusN.TabIndex = 1;
+            this.rdoMKTStatusN.TabStop = true;
+            this.rdoMKTStatusN.Text = "ปกติ";
+            this.rdoMKTStatusN.UseVisualStyleBackColor = false;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label47.Location = new System.Drawing.Point(35, 12);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(57, 16);
+            this.label47.TabIndex = 213;
+            this.label47.Text = "สถานะ : ";
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label66.ForeColor = System.Drawing.Color.Red;
+            this.label66.Location = new System.Drawing.Point(25, 121);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(16, 16);
+            this.label66.TabIndex = 211;
+            this.label66.Text = "*";
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label65.ForeColor = System.Drawing.Color.Red;
+            this.label65.Location = new System.Drawing.Point(149, 93);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(16, 16);
+            this.label65.TabIndex = 210;
+            this.label65.Text = "*";
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label64.ForeColor = System.Drawing.Color.Red;
+            this.label64.Location = new System.Drawing.Point(4, 66);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(16, 16);
+            this.label64.TabIndex = 209;
+            this.label64.Text = "*";
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label63.ForeColor = System.Drawing.Color.Red;
+            this.label63.Location = new System.Drawing.Point(4, 39);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(16, 16);
+            this.label63.TabIndex = 208;
+            this.label63.Text = "*";
+            // 
             // lblSalAreaID
             // 
             this.lblSalAreaID.AutoSize = true;
@@ -3881,16 +4325,6 @@
             this.lblSalAreaCode.Size = new System.Drawing.Size(73, 16);
             this.lblSalAreaCode.TabIndex = 186;
             this.lblSalAreaCode.Text = "รหัสลำดับ : ";
-            // 
-            // lblCountCustomer
-            // 
-            this.lblCountCustomer.AutoSize = true;
-            this.lblCountCustomer.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblCountCustomer.Location = new System.Drawing.Point(266, 121);
-            this.lblCountCustomer.Name = "lblCountCustomer";
-            this.lblCountCustomer.Size = new System.Drawing.Size(86, 16);
-            this.lblCountCustomer.TabIndex = 194;
-            this.lblCountCustomer.Text = "จำนวนลูกค้า : ";
             // 
             // txtSalAreaID
             // 
@@ -3971,6 +4405,16 @@
             this.lblSalAreaName.TabIndex = 190;
             this.lblSalAreaName.Text = "ชื่อตลาด : ";
             // 
+            // lblCountCustomer
+            // 
+            this.lblCountCustomer.AutoSize = true;
+            this.lblCountCustomer.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.lblCountCustomer.Location = new System.Drawing.Point(266, 121);
+            this.lblCountCustomer.Name = "lblCountCustomer";
+            this.lblCountCustomer.Size = new System.Drawing.Size(86, 16);
+            this.lblCountCustomer.TabIndex = 194;
+            this.lblCountCustomer.Text = "จำนวนลูกค้า : ";
+            // 
             // panel20
             // 
             this.panel20.BackColor = System.Drawing.Color.LightCyan;
@@ -4011,428 +4455,6 @@
             this.label52.TabIndex = 142;
             this.label52.Text = "ตลาด";
             // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label48.ForeColor = System.Drawing.Color.Red;
-            this.label48.Location = new System.Drawing.Point(34, 40);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(16, 16);
-            this.label48.TabIndex = 204;
-            this.label48.Text = "*";
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label49.ForeColor = System.Drawing.Color.Red;
-            this.label49.Location = new System.Drawing.Point(20, 67);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(16, 16);
-            this.label49.TabIndex = 205;
-            this.label49.Text = "*";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label53.ForeColor = System.Drawing.Color.Red;
-            this.label53.Location = new System.Drawing.Point(25, 94);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(16, 16);
-            this.label53.TabIndex = 206;
-            this.label53.Text = "*";
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label54.ForeColor = System.Drawing.Color.Red;
-            this.label54.Location = new System.Drawing.Point(40, 38);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(16, 16);
-            this.label54.TabIndex = 207;
-            this.label54.Text = "*";
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label55.ForeColor = System.Drawing.Color.Red;
-            this.label55.Location = new System.Drawing.Point(47, 65);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(16, 16);
-            this.label55.TabIndex = 208;
-            this.label55.Text = "*";
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label61.ForeColor = System.Drawing.Color.Red;
-            this.label61.Location = new System.Drawing.Point(13, 120);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(16, 16);
-            this.label61.TabIndex = 209;
-            this.label61.Text = "*";
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label62.ForeColor = System.Drawing.Color.Red;
-            this.label62.Location = new System.Drawing.Point(22, 92);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(16, 16);
-            this.label62.TabIndex = 210;
-            this.label62.Text = "*";
-            // 
-            // label63
-            // 
-            this.label63.AutoSize = true;
-            this.label63.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label63.ForeColor = System.Drawing.Color.Red;
-            this.label63.Location = new System.Drawing.Point(4, 39);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(16, 16);
-            this.label63.TabIndex = 208;
-            this.label63.Text = "*";
-            // 
-            // label64
-            // 
-            this.label64.AutoSize = true;
-            this.label64.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label64.ForeColor = System.Drawing.Color.Red;
-            this.label64.Location = new System.Drawing.Point(4, 66);
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(16, 16);
-            this.label64.TabIndex = 209;
-            this.label64.Text = "*";
-            // 
-            // label65
-            // 
-            this.label65.AutoSize = true;
-            this.label65.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label65.ForeColor = System.Drawing.Color.Red;
-            this.label65.Location = new System.Drawing.Point(149, 93);
-            this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(16, 16);
-            this.label65.TabIndex = 210;
-            this.label65.Text = "*";
-            // 
-            // label66
-            // 
-            this.label66.AutoSize = true;
-            this.label66.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label66.ForeColor = System.Drawing.Color.Red;
-            this.label66.Location = new System.Drawing.Point(25, 121);
-            this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(16, 16);
-            this.label66.TabIndex = 211;
-            this.label66.Text = "*";
-            // 
-            // panel21
-            // 
-            this.panel21.BackColor = System.Drawing.Color.LightCyan;
-            this.panel21.Controls.Add(this.rdoMKTStatusC);
-            this.panel21.Controls.Add(this.rdoMKTStatusN);
-            this.panel21.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.panel21.Location = new System.Drawing.Point(95, 7);
-            this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(139, 25);
-            this.panel21.TabIndex = 214;
-            // 
-            // rdoMKTStatusC
-            // 
-            this.rdoMKTStatusC.AutoSize = true;
-            this.rdoMKTStatusC.Enabled = false;
-            this.rdoMKTStatusC.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.rdoMKTStatusC.Location = new System.Drawing.Point(69, 3);
-            this.rdoMKTStatusC.Name = "rdoMKTStatusC";
-            this.rdoMKTStatusC.Size = new System.Drawing.Size(62, 20);
-            this.rdoMKTStatusC.TabIndex = 2;
-            this.rdoMKTStatusC.Text = "ยกเลิก";
-            this.rdoMKTStatusC.UseVisualStyleBackColor = true;
-            // 
-            // rdoMKTStatusN
-            // 
-            this.rdoMKTStatusN.AutoSize = true;
-            this.rdoMKTStatusN.BackColor = System.Drawing.Color.LightCyan;
-            this.rdoMKTStatusN.Checked = true;
-            this.rdoMKTStatusN.Enabled = false;
-            this.rdoMKTStatusN.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.rdoMKTStatusN.Location = new System.Drawing.Point(10, 3);
-            this.rdoMKTStatusN.Name = "rdoMKTStatusN";
-            this.rdoMKTStatusN.Size = new System.Drawing.Size(50, 20);
-            this.rdoMKTStatusN.TabIndex = 1;
-            this.rdoMKTStatusN.TabStop = true;
-            this.rdoMKTStatusN.Text = "ปกติ";
-            this.rdoMKTStatusN.UseVisualStyleBackColor = false;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label47.Location = new System.Drawing.Point(35, 12);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(57, 16);
-            this.label47.TabIndex = 213;
-            this.label47.Text = "สถานะ : ";
-            // 
-            // label68
-            // 
-            this.label68.AutoSize = true;
-            this.label68.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label68.ForeColor = System.Drawing.Color.Red;
-            this.label68.Location = new System.Drawing.Point(236, 98);
-            this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(16, 16);
-            this.label68.TabIndex = 217;
-            this.label68.Text = "*";
-            // 
-            // lblWHID
-            // 
-            this.lblWHID.AutoSize = true;
-            this.lblWHID.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblWHID.Location = new System.Drawing.Point(49, 94);
-            this.lblWHID.Name = "lblWHID";
-            this.lblWHID.Size = new System.Drawing.Size(43, 16);
-            this.lblWHID.TabIndex = 216;
-            this.lblWHID.Text = "แวน : ";
-            // 
-            // ddlWHID
-            // 
-            this.ddlWHID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlWHID.FormattingEnabled = true;
-            this.ddlWHID.Location = new System.Drawing.Point(95, 90);
-            this.ddlWHID.Name = "ddlWHID";
-            this.ddlWHID.Size = new System.Drawing.Size(139, 24);
-            this.ddlWHID.TabIndex = 5;
-            this.ddlWHID.SelectedIndexChanged += new System.EventHandler(this.ddlWHID_SelectedIndexChanged);
-            // 
-            // grdSaleAreaList
-            // 
-            this.grdSaleAreaList.AllowUserToAddRows = false;
-            this.grdSaleAreaList.AllowUserToDeleteRows = false;
-            this.grdSaleAreaList.AllowUserToResizeColumns = false;
-            this.grdSaleAreaList.AllowUserToResizeRows = false;
-            this.grdSaleAreaList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdSaleAreaList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdSaleAreaList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.grdSaleAreaList.Location = new System.Drawing.Point(0, 95);
-            this.grdSaleAreaList.MultiSelect = false;
-            this.grdSaleAreaList.Name = "grdSaleAreaList";
-            this.grdSaleAreaList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdSaleAreaList.Size = new System.Drawing.Size(570, 280);
-            this.grdSaleAreaList.TabIndex = 17;
-            this.grdSaleAreaList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSaleAreaList_CellClick);
-            this.grdSaleAreaList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSaleAreaList_RowPostPaint);
-            this.grdSaleAreaList.SelectionChanged += new System.EventHandler(this.grdSaleAreaList_SelectionChanged);
-            // 
-            // grdVanList
-            // 
-            this.grdVanList.AllowUserToAddRows = false;
-            this.grdVanList.AllowUserToDeleteRows = false;
-            this.grdVanList.AllowUserToResizeRows = false;
-            this.grdVanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdVanList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdVanList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.grdVanList.Location = new System.Drawing.Point(0, 95);
-            this.grdVanList.MultiSelect = false;
-            this.grdVanList.Name = "grdVanList";
-            this.grdVanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdVanList.Size = new System.Drawing.Size(550, 280);
-            this.grdVanList.TabIndex = 22;
-            this.grdVanList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdVanList_CellClick);
-            this.grdVanList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdVanList_RowPostPaint);
-            this.grdVanList.SelectionChanged += new System.EventHandler(this.grdVanList_SelectionChanged);
-            // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnClose.BackColor = System.Drawing.Color.Azure;
-            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.Color.Black;
-            this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(600, 3);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(57, 23);
-            this.btnClose.TabIndex = 17;
-            this.btnClose.Text = "ออก";
-            this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAdd.BackColor = System.Drawing.Color.Azure;
-            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.FlatAppearance.BorderSize = 0;
-            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.ForeColor = System.Drawing.Color.Black;
-            this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
-            this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdd.Location = new System.Drawing.Point(7, 3);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(56, 23);
-            this.btnAdd.TabIndex = 23;
-            this.btnAdd.Text = "เพิ่ม";
-            this.btnAdd.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnAdd.UseVisualStyleBackColor = false;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // btnExcel
-            // 
-            this.btnExcel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnExcel.BackColor = System.Drawing.Color.Azure;
-            this.btnExcel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnExcel.Enabled = false;
-            this.btnExcel.FlatAppearance.BorderSize = 0;
-            this.btnExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExcel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExcel.ForeColor = System.Drawing.Color.Black;
-            this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
-            this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(485, 3);
-            this.btnExcel.Name = "btnExcel";
-            this.btnExcel.Size = new System.Drawing.Size(109, 23);
-            this.btnExcel.TabIndex = 17;
-            this.btnExcel.Text = "Import Excel";
-            this.btnExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExcel.UseVisualStyleBackColor = false;
-            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnEdit.BackColor = System.Drawing.Color.Azure;
-            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEdit.FlatAppearance.BorderSize = 0;
-            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEdit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEdit.ForeColor = System.Drawing.Color.Black;
-            this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
-            this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEdit.Location = new System.Drawing.Point(69, 3);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(63, 23);
-            this.btnEdit.TabIndex = 25;
-            this.btnEdit.Text = "แก้ไข";
-            this.btnEdit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnEdit.UseVisualStyleBackColor = false;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
-            // 
-            // btnPrint
-            // 
-            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrint.BackColor = System.Drawing.Color.Azure;
-            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPrint.Enabled = false;
-            this.btnPrint.FlatAppearance.BorderSize = 0;
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrint.ForeColor = System.Drawing.Color.Black;
-            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
-            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrint.Location = new System.Drawing.Point(418, 3);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(61, 23);
-            this.btnPrint.TabIndex = 17;
-            this.btnPrint.Text = "พิมพ์";
-            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnRemove.BackColor = System.Drawing.Color.Azure;
-            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRemove.Enabled = false;
-            this.btnRemove.FlatAppearance.BorderSize = 0;
-            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.ForeColor = System.Drawing.Color.Black;
-            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
-            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemove.Location = new System.Drawing.Point(138, 3);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(49, 23);
-            this.btnRemove.TabIndex = 25;
-            this.btnRemove.Text = "ลบ";
-            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRemove.UseVisualStyleBackColor = false;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCancel.BackColor = System.Drawing.Color.Azure;
-            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(344, 3);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(68, 23);
-            this.btnCancel.TabIndex = 17;
-            this.btnCancel.Text = "ยกเลิก";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnCopy
-            // 
-            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCopy.BackColor = System.Drawing.Color.Azure;
-            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCopy.Enabled = false;
-            this.btnCopy.FlatAppearance.BorderSize = 0;
-            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCopy.ForeColor = System.Drawing.Color.Black;
-            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCopy.Location = new System.Drawing.Point(193, 3);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(75, 23);
-            this.btnCopy.TabIndex = 25;
-            this.btnCopy.Text = "คัดลอก";
-            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCopy.UseVisualStyleBackColor = false;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSave.BackColor = System.Drawing.Color.Azure;
-            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSave.FlatAppearance.BorderSize = 0;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.Color.Black;
-            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
-            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(274, 3);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(64, 23);
-            this.btnSave.TabIndex = 24;
-            this.btnSave.Text = "บันทึก";
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // frmDistributionCenter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4441,9 +4463,11 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmDistributionCenter";
             this.Text = "frmDistributionCenter";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDistributionCenter_FormClosed);
             this.Load += new System.EventHandler(this.frmDistributionCenter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).EndInit();
             this.panel4.ResumeLayout(false);
@@ -4521,6 +4545,7 @@
             this.sprcVan.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sprcVan)).EndInit();
             this.sprcVan.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdVanList)).EndInit();
             this.panel33.ResumeLayout(false);
             this.panel33.PerformLayout();
             this.panel23.ResumeLayout(false);
@@ -4540,6 +4565,7 @@
             this.sprcMKT.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sprcMKT)).EndInit();
             this.sprcMKT.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdSaleAreaList)).EndInit();
             this.panel34.ResumeLayout(false);
             this.panel34.PerformLayout();
             this.panel27.ResumeLayout(false);
@@ -4552,12 +4578,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.grdSaleDistrictList)).EndInit();
             this.pnlMKT.ResumeLayout(false);
             this.pnlMKT.PerformLayout();
-            this.panel20.ResumeLayout(false);
-            this.panel20.PerformLayout();
             this.panel21.ResumeLayout(false);
             this.panel21.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdSaleAreaList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.grdVanList)).EndInit();
+            this.panel20.ResumeLayout(false);
+            this.panel20.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -4584,7 +4608,6 @@
         private System.Windows.Forms.SplitContainer splcBranch;
         private System.Windows.Forms.DataGridView grdDepo;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Button btnSearchBranch;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.RadioButton rdoCancel;
         private System.Windows.Forms.RadioButton rdoNormal;
@@ -4628,7 +4651,6 @@
         private System.Windows.Forms.RadioButton rdoEmpC;
         private System.Windows.Forms.RadioButton rdoEmpN;
         private System.Windows.Forms.ComboBox ddlDepartment;
-        private System.Windows.Forms.Button btnSearchEmp;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.TextBox txtSearchEmp;
         private System.Windows.Forms.Label label27;
@@ -4725,7 +4747,6 @@
         private System.Windows.Forms.Label lblWHSeq;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.Label label56;
-        private System.Windows.Forms.Button btnSearchWarehouse;
         private System.Windows.Forms.TextBox txtSearchWarehouse;
         private System.Windows.Forms.Panel pnlBWH;
         private System.Windows.Forms.Panel panel22;
@@ -4739,7 +4760,6 @@
         private System.Windows.Forms.RadioButton rdoVanN;
         private System.Windows.Forms.Label label58;
         private System.Windows.Forms.Label label59;
-        private System.Windows.Forms.Button btnSearchVan;
         private System.Windows.Forms.TextBox txtSearchVan;
         private System.Windows.Forms.ComboBox ddlWHType_SVan;
         private System.Windows.Forms.Label label60;
@@ -4774,7 +4794,6 @@
         private System.Windows.Forms.RadioButton rdoMKTC;
         private System.Windows.Forms.RadioButton rdoMKTN;
         private System.Windows.Forms.Label label70;
-        private System.Windows.Forms.Button btnSearchMKT;
         private System.Windows.Forms.TextBox txtSearchMKT;
         private System.Windows.Forms.Label label71;
         private System.Windows.Forms.Panel panel30;
@@ -4896,5 +4915,10 @@
         private System.Windows.Forms.ComboBox ddlWHID;
         private System.Windows.Forms.DataGridView grdSaleAreaList;
         private System.Windows.Forms.DataGridView grdVanList;
+        private System.Windows.Forms.Button btnSearchBranch;
+        private System.Windows.Forms.Button btnSearchEmp;
+        private System.Windows.Forms.Button btnSearchWarehouse;
+        private System.Windows.Forms.Button btnSearchVan;
+        private System.Windows.Forms.Button btnSearchMKT;
     }
 }

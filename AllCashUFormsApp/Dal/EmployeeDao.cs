@@ -23,10 +23,12 @@ namespace AllCashUFormsApp
             List<tbl_Employee> list = new List<tbl_Employee>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Employee.Where(predicate).OrderBy(x => x.EmpCode).ToList();
-                }
+                list = tbl_Employee.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Employee.Where(predicate).OrderBy(x => x.EmpCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -46,10 +48,23 @@ namespace AllCashUFormsApp
             List<tbl_Employee> list = new List<tbl_Employee>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Employee.OrderBy(x => x.EmpCode).ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_Employee] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Employee), sql);
+                list = dynamicListReturned.Cast<tbl_Employee>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_Employee>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Employee.OrderBy(x => x.EmpCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -155,6 +170,57 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+
+        public static DataTable GetSaleEmployee(this tbl_Employee tbl_Employee, int PositionID)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM SaleEmployeeView ";
+                sql += " WHERE PositionID = " + PositionID + "";
+                //sql += " AND WHID IS NULL";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static DataTable GetAllSaleEmployee(this tbl_Employee tbl_Employee)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM AllSaleEmployeeView";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static DataTable GetEmployeePopup(this tbl_Employee tbl_Employee)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT EmpID, CONCAT(TitleName, ' ', FirstName) AS FullName FROM tbl_Employee ";
+                sql += " WHERE PositionID = 4 AND DepartmentID = 3";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

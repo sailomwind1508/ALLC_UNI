@@ -33,7 +33,7 @@ namespace AllCashUFormsApp.Controller
 
             if (!string.IsNullOrEmpty(message))
             {
-                MessageBox.Show(message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FlexibleMessageBox.Show(message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             return ret;
@@ -44,11 +44,14 @@ namespace AllCashUFormsApp.Controller
             bool ret = false;
             try
             {
-                var users = (new tbl_Users()).SelectAll();
-                if (users.Count > 0)
-                {
-                    ret = users.Any(x => x.Username.ToLower() == username.ToLower() && x.Password == password);
-                }
+                //new tbl_Users().SelectAllWarmup();
+
+                var users = (new tbl_Users()).Select(x => x.FlagDel == false && x.Username.ToLower() == username.ToLower() && x.Password == password);
+                ret = users.Count > 0;
+                //if (users.Count > 0)
+                //{
+                //    ret = users.Any(x => x.FlagDel == false && x.Username.ToLower() == username.ToLower() && x.Password == password); //01-06-2021 by sailom
+                //}
             }
             catch (Exception ex)
             {

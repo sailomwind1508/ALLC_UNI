@@ -23,10 +23,12 @@ namespace AllCashUFormsApp
             List<tbl_VanType> list = new List<tbl_VanType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_VanType.Where(x => x.FlagDel == false).Where(predicate).ToList();
-                }
+                list = tbl_VanType.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_VanType.Where(x => x.FlagDel == false).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -46,10 +48,16 @@ namespace AllCashUFormsApp
             List<tbl_VanType> list = new List<tbl_VanType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_VanType.Where(x => x.FlagDel == false).OrderBy(x => x.Seq).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_VanType] WHERE FlagDel = 0 ORDER BY Seq ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_VanType), sql);
+                list = dynamicListReturned.Cast<tbl_VanType>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_VanType.Where(x => x.FlagDel == false).OrderBy(x => x.Seq).ToList();
+                //}
             }
             catch (Exception ex)
             {

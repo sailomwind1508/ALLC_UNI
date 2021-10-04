@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -20,10 +21,11 @@ namespace AllCashUFormsApp
             List<tbl_Position> list = new List<tbl_Position>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Position.Where(predicate).Where(x => x.FlagDel == false).ToList();
-                }
+                list = tbl_Position.SelectAll().Where(predicate).ToList();
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Position.Where(predicate).Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -32,7 +34,6 @@ namespace AllCashUFormsApp
 
             return list;
         }
-
         /// <summary>
         /// select all data
         /// </summary>
@@ -43,10 +44,17 @@ namespace AllCashUFormsApp
             List<tbl_Position> list = new List<tbl_Position>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Position.Where(x => x.FlagDel == false).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_Position] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Position), sql);
+                list = dynamicListReturned.Cast<tbl_Position>().ToList();
+
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Position.Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -55,7 +63,36 @@ namespace AllCashUFormsApp
 
             return list;
         }
+        public static List<tbl_Position> SelectAllNonFlag(this tbl_Position tbl_Position)
+        {
+            List<tbl_Position> list = new List<tbl_Position>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_Position";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Position), sql);
+                list = dynamicListReturned.Cast<tbl_Position>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Position.GetType());
+            }
 
+            return list;
+        }
+        public static List<tbl_Position> SelectNonFlag(this tbl_Position tbl_Position, Func<tbl_Position, bool> predicate)
+        {
+            List<tbl_Position> list = new List<tbl_Position>();
+            try
+            {
+                list = tbl_Position.SelectAllNonFlag().Where(predicate).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Position.GetType());
+            }
+
+            return list;
+        }
         /// <summary>
         /// add new data
         /// </summary>
@@ -80,7 +117,6 @@ namespace AllCashUFormsApp
 
             return ret;
         }
-
         /// <summary>
         /// update data
         /// </summary>
@@ -115,6 +151,10 @@ namespace AllCashUFormsApp
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
                     }
+                    else
+                    {
+                        ret = tbl_Position.Insert();
+                    }
                 }
             }
             catch (Exception ex)
@@ -124,7 +164,6 @@ namespace AllCashUFormsApp
 
             return ret;
         }
-
         /// <summary>
         /// remove data
         /// </summary>
@@ -148,6 +187,21 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable GetPositionData(this tbl_Position tbl_Position, int flagDel, string Search)
+        {
+            DataTable dt = new DataTable();
+
+            string sql = "SELECT * FROM tbl_Position WHERE FlagDel = " + flagDel + "";
+
+            if (!string.IsNullOrEmpty(Search))
+            {
+                sql += " AND (PositionCode like '%" + Search + "%'";
+                sql += " OR PositionName like '%" + Search + "%')";
+            }
+
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            return dt;
         }
     }
 }

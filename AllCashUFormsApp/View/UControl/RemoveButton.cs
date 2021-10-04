@@ -12,14 +12,14 @@ namespace AllCashUFormsApp.View.UControl
     {
         public RemoveButton()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
 
         public RemoveButton(IContainer container)
         {
             container.Add(this);
 
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

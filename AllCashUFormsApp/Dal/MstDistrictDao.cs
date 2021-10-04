@@ -20,10 +20,12 @@ namespace AllCashUFormsApp
             List<tbl_MstDistrict> list = new List<tbl_MstDistrict>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstDistrict.Where(predicate).ToList();
-                }
+                list = tbl_MstDistrict.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstDistrict.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +45,16 @@ namespace AllCashUFormsApp
             List<tbl_MstDistrict> list = new List<tbl_MstDistrict>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstDistrict.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstDistrict] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstDistrict), sql);
+                list = dynamicListReturned.Cast<tbl_MstDistrict>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstDistrict.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -114,6 +122,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_MstDistrict.Insert();
                     }
                 }
             }

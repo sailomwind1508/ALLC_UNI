@@ -86,6 +86,26 @@ namespace AllCashUFormsApp
                         obj = new Product();
                     }
                     break;
+                case ObjectType.VEProduct:
+                    {
+                        obj = new Product();
+                    }
+                    break;
+                case ObjectType.IVPreProduct:
+                    {
+                        obj = new Product();
+                    }
+                    break;
+                case ObjectType.IMPreProduct:
+                    {
+                        obj = new Product();
+                    }
+                    break;
+                case ObjectType.PreOrderProduct:
+                    {
+                        obj = new Product();
+                    }
+                    break;
                 case ObjectType.OD:
                     {
                         obj = new OD();
@@ -156,6 +176,11 @@ namespace AllCashUFormsApp
                         obj = new Customer();
                     }
                     break;
+                case ObjectType.CustomerPre:
+                    {
+                        obj = new Customer();
+                    }
+                    break;
                 case ObjectType.SaleAreaDistrict:
                     {
                         obj = new SaleAreaDistrict();
@@ -169,6 +194,31 @@ namespace AllCashUFormsApp
                 case ObjectType.IV: //Tablet Sales
                     {
                         obj = new IV();
+                    }
+                    break;
+                case ObjectType.V: //Tablet Sales
+                    {
+                        obj = new VE();
+                    }
+                    break;
+                case ObjectType.IVPre: //Tablet Sales Pre-Order
+                    {
+                        obj = new IVPre();
+                    }
+                    break;
+                case ObjectType.IMPre: //Van Sales Pre-Order
+                    {
+                        obj = new IMPre();
+                    }
+                    break;
+                case ObjectType.PreOrder: //Van Sales Pre-Order
+                    {
+                        obj = new PreOrder();
+                    }
+                    break;
+                case ObjectType.IVPrePO: //Van Sales Pre-Order
+                    {
+                        obj = new PreOrder();
                     }
                     break;
                 default:

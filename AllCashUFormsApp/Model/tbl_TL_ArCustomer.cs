@@ -14,56 +14,38 @@ namespace AllCashUFormsApp.Model
     
     public partial class tbl_TL_ArCustomer
     {
+        public long AutoID { get; set; }
         public string CustomerID { get; set; }
-        public string CustomerCode { get; set; }
-        public string CustomerRefCode { get; set; }
-        public short Seq { get; set; }
+        public string BranchID { get; set; }
+        public string WHID { get; set; }
+        public string EmpID { get; set; }
+        public string SalAreaID { get; set; }
+        public Nullable<int> ShopTypeID { get; set; }
+        public Nullable<short> CustSeq { get; set; }
         public string CustTitle { get; set; }
         public string CustName { get; set; }
         public string CustShortName { get; set; }
-        public Nullable<int> CustomerTypeID { get; set; }
+        public string CustImage { get; set; }
         public string BillTo { get; set; }
-        public string ShipTo { get; set; }
-        public string Telephone { get; set; }
-        public string Fax { get; set; }
+        public string Tel { get; set; }
         public string Contact { get; set; }
         public string AddressNo { get; set; }
-        public string lane { get; set; }
+        public string Moo { get; set; }
+        public string Lane { get; set; }
         public string Street { get; set; }
         public Nullable<int> AreaID { get; set; }
         public Nullable<int> DistrictID { get; set; }
         public Nullable<int> ProvinceID { get; set; }
         public string PostalCode { get; set; }
-        public string Moo { get; set; }
-        public string Email { get; set; }
-        public byte CreditDay { get; set; }
-        public string TaxId { get; set; }
-        public Nullable<bool> VatType { get; set; }
-        public Nullable<decimal> VatRate { get; set; }
-        public string DiscountType { get; set; }
-        public Nullable<decimal> Discount { get; set; }
-        public string EmpID { get; set; }
-        public Nullable<int> PriceGroupID { get; set; }
-        public string WHID { get; set; }
-        public string SalAreaID { get; set; }
-        public int ShopTypeID { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
-        public bool FlagMember { get; set; }
-        public bool FlagBill { get; set; }
-        public int NetPoint { get; set; }
-        public string CustomerSAPCode { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public Nullable<System.DateTime> GPSDate { get; set; }
-        public bool IsNewMember { get; set; }
-        public bool FlagNew { get; set; }
-        public bool FlagEdit { get; set; }
-        public byte[] CustomerImg { get; set; }
-        public bool PromotionVanID { get; set; }
+        public Nullable<int> CreditDay { get; set; }
+        public Nullable<bool> FlagMember { get; set; }
+        public Nullable<int> NetPoint { get; set; }
+        public Nullable<bool> FlagBill { get; set; }
+        public Nullable<bool> FlagNew { get; set; }
+        public Nullable<bool> FlagEdit { get; set; }
+        public Nullable<bool> FlagShelf { get; set; }
     }
 }

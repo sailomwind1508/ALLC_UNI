@@ -23,12 +23,14 @@ namespace AllCashUFormsApp
             List<tbl_AdmFormList> list = new List<tbl_AdmFormList>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_AdmFormList.Where(predicate).AsQueryable().ToList();
+                list = tbl_AdmFormList.SelectAll().Where(predicate).ToList();
 
-                    //list = db.tbl_AdmFormList.Where(predicate).ToList();
-                }
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_AdmFormList.Where(predicate).AsQueryable().ToList();
+
+                //    //list = db.tbl_AdmFormList.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -48,10 +50,16 @@ namespace AllCashUFormsApp
             List<tbl_AdmFormList> list = new List<tbl_AdmFormList>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_AdmFormList.OrderBy(x => x.FormID).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_AdmFormList] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_AdmFormList), sql);
+                list = dynamicListReturned.Cast<tbl_AdmFormList>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_AdmFormList.OrderBy(x => x.FormID).ToList();
+                //}
             }
             catch (Exception ex)
             {

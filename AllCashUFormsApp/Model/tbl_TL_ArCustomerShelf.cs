@@ -14,17 +14,13 @@ namespace AllCashUFormsApp.Model
     
     public partial class tbl_TL_ArCustomerShelf
     {
-        public int AutoID { get; set; }
+        public long AutoID { get; set; }
         public string CustomerID { get; set; }
         public string ShelfID { get; set; }
-        public string WHID { get; set; }
-        public bool FlagNew { get; set; }
-        public bool FlagEdit { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
+        public string ProductID { get; set; }
+        public Nullable<bool> FlagNew { get; set; }
+        public Nullable<bool> FlagEdit { get; set; }
+        public Nullable<bool> FlagDel { get; set; }
+        public string PathImage { get; set; }
     }
 }

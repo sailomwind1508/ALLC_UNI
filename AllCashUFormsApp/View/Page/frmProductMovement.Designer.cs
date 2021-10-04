@@ -47,6 +47,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.pnlTL = new System.Windows.Forms.Panel();
+            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -66,8 +67,6 @@
             this.lblBranchCode = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -77,6 +76,7 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -154,6 +154,7 @@
             // 
             this.panel6.Controls.Add(this.grdList);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.panel6.Location = new System.Drawing.Point(0, 109);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(992, 353);
@@ -221,6 +222,7 @@
             this.rdoDetails.TabStop = true;
             this.rdoDetails.Text = "แบบรายละเอียด";
             this.rdoDetails.UseVisualStyleBackColor = true;
+            this.rdoDetails.CheckedChanged += new System.EventHandler(this.rdoDetails_CheckedChanged);
             // 
             // rdoSummary
             // 
@@ -299,17 +301,34 @@
             this.pnlTL.Size = new System.Drawing.Size(722, 109);
             this.pnlTL.TabIndex = 20;
             // 
+            // ccbProductCode
+            // 
+            this.ccbProductCode.CheckOnClick = true;
+            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.ccbProductCode.DropDownHeight = 1;
+            this.ccbProductCode.FormattingEnabled = true;
+            this.ccbProductCode.IntegralHeight = false;
+            this.ccbProductCode.Location = new System.Drawing.Point(89, 83);
+            this.ccbProductCode.Name = "ccbProductCode";
+            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
+            this.ccbProductCode.TabIndex = 108;
+            this.ccbProductCode.ValueSeparator = ", ";
+            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
+            // 
             // btnClear
             // 
             this.btnClear.BackColor = System.Drawing.Color.PaleTurquoise;
             this.btnClear.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnClear.Location = new System.Drawing.Point(629, 82);
+            this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
+            this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnClear.Location = new System.Drawing.Point(634, 82);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(63, 25);
+            this.btnClear.Size = new System.Drawing.Size(67, 26);
             this.btnClear.TabIndex = 126;
             this.btnClear.Text = "ล้าง";
+            this.btnClear.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
@@ -319,11 +338,14 @@
             this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
+            this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSearch.Location = new System.Drawing.Point(561, 82);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(63, 25);
+            this.btnSearch.Size = new System.Drawing.Size(67, 26);
             this.btnSearch.TabIndex = 125;
             this.btnSearch.Text = "ค้นหา";
+            this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
@@ -510,24 +532,6 @@
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ccbProductCode
-            // 
-            this.ccbProductCode.CheckOnClick = true;
-            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.ccbProductCode.DropDownHeight = 1;
-            this.ccbProductCode.FormattingEnabled = true;
-            this.ccbProductCode.IntegralHeight = false;
-            this.ccbProductCode.Location = new System.Drawing.Point(89, 83);
-            this.ccbProductCode.Name = "ccbProductCode";
-            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
-            this.ccbProductCode.TabIndex = 108;
-            this.ccbProductCode.ValueSeparator = ", ";
-            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
-            // 
             // btnClose
             // 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -706,6 +710,10 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // frmProductMovement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -714,9 +722,11 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmProductMovement";
             this.Text = "frmProductMovement";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmProductMovement_FormClosed);
             this.Load += new System.EventHandler(this.frmProductMovement_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).EndInit();
             this.panel4.ResumeLayout(false);

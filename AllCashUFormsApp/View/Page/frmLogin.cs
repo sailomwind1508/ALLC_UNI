@@ -14,6 +14,8 @@ namespace AllCashUFormsApp.View.Page
     public partial class frmLogin : Form
     {
         Login bu = new Login();
+        Customer cust = new Customer();
+        Product prod = new Product();
         Dictionary<string, string> depoList = new Dictionary<string, string>();
 
         public frmLogin()
@@ -21,6 +23,7 @@ namespace AllCashUFormsApp.View.Page
             InitializeComponent();
             this.lblcopyR1.Text = ConfigurationManager.AppSettings["CopyRightTextR1"];
             this.lblcopyR2.Text = ConfigurationManager.AppSettings["CopyRightTextR2"];
+            this.lblVersion.Text = ConfigurationManager.AppSettings["Version"];
         }
 
         private void frmLogin_Load(object sender, EventArgs e)
@@ -49,6 +52,13 @@ namespace AllCashUFormsApp.View.Page
                     Connection.GetConnectionStringsManual(); //for manual connect 04112020
 
                     Helper.tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower()  && x.Password == txtPassword.Text);
+
+                    cust.GetAllData();
+                    //prod.GetAllData();
+                    cust.GetUOM();
+                    cust.GetUOMSet();
+                    cust.GetDiscountType();
+
                     MainForm frm = new MainForm();
                     frm.Show();
 
@@ -57,7 +67,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Username or Password!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Invalid Username or Password!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             
@@ -112,6 +122,11 @@ namespace AllCashUFormsApp.View.Page
             {
                 btnLogin.PerformClick();
             }
+        }
+
+        private void frmLogin_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
         }
     }
 }

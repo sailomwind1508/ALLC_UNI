@@ -27,7 +27,7 @@ namespace AllCashUFormsApp.Controller
 
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> predicate)
         {
-            return new tbl_ArCustomer().Select(predicate);
+            return new tbl_ArCustomer().SelectAll().Where(predicate).ToList();
         }
 
         public virtual DataTable GetDataTable(bool isPopup = true)
@@ -38,6 +38,7 @@ namespace AllCashUFormsApp.Controller
                 tbl_POMaster = (new tbl_POMaster()).Select(docTypepredicate);
 
                 var docStatus = GetDocStatus();
+                var allEmp = GetEmployee();
 
                 DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
                 //newTable.Clear();
@@ -61,8 +62,10 @@ namespace AllCashUFormsApp.Controller
                     Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
 
                     string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
-                    tbl_Employee emp = GetEmployee(r.EmpID);
-                    string crUser = string.Join(" ", emp.TitleName, emp.FirstName);
+                    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
+                    string crUser = "";
+                    if (emp != null)
+                        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
 
                     newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
                         r.SuppName, r.CreditDay, r.DueDate, r.TotalDue, crUser, r.Remark);

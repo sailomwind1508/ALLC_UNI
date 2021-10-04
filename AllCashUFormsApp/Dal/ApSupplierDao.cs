@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,37 @@ namespace AllCashUFormsApp
 {
     public static class ApSupplierDao
     {
+        public static List<tbl_ApSupplier> SelectAllNonFlag(this tbl_ApSupplier tbl_ApSupplier)
+        {
+            List<tbl_ApSupplier> list = new List<tbl_ApSupplier>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ApSupplier";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ApSupplier), sql);
+                list = dynamicListReturned.Cast<tbl_ApSupplier>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ApSupplier.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_ApSupplier> SelectNonFlag(this tbl_ApSupplier tbl_ApSupplier, Func<tbl_ApSupplier, bool> Condition)
+        {
+            List<tbl_ApSupplier> list = new List<tbl_ApSupplier>();
+            try
+            {
+                list = tbl_ApSupplier.SelectAllNonFlag().Where(Condition).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ApSupplier.GetType());
+            }
+
+            return list;
+        }
         /// <summary>
         /// select data by criteria
         /// </summary>
@@ -21,10 +53,12 @@ namespace AllCashUFormsApp
             tbl_ApSupplier ret = new tbl_ApSupplier();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    ret = db.tbl_ApSupplier.Where(x => x.FlagDel == false).FirstOrDefault(x => x.SupplierID == supplierID);
-                }
+                ret = tbl_ApSupplier.SelectAll().FirstOrDefault(x => x.SupplierID == supplierID);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    ret = db.tbl_ApSupplier.Where(x => x.FlagDel == false).FirstOrDefault(x => x.SupplierID == supplierID);
+                //}
             }
             catch (Exception ex)
             {
@@ -44,10 +78,17 @@ namespace AllCashUFormsApp
             List<tbl_ApSupplier> list = new List<tbl_ApSupplier>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ApSupplier.Where(x => x.FlagDel == false).OrderBy(x => x.SupplierCode).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ApSupplier] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ApSupplier), sql);
+                list = dynamicListReturned.Cast<tbl_ApSupplier>().ToList();
+
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ApSupplier.Where(x => x.FlagDel == false).OrderBy(x => x.SupplierCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -117,6 +158,10 @@ namespace AllCashUFormsApp
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
                     }
+                    else
+                    {
+                        ret = tbl_ApSupplier.Insert();
+                    }
                 }
             }
             catch (Exception ex)
@@ -150,6 +195,44 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable GetApSupplierData(this tbl_ApSupplier tbl_ApSupplier, int flagDel, string Text)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_ApSupplier t1";
+                sql += " LEFT JOIN tbl_ApSupplierType t2 on t1.SupplierTypeID = t2.APSupplierTypeID";
+                sql += " WHERE t1.FlagDel = " + flagDel + "";
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    sql += " AND (t1.SupplierCode like '%" + Text + "%'";
+                    sql += " OR t1.SuppName like '%" + Text + "%')";
+                }
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        public static DataTable GetDataTable(this tbl_ApSupplier tbl_ApSupplier)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_Supplier_GetDataTable";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

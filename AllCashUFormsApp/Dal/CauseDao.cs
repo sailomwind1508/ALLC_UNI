@@ -20,10 +20,12 @@ namespace AllCashUFormsApp
             List<tbl_Cause> list = new List<tbl_Cause>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Cause.Where(x => x.FlagDel == false).Where(predicate).ToList();
-                }
+                list = tbl_Cause.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Cause.Where(x => x.FlagDel == false).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +45,17 @@ namespace AllCashUFormsApp
             List<tbl_Cause> list = new List<tbl_Cause>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Cause.Where(x => x.FlagDel == false).ToList();
-                }
+
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_Cause] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Cause), sql);
+                list = dynamicListReturned.Cast<tbl_Cause>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Cause.Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {

@@ -26,6 +26,23 @@ namespace AllCashUFormsApp
 {
     public static class ConvertHelper
     {
+        public static DateTime ConvertThaiDate(DateTime date)
+        {
+            DateTime dt;
+
+            if (CultureInfo.CurrentCulture.Name != "th-TH")
+            {
+                dt = date.AddYears(543);
+            }
+            else
+            {
+                dt = date;
+            }
+
+            return dt;
+
+        }
+
         public static void CopyTo(this object S, object T)
         {
             foreach (var pS in S.GetType().GetProperties())
@@ -351,6 +368,92 @@ namespace AllCashUFormsApp
             return table;
         }
 
+        public static List<T> ConvertToList<T>(DataTable dt)
+        {
+            var columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName.ToLower()).ToList();
+            var properties = typeof(T).GetProperties();
+            return dt.AsEnumerable().Select(row =>
+            {
+                var objT = Activator.CreateInstance<T>();
+                foreach (var pro in properties)
+                {
+                    if (columnNames.Contains(pro.Name.ToLower()))
+                    {
+                        try
+                        {
+                            pro.SetValue(objT, row[pro.Name], null);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+                return objT;
+            }).ToList();
+        }
+
+        public static List<T> ConvertDataTable<T>(DataTable dt)
+        {
+            List<T> data = new List<T>();
+            foreach (DataRow row in dt.Rows)
+            {
+                T item = GetItem<T>(row);
+                data.Add(item);
+            }
+            return data;
+        }
+
+        public static List<dynamic> GetListFromDT(Type className, DataTable dataTable)
+        {
+            List<dynamic> list = new List<dynamic>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                object objClass = Activator.CreateInstance(className);
+                Type type = objClass.GetType();
+                foreach (DataColumn column in row.Table.Columns)
+                {
+                    PropertyInfo prop = type.GetProperty(column.ColumnName);
+                    //prop.SetValue(objClass, row[column.ColumnName], null);
+                    object safeValue = (row[column.ColumnName] == null || row[column.ColumnName] == DBNull.Value) ? null : row[column.ColumnName];
+
+                    if (prop != null)
+                        prop.SetValue(objClass, safeValue, null);
+                }
+                list.Add(objClass);
+            }
+            return list;
+        }
+
+        public static T GetItem<T>(DataRow dr)
+        {
+            try
+            {
+                Type temp = typeof(T);
+                T obj = Activator.CreateInstance<T>();
+
+                foreach (DataColumn column in dr.Table.Columns)
+                {
+                    foreach (PropertyInfo pro in temp.GetProperties())
+                    {
+                        if (pro.Name == column.ColumnName)
+                        {
+                            Type t = Nullable.GetUnderlyingType(pro.PropertyType) ?? pro.PropertyType;
+                            object safeValue = (dr[column.ColumnName] == null || dr[column.ColumnName] == DBNull.Value) ? null : Convert.ChangeType(dr[column.ColumnName], t);
+
+                            pro.SetValue(obj, safeValue, null);
+                        }
+                        else
+                            continue;
+                    }
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
+        }
+
         public static string ToNumberFormat(this int number)
         {
             return string.Format("{0:#,0}", number);
@@ -370,6 +473,12 @@ namespace AllCashUFormsApp
         public static decimal ToDecimalN2(this decimal number)
         {
             string _number = string.Format("{0:#,0.00}", number);
+            return Convert.ToDecimal(_number);
+        }
+
+        public static decimal ToDecimalN3(this decimal number)
+        {
+            string _number = string.Format("{0:#,0.000}", number);
             return Convert.ToDecimal(_number);
         }
 
@@ -396,8 +505,8 @@ namespace AllCashUFormsApp
 
         public static DateTime ToDateTimeFormat(this DateTime dt)
         {
-            string _tempDt = dt.ToString("dd/MM/yyyy");
-            return Convert.ToDateTime(_tempDt);
+            //string _tempDt = dt.ToString("dd/MM/yyyy");
+            return new DateTime(dt.Year, dt.Month, dt.Day);
         }
 
         public static string ToDateTimeFormatString(this DateTime dt)

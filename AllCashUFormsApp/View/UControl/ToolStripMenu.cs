@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace AllCashUFormsApp.View.UserControl
 {
-    public partial class ToolStripMenu : UserControl
+    public partial class ToolStripMenu : System.Windows.Forms.UserControl
     {
         public ToolStripMenu()
         {

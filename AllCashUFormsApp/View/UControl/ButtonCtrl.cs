@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace AllCashUFormsApp.View.UControl
 {
-    public partial class ButtonCtrl : UserControl
+    public partial class ButtonCtrl : System.Windows.Forms.UserControl
     {
         public ButtonCtrl()
         {

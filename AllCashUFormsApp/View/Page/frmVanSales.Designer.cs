@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVanSales));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -40,7 +41,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label12 = new System.Windows.Forms.Label();
             this.rdoAccCode = new System.Windows.Forms.RadioButton();
             this.rdoProdCode = new System.Windows.Forms.RadioButton();
@@ -52,11 +53,11 @@
             this.pnlBR = new System.Windows.Forms.Panel();
             this.txnCommission = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnShowPromotion = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.lblVatType = new System.Windows.Forms.Label();
             this.txnDiscountAmt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txnDiscountType = new System.Windows.Forms.TextBox();
             this.txnTotalDue = new System.Windows.Forms.TextBox();
             this.txnAmount = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -130,15 +131,16 @@
             this.FormHeader = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
-            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
-            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
             this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
+            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
+            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
+            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
+            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
+            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel6.SuspendLayout();
@@ -158,27 +160,6 @@
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCancel.BackColor = System.Drawing.Color.Azure;
-            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(344, 3);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(68, 23);
-            this.btnCancel.TabIndex = 17;
-            this.btnCancel.Text = "ยกเลิก";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label12
             // 
@@ -220,12 +201,14 @@
             this.btnReCalc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReCalc.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnReCalc.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnReCalc.Image = ((System.Drawing.Image)(resources.GetObject("btnReCalc.Image")));
             this.btnReCalc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReCalc.Location = new System.Drawing.Point(408, 34);
             this.btnReCalc.Name = "btnReCalc";
             this.btnReCalc.Size = new System.Drawing.Size(117, 45);
             this.btnReCalc.TabIndex = 152;
-            this.btnReCalc.Text = "คำนวน/โปรโมชั่น";
+            this.btnReCalc.Text = "คำนวนใหม่";
+            this.btnReCalc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnReCalc.UseVisualStyleBackColor = false;
             this.btnReCalc.Click += new System.EventHandler(this.btnReCalc_Click);
             // 
@@ -279,11 +262,11 @@
             this.pnlBR.BackColor = System.Drawing.Color.Azure;
             this.pnlBR.Controls.Add(this.txnCommission);
             this.pnlBR.Controls.Add(this.label1);
+            this.pnlBR.Controls.Add(this.btnShowPromotion);
             this.pnlBR.Controls.Add(this.label3);
             this.pnlBR.Controls.Add(this.lblVatType);
             this.pnlBR.Controls.Add(this.txnDiscountAmt);
             this.pnlBR.Controls.Add(this.label2);
-            this.pnlBR.Controls.Add(this.txnDiscountType);
             this.pnlBR.Controls.Add(this.txnTotalDue);
             this.pnlBR.Controls.Add(this.txnAmount);
             this.pnlBR.Controls.Add(this.label13);
@@ -310,7 +293,8 @@
             this.txnCommission.Name = "txnCommission";
             this.txnCommission.ReadOnly = true;
             this.txnCommission.Size = new System.Drawing.Size(163, 23);
-            this.txnCommission.TabIndex = 141;
+            this.txnCommission.TabIndex = 144;
+            this.txnCommission.Visible = false;
             // 
             // label1
             // 
@@ -319,8 +303,26 @@
             this.label1.Location = new System.Drawing.Point(94, 163);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(122, 16);
-            this.label1.TabIndex = 142;
+            this.label1.TabIndex = 145;
             this.label1.Text = "ค่าคอมมิชชั่นทั้งสิ้น : ";
+            this.label1.Visible = false;
+            // 
+            // btnShowPromotion
+            // 
+            this.btnShowPromotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowPromotion.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnShowPromotion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnShowPromotion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowPromotion.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnShowPromotion.Image = ((System.Drawing.Image)(resources.GetObject("btnShowPromotion.Image")));
+            this.btnShowPromotion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnShowPromotion.Location = new System.Drawing.Point(387, 30);
+            this.btnShowPromotion.Name = "btnShowPromotion";
+            this.btnShowPromotion.Size = new System.Drawing.Size(35, 23);
+            this.btnShowPromotion.TabIndex = 143;
+            this.btnShowPromotion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnShowPromotion.UseVisualStyleBackColor = false;
+            this.btnShowPromotion.Click += new System.EventHandler(this.btnShowPromotion_Click);
             // 
             // label3
             // 
@@ -364,17 +366,6 @@
             this.label2.Size = new System.Drawing.Size(90, 16);
             this.label2.TabIndex = 137;
             this.label2.Text = "มูลค่าอัตราภาษี";
-            // 
-            // txnDiscountType
-            // 
-            this.txnDiscountType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txnDiscountType.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnDiscountType.Location = new System.Drawing.Point(131, 30);
-            this.txnDiscountType.MaxLength = 5;
-            this.txnDiscountType.Name = "txnDiscountType";
-            this.txnDiscountType.ReadOnly = true;
-            this.txnDiscountType.Size = new System.Drawing.Size(85, 23);
-            this.txnDiscountType.TabIndex = 136;
             // 
             // txnTotalDue
             // 
@@ -422,11 +413,11 @@
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(66, 33);
+            this.label14.Location = new System.Drawing.Point(102, 33);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(59, 16);
+            this.label14.Size = new System.Drawing.Size(114, 16);
             this.label14.TabIndex = 132;
-            this.label14.Text = "ส่วนลด : ";
+            this.label14.Text = "ส่วนลด/โปรโมชั่น : ";
             // 
             // txnBeforeVat
             // 
@@ -541,12 +532,14 @@
             this.btnGenCustIVNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGenCustIVNo.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnGenCustIVNo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnGenCustIVNo.Image = ((System.Drawing.Image)(resources.GetObject("btnGenCustIVNo.Image")));
             this.btnGenCustIVNo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnGenCustIVNo.Location = new System.Drawing.Point(152, 186);
             this.btnGenCustIVNo.Name = "btnGenCustIVNo";
             this.btnGenCustIVNo.Size = new System.Drawing.Size(163, 42);
             this.btnGenCustIVNo.TabIndex = 151;
             this.btnGenCustIVNo.Text = "ออกใบกำกับภาษี";
+            this.btnGenCustIVNo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnGenCustIVNo.UseVisualStyleBackColor = false;
             this.btnGenCustIVNo.Click += new System.EventHandler(this.btnGenCustIVNo_Click);
             // 
@@ -751,13 +744,16 @@
             this.btnUpdateAddress.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateAddress.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnUpdateAddress.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnUpdateAddress.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdateAddress.Image")));
             this.btnUpdateAddress.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnUpdateAddress.Location = new System.Drawing.Point(551, 31);
             this.btnUpdateAddress.Name = "btnUpdateAddress";
-            this.btnUpdateAddress.Size = new System.Drawing.Size(77, 46);
+            this.btnUpdateAddress.Size = new System.Drawing.Size(80, 46);
             this.btnUpdateAddress.TabIndex = 152;
             this.btnUpdateAddress.Text = "ปรับปรุง ชื่อ/ที่อยู่";
+            this.btnUpdateAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnUpdateAddress.UseVisualStyleBackColor = false;
+            this.btnUpdateAddress.Click += new System.EventHandler(this.btnUpdateAddress_Click);
             // 
             // txtRemark
             // 
@@ -805,7 +801,7 @@
             // txtWHCode
             // 
             this.txtWHCode.Location = new System.Drawing.Point(81, 153);
-            this.txtWHCode.MaxLength = 5;
+            this.txtWHCode.MaxLength = 6;
             this.txtWHCode.Name = "txtWHCode";
             this.txtWHCode.Size = new System.Drawing.Size(153, 23);
             this.txtWHCode.TabIndex = 127;
@@ -904,7 +900,7 @@
             // txtTelephone
             // 
             this.txtTelephone.Location = new System.Drawing.Point(81, 100);
-            this.txtTelephone.MaxLength = 15;
+            this.txtTelephone.MaxLength = 50;
             this.txtTelephone.Name = "txtTelephone";
             this.txtTelephone.Size = new System.Drawing.Size(190, 23);
             this.txtTelephone.TabIndex = 122;
@@ -921,7 +917,7 @@
             // txtContact
             // 
             this.txtContact.Location = new System.Drawing.Point(369, 100);
-            this.txtContact.MaxLength = 10;
+            this.txtContact.MaxLength = 200;
             this.txtContact.Name = "txtContact";
             this.txtContact.Size = new System.Drawing.Size(180, 23);
             this.txtContact.TabIndex = 123;
@@ -938,7 +934,7 @@
             // txtBillTo
             // 
             this.txtBillTo.Location = new System.Drawing.Point(81, 31);
-            this.txtBillTo.MaxLength = 50;
+            this.txtBillTo.MaxLength = 200;
             this.txtBillTo.Multiline = true;
             this.txtBillTo.Name = "txtBillTo";
             this.txtBillTo.Size = new System.Drawing.Size(468, 66);
@@ -965,7 +961,7 @@
             // txtCustomerCode
             // 
             this.txtCustomerCode.Location = new System.Drawing.Point(81, 5);
-            this.txtCustomerCode.MaxLength = 5;
+            this.txtCustomerCode.MaxLength = 13;
             this.txtCustomerCode.Name = "txtCustomerCode";
             this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
             this.txtCustomerCode.TabIndex = 118;
@@ -1012,6 +1008,14 @@
             this.grdList.AllowUserToAddRows = false;
             this.grdList.AllowUserToResizeColumns = false;
             this.grdList.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colProductCode,
@@ -1026,6 +1030,14 @@
             this.colTotal,
             this.colUomSetID,
             this.colSellPrice});
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdList.DefaultCellStyle = dataGridViewCellStyle12;
             this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdList.Location = new System.Drawing.Point(0, 0);
@@ -1037,8 +1049,8 @@
             // colProductCode
             // 
             this.colProductCode.DataPropertyName = "ProductID";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle2;
             this.colProductCode.HeaderText = "รหัสสินค้า";
             this.colProductCode.MaxInputLength = 15;
             this.colProductCode.Name = "colProductCode";
@@ -1046,9 +1058,9 @@
             // 
             // colSearchProduct
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle3;
             this.colSearchProduct.HeaderText = "";
             this.colSearchProduct.Name = "colSearchProduct";
             this.colSearchProduct.ReadOnly = true;
@@ -1060,9 +1072,9 @@
             // 
             this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle4;
             this.colProductName.HeaderText = "รายการ";
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
@@ -1071,9 +1083,9 @@
             // colUnit
             // 
             this.colUnit.DataPropertyName = "UomSetName";
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colUnit.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colUnit.DefaultCellStyle = dataGridViewCellStyle5;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
             this.colUnit.ReadOnly = true;
@@ -1083,21 +1095,23 @@
             // colReceivedQty
             // 
             this.colReceivedQty.DataPropertyName = "ReceivedQty";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle5.Format = "N0";
-            this.colReceivedQty.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle6.Format = "N0";
+            this.colReceivedQty.DefaultCellStyle = dataGridViewCellStyle6;
             this.colReceivedQty.HeaderText = "จำนวนขาย";
+            this.colReceivedQty.MaxInputLength = 5;
             this.colReceivedQty.Name = "colReceivedQty";
             this.colReceivedQty.ReadOnly = true;
+            this.colReceivedQty.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colSellPriceVat
             // 
             this.colSellPriceVat.DataPropertyName = "SellPriceVat";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle6.Format = "N2";
-            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle7.Format = "N2";
+            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle7;
             this.colSellPriceVat.HeaderText = "หน่วยละ";
             this.colSellPriceVat.MaxInputLength = 10;
             this.colSellPriceVat.Name = "colSellPriceVat";
@@ -1108,10 +1122,10 @@
             // colVAT
             // 
             this.colVAT.DataPropertyName = "VatType";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colVAT.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colVAT.DefaultCellStyle = dataGridViewCellStyle8;
             this.colVAT.HeaderText = "ภาษี";
             this.colVAT.Name = "colVAT";
             this.colVAT.ReadOnly = true;
@@ -1120,8 +1134,8 @@
             // 
             // colLineDiscountType
             // 
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colLineDiscountType.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colLineDiscountType.DefaultCellStyle = dataGridViewCellStyle9;
             this.colLineDiscountType.HeaderText = "ประเภทการลด";
             this.colLineDiscountType.Name = "colLineDiscountType";
             this.colLineDiscountType.ReadOnly = true;
@@ -1129,22 +1143,24 @@
             // colLineDiscount
             // 
             this.colLineDiscount.DataPropertyName = "LineDiscount";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle9.Format = "N2";
-            this.colLineDiscount.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle10.Format = "N2";
+            this.colLineDiscount.DefaultCellStyle = dataGridViewCellStyle10;
             this.colLineDiscount.HeaderText = "ส่วนลด";
             this.colLineDiscount.Name = "colLineDiscount";
             this.colLineDiscount.ReadOnly = true;
+            this.colLineDiscount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colTotal
             // 
             this.colTotal.DataPropertyName = "LineTotal";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle10.Format = "N2";
-            this.colTotal.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle11.Format = "N2";
+            this.colTotal.DefaultCellStyle = dataGridViewCellStyle11;
             this.colTotal.HeaderText = "จำนวนเงิน";
             this.colTotal.Name = "colTotal";
             this.colTotal.ReadOnly = true;
@@ -1157,6 +1173,7 @@
             this.colUomSetID.HeaderText = "UomSetID";
             this.colUomSetID.Name = "colUomSetID";
             this.colUomSetID.ReadOnly = true;
+            this.colUomSetID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colUomSetID.Visible = false;
             this.colUomSetID.Width = 80;
             // 
@@ -1166,6 +1183,7 @@
             this.colSellPrice.HeaderText = "SellPrice";
             this.colSellPrice.Name = "colSellPrice";
             this.colSellPrice.ReadOnly = true;
+            this.colSellPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colSellPrice.Visible = false;
             // 
             // FormPic
@@ -1213,89 +1231,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1008, 580);
             this.panel2.TabIndex = 29;
-            // 
-            // btnCopy
-            // 
-            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCopy.BackColor = System.Drawing.Color.Azure;
-            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCopy.Enabled = false;
-            this.btnCopy.FlatAppearance.BorderSize = 0;
-            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCopy.ForeColor = System.Drawing.Color.Black;
-            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCopy.Location = new System.Drawing.Point(193, 3);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(75, 23);
-            this.btnCopy.TabIndex = 25;
-            this.btnCopy.Text = "คัดลอก";
-            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCopy.UseVisualStyleBackColor = false;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSave.BackColor = System.Drawing.Color.Azure;
-            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSave.FlatAppearance.BorderSize = 0;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.Color.Black;
-            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
-            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(274, 3);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(64, 23);
-            this.btnSave.TabIndex = 24;
-            this.btnSave.Text = "บันทึก";
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnRemove.BackColor = System.Drawing.Color.Azure;
-            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRemove.Enabled = false;
-            this.btnRemove.FlatAppearance.BorderSize = 0;
-            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.ForeColor = System.Drawing.Color.Black;
-            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
-            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemove.Location = new System.Drawing.Point(138, 3);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(49, 23);
-            this.btnRemove.TabIndex = 25;
-            this.btnRemove.Text = "ลบ";
-            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRemove.UseVisualStyleBackColor = false;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
-            // btnPrint
-            // 
-            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrint.BackColor = System.Drawing.Color.Azure;
-            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPrint.Enabled = false;
-            this.btnPrint.FlatAppearance.BorderSize = 0;
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrint.ForeColor = System.Drawing.Color.Black;
-            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
-            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrint.Location = new System.Drawing.Point(418, 3);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(61, 23);
-            this.btnPrint.TabIndex = 17;
-            this.btnPrint.Text = "พิมพ์";
-            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // panel5
             // 
@@ -1395,6 +1330,110 @@
             this.btnEdit.UseVisualStyleBackColor = false;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
+            // btnPrint
+            // 
+            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrint.BackColor = System.Drawing.Color.Azure;
+            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrint.Enabled = false;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrint.ForeColor = System.Drawing.Color.Black;
+            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
+            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrint.Location = new System.Drawing.Point(418, 3);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(61, 23);
+            this.btnPrint.TabIndex = 17;
+            this.btnPrint.Text = "พิมพ์";
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnRemove.BackColor = System.Drawing.Color.Azure;
+            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRemove.Enabled = false;
+            this.btnRemove.FlatAppearance.BorderSize = 0;
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemove.ForeColor = System.Drawing.Color.Black;
+            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
+            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRemove.Location = new System.Drawing.Point(138, 3);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(49, 23);
+            this.btnRemove.TabIndex = 25;
+            this.btnRemove.Text = "ลบ";
+            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCancel.BackColor = System.Drawing.Color.Azure;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(344, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(68, 23);
+            this.btnCancel.TabIndex = 17;
+            this.btnCancel.Text = "ยกเลิก";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCopy.BackColor = System.Drawing.Color.Azure;
+            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCopy.Enabled = false;
+            this.btnCopy.FlatAppearance.BorderSize = 0;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopy.ForeColor = System.Drawing.Color.Black;
+            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
+            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCopy.Location = new System.Drawing.Point(193, 3);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(75, 23);
+            this.btnCopy.TabIndex = 25;
+            this.btnCopy.Text = "คัดลอก";
+            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCopy.UseVisualStyleBackColor = false;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSave.BackColor = System.Drawing.Color.Azure;
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.Black;
+            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
+            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSave.Location = new System.Drawing.Point(274, 3);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(64, 23);
+            this.btnSave.TabIndex = 24;
+            this.btnSave.Text = "บันทึก";
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Azure;
@@ -1416,9 +1455,11 @@
             this.ClientSize = new System.Drawing.Size(1008, 609);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmVanSales";
             this.Text = "frmVanSales";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmVanSales_FormClosed);
             this.Load += new System.EventHandler(this.frmVanSales_Load);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
@@ -1458,13 +1499,10 @@
         private System.Windows.Forms.TextBox txtComment;
         private System.Windows.Forms.Panel pnlBot;
         private System.Windows.Forms.Panel pnlBR;
-        private System.Windows.Forms.TextBox txnCommission;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblVatType;
         private System.Windows.Forms.TextBox txnDiscountAmt;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txnDiscountType;
         private System.Windows.Forms.TextBox txnTotalDue;
         private System.Windows.Forms.TextBox txnAmount;
         private System.Windows.Forms.Label label13;
@@ -1522,18 +1560,6 @@
         private System.Windows.Forms.Label lblCustomerCode;
         private System.Windows.Forms.Panel pnlCen;
         private System.Windows.Forms.DataGridView grdList;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProductCode;
-        private System.Windows.Forms.DataGridViewButtonColumn colSearchProduct;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
-        private System.Windows.Forms.DataGridViewComboBoxColumn colUnit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colReceivedQty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colSellPriceVat;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colVAT;
-        private System.Windows.Forms.DataGridViewComboBoxColumn colLineDiscountType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLineDiscount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colUomSetID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colSellPrice;
         private System.Windows.Forms.PictureBox FormPic;
         private System.Windows.Forms.Label FormHeader;
         private System.Windows.Forms.Panel panel4;
@@ -1549,5 +1575,20 @@
         private UControl.EditButton btnEdit;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnShowPromotion;
+        private System.Windows.Forms.TextBox txnCommission;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductCode;
+        private System.Windows.Forms.DataGridViewButtonColumn colSearchProduct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colUnit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colReceivedQty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSellPriceVat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colVAT;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colLineDiscountType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLineDiscount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUomSetID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSellPrice;
     }
 }

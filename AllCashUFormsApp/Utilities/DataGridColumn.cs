@@ -14,6 +14,7 @@ namespace AllCashUFormsApp
         public int Width { get; set; }
         public DataGridViewAutoSizeColumnMode AutoSizeColumnMode { get; set; }
         public DataGridViewContentAlignment Alignment { get; set; }
+        public bool? Visibility { get; set; }
         public string Format { get; set; }
         public DataGridViewColumn ColoumnType { get; set; }
         public bool AddNumberInFirstRow { get; set; }

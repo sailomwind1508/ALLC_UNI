@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -20,10 +21,17 @@ namespace AllCashUFormsApp
             List<tbl_Company> list = new List<tbl_Company>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Company.OrderBy(x => x.CompanyCode).ToList();
-                }
+
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_Company] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Company), sql);
+                list = dynamicListReturned.Cast<tbl_Company>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Company.OrderBy(x => x.CompanyCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -125,6 +133,13 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable GetCompanyTable(this tbl_Company tbl_Company)
+        {
+            DataTable dt = new DataTable();
+            string sql = "SELECT * FROM tbl_Company";
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            return dt;
         }
     }
 }

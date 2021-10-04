@@ -201,6 +201,8 @@ namespace AllCashUFormsApp.View.Page
 
             #endregion
 
+            MemoryManagement.FlushMemory();
+
             #region Initial Tab Employee
 
             var titleList = new Dictionary<string, string>();
@@ -252,6 +254,8 @@ namespace AllCashUFormsApp.View.Page
 
             #endregion
 
+            MemoryManagement.FlushMemory();
+
             #region Tab Branch Warehouse
 
             //BindBranchWarehouseData();
@@ -269,6 +273,8 @@ namespace AllCashUFormsApp.View.Page
 
             #endregion
 
+            MemoryManagement.FlushMemory();
+
             #region Tab Van
 
             PrepareCashVan();
@@ -285,6 +291,8 @@ namespace AllCashUFormsApp.View.Page
             rdoStatusVanC.Enabled = false;
 
             #endregion
+
+            MemoryManagement.FlushMemory();
 
             #region Tab MKT
 
@@ -318,6 +326,7 @@ namespace AllCashUFormsApp.View.Page
 
             #endregion
 
+            MemoryManagement.FlushMemory();
         }
 
         private void InitPart()
@@ -408,6 +417,8 @@ namespace AllCashUFormsApp.View.Page
         private void frmDistributionCenter_Load(object sender, EventArgs e)
         {
             InitPage();
+
+            MemoryManagement.FlushMemory();
 
             btnSearchBranch.PerformClick();
         }
@@ -1923,7 +1934,9 @@ namespace AllCashUFormsApp.View.Page
                 bwData.SaleEmpID = txtSaleEmpID.Text;
 
                 bwData.FlagSend = false;
-                bwData.VanType = 1;
+
+                int vanType = Convert.ToInt32(ddlWHType_VanDT.SelectedValue);
+                bwData.VanType = vanType;
                 bwData.HelperEmpID = txtHelperEmpID.Text;
                 bwData.DriverEmpID = txtDriverEmpID.Text;
                 bwData.POSNo = txtPOSNo.Text;
@@ -2460,7 +2473,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     var cell0 = grdSaleAreaList.Rows[rowIndex].Cells[0];
                     var cell5 = grdSaleAreaList.Rows[rowIndex].Cells[5];
-
+             
                     var salAreaID = cell0.Value.ToString();
 
                     Func<tbl_SalArea, bool> tbl_SalAreaFunc = (x => x.SalAreaID == salAreaID);
@@ -2469,13 +2482,20 @@ namespace AllCashUFormsApp.View.Page
                     if (sa != null && sa.Count > 0)
                     {
                         pnlMKT.Controls.SetTextBoxControlValue(sa[0]);
+                        txtCountCustomer.Text = cell5.Value.ToString();
 
                         rdoMKTStatusN.Checked = sa[0].FlagDel == false;
                         rdoMKTStatusC.Checked = sa[0].FlagDel == true;
 
                         ddlZoneID.SelectedValue = sa[0].ZoneID == 0 ? -1 : sa[0].ZoneID;
 
-                        ddlWHID.SelectedValue = "-1";
+                        var saleAreDistinct = bu.GetSaleAreaDistrict(x => x.SalAreaID == salAreaID);
+                        if (saleAreDistinct != null && saleAreDistinct.Count > 0)
+                        {
+                            ddlWHID.SelectedValue = saleAreDistinct[0].WHID.ToString();
+                        }
+                        else
+                            ddlWHID.SelectedValue = "-1";
 
                         BindSaleAreaDistrict(txtSalAreaID.Text);
 
@@ -2680,8 +2700,12 @@ namespace AllCashUFormsApp.View.Page
             e.ToNumberOnly(sender);
         }
 
+
         #endregion
 
-
+        private void frmDistributionCenter_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

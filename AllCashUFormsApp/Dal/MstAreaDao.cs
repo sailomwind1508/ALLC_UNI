@@ -20,10 +20,12 @@ namespace AllCashUFormsApp
             List<tbl_MstArea> list = new List<tbl_MstArea>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstArea.Where(x => x.FlagDel == false).Where(predicate).ToList();
-                }
+                list = tbl_MstArea.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstArea.Where(x => x.FlagDel == false).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +45,16 @@ namespace AllCashUFormsApp
             List<tbl_MstArea> list = new List<tbl_MstArea>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstArea.Where(x => x.FlagDel == false).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstArea] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstArea), sql);
+                list = dynamicListReturned.Cast<tbl_MstArea>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstArea.Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -114,6 +122,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_MstArea.Insert();
                     }
                 }
             }

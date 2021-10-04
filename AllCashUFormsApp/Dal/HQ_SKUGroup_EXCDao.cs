@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +19,7 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_SKUGroup_EXC> Select(this tbl_HQ_SKUGroup_EXC obj, object condition)
         {
-            return new tbl_HQ_SKUGroup_EXC().Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -30,10 +32,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_SKUGroup_EXC> list = new List<tbl_HQ_SKUGroup_EXC>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_SKUGroup_EXC.Where(predicate).ToList();
-                }
+                list = tbl_HQ_SKUGroup_EXC.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_SKUGroup_EXC.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -53,10 +57,16 @@ namespace AllCashUFormsApp
             List<tbl_HQ_SKUGroup_EXC> list = new List<tbl_HQ_SKUGroup_EXC>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_SKUGroup_EXC.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_SKUGroup_EXC] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_SKUGroup_EXC), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_SKUGroup_EXC>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_SKUGroup_EXC.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -103,7 +113,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_HQ_SKUGroup_EXC.FirstOrDefault(x => x.SKUGroupID == tbl_HQ_SKUGroup_EXC.SKUGroupID && x.SKU_ID == tbl_HQ_SKUGroup_EXC.SKU_ID);
+                    var updateData = db.tbl_HQ_SKUGroup_EXC.FirstOrDefault(x => x.SKU_ID == tbl_HQ_SKUGroup_EXC.SKU_ID);
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
@@ -159,6 +169,73 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_HQ_SKUGroup_EXC.GetType());
+            }
+
+            return ret;
+        }
+        public static DataTable GetHQ_SKUGroup_ExcData(this tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC, string search)//
+
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_HQ_SKUGroup_EXC";
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    sql += " WHERE SKU_ID like '%" + search + "%'";
+                }
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public static int UpdateSKUGroupExc(this tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC ,string SKU_ID_Old)
+        {
+            int ret = 0;
+            try
+            {
+                string query = "SELECT * FROM tbl_HQ_SKUGroup_EXC WHERE SKU_ID = '" + SKU_ID_Old + "'";
+                DataTable dt = new DataTable();
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(query);
+
+                SqlConnection con = new SqlConnection(Connection.ConnectionString);
+
+                string sql = "";
+
+                SqlCommand cmd = new SqlCommand();
+
+                if (dt.Rows.Count > 0)
+                {
+                    sql = "UPDATE tbl_HQ_SKUGroup_EXC SET SKU_ID = @SKU_ID  WHERE SKU_ID = @Old_SKU_ID";
+
+                    cmd = new SqlCommand(sql, con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Old_SKU_ID", SKU_ID_Old);
+                    cmd.Parameters.AddWithValue("@SKU_ID", tbl_HQ_SKUGroup_EXC.SKU_ID);
+                }
+                else
+                {
+                    sql = "INSERT INTO tbl_HQ_SKUGroup_EXC (SKU_ID) VALUES (@SKU_ID)";
+
+                    cmd = new SqlCommand(sql, con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@SKU_ID", tbl_HQ_SKUGroup_EXC.SKU_ID);
+                   
+                }
+
+                ret = cmd.ExecuteNonQuery();
+
+                con.Close();
+
+            }
+            catch (Exception ex)
+            {
+                
             }
 
             return ret;

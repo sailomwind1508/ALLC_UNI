@@ -31,7 +31,9 @@ namespace AllCashUFormsApp.View.Page
 
         Func<tbl_BranchWarehouse, bool> fbiPredicate = null;
         private string[] productArr = null;
-        private List<string> selectProdect = new List<string>();
+        private static List<string> selectProdect = new List<string>();
+        static DataTable tmpDTData = new DataTable();
+        string excelName = "";
 
         public frmProductMovement()
         {
@@ -88,7 +90,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitialData()
         {
-            this.BindData("FromBranchID", searchBranchControls, "503");
+            var b = bu.GetBranch();
+            if (b != null)
+            {
+                this.BindData("FromBranchID", searchBranchControls, b[0].BranchID);
+                //this.BindData("FromBranchID", searchBranchControls, "503");
+            }
             this.BindData("BranchWarehouse", searchFromBWHControls, "1000");
             this.BindData("BranchWarehouse", searchToBWHControls, "1000");
 
@@ -143,90 +150,111 @@ namespace AllCashUFormsApp.View.Page
 
         private void SearchSummary()
         {
-            Func<tbl_BranchWarehouse, bool> func = (x => x.WHCode == txtFromWHCode.Text);
-            var bwh = bu.GetBranchWarehouse(func);
-            if (bwh != null)
+            var fbwh = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
+            if (fbwh != null)
             {
-                string whid = bwh.WHID;
-                string prdGroupID = ddlProductGroup.SelectedValue.ToString();
-                string prdSupGroupID = ddlProductSubGroup.SelectedValue.ToString();
+                string fwhid = fbwh.WHID;
+                var tbwh = bu.GetBranchWarehouse(x => x.WHCode == txtToWHCode.Text);
 
-                DateTime fDate = dtpFromDate.Value;
-                DateTime tDate = dtpToDate.Value;
-
-                DataTable dt = new DataTable();
-
-                dt = bu.GetDataTable(whid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
-
-                if (dt != null)
+                if (tbwh != null)
                 {
-                    grdList.DataSource = dt;
+                    string twhid = tbwh.WHID;
 
-                    DataGridViewColumn col0 = grdList.Columns[0];
-                    DataGridViewColumn col1 = grdList.Columns[1];
-                    DataGridViewColumn col2 = grdList.Columns[2];
-                    DataGridViewColumn col3 = grdList.Columns[3];
-                    DataGridViewColumn col4 = grdList.Columns[4];
-                    DataGridViewColumn col5 = grdList.Columns[5];
-                    DataGridViewColumn col6 = grdList.Columns[6];
-                    DataGridViewColumn col7 = grdList.Columns[7];
-                    DataGridViewColumn col8 = grdList.Columns[8];
+                    string prdGroupID = ddlProductGroup.SelectedValue.ToString();
+                    string prdSupGroupID = ddlProductSubGroup.SelectedValue.ToString();
 
-                    col0.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                    col1.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
-                    col2.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                    DateTime fDate = dtpFromDate.Value;
+                    DateTime tDate = dtpToDate.Value;
+
+                    DataTable dt = new DataTable();
+
+                    dt = bu.GetDataTable(fwhid, twhid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
+
+                    if (dt != null)
+                    {
+                        grdList.DataSource = dt;
+                        tmpDTData = dt;
+                        excelName = "รายงานสินค้าเคลื่อนไหว (สรุป)";
+
+                        DataGridViewColumn col0 = grdList.Columns[0];
+                        DataGridViewColumn col1 = grdList.Columns[1];
+                        DataGridViewColumn col2 = grdList.Columns[2];
+                        DataGridViewColumn col3 = grdList.Columns[3];
+                        DataGridViewColumn col4 = grdList.Columns[4];
+                        DataGridViewColumn col5 = grdList.Columns[5];
+                        DataGridViewColumn col6 = grdList.Columns[6];
+                        DataGridViewColumn col7 = grdList.Columns[7];
+                        DataGridViewColumn col8 = grdList.Columns[8];
+
+                        col0.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                        col1.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
+                        col2.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                    }
                 }
             }
         }
 
         private void SearchDetails()
         {
-            Func<tbl_BranchWarehouse, bool> func = (x => x.WHCode == txtFromWHCode.Text);
-            var bwh = bu.GetBranchWarehouse(func);
-            if (bwh != null)
+            var fbwh = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
+            if (fbwh != null)
             {
-                string whid = bwh.WHID;
-                string prdGroupID = ddlProductGroup.SelectedValue.ToString();
-                string prdSupGroupID = ddlProductSubGroup.SelectedValue.ToString();
+                string fwhid = fbwh.WHID;
+                var tbwh = bu.GetBranchWarehouse(x => x.WHCode == txtToWHCode.Text);
 
-                DateTime fDate = dtpFromDate.Value;
-                DateTime tDate = dtpToDate.Value;
-
-                DataTable dt = new DataTable();
-
-                dt = bu.GetDataTable_Details(whid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
-
-                if (dt != null)
+                if (tbwh != null)
                 {
-                    grdList.DataSource = dt;
+                    string twhid = tbwh.WHID;
+                    {
+                        string prdGroupID = ddlProductGroup.SelectedValue.ToString();
+                        string prdSupGroupID = ddlProductSubGroup.SelectedValue.ToString();
 
-                    DataGridViewColumn col0 = grdList.Columns[0];
-                    DataGridViewColumn col1 = grdList.Columns[1];
-                    DataGridViewColumn col2 = grdList.Columns[2];
-                    DataGridViewColumn col3 = grdList.Columns[3];
-                    DataGridViewColumn col4 = grdList.Columns[4];
-                    DataGridViewColumn col5 = grdList.Columns[5];
-                    DataGridViewColumn col6 = grdList.Columns[6];
-                    DataGridViewColumn col7 = grdList.Columns[7];
-                    DataGridViewColumn col8 = grdList.Columns[8];
-                    DataGridViewColumn col9 = grdList.Columns[9];
+                        DateTime fDate = dtpFromDate.Value;
+                        DateTime tDate = dtpToDate.Value;
 
-                    col0.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                    col1.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
-                    col2.SetColumnStyle(80, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
-                    col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                    col4.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
-                    col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                    col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
-                    col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        DataTable dt = new DataTable();
+
+                        MemoryManagement.FlushMemory();
+
+                        dt = bu.GetDataTable_Details(fwhid, twhid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
+
+                        MemoryManagement.FlushMemory();
+
+                        if (dt != null)
+                        {
+                            grdList.DataSource = dt;
+                            tmpDTData = dt;
+                            excelName = "รายงานสินค้าเคลื่อนไหว (รายละเอียด)";
+
+                            DataGridViewColumn col0 = grdList.Columns[0];
+                            DataGridViewColumn col1 = grdList.Columns[1];
+                            DataGridViewColumn col2 = grdList.Columns[2];
+                            DataGridViewColumn col3 = grdList.Columns[3];
+                            DataGridViewColumn col4 = grdList.Columns[4];
+                            DataGridViewColumn col5 = grdList.Columns[5];
+                            DataGridViewColumn col6 = grdList.Columns[6];
+                            DataGridViewColumn col7 = grdList.Columns[7];
+                            DataGridViewColumn col8 = grdList.Columns[8];
+                            DataGridViewColumn col9 = grdList.Columns[9];
+
+                            col0.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                            col1.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
+                            col2.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+                            col3.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                            col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+                            col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                            col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                            col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                            col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                            col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleRight, "N0", 0);
+                        }
+                    }
                 }
             }
         }
@@ -245,6 +273,11 @@ namespace AllCashUFormsApp.View.Page
         #region event methods
 
         private void ccb_DropDownClosed(object sender, EventArgs e)
+        {
+            GetProductList();
+        }
+
+        private void GetProductList()
         {
             selectProdect = new List<string>();
 
@@ -343,7 +376,24 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            frmWait wait = new frmWait();
+            wait.Show();
 
+            string dir = @"C:\AllCashExcels";
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            //string _excelName = dir + @"\" + excelName + ".xlsx";
+            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+            string _excelName = dir + @"\" + string.Join("", excelName, '_', cDate) + ".xls";
+
+            My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { tmpDTData }, _excelName, "ตรวจสอบสินค้าเคลื่อนไหว");
+
+            wait.Hide();
+            wait.Dispose();
+            wait.Close();
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -377,10 +427,15 @@ namespace AllCashUFormsApp.View.Page
         {
             Cursor.Current = Cursors.WaitCursor;
 
+            GetProductList();
+
+            tmpDTData = new DataTable();
             if (rdoSummary.Checked)
                 SearchSummary();
             else
                 SearchDetails();
+
+            MemoryManagement.FlushMemory();
 
             Cursor.Current = Cursors.Default;
         }
@@ -432,6 +487,21 @@ namespace AllCashUFormsApp.View.Page
 
                 grdList.SetCellFormatting(sender, e, 1);
             }
+        }
+
+        private void rdoDetails_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdoDetails.Checked)
+            {
+                string msg = "รูปแบบรายงาน 'แบบรายละเอียด' จะดูได้ทีละคลังเท่านั้น!!!";
+                msg.ShowInfoMessage();
+                return;
+            }
+        }
+
+        private void frmProductMovement_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
         }
     }
 }

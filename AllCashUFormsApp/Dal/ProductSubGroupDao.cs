@@ -10,6 +10,55 @@ namespace AllCashUFormsApp
 {
     public static class ProductSubGroupDao
     {
+        public static List<tbl_ProductSubGroup> SelectNonFlag(this tbl_ProductSubGroup tbl_ProductSubGroup, Func<tbl_ProductSubGroup, bool> predicate)
+        {
+            List<tbl_ProductSubGroup> list = new List<tbl_ProductSubGroup>();
+            try
+            {
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ProductSubGroup] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductSubGroup), sql);
+                list = dynamicListReturned.Cast<tbl_ProductSubGroup>().ToList();
+                list = list.Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductSubGroup.Where(predicate).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ProductSubGroup.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_ProductSubGroup> SelectAllNonFlag(this tbl_ProductSubGroup tbl_ProductSubGroup)
+        {
+            List<tbl_ProductSubGroup> list = new List<tbl_ProductSubGroup>();
+            try
+            {
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ProductSubGroup] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductSubGroup), sql);
+                list = dynamicListReturned.Cast<tbl_ProductSubGroup>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductSubGroup.OrderBy(x => x.ProductSubGroupID).ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+
+                ex.WriteLog(tbl_ProductSubGroup.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -20,10 +69,12 @@ namespace AllCashUFormsApp
             List<tbl_ProductSubGroup> list = new List<tbl_ProductSubGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ProductSubGroup.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_ProductSubGroup.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductSubGroup.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +94,18 @@ namespace AllCashUFormsApp
             List<tbl_ProductSubGroup> list = new List<tbl_ProductSubGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ProductSubGroup.Where(x => x.FlagDel == false).OrderBy(x => x.ProductSubGroupID).ToList();
-                }
+
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ProductSubGroup] WHERE FlagDel = 0 Order By ProductSubGroupID ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductSubGroup), sql);
+                list = dynamicListReturned.Cast<tbl_ProductSubGroup>().ToList();
+
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductSubGroup.Where(x => x.FlagDel == false).OrderBy(x => x.ProductSubGroupID).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -94,7 +153,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_ProductSubGroup.FirstOrDefault(x => x.ProductGroupID == tbl_ProductSubGroup.ProductGroupID);
+                    var updateData = db.tbl_ProductSubGroup.FirstOrDefault(x => x.ProductGroupID == tbl_ProductSubGroup.ProductGroupID && x.ProductSubGroupCode == tbl_ProductSubGroup.ProductSubGroupCode);
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
@@ -115,6 +174,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_ProductSubGroup.Insert();
                     }
                 }
             }

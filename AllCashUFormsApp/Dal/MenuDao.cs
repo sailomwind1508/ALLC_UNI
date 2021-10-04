@@ -23,10 +23,16 @@ namespace AllCashUFormsApp
             List<tbl_MstMenu> list = new List<tbl_MstMenu>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstMenu.OrderBy(x => x.Seq).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstMenu] ORDER BY Seq ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstMenu), sql);
+                list = dynamicListReturned.Cast<tbl_MstMenu>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstMenu.OrderBy(x => x.Seq).ToList();
+                //}
             }
             catch (Exception ex)
             {

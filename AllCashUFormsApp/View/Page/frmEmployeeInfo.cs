@@ -93,6 +93,13 @@ namespace AllCashUFormsApp.View.Page
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
+            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            if (headerPic != null)
+            {
+                FormPic.Image = headerPic.MenuImage.byteArrayToImage();
+                FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+
             btnAdd.Enabled = true;
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
@@ -665,8 +672,12 @@ namespace AllCashUFormsApp.View.Page
                 BindEmployeeData();
         }
 
+
         #endregion
 
-
+        private void frmEmployeeInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

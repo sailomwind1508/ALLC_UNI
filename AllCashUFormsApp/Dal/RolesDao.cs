@@ -23,10 +23,12 @@ namespace AllCashUFormsApp
             List<tbl_Roles> list = new List<tbl_Roles>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Roles.Where(predicate).ToList();
-                }
+                list = tbl_Roles.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Roles.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -46,10 +48,17 @@ namespace AllCashUFormsApp
             List<tbl_Roles> list = new List<tbl_Roles>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Roles.OrderBy(x => x.RoleID).ToList();
-                }
+
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_Roles] Order By RoleID ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Roles), sql);
+                list = dynamicListReturned.Cast<tbl_Roles>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Roles.OrderBy(x => x.RoleID).ToList();
+                //}
             }
             catch (Exception ex)
             {

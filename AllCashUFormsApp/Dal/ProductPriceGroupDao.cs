@@ -1,11 +1,12 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 
 namespace AllCashUFormsApp
 {
@@ -21,10 +22,12 @@ namespace AllCashUFormsApp
             List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_ProductPriceGroup.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -44,10 +47,23 @@ namespace AllCashUFormsApp
             List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_ProductPriceGroup] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductPriceGroup), sql);
+                list = dynamicListReturned.Cast<tbl_ProductPriceGroup>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_ProductPriceGroup>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -95,7 +111,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_ProductPriceGroup.FirstOrDefault(x => x.PriceGroupID == tbl_ProductPriceGroup.PriceGroupID 
+                    var updateData = db.tbl_ProductPriceGroup.FirstOrDefault(x => x.PriceGroupID == tbl_ProductPriceGroup.PriceGroupID
                     && x.ProductID == tbl_ProductPriceGroup.ProductID
                     && x.ProductUomID == tbl_ProductPriceGroup.ProductUomID);
 
@@ -119,6 +135,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_ProductPriceGroup.Insert();
                     }
                 }
             }
@@ -150,6 +170,31 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+
+            return ret;
+        }
+
+        public static bool CallSendAllProductPriceGroupData(this tbl_ProductPriceGroup tbl_ProductPriceGroup, Dictionary<string, object> _params)//
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_SendAllPrdPriceTable_SendDataToBranch";
+                DataTable dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+
+                if (dt != null && dt.Rows.Count != 0)
+                {
+                    if (dt.Rows[0]["Result"].ToString() == "1")
+                    {
+                        ret = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ret = false;
             }
 
             return ret;

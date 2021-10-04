@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,8 @@ namespace AllCashUFormsApp
 {
     public static class DiscountTypeDao
     {
+        private static List<tbl_DiscountType> tbl_DiscountTypes = new List<tbl_DiscountType>();
+
         /// <summary>
         /// select all data
         /// </summary>
@@ -20,9 +23,23 @@ namespace AllCashUFormsApp
             List<tbl_DiscountType> list = new List<tbl_DiscountType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                VerifyNewData();
+
+                if (tbl_DiscountTypes.Count == 0)
                 {
-                    list = db.tbl_DiscountType.ToList();
+                    string sql = "SELECT * FROM tbl_DiscountType";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DiscountType), sql);
+                    list = dynamicListReturned.Cast<tbl_DiscountType>().ToList();
+
+                    //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                    //{
+                    //    list = db.tbl_DiscountType.ToList();
+                    //}
+                }
+                else
+                {
+                    list = tbl_DiscountTypes;
                 }
             }
             catch (Exception ex)
@@ -31,6 +48,45 @@ namespace AllCashUFormsApp
             }
 
             return list;
+        }
+
+        private static void VerifyNewData()
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += "SELECT COUNT(*) AS countDiscountType FROM tbl_DiscountType ";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                int count = Convert.ToInt32(dt.Rows[0][0]);
+
+                if (count != tbl_DiscountTypes.Count)
+                {
+                    dt = new DataTable();
+                    sql = "";
+                    sql += " SELECT * ";
+                    sql += " FROM tbl_DiscountType ";
+
+                    //da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                    //da.Fill(dt);
+
+                    //var list = ConvertHelper.ConvertDataTable<tbl_ProductUomSet>(dt);
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DiscountType), sql);
+                    var list = dynamicListReturned.Cast<tbl_DiscountType>().ToList();
+
+                    tbl_DiscountTypes = list;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(null);
+            }
         }
 
         /// <summary>

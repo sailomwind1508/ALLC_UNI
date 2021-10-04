@@ -14,60 +14,32 @@ namespace AllCashUFormsApp.Model
     
     public partial class tbl_TL_POMaster
     {
-        public int AutoID { get; set; }
+        public long AutoID { get; set; }
         public string DocNo { get; set; }
-        public byte RevisionNo { get; set; }
         public string DocTypeCode { get; set; }
         public string DocStatus { get; set; }
-        public System.DateTime DocDate { get; set; }
-        public string DocRef { get; set; }
-        public string StatusInOut { get; set; }
-        public string SupplierID { get; set; }
-        public string SuppName { get; set; }
+        public Nullable<System.DateTime> DocDate { get; set; }
+        public string BranchID { get; set; }
         public string WHID { get; set; }
         public string EmpID { get; set; }
-        public string SaleEmpID { get; set; }
         public string SalAreaID { get; set; }
-        public string Address { get; set; }
-        public string ContactName { get; set; }
-        public string ContactTel { get; set; }
-        public string Shipto { get; set; }
-        public Nullable<short> CreditDay { get; set; }
-        public Nullable<System.DateTime> DueDate { get; set; }
         public string CustomerID { get; set; }
-        public string CustType { get; set; }
-        public string CustName { get; set; }
-        public string CustInvNO { get; set; }
-        public Nullable<System.DateTime> CustInvDate { get; set; }
-        public Nullable<System.DateTime> CustPODate { get; set; }
-        public string CustPONo { get; set; }
+        public Nullable<decimal> Amount { get; set; }
+        public Nullable<decimal> ExcVat { get; set; }
+        public Nullable<decimal> IncVat { get; set; }
+        public Nullable<decimal> VatAmt { get; set; }
+        public Nullable<decimal> TotalDue { get; set; }
+        public Nullable<int> RevisionNo { get; set; }
+        public Nullable<System.DateTime> CrDate { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string DiscountType { get; set; }
+        public Nullable<decimal> Discount { get; set; }
+        public Nullable<decimal> Freight { get; set; }
+        public Nullable<int> PayType { get; set; }
         public string Remark { get; set; }
         public string Comment { get; set; }
-        public Nullable<decimal> OldAmount { get; set; }
-        public Nullable<decimal> Amount { get; set; }
-        public Nullable<decimal> OldExcVat { get; set; }
-        public Nullable<decimal> ExcVat { get; set; }
-        public Nullable<decimal> OldIncVat { get; set; }
-        public Nullable<decimal> IncVat { get; set; }
-        public Nullable<decimal> VatRate { get; set; }
-        public Nullable<decimal> VatAmt { get; set; }
-        public decimal Freight { get; set; }
-        public string DiscountType { get; set; }
-        public Nullable<decimal> OldDiscount { get; set; }
-        public Nullable<decimal> Discount { get; set; }
-        public decimal TotalDue { get; set; }
-        public string ApprovedBy { get; set; }
-        public Nullable<System.DateTime> ApprovedDate { get; set; }
-        public byte PayType { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
-        public decimal OldTotalCom { get; set; }
-        public decimal TotalCom { get; set; }
-        public Nullable<short> CNType { get; set; }
-        public decimal DiscountRate { get; set; }
+        public Nullable<decimal> DiscountRate { get; set; }
     }
 }

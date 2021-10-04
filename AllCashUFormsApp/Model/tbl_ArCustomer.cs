@@ -60,8 +60,11 @@ namespace AllCashUFormsApp.Model
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public Nullable<System.DateTime> GPSDate { get; set; }
+        public Nullable<bool> IsNewMember { get; set; }
+        public Nullable<bool> FlagNew { get; set; }
+        public Nullable<bool> FlagEdit { get; set; }
         public byte[] CustomerImg { get; set; }
-        public bool FlagShelf { get; set; }
         public bool PromotionVanID { get; set; }
+        public string CustImage { get; set; }
     }
 }

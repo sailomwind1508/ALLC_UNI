@@ -20,10 +20,12 @@ namespace AllCashUFormsApp
             List<tbl_MstPart> list = new List<tbl_MstPart>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstPart.Where(x => x.FlagDel == false).Where(predicate).ToList();
-                }
+                list = tbl_MstPart.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstPart.Where(x => x.FlagDel == false).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +45,17 @@ namespace AllCashUFormsApp
             List<tbl_MstPart> list = new List<tbl_MstPart>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstPart.Where(x => x.FlagDel == false).OrderBy(x => x.PartID).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstPart] WHERE FlagDel = 0 ORDER BY PartID ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstPart), sql);
+                list = dynamicListReturned.Cast<tbl_MstPart>().ToList();
+
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstPart.Where(x => x.FlagDel == false).OrderBy(x => x.PartID).ToList();
+                //}
             }
             catch (Exception ex)
             {

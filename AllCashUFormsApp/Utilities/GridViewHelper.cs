@@ -25,6 +25,114 @@ namespace AllCashUFormsApp
 {
     public static class GridViewHelper
     {
+        static CheckBox headerCheckBox = new CheckBox();
+        static DataGridView grdList = null;
+        static string CheckBoxColName = "";
+
+        //public static void CreateCheckBoxHeaderColumn(this DataGridView grd, string colName)
+        //{
+        //    try
+        //    {
+        //        grdList = grd;
+        //        CheckBoxColName = colName;
+
+        //        //Add a CheckBox Column to the DataGridView Header Cell.
+
+        //        //Find the Location of Header Cell.
+        //        Point headerCellLocation = grdList.GetCellDisplayRectangle(0, -1, true).Location;
+
+        //        //Place the Header CheckBox in the Location of the Header Cell.
+        //        headerCheckBox.Location = new Point(headerCellLocation.X + 8, headerCellLocation.Y + 2);
+        //        headerCheckBox.BackColor = Color.White;
+        //        headerCheckBox.Size = new Size(18, 18);
+
+        //        //Assign Click event to the Header CheckBox.
+        //        headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
+        //        grdList.Controls.Add(headerCheckBox);
+        //        //grdList.CurrentCell = grdList.Rows[0].Cells[0];
+
+        //        //Assign Click event to the DataGridView Cell.
+        //        grdList.CellContentClick += new DataGridViewCellEventHandler(DataGridView_CellClick);
+        //    }
+        //    catch
+        //    {
+
+
+        //    }
+
+        //}
+
+        public static void CreateCheckBoxHeaderColumn(this DataGridView grd, string colName)
+        {
+            try
+            {
+                grdList = grd;
+                CheckBoxColName = colName;
+
+                //Add a CheckBox Column to the DataGridView Header Cell.
+
+                //Find the Location of Header Cell.
+                Point headerCellLocation = grdList.GetCellDisplayRectangle(0, -1, true).Location;
+
+                //Place the Header CheckBox in the Location of the Header Cell.
+                headerCheckBox.Location = new Point(headerCellLocation.X + 8, headerCellLocation.Y + 2);
+                headerCheckBox.BackColor = Color.White;
+                headerCheckBox.Size = new Size(18, 18);
+
+                headerCheckBox.Checked = false; // uncheck 
+
+                //Assign Click event to the Header CheckBox.
+                headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
+                grdList.Controls.Add(headerCheckBox);
+                //grdList.CurrentCell = grdList.Rows[0].Cells[0];
+
+                //Assign Click event to the DataGridView Cell.
+                grdList.CellContentClick += new DataGridViewCellEventHandler(DataGridView_CellClick);
+            }
+            catch(Exception ex)
+            {
+                return;
+            }
+        }
+
+        private static void HeaderCheckBox_Clicked(object sender, EventArgs e)
+        {
+            //Necessary to end the edit mode of the Cell.
+            grdList.EndEdit();
+
+            //Loop and check and uncheck all row CheckBoxes based on Header Cell CheckBox.
+            foreach (DataGridViewRow row in grdList.Rows)
+            {
+                DataGridViewCheckBoxCell checkBox = (row.Cells[CheckBoxColName] as DataGridViewCheckBoxCell);
+                checkBox.Value = headerCheckBox.Checked;
+
+            }
+
+            grdList.CurrentCell = null;
+            grdList.RefreshEdit();
+            grdList.Refresh();
+        }
+
+        private static void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //Check to ensure that the row CheckBox is clicked.
+            if (e.RowIndex >= 0 && e.ColumnIndex == 0)
+            {
+                //Loop to verify whether all row CheckBoxes are checked or not.
+                bool isChecked = true;
+                foreach (DataGridViewRow row in grdList.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells[CheckBoxColName].EditedFormattedValue) == false)
+                    {
+                        isChecked = false;
+                        break;
+                    }
+                }
+                headerCheckBox.Checked = isChecked;
+            }
+        }
+
+
         public static DataGridViewColumn SetSearchDataGridViewProperties(this DataGridColumn item)
         {
             DataGridViewColumn col = null;
@@ -34,6 +142,15 @@ namespace AllCashUFormsApp
             col.HeaderText = item.HeaderText;
             col.Width = item.Width;
             col.AutoSizeMode = item.AutoSizeColumnMode;
+            if (item.Visibility != null && item.Visibility.Value != true)
+            {
+                col.Visible = false;
+            }
+            else
+            {
+                col.Visible = true;
+            }
+
             if (item.AutoSizeColumnMode == DataGridViewAutoSizeColumnMode.Fill)
             {
                 col.MinimumWidth = item.Width;
@@ -87,7 +204,7 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static bool ValidateCode(this DataGridView grd, DataTable dt, int rowIndex, int validateCellIndex, string objType)
+        public static bool ValidateCode(this DataGridView grd, DataTable dt, int rowIndex, int validateCellIndex, string objType, bool isLike = true)
         {
             bool ret = true;
             if (grd != null && grd.CurrentRow != null)
@@ -102,6 +219,12 @@ namespace AllCashUFormsApp
                     case "RBProduct": { _objType = ObjectType.RBProduct; } break;
                     case "RJProduct": { _objType = ObjectType.RJProduct; } break;
                     case "RTProduct": { _objType = ObjectType.RTProduct; } break;
+                    case "IMProduct": { _objType = ObjectType.IMProduct; } break;
+                    case "IVProduct": { _objType = ObjectType.IVProduct; } break;
+                    case "VEProduct": { _objType = ObjectType.VEProduct; } break;
+                    case "IVPreProduct": { _objType = ObjectType.IVPreProduct; } break;
+                    case "IMPreProduct": { _objType = ObjectType.IMPreProduct; } break;
+                    case "PreOrderProduct": { _objType = ObjectType.PreOrderProduct; } break;
                     default:
                         break;
                 }
@@ -119,7 +242,7 @@ namespace AllCashUFormsApp
                     text = grd.Rows[rowIndex].Cells[validateCellIndex].EditedFormattedValue.ToString();
                     if (!string.IsNullOrEmpty(text))
                     {
-                        SelectItem(text, dt, _dt, ref filteredRows);
+                        SelectItem(text, dt, _dt, ref filteredRows, isLike);
 
                         if (filteredRows == null || _dt.Rows.Count == 0)
                         {
@@ -138,11 +261,14 @@ namespace AllCashUFormsApp
             return ret;
         }
 
-        public static void SelectItem(this string text, DataTable dt, DataTable _dt, ref DataRow[] filteredRows)
+        public static void SelectItem(this string text, DataTable dt, DataTable _dt, ref DataRow[] filteredRows, bool isLike = true)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", "ProductID", text, "ProductName", text));
+                if (!isLike)
+                    filteredRows = dt.Select(string.Format("{0} = '{1}' OR {2} = '{3}'", "ProductID", text, "ProductName", text));
+                else
+                    filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", "ProductID", text, "ProductName", text));
 
                 foreach (var row in filteredRows)
                 {
@@ -152,6 +278,104 @@ namespace AllCashUFormsApp
                         data.Add(row[i]);
                     }
                     _dt.Rows.Add(data.ToArray());
+                }
+            }
+        }
+
+        public static void BindDataGridViewRow(this DataGridView grd, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable dt, int idIndex, string id, int rowIndex, int colIndex, ref bool validateNewRow, string objType, bool isLike = true)
+        {
+            if (rowIndex != -1)
+            {
+                //ValidateCode(this DataGridView grd, DataTable dt, int rowIndex, int validateCellIndex)
+                bool ret = grd.ValidateCode(dt, rowIndex, colIndex, objType, isLike);
+                if (!ret)
+                {
+                    validateNewRow = false;
+                    return;
+                }
+
+                if (rowIndex != 0)
+                {
+                    if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                    {
+                        grd.ValidateDuplicateSKU(id, colIndex, rowIndex, ref validateNewRow);
+                    }
+                }
+            }
+
+            ObjectFactory objectFactory = new ObjectFactory();
+            ObjectType _objType = new ObjectType();
+            switch (objType)
+            {
+                case "ODProduct": { _objType = ObjectType.ODProduct; } break;
+                case "REProduct": { _objType = ObjectType.REProduct; } break;
+                case "RLProduct": { _objType = ObjectType.RLProduct; } break;
+                case "RBProduct": { _objType = ObjectType.RBProduct; } break;
+                case "RJProduct": { _objType = ObjectType.RJProduct; } break;
+                case "RTProduct": { _objType = ObjectType.RTProduct; } break;
+                case "IMProduct": { _objType = ObjectType.IMProduct; } break;
+                case "IVProduct": { _objType = ObjectType.IVProduct; } break;
+                case "VEProduct": { _objType = ObjectType.VEProduct; } break;
+                case "IVPreProduct": { _objType = ObjectType.IVPreProduct; } break;
+                case "IMPreProduct": { _objType = ObjectType.IMPreProduct; } break;
+                case "PreOrderProduct": { _objType = ObjectType.PreOrderProduct; } break;
+                default:
+                    break;
+            }
+
+            var prod = objectFactory.Get(_objType, null);
+            dt = prod.GetDataTable();
+
+            DataTable _dt = new DataTable();
+            _dt = dt.Clone();
+            DataRow[] filteredRows = null;
+
+            id.SelectItem(dt, _dt, ref filteredRows);
+
+            grd.UpdateRow(dataGridList, initDataGridList, _dt, idIndex, grd.CurrentRow.Index, validateNewRow);
+        }
+
+        public static void BindDataGridViewRow_New(this DataGridView grdList, List<tbl_Product> allProducts, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, string productID, string objType, int idIndex, int rowIndex, bool validateNewRow, Form frm, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
+        {
+            ObjectFactory objectFactory = new ObjectFactory();
+            ObjectType _objType = new ObjectType();
+            switch (objType)
+            {
+                case "ODProduct": { _objType = ObjectType.ODProduct; } break;
+                case "REProduct": { _objType = ObjectType.REProduct; } break;
+                case "RLProduct": { _objType = ObjectType.RLProduct; } break;
+                case "RBProduct": { _objType = ObjectType.RBProduct; } break;
+                case "RJProduct": { _objType = ObjectType.RJProduct; } break;
+                case "RTProduct": { _objType = ObjectType.RTProduct; } break;
+                case "IMProduct": { _objType = ObjectType.IMProduct; } break;
+                case "IVProduct": { _objType = ObjectType.IVProduct; } break;
+                case "VEProduct": { _objType = ObjectType.VEProduct; } break;
+                case "IVPreProduct": { _objType = ObjectType.IVPreProduct; } break;
+                case "IMPreProduct": { _objType = ObjectType.IMPreProduct; } break;
+                case "PreOrderProduct": { _objType = ObjectType.PreOrderProduct; } break;
+                default:
+                    break;
+            }
+
+            var prod = objectFactory.Get(_objType, null);
+            var _dt1 = prod.GetDataTable();
+
+            DataTable dt2 = new DataTable();
+            dt2 = _dt1.Clone();
+            DataRow[] filteredRows = null;
+
+            productID.SelectItem(_dt1, dt2, ref filteredRows);
+
+            if (_dt1 != null && _dt1.Rows.Count > 0)
+            {
+                grdList.AutoGenerateColumns = false;
+
+                grdList.UpdateRow(allProducts, frm, dataGridList, initDataGridList, _dt1, idIndex, rowIndex, validateNewRow, prodUOMs, bu, prdCellIndex, isCheckAll, minUOM);
+
+                for (int i = 0; i < grdList.Columns.Count; i++)
+                {
+                    grdList.Columns[i].DefaultCellStyle.Font = new Font("Tahoma", 9.5F);
+                    grdList.Columns[i].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
             }
         }
@@ -172,13 +396,13 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void BindDataGrid(this DataGridView grdList, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, Form frm, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
+        public static void BindDataGrid(this DataGridView grdList, List<tbl_Product> allProducts, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, Form frm, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
         {
             if (_dt != null && _dt.Rows.Count > 0)
             {
                 grdList.AutoGenerateColumns = false;
 
-                grdList.UpdateRow(frm, dataGridList, initDataGridList, _dt, idIndex, rowIndex, validateNewRow, prodUOMs, bu, prdCellIndex, isCheckAll, minUOM);
+                grdList.UpdateRow(allProducts, frm, dataGridList, initDataGridList, _dt, idIndex, rowIndex, validateNewRow, prodUOMs, bu, prdCellIndex, isCheckAll, minUOM);
 
                 for (int i = 0; i < grdList.Columns.Count; i++)
                 {
@@ -188,13 +412,13 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void BindDataGrid(this DataGridView grdList, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, Form frm, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex, bool isCheckAll = false)
+        public static void BindDataGrid(this DataGridView grdList, List<tbl_Product> allProducts, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, Form frm, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex, bool isCheckAll = false)
         {
             if (_dt != null && _dt.Rows.Count > 0)
             {
                 grdList.AutoGenerateColumns = false;
 
-                grdList.UpdateRow(frm, dataGridList, initDataGridList, _dt, idIndex, rowIndex, validateNewRow, prodUOMs, causeList, bu, prdCellIndex, isCheckAll);
+                grdList.UpdateRow(allProducts, frm, dataGridList, initDataGridList, _dt, idIndex, rowIndex, validateNewRow, prodUOMs, causeList, bu, prdCellIndex, isCheckAll);
 
                 for (int i = 0; i < grdList.Columns.Count; i++)
                 {
@@ -223,7 +447,7 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void UpdateRow(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
+        public static void UpdateRow(this DataGridView grd, List<tbl_Product> allProducts, Form frm, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
         {
             if (_dt.Rows.Count > 0)
             {
@@ -232,7 +456,7 @@ namespace AllCashUFormsApp
                     ShowDupSKUMessage();
                     if (isCheckAll)
                     {
-                        grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[rowIndex]["ProductID"].ToString(), rowIndex, prodUOMs, bu, prdCellIndex);
+                        grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[rowIndex]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
                     }
                     else
                     {
@@ -241,7 +465,7 @@ namespace AllCashUFormsApp
                             grd.SetMinUOM(dataGridList, _dt, rowIndex, bu);
                         }
                         else
-                            grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex, prodUOMs, bu, prdCellIndex);
+                            grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
                     }
                 }
                 else
@@ -293,7 +517,7 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void UpdateRow(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex, bool isCheckAll = false)
+        public static void UpdateRow(this DataGridView grd, List<tbl_Product> allProducts, Form frm, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex, bool isCheckAll = false)
         {
             if (_dt.Rows.Count > 0)
             {
@@ -306,7 +530,7 @@ namespace AllCashUFormsApp
                 if (!validateNewRow)
                 {
                     ShowDupSKUMessage();
-                    grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[_rowIndex]["ProductID"].ToString(), rowIndex, prodUOMs, causeList, bu, prdCellIndex);
+                    grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[_rowIndex]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, causeList, bu, prdCellIndex);
                 }
                 else
                 {
@@ -329,19 +553,30 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
+        public static void BindComboBoxCell(this DataGridView grd, List<tbl_Product> allProducts, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
         {
             if (flagNewRow)
-                SubBindComboBoxCell(row.Cells[comboBoxIndex], prodUOMs, row, bu, prdCellIndex, isMinUOM);
+                SubBindComboBoxCell(row.Cells[comboBoxIndex], allProducts, prodUOMs, row, bu, prdCellIndex, isMinUOM);
             else
                 grd.ModifyComboBoxCell(rowIndex, bu, comboBoxIndex, prdCellIndex, isMinUOM);
 
-            if (bu is RE)
+            if (bu is RE || bu is TabletSales)
                 BindComboDiscount(bu, row.Cells[7]);
-            else if (bu is RT)
+            else if (bu is RT || bu is VE)
                 BindComboDiscount(bu, row.Cells[8]);
-            else if (bu is TabletSales)
-                BindComboDiscount(bu, row.Cells[7]);
+
+        }
+
+        public static void BindComboBoxDiscountTypeCell(this DataGridView grd, List<tbl_Product> allProducts, DataGridViewRow row
+            , int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, List<tbl_DiscountType> disTypeList, int disColIndex)
+        {
+            //if (flagNewRow)
+            //    SubBindComboBoxCell(row.Cells[comboBoxIndex], allProducts, prodUOMs, row, bu, prdCellIndex, false);
+            //else
+            //    grd.ModifyComboBoxCell(rowIndex, bu, comboBoxIndex, prdCellIndex, false);
+
+            BindComboDiscountType(bu, row.Cells[disColIndex], disTypeList);
+
         }
 
         private static void BindComboDiscount(BaseControl bu, DataGridViewCell discountCbCell)
@@ -353,12 +588,21 @@ namespace AllCashUFormsApp
             cboLineDiscountType.Value = "N";
         }
 
+        private static void BindComboDiscountType(BaseControl bu, DataGridViewCell discountCbCell, List<tbl_DiscountType> disTypeList)
+        {
+            DataGridViewComboBoxCell cboLineDiscountType = (DataGridViewComboBoxCell)(discountCbCell);
+            cboLineDiscountType.DataSource = disTypeList;
+            cboLineDiscountType.DisplayMember = "DiscountTypeName";
+            cboLineDiscountType.ValueMember = "DiscountTypeCode";
+            cboLineDiscountType.Value = "N";
+        }
+
         public static void BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_Cause> causeList, Form frm, BaseControl bu, int prdCellIndex)
         {
             SubBindComboBoxCell(row.Cells[comboBoxIndex], causeList, row, bu, prdCellIndex);
         }
 
-        public static void SubBindComboBoxCell(DataGridViewCell cboCell, List<tbl_ProductUom> prodUOMs, DataGridViewRow row, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
+        public static void SubBindComboBoxCell(DataGridViewCell cboCell, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, DataGridViewRow row, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
         {
             DataGridViewComboBoxCell cboUOM = (DataGridViewComboBoxCell)(cboCell);
             if (prodUOMs != null && prodUOMs.Count > 0)
@@ -378,7 +622,7 @@ namespace AllCashUFormsApp
                 else
                 {
                     Func<tbl_Product, bool> predicate = (x => x.ProductID == prodID);
-                    var purchaseUom = bu.GetProduct(predicate);
+                    var purchaseUom = allProducts.Where(predicate).ToList();// bu.GetProduct(predicate);
 
                     if (purchaseUom != null && purchaseUom.Count > 0)
                     {
@@ -397,6 +641,14 @@ namespace AllCashUFormsApp
                     //}
                     else
                     {
+                        var tmpUoms = new List<tbl_ProductUom>();
+                        tmpUoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
+                        tmpUoms.AddRange(bu.GetUOM());
+
+                        cboUOM.DataSource = tmpUoms;
+                        cboUOM.DisplayMember = "ProductUomName";
+                        cboUOM.ValueMember = "ProductUomID";
+
                         cboUOM.Value = -1;
                     }
                 }
@@ -440,7 +692,21 @@ namespace AllCashUFormsApp
         //    }
         //}
 
-        public static void ModifyComboBoxCell(this DataGridView grid, int checkRowindex, BaseControl bu, int cboIndex, int prdCellindex, bool isMinUOM = false)
+        public static void ModifyComboBoxCell_Tunning(this DataGridView grid, List<tbl_Product> allProducts, int checkRowindex, BaseControl bu, int cboIndex, int prdCellindex, List<tbl_ProductUom> prodUOMs)
+        {
+            var prdCell = grid.Rows[checkRowindex].Cells[prdCellindex];
+            if (prdCell.IsNotNullOrEmptyCell())
+            {
+                var cboCell = grid.Rows[checkRowindex].Cells[cboIndex];
+
+                if (prodUOMs != null && prodUOMs.Count > 0)
+                {
+                    SubBindComboBoxCell(cboCell, allProducts, prodUOMs, grid.Rows[checkRowindex], bu, prdCellindex, false);
+                }
+            }
+        }
+
+        public static void ModifyComboBoxCell(this DataGridView grid, List<tbl_Product> allProducts, int checkRowindex, BaseControl bu, int cboIndex, int prdCellindex, bool isMinUOM = false)
         {
             //int[] uomList = new int[] { 1, 2, 3, 4 };
 
@@ -456,11 +722,10 @@ namespace AllCashUFormsApp
                 //prodUOMs.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
                 //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
                 prodUOMs.AddRange(bu.GetProductUOM(prdID));
-               
 
                 if (prodUOMs != null && prodUOMs.Count > 0)
                 {
-                    SubBindComboBoxCell(cboCell, prodUOMs, grid.Rows[checkRowindex], bu, prdCellindex, isMinUOM);
+                    SubBindComboBoxCell(cboCell, allProducts, prodUOMs, grid.Rows[checkRowindex], bu, prdCellindex, isMinUOM);
                 }
             }
         }
@@ -499,7 +764,7 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex)
+        public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex)
         {
             foreach (var item in dataGridList)
             {
@@ -510,16 +775,14 @@ namespace AllCashUFormsApp
                 else
                 {
                     if (item.Value.ToString() == "combobox")
-                        grd.BindComboBoxCell(grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
+                        grd.BindComboBoxCell(allProducts, grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
                     else
                         grd.Rows[rowIndex].Cells[item.Key].Value = item.Value;
-
-
                 }
             }
         }
 
-        public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex)
+        public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex)
         {
             foreach (var item in dataGridList)
             {
@@ -531,7 +794,7 @@ namespace AllCashUFormsApp
                 {
                     if (item.Value.ToString() == "combobox1")
                     {
-                        grd.BindComboBoxCell(grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
+                        grd.BindComboBoxCell(allProducts, grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
                     }
                     else if (item.Value.ToString() == "combobox2")
                     {
@@ -543,62 +806,20 @@ namespace AllCashUFormsApp
             }
         }
 
-        public static void BindDataGridViewRow(this DataGridView grd, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable dt, int idIndex, string id, int rowIndex, int colIndex, ref bool validateNewRow, string objType)
-        {
-            if (rowIndex != -1)
-            {
-                //ValidateCode(this DataGridView grd, DataTable dt, int rowIndex, int validateCellIndex)
-                bool ret = grd.ValidateCode(dt, rowIndex, colIndex, objType);
-                if (!ret)
-                {
-                    validateNewRow = false;
-                    return;
-                }
-
-                if (rowIndex != 0)
-                {
-                    grd.ValidateDuplicateSKU(id, colIndex, rowIndex, ref validateNewRow);
-                }
-            }
-
-            ObjectFactory objectFactory = new ObjectFactory();
-            ObjectType _objType = new ObjectType();
-            switch (objType)
-            {
-                case "ODProduct": { _objType = ObjectType.ODProduct; } break;
-                case "REProduct": { _objType = ObjectType.REProduct; } break;
-                case "RLProduct": { _objType = ObjectType.RLProduct; } break;
-                case "RBProduct": { _objType = ObjectType.RBProduct; } break;
-                case "RJProduct": { _objType = ObjectType.RJProduct; } break;
-                case "RTProduct": { _objType = ObjectType.RTProduct; } break;
-                default:
-                    break;
-            }
-
-            var prod = objectFactory.Get(_objType, null);
-            dt = prod.GetDataTable();
-
-            DataTable _dt = new DataTable();
-            _dt = dt.Clone();
-            DataRow[] filteredRows = null;
-
-            id.SelectItem(dt, _dt, ref filteredRows);
-
-            grd.UpdateRow(dataGridList, initDataGridList, _dt, idIndex, grd.CurrentRow.Index, validateNewRow);
-        }
 
         public static bool ValidateDuplicateSKU(this DataGridView grdList, string _prodcutID, int colIndex, int rowIndex, ref bool validateNewRow)
         {
             bool ret = true;
             for (int i = 0; i < grdList.Rows.Count; i++)
             {
-                if (grdList[0, i].IsNotNullOrEmptyCell())
+                if (grdList[colIndex, i].IsNotNullOrEmptyCell())
                 {
                     string productID = grdList[colIndex, i].EditedFormattedValue.ToString();
                     if (productID == _prodcutID && i != rowIndex)
                     {
                         ret = false;
                         validateNewRow = false;
+
                         break;
                     }
                 }
@@ -618,24 +839,24 @@ namespace AllCashUFormsApp
             //grd.Rows[rowIndex].Cells[7].ReadOnly = true;
         }
 
-        public static void AddNewRow(this DataGridView grd, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, Form frm, int prdCellIndex)
+        public static void AddNewRow(this DataGridView grd, List<tbl_Product> allProducts, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, Form frm, int prdCellIndex)
         {
             if (!validateNewRow)
                 return;
 
             grd.Rows.Add(1);
-            grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, prodUOMs, bu, prdCellIndex);
+            grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
 
             //grd.Rows[rowIndex].Cells[7].ReadOnly = true;
         }
 
-        public static void AddNewRow(this DataGridView grd, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, Form frm, int prdCellIndex)
+        public static void AddNewRow(this DataGridView grd, List<tbl_Product> allProducts, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, Form frm, int prdCellIndex)
         {
             if (!validateNewRow)
                 return;
 
             grd.Rows.Add(1);
-            grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, prodUOMs, causeList, bu, prdCellIndex);
+            grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, allProducts, prodUOMs, causeList, bu, prdCellIndex);
         }
 
         public static void SetRowPostPaint(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
@@ -654,6 +875,30 @@ namespace AllCashUFormsApp
             e.Graphics.DrawString(rowIdx, font, SystemBrushes.ControlText, headerBounds, centerFormat);
         }
 
+        public static void SetRowPostPaintImage(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
+        {
+            var grid = sender as DataGridView;
+            var rowIdx = (e.RowIndex + 1);
+            var docStatus = grid.Rows[rowIdx].Cells["DocStatus"].Value;
+
+            if (grid.Rows[e.RowIndex].Cells["DocStatus"].Value != null && !string.IsNullOrEmpty(docStatus.ToString()))
+            {
+                var centerFormat = new StringFormat()
+                {
+                    // right alignment might actually make more sense for numbers
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+
+                var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+                Bitmap closeImg = new Bitmap(Properties.Resources.power_off);
+                Bitmap cancelmg = new Bitmap(Properties.Resources.closeBtn);
+                Bitmap statusImg = docStatus.ToString() == "Closed" ? closeImg : cancelmg;
+
+                e.Graphics.DrawImage(statusImg, headerBounds); // .DrawString(rowIdx, font, SystemBrushes.ControlText, headerBounds, centerFormat);
+            }
+        }
+
         public static void SetCellNumberOnly(this DataGridView grd, object sender, KeyPressEventArgs e, List<int> numberCell)
         {
             DataGridView tempgrd = null;
@@ -670,12 +915,15 @@ namespace AllCashUFormsApp
                 tempgrd = _grd.EditingControlDataGridView;
             }
 
-            int currentRowIndex = tempgrd.CurrentCell.RowIndex;
-            int curentColIndex = tempgrd.CurrentCell.ColumnIndex;
+            if (tempgrd != null)
             {
-                if (numberCell.Contains(curentColIndex))
+                int currentRowIndex = tempgrd.CurrentCell.RowIndex;
+                int curentColIndex = tempgrd.CurrentCell.ColumnIndex;
                 {
-                    e.ToNumberOnly(sender);
+                    if (numberCell.Contains(curentColIndex))
+                    {
+                        e.ToNumberOnly(sender);
+                    }
                 }
             }
         }
@@ -857,6 +1105,175 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+
+
+
+        public static void BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
+        {
+            if (flagNewRow)
+                SubBindComboBoxCell(row.Cells[comboBoxIndex], prodUOMs, row, bu, prdCellIndex, isMinUOM);
+            else
+                grd.ModifyComboBoxCell(prodUOMs, rowIndex, bu, comboBoxIndex, prdCellIndex, isMinUOM);//
+
+            if (bu is RE || bu is TabletSales)
+                BindComboDiscount(bu, row.Cells[7]);
+            else if (bu is RT || bu is VE)
+                BindComboDiscount(bu, row.Cells[8]);
+
+        }
+
+
+        public static void SubBindComboBoxCell(DataGridViewCell cboCell, List<tbl_ProductUom> prodUOMs, DataGridViewRow row, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
+        {
+            DataGridViewComboBoxCell cboUOM = (DataGridViewComboBoxCell)(cboCell);
+            if (prodUOMs != null && prodUOMs.Count > 0)
+            {
+                cboUOM.DataSource = prodUOMs;
+                cboUOM.DisplayMember = "ProductUomName";
+                cboUOM.ValueMember = "ProductUomID";
+
+                string prodID = row.Cells[prdCellIndex].EditedFormattedValue.ToString();
+
+                if (isMinUOM)
+                {
+                    Func<tbl_Product, bool> predicate = (x => x.ProductID == prodID);
+                    int minUOM = bu.GetMinProductUOM(predicate);
+                    cboUOM.Value = minUOM;
+                }
+                else
+                {
+                    Func<tbl_Product, bool> predicate = (x => x.ProductID == prodID);
+                    var purchaseUom = bu.GetProduct(predicate);
+
+                    if (purchaseUom != null && purchaseUom.Count > 0)
+                    {
+                        if (prodUOMs.Any(x => x.ProductUomID == purchaseUom[0].PurchaseUomID))
+                        {
+                            cboUOM.Value = purchaseUom[0].PurchaseUomID;
+                        }
+                    }
+                    //else if (prodUOMs.Any(x => x.ProductUomID == 4))
+                    //{
+                    //    cboUOM.Value = 4;
+                    //}
+                    //else if (prodUOMs.Any(x => x.ProductUomID == 3))
+                    //{
+                    //    cboUOM.Value = 3;
+                    //}
+                    else
+                    {
+                        var tmpUoms = new List<tbl_ProductUom>();
+                        tmpUoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
+                        tmpUoms.AddRange(bu.GetUOM());
+
+                        cboUOM.DataSource = tmpUoms;
+                        cboUOM.DisplayMember = "ProductUomName";
+                        cboUOM.ValueMember = "ProductUomID";
+
+                        cboUOM.Value = -1;
+                    }
+                }
+            }
+        }
+
+
+
+        public static void ModifyComboBoxCell(this DataGridView grid, List<tbl_ProductUom> prodUOMs, int checkRowindex, BaseControl bu, int cboIndex, int prdCellindex, bool isMinUOM = false)
+        {
+            //int[] uomList = new int[] { 1, 2, 3, 4 };
+
+            var prdCell = grid.Rows[checkRowindex].Cells[prdCellindex];//
+            if (prdCell.IsNotNullOrEmptyCell())
+            {
+                var prdID = prdCell.EditedFormattedValue.ToString();
+
+                var cboCell = grid.Rows[checkRowindex].Cells[cboIndex];
+
+                //List<tbl_ProductUom> prodUOMs = new List<tbl_ProductUom>();
+
+                //prodUOMs.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
+                //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
+                //prodUOMs.AddRange(bu.GetProductUOM(prdID));
+
+
+                if (prodUOMs != null && prodUOMs.Count > 0)
+                {
+                    SubBindComboBoxCell(cboCell, prodUOMs, grid.Rows[checkRowindex], bu, prdCellindex, isMinUOM);
+                }
+            }
+        }
+
+
+
+        public static void AddNewRow(this DataGridView grd, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, Form frm, int prdCellIndex)
+        {
+            if (!validateNewRow)//Method
+                return;
+
+            grd.Rows.Add(1);
+            grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, prodUOMs, bu, prdCellIndex);
+
+            //grd.Rows[rowIndex].Cells[7].ReadOnly = true;
+        }
+
+        public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex)
+        {
+            foreach (var item in dataGridList) //new Method
+            {
+                if (item.Key == idIndex)
+                {
+                    grd.Rows[rowIndex].Cells[item.Key].Value = id;//
+                }
+                else
+                {
+                    if (item.Value.ToString() == "combobox")
+                        grd.BindComboBoxCell(grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
+                    else
+                        grd.Rows[rowIndex].Cells[item.Key].Value = item.Value;
+                }
+            }
+        }
+
+        //public static void AddNewRow(this DataGridView grd, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, Form frm, int prdCellIndex)
+        //{
+        //    if (!validateNewRow)
+        //        return;
+
+        //    grd.Rows.Add(1);
+        //    grd.InitRowData(frm, initDataGridList, idIndex, id, rowIndex, prodUOMs, bu, prdCellIndex);
+
+        //    //grd.Rows[rowIndex].Cells[7].ReadOnly = true;
+        //}
+
+
+        //public static void BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
+        //{
+        //    if (flagNewRow)
+        //        SubBindComboBoxCell(row.Cells[comboBoxIndex], prodUOMs, row, bu, prdCellIndex, isMinUOM);
+        //    else
+        //        grd.ModifyComboBoxCell(rowIndex, bu, comboBoxIndex, prdCellIndex, isMinUOM);
+
+        //    if (bu is RE || bu is TabletSales)
+        //        BindComboDiscount(bu, row.Cells[7]);
+        //    else if (bu is RT || bu is VE)
+        //        BindComboDiscount(bu, row.Cells[8]);
+
+        //}
+
+        public static void SetTextBoxNumberOnly(this TextBox txt, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8))
+            {
+                e.Handled = true;
+            }
+        }
+        public static void SetTextBoxNumberWithDot(this TextBox txt, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

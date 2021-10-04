@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,6 +12,41 @@ namespace AllCashUFormsApp
 {
     public static class SalAreaDao
     {
+        public static DataTable GetSalAreaData(this tbl_SalArea tbl_SalArea, int flagDel, string searchtext)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                string sql = " ";
+                sql += "select * from tbl_SalArea";
+
+                if (!string.IsNullOrEmpty(searchtext))
+                {
+                    sql += " WHERE SalAreaID like '%" + searchtext + "%'" + " OR SalAreaName like '%" + searchtext + "%'" + " AND FlagDel = " + flagDel + "";
+                }
+                else
+                {
+                    sql += " WHERE FlagDel=" + flagDel + "";
+                }
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(ds, "salarea");
+
+                //return ds.Tables["salarea"]; // public static Datatable
+
+                var dt = new DataTable("salarea");
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                return dt;
+            }
+
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+                return null;
+            }
+        }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -20,10 +57,42 @@ namespace AllCashUFormsApp
             List<tbl_SalArea> list = new List<tbl_SalArea>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SalArea.Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_SalArea.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_SalArea.Where(predicate).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Last edit by sailom.k 14/09/2021 tunning performance
+        /// </summary>
+        /// <param name="tbl_SalArea"></param>
+        /// <param name="listOfSalAreaID"></param>
+        /// <returns></returns>
+        public static List<tbl_SalArea> Select(this tbl_SalArea tbl_SalArea, List<string> listOfSalAreaID)
+        {
+            List<tbl_SalArea> list = new List<tbl_SalArea>();
+            try
+            {
+                DataTable dt = new DataTable();
+
+                string _listOfSalAreaID = "'" + string.Join("','", listOfSalAreaID) + "'";
+
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_SalArea] WHERE SalAreaID IN (" + _listOfSalAreaID + ")  Order By SalAreaCode, Seq ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
+                list = dynamicListReturned.Cast<tbl_SalArea>().ToList();
             }
             catch (Exception ex)
             {
@@ -43,10 +112,23 @@ namespace AllCashUFormsApp
             List<tbl_SalArea> list = new List<tbl_SalArea>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SalArea.OrderBy(x => x.SalAreaCode).ThenBy(x => x.Seq).ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_SalArea] Order By SalAreaCode, Seq ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
+                list = dynamicListReturned.Cast<tbl_SalArea>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_SalArea>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_SalArea.OrderBy(x => x.SalAreaCode).ThenBy(x => x.Seq).ToList();
+                //}
             }
             catch (Exception ex)
             {

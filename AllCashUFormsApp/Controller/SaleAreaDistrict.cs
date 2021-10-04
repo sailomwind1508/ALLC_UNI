@@ -7,9 +7,26 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class SaleAreaDistrict : IObject
+    public class SaleAreaDistrict : BaseControl, IObject
     {
         BaseControl b = new BaseControl("");
+        private Func<tbl_PRMaster, bool> _docTypePredicate = null; //
+        public virtual Func<tbl_PRMaster, bool> docTypePredicate //
+        {
+            get { return _docTypePredicate; }
+            set
+            {
+                _docTypePredicate = value;
+            }
+        }
+        public SaleAreaDistrict() : base("") //
+        {
+            _docTypePredicate = (x => x.DocTypeCode == "");
+        }
+        //public DataTable GetSalAreaByWHID(int flagDel)
+        //{
+        //    return (new tbl_SalAreaDistrict()).GetSalAreaByWHID(flagDel);
+        //}
 
         public List<tbl_SalAreaDistrict> GetAllData()
         {
@@ -33,53 +50,7 @@ namespace AllCashUFormsApp.Controller
 
         public virtual DataTable GetDataTable(bool isPopup = true)
         {
-            try
-            {
-                DataTable _dt = new DataTable("DistrictTable");
-                _dt.Columns.Add("ProvinceName", typeof(string));
-                _dt.Columns.Add("AreaName", typeof(string));
-                _dt.Columns.Add("DistrictCode", typeof(string));
-                _dt.Columns.Add("DistrictName", typeof(string));
-
-                var saleAreaDistricts = b.GetSaleAreaDistrict();
-                if (saleAreaDistricts != null && saleAreaDistricts.Count > 0)
-                {
-                    List<string> provinceList = saleAreaDistricts.Select(x => x.ProvinceName).Distinct().ToList();
-
-                    Func<tbl_MstProvince, bool> tbl_MstProvinceFunc = (x => provinceList.Contains(x.ProvinceName));
-                    var provices = b.GetMstProvince(tbl_MstProvinceFunc);
-                    var provinceIDList = provices.Select(x => x.ProvinceID).ToList();
-
-                    Func<tbl_MstArea, bool> tbl_MstAreaFunc = (x => provinceIDList.Contains(x.ProvinceID.Value));
-                    var areas = b.GetMstArea(tbl_MstAreaFunc);
-                    var areaIDList = areas.Select(x => x.AreaID).ToList();
-
-                    Func<tbl_MstDistrict, bool> tbl_MstDistrictFunc = (x => areaIDList.Contains(x.AreaID.Value));
-                    var districts = b.GetMstDistrict(tbl_MstDistrictFunc);
-
-                    var query = from p in provices
-                                join a in areas on p.ProvinceID equals a.ProvinceID
-                                join d in districts on a.AreaID equals d.AreaID
-                                select new
-                                {
-                                    ProvinceName = p.ProvinceName,
-                                    AreaName = a.AreaName,
-                                    DistrictCode = d.DistrictCode,
-                                    DistrictName = d.DistrictName
-                                };
-                    foreach (var item in query)
-                    {
-                        _dt.Rows.Add(item.ProvinceName, item.AreaName, item.DistrictCode, item.DistrictName);
-                    }
-                }
-
-                return _dt;
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-                return null;
-            }
+            return new tbl_SalAreaDistrict().GetDataTable();
         }
 
         public virtual DataTable GetDataTableByCondition(string[] filters)

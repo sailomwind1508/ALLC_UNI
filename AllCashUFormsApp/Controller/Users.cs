@@ -8,8 +8,13 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    class Users : IObject
+    public class Users : BaseControl, IObject
     {
+        public Users() : base("")
+        {
+
+        }
+
         public List<tbl_Users> GetAllData()
         {
             return (new tbl_Users()).SelectAll();
@@ -47,6 +52,23 @@ namespace AllCashUFormsApp.Controller
                 //}
 
                 return query.ToDataTable();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
+        public DataTable GetFastDataTable()
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+                string sql = "proc_User_GetDataTable";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
             }
             catch (Exception ex)
             {

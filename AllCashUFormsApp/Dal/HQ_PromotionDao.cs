@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -18,7 +20,7 @@ namespace AllCashUFormsApp
         public static IEnumerable<tbl_HQ_Promotion> Select(this tbl_HQ_Promotion obj, object condition)
         {
             DateTime cDate = DateTime.Now;
-            return new tbl_HQ_Promotion().Select(x => x.PromotionPattern.ToLower() == "prd" &&
+            return obj.Select(x => x.PromotionPattern.ToLower() == "prd" &&
             cDate >= x.EffectiveDate && cDate <= x.ExpireDate &&
             x.SKUGroupID1.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
@@ -35,16 +37,40 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion> list = new List<tbl_HQ_Promotion>();
             try
             {
-                
+                list = tbl_HQ_Promotion.SelectAll().Where(predicate).ToList();
 
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion.Where(x => cDate >= x.EffectiveDate && cDate <= x.ExpireDate).Where(predicate).ToList();
-                }
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion.Where(x => cDate >= x.EffectiveDate && cDate <= x.ExpireDate).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_HQ_Promotion.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_HQ_Promotion> SelectPromotion(this tbl_HQ_Promotion tbl_HQ_Promotion, string PromotionID = "")
+        {
+            List<tbl_HQ_Promotion> list = new List<tbl_HQ_Promotion>();
+            try
+            {
+
+                string sql = "SELECT * FROM tbl_HQ_Promotion";
+
+                if (!string.IsNullOrEmpty(PromotionID))
+                {
+                    sql += " WHERE PromotionID like '%" + PromotionID + "%'";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+
             }
 
             return list;
@@ -61,10 +87,18 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion> list = new List<tbl_HQ_Promotion>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion.Where(x => cDate >= x.EffectiveDate && cDate <= x.ExpireDate).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion>().ToList();
+
+                list = list.Where(x => cDate >= x.EffectiveDate && cDate <= x.ExpireDate).ToList(); //for support u-online last edit by sailom .k 18-06-2021
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion.Where(x => cDate >= x.EffectiveDate && cDate <= x.ExpireDate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -167,6 +201,49 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_HQ_Promotion.GetType());
+            }
+
+            return ret;
+        }
+        public static DataTable GetHQ_PromotionData(this tbl_HQ_Promotion tbl_HQ_Promotion, string search)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_HQ_Promotion";
+                if (!string.IsNullOrEmpty(search))
+                {
+                    sql += " WHERE PromotionID like '%" + search + "%'";
+                }
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static bool CallSendAllPromotionInfo(this tbl_HQ_Promotion tbl_HQ_Promotion, Dictionary<string, object> _params)//
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_SendAllPromotionInfo_SendDataToBranch";
+                DataTable dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+
+                if (dt != null && dt.Rows.Count != 0)
+                {
+                    if (dt.Rows[0]["Result"].ToString() == "1")
+                    {
+                        ret = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ret = false;
             }
 
             return ret;

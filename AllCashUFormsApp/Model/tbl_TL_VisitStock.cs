@@ -14,14 +14,15 @@ namespace AllCashUFormsApp.Model
     
     public partial class tbl_TL_VisitStock
     {
+        public long AutoID { get; set; }
+        public string BranchID { get; set; }
+        public string WHID { get; set; }
+        public string CustomerID { get; set; }
+        public string DocNo { get; set; }
         public string VisitID { get; set; }
+        public string VisitType { get; set; }
+        public Nullable<System.DateTime> VisitDate { get; set; }
         public string ProductID { get; set; }
-        public decimal Qty { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
+        public Nullable<decimal> StockQty { get; set; }
     }
 }

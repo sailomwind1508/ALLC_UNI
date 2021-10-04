@@ -10,12 +10,13 @@ namespace AllCashUFormsApp.Controller
 {
     public class Promotion : PromotionBase, IObject
     {
-        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail> productList)
+        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail_PRE> productList)
         {
             List<PromotionRuleModel> hitProList = new List<PromotionRuleModel>();
 
             try
             {
+
                 var cDate = DateTime.Now;
 
                 PRDPromotion prdPro = new PRDPromotion();
@@ -23,6 +24,31 @@ namespace AllCashUFormsApp.Controller
 
                 TXNPromotion txnPro = new TXNPromotion();
                 txnPro.PreCalcPromotion(this, productList, hitProList);
+
+            }
+            catch (Exception ex)
+            {
+                hitProList = null;
+                throw;
+            }
+
+            return hitProList;
+        }
+
+        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail> productList, string customerID = "")
+        {
+            List<PromotionRuleModel> hitProList = new List<PromotionRuleModel>();
+
+            try
+            {
+
+                var cDate = DateTime.Now;
+
+                PRDPromotion prdPro = new PRDPromotion();
+                prdPro.PreCalcPromotion(this, productList, hitProList, customerID);
+
+                TXNPromotion txnPro = new TXNPromotion();
+                txnPro.PreCalcPromotion(this, productList, hitProList, customerID);
 
             }
             catch (Exception ex)

@@ -32,12 +32,23 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchSupp));
             this.pnlBR = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.grdList = new System.Windows.Forms.DataGridView();
+            this.pnlSearchAddOn = new System.Windows.Forms.Panel();
+            this.txtWHName = new System.Windows.Forms.TextBox();
+            this.txtWHCode = new System.Windows.Forms.TextBox();
+            this.btnSearchWHCode = new System.Windows.Forms.Button();
+            this.txtCustName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCustomerCode = new System.Windows.Forms.TextBox();
+            this.btnSearchCust = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.pnlAdcSearch = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.rdoN = new System.Windows.Forms.RadioButton();
             this.rdoY = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
             this.dtpDocDate = new System.Windows.Forms.DateTimePicker();
+            this.lnkSearchAddOn = new System.Windows.Forms.LinkLabel();
             this.label11 = new System.Windows.Forms.Label();
             this.ddlDocStatus = new System.Windows.Forms.ComboBox();
             this.pnlTop = new System.Windows.Forms.Panel();
@@ -47,25 +58,14 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblCountList = new System.Windows.Forms.Label();
             this.lblCountListText = new System.Windows.Forms.Label();
-            this.grdList = new System.Windows.Forms.DataGridView();
-            this.pnlSearchAddOn = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lnkSearchAddOn = new System.Windows.Forms.LinkLabel();
-            this.txtCustName = new System.Windows.Forms.TextBox();
-            this.txtCustomerCode = new System.Windows.Forms.TextBox();
-            this.btnSearchCust = new System.Windows.Forms.Button();
-            this.txtWHName = new System.Windows.Forms.TextBox();
-            this.txtWHCode = new System.Windows.Forms.TextBox();
-            this.btnSearchWHCode = new System.Windows.Forms.Button();
             this.pnlBR.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
+            this.pnlSearchAddOn.SuspendLayout();
             this.pnlAdcSearch.SuspendLayout();
             this.panel6.SuspendLayout();
             this.pnlTop.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
-            this.pnlSearchAddOn.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlBR
@@ -95,6 +95,134 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(620, 401);
             this.panel2.TabIndex = 19;
+            // 
+            // grdList
+            // 
+            this.grdList.AllowUserToAddRows = false;
+            this.grdList.AllowUserToDeleteRows = false;
+            this.grdList.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdList.Location = new System.Drawing.Point(0, 133);
+            this.grdList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.grdList.Name = "grdList";
+            this.grdList.ReadOnly = true;
+            this.grdList.RowHeadersVisible = false;
+            this.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdList.Size = new System.Drawing.Size(620, 236);
+            this.grdList.TabIndex = 2;
+            this.grdList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellDoubleClick);
+            this.grdList.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdList_CellFormatting);
+            // 
+            // pnlSearchAddOn
+            // 
+            this.pnlSearchAddOn.BackColor = System.Drawing.Color.Azure;
+            this.pnlSearchAddOn.Controls.Add(this.txtWHName);
+            this.pnlSearchAddOn.Controls.Add(this.txtWHCode);
+            this.pnlSearchAddOn.Controls.Add(this.btnSearchWHCode);
+            this.pnlSearchAddOn.Controls.Add(this.txtCustName);
+            this.pnlSearchAddOn.Controls.Add(this.label1);
+            this.pnlSearchAddOn.Controls.Add(this.txtCustomerCode);
+            this.pnlSearchAddOn.Controls.Add(this.btnSearchCust);
+            this.pnlSearchAddOn.Controls.Add(this.label2);
+            this.pnlSearchAddOn.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSearchAddOn.Location = new System.Drawing.Point(0, 73);
+            this.pnlSearchAddOn.Name = "pnlSearchAddOn";
+            this.pnlSearchAddOn.Size = new System.Drawing.Size(620, 60);
+            this.pnlSearchAddOn.TabIndex = 20;
+            this.pnlSearchAddOn.Visible = false;
+            // 
+            // txtWHName
+            // 
+            this.txtWHName.Location = new System.Drawing.Point(267, 5);
+            this.txtWHName.MaxLength = 200;
+            this.txtWHName.Name = "txtWHName";
+            this.txtWHName.ReadOnly = true;
+            this.txtWHName.Size = new System.Drawing.Size(344, 23);
+            this.txtWHName.TabIndex = 132;
+            // 
+            // txtWHCode
+            // 
+            this.txtWHCode.Location = new System.Drawing.Point(70, 5);
+            this.txtWHCode.MaxLength = 5;
+            this.txtWHCode.Name = "txtWHCode";
+            this.txtWHCode.Size = new System.Drawing.Size(153, 23);
+            this.txtWHCode.TabIndex = 130;
+            // 
+            // btnSearchWHCode
+            // 
+            this.btnSearchWHCode.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchWHCode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchWHCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchWHCode.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnSearchWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchWHCode.Image")));
+            this.btnSearchWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchWHCode.Location = new System.Drawing.Point(225, 5);
+            this.btnSearchWHCode.Name = "btnSearchWHCode";
+            this.btnSearchWHCode.Size = new System.Drawing.Size(35, 23);
+            this.btnSearchWHCode.TabIndex = 131;
+            this.btnSearchWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchWHCode.UseVisualStyleBackColor = false;
+            this.btnSearchWHCode.Click += new System.EventHandler(this.btnSearchWHCode_Click);
+            // 
+            // txtCustName
+            // 
+            this.txtCustName.Location = new System.Drawing.Point(267, 32);
+            this.txtCustName.MaxLength = 200;
+            this.txtCustName.Name = "txtCustName";
+            this.txtCustName.ReadOnly = true;
+            this.txtCustName.Size = new System.Drawing.Size(344, 23);
+            this.txtCustName.TabIndex = 123;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 35);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 16);
+            this.label1.TabIndex = 113;
+            this.label1.Text = "ลูกค้า : ";
+            // 
+            // txtCustomerCode
+            // 
+            this.txtCustomerCode.Location = new System.Drawing.Point(70, 32);
+            this.txtCustomerCode.MaxLength = 5;
+            this.txtCustomerCode.Name = "txtCustomerCode";
+            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
+            this.txtCustomerCode.TabIndex = 121;
+            // 
+            // btnSearchCust
+            // 
+            this.btnSearchCust.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchCust.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchCust.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchCust.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnSearchCust.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchCust.Image")));
+            this.btnSearchCust.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchCust.Location = new System.Drawing.Point(226, 32);
+            this.btnSearchCust.Name = "btnSearchCust";
+            this.btnSearchCust.Size = new System.Drawing.Size(35, 23);
+            this.btnSearchCust.TabIndex = 122;
+            this.btnSearchCust.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchCust.UseVisualStyleBackColor = false;
+            this.btnSearchCust.Click += new System.EventHandler(this.btnSearchCust_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(21, 8);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(43, 16);
+            this.label2.TabIndex = 112;
+            this.label2.Text = "Van : ";
             // 
             // pnlAdcSearch
             // 
@@ -164,6 +292,18 @@
             this.dtpDocDate.Name = "dtpDocDate";
             this.dtpDocDate.Size = new System.Drawing.Size(118, 23);
             this.dtpDocDate.TabIndex = 113;
+            // 
+            // lnkSearchAddOn
+            // 
+            this.lnkSearchAddOn.AutoSize = true;
+            this.lnkSearchAddOn.Location = new System.Drawing.Point(3, 23);
+            this.lnkSearchAddOn.Name = "lnkSearchAddOn";
+            this.lnkSearchAddOn.Size = new System.Drawing.Size(79, 16);
+            this.lnkSearchAddOn.TabIndex = 114;
+            this.lnkSearchAddOn.TabStop = true;
+            this.lnkSearchAddOn.Text = "ค้นหาเพิ่มเติม";
+            this.lnkSearchAddOn.Visible = false;
+            this.lnkSearchAddOn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkSearchAddOn_LinkClicked);
             // 
             // label11
             // 
@@ -265,145 +405,6 @@
             this.lblCountListText.TabIndex = 0;
             this.lblCountListText.Text = "จำนวนรายการ";
             // 
-            // grdList
-            // 
-            this.grdList.AllowUserToAddRows = false;
-            this.grdList.AllowUserToDeleteRows = false;
-            this.grdList.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdList.Location = new System.Drawing.Point(0, 133);
-            this.grdList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.grdList.Name = "grdList";
-            this.grdList.ReadOnly = true;
-            this.grdList.RowHeadersVisible = false;
-            this.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdList.Size = new System.Drawing.Size(620, 236);
-            this.grdList.TabIndex = 2;
-            this.grdList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellDoubleClick);
-            // 
-            // pnlSearchAddOn
-            // 
-            this.pnlSearchAddOn.BackColor = System.Drawing.Color.Azure;
-            this.pnlSearchAddOn.Controls.Add(this.txtWHName);
-            this.pnlSearchAddOn.Controls.Add(this.txtWHCode);
-            this.pnlSearchAddOn.Controls.Add(this.btnSearchWHCode);
-            this.pnlSearchAddOn.Controls.Add(this.txtCustName);
-            this.pnlSearchAddOn.Controls.Add(this.label1);
-            this.pnlSearchAddOn.Controls.Add(this.txtCustomerCode);
-            this.pnlSearchAddOn.Controls.Add(this.btnSearchCust);
-            this.pnlSearchAddOn.Controls.Add(this.label2);
-            this.pnlSearchAddOn.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSearchAddOn.Location = new System.Drawing.Point(0, 73);
-            this.pnlSearchAddOn.Name = "pnlSearchAddOn";
-            this.pnlSearchAddOn.Size = new System.Drawing.Size(620, 60);
-            this.pnlSearchAddOn.TabIndex = 20;
-            this.pnlSearchAddOn.Visible = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 16);
-            this.label2.TabIndex = 112;
-            this.label2.Text = "Van : ";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 16);
-            this.label1.TabIndex = 113;
-            this.label1.Text = "ลูกค้า : ";
-            // 
-            // lnkSearchAddOn
-            // 
-            this.lnkSearchAddOn.AutoSize = true;
-            this.lnkSearchAddOn.Location = new System.Drawing.Point(3, 23);
-            this.lnkSearchAddOn.Name = "lnkSearchAddOn";
-            this.lnkSearchAddOn.Size = new System.Drawing.Size(79, 16);
-            this.lnkSearchAddOn.TabIndex = 114;
-            this.lnkSearchAddOn.TabStop = true;
-            this.lnkSearchAddOn.Text = "ค้นหาเพิ่มเติม";
-            this.lnkSearchAddOn.Visible = false;
-            this.lnkSearchAddOn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkSearchAddOn_LinkClicked);
-            // 
-            // txtCustName
-            // 
-            this.txtCustName.Location = new System.Drawing.Point(267, 32);
-            this.txtCustName.MaxLength = 200;
-            this.txtCustName.Name = "txtCustName";
-            this.txtCustName.ReadOnly = true;
-            this.txtCustName.Size = new System.Drawing.Size(344, 23);
-            this.txtCustName.TabIndex = 123;
-            // 
-            // txtCustomerCode
-            // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(70, 32);
-            this.txtCustomerCode.MaxLength = 5;
-            this.txtCustomerCode.Name = "txtCustomerCode";
-            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
-            this.txtCustomerCode.TabIndex = 121;
-            // 
-            // btnSearchCust
-            // 
-            this.btnSearchCust.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchCust.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchCust.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchCust.ForeColor = System.Drawing.SystemColors.Control;
-            this.btnSearchCust.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchCust.Image")));
-            this.btnSearchCust.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchCust.Location = new System.Drawing.Point(226, 32);
-            this.btnSearchCust.Name = "btnSearchCust";
-            this.btnSearchCust.Size = new System.Drawing.Size(35, 23);
-            this.btnSearchCust.TabIndex = 122;
-            this.btnSearchCust.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSearchCust.UseVisualStyleBackColor = false;
-            this.btnSearchCust.Click += new System.EventHandler(this.btnSearchCust_Click);
-            // 
-            // txtWHName
-            // 
-            this.txtWHName.Location = new System.Drawing.Point(267, 5);
-            this.txtWHName.MaxLength = 200;
-            this.txtWHName.Name = "txtWHName";
-            this.txtWHName.ReadOnly = true;
-            this.txtWHName.Size = new System.Drawing.Size(344, 23);
-            this.txtWHName.TabIndex = 132;
-            // 
-            // txtWHCode
-            // 
-            this.txtWHCode.Location = new System.Drawing.Point(70, 5);
-            this.txtWHCode.MaxLength = 5;
-            this.txtWHCode.Name = "txtWHCode";
-            this.txtWHCode.Size = new System.Drawing.Size(153, 23);
-            this.txtWHCode.TabIndex = 130;
-            // 
-            // btnSearchWHCode
-            // 
-            this.btnSearchWHCode.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchWHCode.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchWHCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchWHCode.ForeColor = System.Drawing.SystemColors.Control;
-            this.btnSearchWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchWHCode.Image")));
-            this.btnSearchWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchWHCode.Location = new System.Drawing.Point(225, 5);
-            this.btnSearchWHCode.Name = "btnSearchWHCode";
-            this.btnSearchWHCode.Size = new System.Drawing.Size(35, 23);
-            this.btnSearchWHCode.TabIndex = 131;
-            this.btnSearchWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSearchWHCode.UseVisualStyleBackColor = false;
-            this.btnSearchWHCode.Click += new System.EventHandler(this.btnSearchWHCode_Click);
-            // 
             // frmSearchSupp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -420,6 +421,9 @@
             this.Load += new System.EventHandler(this.frmSearchSupp_Load);
             this.pnlBR.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdList)).EndInit();
+            this.pnlSearchAddOn.ResumeLayout(false);
+            this.pnlSearchAddOn.PerformLayout();
             this.pnlAdcSearch.ResumeLayout(false);
             this.pnlAdcSearch.PerformLayout();
             this.panel6.ResumeLayout(false);
@@ -428,9 +432,6 @@
             this.pnlTop.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdList)).EndInit();
-            this.pnlSearchAddOn.ResumeLayout(false);
-            this.pnlSearchAddOn.PerformLayout();
             this.ResumeLayout(false);
 
         }

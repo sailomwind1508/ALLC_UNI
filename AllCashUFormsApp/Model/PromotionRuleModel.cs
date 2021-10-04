@@ -11,12 +11,15 @@ namespace AllCashUFormsApp.Model
         public int UseAmount { get; set; }
         public int ConditionAmount { get; set; }
         public string ProductGroupID { get; set; }
+        public string PromotionType { get; set; }
         public decimal ProductGroupBeforeCalc { get; set; }
         public decimal ProductGroupAfterCalc { get; set; }
         public string DisCountPattern { get; set; }
         public decimal DisCountAmt { get; set; }
         public string PruductGroupRewardID { get; set; }
         public int PruductGroupRewardAmt { get; set; }
+        public string PruductGroupRewardID2 { get; set; }
+        public int PruductGroupRewardAmt2 { get; set; }
         public string RewardID { get; set; }
 
         public int RoundHit { get; set; }
@@ -24,6 +27,7 @@ namespace AllCashUFormsApp.Model
         public string StepCondition { get; set; }
 
         public bool IgnoreApplied { get; set; }
+        public bool IsUseCoupon { get; set; }
 
         public PromotionUseModel Use { get; set; }
 

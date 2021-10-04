@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,61 @@ namespace AllCashUFormsApp.Controller
 {
     public class TabletSales : BaseControl, IObject
     {
+        private List<tbl_ArCustomerShelf> _tbl_ArCustomerShelfs = null;
+        public virtual List<tbl_ArCustomerShelf> tbl_ArCustomerShelfs
+        {
+            get { return _tbl_ArCustomerShelfs; }
+            set
+            {
+                _tbl_ArCustomerShelfs = value;
+            }
+        }
+
         public TabletSales() : base("IV")
         {
             this.tbl_IVMaster = new tbl_IVMaster();
             this.tbl_IVDetails = new List<tbl_IVDetail>();
         }
 
+        public bool UpdateCustomerAddress(string docNo)
+        {
+            try
+            {
+                bool ret = false;
+
+                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand("proc_update_v_customer_address", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+                    cmd.Parameters.Add(new SqlParameter("@DocNo", docNo));
+                    var result = cmd.ExecuteNonQuery();
+                    ret = true;
+
+                    con.Close();
+
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return false;
+            }
+
+        }
+
         public List<tbl_SalArea> GetAllSaleArea()
         {
             return new tbl_SalArea().SelectAll();
+        }
+
+        public List<tbl_SalArea> GetAllSaleArea(List<string> listOfSalAreaID)
+        {
+            return new tbl_SalArea().Select(listOfSalAreaID);
         }
 
         public List<tbl_SalAreaDistrict> GetAllSaleAreaDistrict()
@@ -28,7 +75,7 @@ namespace AllCashUFormsApp.Controller
 
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> predicate)
         {
-            return new tbl_ArCustomer().Select(predicate);
+            return new tbl_ArCustomer().SelectAll().Where(predicate).ToList();
         }
 
         public virtual DataTable GetDataTable(bool isPopup = true)
@@ -39,6 +86,8 @@ namespace AllCashUFormsApp.Controller
                 tbl_POMaster = (new tbl_POMaster()).Select(docTypepredicate);
 
                 var docStatus = GetDocStatus();
+
+                var allEmp = GetEmployee();
 
                 DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
                 //newTable.Clear();
@@ -62,8 +111,10 @@ namespace AllCashUFormsApp.Controller
                     Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
 
                     string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
-                    tbl_Employee emp = GetEmployee(r.EmpID);
-                    string crUser = string.Join(" ", emp.TitleName, emp.FirstName);
+                    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
+                    string crUser = "";
+                    if (emp != null)
+                        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
 
                     newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
                         r.SuppName, r.CreditDay, r.DueDate, r.TotalDue, crUser, r.Remark);
@@ -94,5 +145,21 @@ namespace AllCashUFormsApp.Controller
             return dt;
         }
 
+        public int UpdateCustomerShelf()
+        {
+            List<int> ret = new List<int>();
+
+            if (tbl_ArCustomerShelfs != null && tbl_ArCustomerShelfs.Count > 0)
+            {
+                foreach (var item in tbl_ArCustomerShelfs)
+                {
+                    ret.Add(item.Update());
+                }
+                return ret.All(x => x == 1) ? 1 : 0;
+            }
+            else
+                return 1;
+            
+        }
     }
 }

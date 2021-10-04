@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -20,10 +21,16 @@ namespace AllCashUFormsApp
             List<tbl_ApSupplierType> list = new List<tbl_ApSupplierType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_ApSupplierType.Where(x => x.FlagDel == false).OrderBy(x => x.ApSupplierTypeCode).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ApSupplierType] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ApSupplierType), sql);
+                list = dynamicListReturned.Cast<tbl_ApSupplierType>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ApSupplierType.Where(x => x.FlagDel == false).OrderBy(x => x.ApSupplierTypeCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -93,6 +100,10 @@ namespace AllCashUFormsApp
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
                     }
+                    else
+                    {
+                        ret = tbl_ApSupplierType.Insert();
+                    }
                 }
             }
             catch (Exception ex)
@@ -102,7 +113,6 @@ namespace AllCashUFormsApp
 
             return ret;
         }
-
         /// <summary>
         /// remove data
         /// </summary>
@@ -126,6 +136,56 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static List<tbl_ApSupplierType> SelectAllNonFlag(this tbl_ApSupplierType tbl_ApSupplierType)
+        {
+            List<tbl_ApSupplierType> list = new List<tbl_ApSupplierType>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ApSupplierType";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ApSupplierType), sql);
+                list = dynamicListReturned.Cast<tbl_ApSupplierType>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ApSupplierType.GetType());
+
+            }
+            return list;
+        }
+        public static List<tbl_ApSupplierType> SelectNonFlag(this tbl_ApSupplierType tbl_ApSupplierType, Func<tbl_ApSupplierType, bool> Func)
+        {
+            List<tbl_ApSupplierType> list = new List<tbl_ApSupplierType>();
+            try
+            {
+                list = tbl_ApSupplierType.SelectAllNonFlag().Where(Func).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ApSupplierType.GetType());
+
+            }
+            return list;
+        }
+        public static DataTable GetApSupplierTypeData(this tbl_ApSupplierType tbl_ApSupplierType, int flagDel, string Text)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_ApSupplierType WHERE FlagDel = " + flagDel + "";
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    sql += " AND (ApSupplierTypeCode like '%" + Text + "%'";
+                    sql += " OR ApSupplierTypeName like '%" + Text + "%')";
+                }
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

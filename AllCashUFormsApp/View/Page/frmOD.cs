@@ -29,6 +29,8 @@ namespace AllCashUFormsApp.View.Page
         int[] numberCell = new int[] { 5, 6 };
         Dictionary<int, string> dataGridList = new Dictionary<int, string>();
         Dictionary<int, string> initDataGridList = new Dictionary<int, string>();
+        List<tbl_Product> allProduct = new List<tbl_Product>();
+        //List<tbl_ProductUomSet> allprdUOMSets = new List<tbl_ProductUomSet>();
 
         public frmOD()
         {
@@ -51,7 +53,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode == "OD");
+            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "OD");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -65,7 +67,7 @@ namespace AllCashUFormsApp.View.Page
             validateNewRow = true;
             btnAdd.Enabled = true;
 
-            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
 
@@ -87,11 +89,14 @@ namespace AllCashUFormsApp.View.Page
             //data gridview
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
+
+            allProduct = bu.GetProduct();
+            //allprdUOMSets = bu.GetUOMSet();
         }
 
         public void BindODData(string odDocNo)
         {
-            bu.GetDocData(odDocNo);
+            bu.GetDocData(odDocNo, docTypeCode);
 
             var po = bu.tbl_POMaster;
             var poDts = bu.tbl_PODetails;
@@ -115,7 +120,7 @@ namespace AllCashUFormsApp.View.Page
                 BindPODetail(poDts);
             }
 
-            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
 
@@ -170,7 +175,6 @@ namespace AllCashUFormsApp.View.Page
             grdList.Rows.Clear();
 
             var allUOM = bu.GetUOM();
-            var allProduct = bu.GetProduct();
 
             for (int i = 0; i < poDts.Count; i++)
             {
@@ -314,10 +318,11 @@ namespace AllCashUFormsApp.View.Page
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
 
-            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             InitHeader();
 
+            txdDocNo.ReadOnly = false;
             grdList.AutoGenerateColumns = false;
             validateNewRow = true;
 
@@ -331,8 +336,10 @@ namespace AllCashUFormsApp.View.Page
             txtSupplierCode.Focus();
         }
 
-        private void PreparePOMaster(bool editFlag = false)
+        private string PreparePOMaster(bool editFlag = false)
         {
+            string docNo = string.Empty;
+
             bu.tbl_POMaster = new tbl_POMaster();
 
             var comp = bu.GetCompany();
@@ -350,6 +357,7 @@ namespace AllCashUFormsApp.View.Page
                 po.DocNo = bu.GenDocNo(docTypeCode);
             }
 
+            docNo = po.DocNo;
             po.RevisionNo = 0;
             po.DocTypeCode = docTypeCode;
             po.DocStatus = ddlDocStatus.SelectedValue.ToString();
@@ -405,17 +413,14 @@ namespace AllCashUFormsApp.View.Page
             po.ApprovedBy = null;
             po.ApprovedDate = null;
             po.PayType = 0;
+            po.CrDate = DateTime.Now;
+            po.CrUser = Helper.tbl_Users.Username;
 
             if (editFlag)
             {
                 po.EdDate = DateTime.Now;
                 po.EdUser = Helper.tbl_Users.Username;
-            }
-            else
-            {
-                po.CrDate = DateTime.Now;
-                po.CrUser = Helper.tbl_Users.Username;
-            }
+            } 
 
             po.FlagDel = false;
             po.FlagSend = false;
@@ -423,6 +428,8 @@ namespace AllCashUFormsApp.View.Page
             po.TotalCom = 0.00m;
             po.CNType = 0;
             po.DiscountRate = 0.00m;
+
+            return docNo;
         }
 
         private void PreparePODetail(bool editFlag = false)
@@ -463,16 +470,13 @@ namespace AllCashUFormsApp.View.Page
                     poDt.LineDiscount = 0;
                     poDt.LineTotal = Convert.ToDecimal(cell7.EditedFormattedValue);
                     poDt.CustType = "";
-                    
+                    poDt.CrDate = crDate;
+                    poDt.CrUser = Helper.tbl_Users.Username;
+
                     if (editFlag)
                     {
                         poDt.EdDate = crDate;
                         poDt.EdUser = Helper.tbl_Users.Username;
-                    }
-                    else
-                    {
-                        poDt.CrDate = crDate;
-                        poDt.CrUser = Helper.tbl_Users.Username;
                     }
 
                     poDt.FlagDel = false;
@@ -518,15 +522,12 @@ namespace AllCashUFormsApp.View.Page
                 invMm.TrnQtyIn = 0;
                 invMm.TrnQtyOut = 0;
                 invMm.TrnQty = 0;
+                invMm.CrDate = crDate;
 
                 if (editFlag)
                 {
                     invMm.EdDate = crDate;
                     invMm.TrnType = ddlDocStatus.SelectedValue.ToString() == "5" ? "X" : "";
-                }
-                else
-                {
-                    invMm.CrDate = crDate;
                 }
 
                 var prodItem = prod.FirstOrDefault(x => x.ProductID == poDt.ProductID);
@@ -550,6 +551,7 @@ namespace AllCashUFormsApp.View.Page
             var invWhs = bu.tbl_InvWarehouses;
             var poDts = bu.tbl_PODetails;
             var po = bu.tbl_POMaster;
+            var allInvWhs = bu.GetInvWarehouse();
 
             DateTime crDate = DateTime.Now;
 
@@ -561,7 +563,7 @@ namespace AllCashUFormsApp.View.Page
                 invWh.WHID = po.WHID;
                 invWh.QtyOnHand = 0;
 
-                var invWhItem = bu.GetInvWarehouse(poDt.ProductID, po.WHID); //allInvWhs.FirstOrDefault(x => x.ProductID == poDt.ProductID && x.WHID == po.WHID);
+                var invWhItem = allInvWhs.Where(x => x.ProductID == poDt.ProductID && x.WHID == po.WHID).ToList(); //bu.GetInvWarehouse(poDt.ProductID, po.WHID); //allInvWhs.FirstOrDefault(x => x.ProductID == poDt.ProductID && x.WHID == po.WHID);
                 if (invWhItem != null && invWhItem.Count > 0)
                 {
                     invWh.QtyOnHand = invWhItem[0].QtyOnHand;
@@ -575,16 +577,13 @@ namespace AllCashUFormsApp.View.Page
                 invWh.MinimumQty = 0;
                 invWh.MaximumQty = 0;
                 invWh.ReOrderQty = 0;
-                
+                invWh.CrDate = crDate;
+                invWh.CrUser = Helper.tbl_Users.Username;
+
                 if (editFlag)
                 {
                     invWh.EdDate = crDate;
                     invWh.EdUser = Helper.tbl_Users.Username;
-                }
-                else
-                {
-                    invWh.CrDate = crDate;
-                    invWh.CrUser = Helper.tbl_Users.Username;
                 }
 
                 invWh.FlagDel = false;
@@ -617,62 +616,91 @@ namespace AllCashUFormsApp.View.Page
 
                     DateTime crDate = DateTime.Now;
 
-                    docno = txdDocNo.Text;
+                    //docno = txdDocNo.Text;
                     editFlag = true;
                     bu.tbl_DocRunning = new List<tbl_DocRunning>();
 
                     bu.tbl_POMaster = null;
-                    bu.tbl_POMaster = bu.GetPOMaster(docno);
+                    //bu.tbl_POMaster = bu.GetPOMaster(docno);
+                    docno = PreparePOMaster(editFlag);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 11)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
                     bu.tbl_POMaster.DocStatus = ddlDocStatus.SelectedValue.ToString();
                     bu.tbl_POMaster.EdDate = crDate;
                     bu.tbl_POMaster.EdUser = Helper.tbl_Users.Username;
 
                     bu.tbl_PODetails.Clear();
-                    List<tbl_PODetail> tbl_PODetails = bu.GetPODetails(docno);
-                    tbl_PODetails.ForEach(x =>
-                    {
-                        x.EdUser = Helper.tbl_Users.Username; x.EdDate = crDate;
-                    });
-                    bu.tbl_PODetails.AddRange(tbl_PODetails);
+                    //List<tbl_PODetail> tbl_PODetails = bu.GetPODetails(docno);
+                    List<tbl_PODetail> tbl_PODetails = bu.tbl_PODetails;
+                    PreparePODetail(editFlag);
 
-                    bu.tbl_InvMovements.Clear();
-                    List<tbl_InvMovement> tbl_InvMovements = bu.GetInvMovement(docno);
-                    tbl_InvMovements.ForEach(x =>
+                    ret = bu.RemovePODetails(bu.tbl_POMaster.DocNo); //remove old po details befor save edit by sailom 10-06-2021
+                    if (ret == 1)
                     {
-                        x.EdDate = crDate;
-                    });
-                    bu.tbl_InvMovements.AddRange(tbl_InvMovements);
-
-                    //bu.tbl_InvTransactions.Clear();
-                    //List<tbl_InvTransaction> tbl_InvTransactions = bu.GetInvTransaction(docno);
-                    //tbl_InvTransactions.ForEach(x =>
-                    //{
-                    //    x.EdUser = Helper.tbl_Users.Username; x.EdDate = crDate;
-                    //});
-                    //bu.tbl_InvTransactions.AddRange(tbl_InvTransactions);
-
-                    bu.tbl_InvWarehouses.Clear();
-                    foreach (var poDt in bu.tbl_PODetails)
-                    {
-                        List<tbl_InvWarehouse> tbl_InvWarehouses = bu.GetInvWarehouse(poDt.ProductID, bu.tbl_POMaster.WHID);
-                        tbl_InvWarehouses.ForEach(x =>
+                        tbl_PODetails.ForEach(x =>
                         {
                             x.EdUser = Helper.tbl_Users.Username; x.EdDate = crDate;
                         });
-                        bu.tbl_InvWarehouses.AddRange(tbl_InvWarehouses);
-                    }
+                        //bu.tbl_PODetails.AddRange(tbl_PODetails); //edit by sailom 10-06-2021
 
-                    ret = bu.UpdateData();
+                        bu.tbl_InvMovements.Clear();
+                        List<tbl_InvMovement> tbl_InvMovements = bu.GetInvMovement(docno);
+                        tbl_InvMovements.ForEach(x =>
+                        {
+                            x.EdDate = crDate;
+
+                            if (ddlDocStatus.SelectedValue.ToString() == "5")
+                                x.TrnType = "X";
+                        });
+                        bu.tbl_InvMovements.AddRange(tbl_InvMovements);
+
+                        //bu.tbl_InvTransactions.Clear();
+                        //List<tbl_InvTransaction> tbl_InvTransactions = bu.GetInvTransaction(docno);
+                        //tbl_InvTransactions.ForEach(x =>
+                        //{
+                        //    x.EdUser = Helper.tbl_Users.Username; x.EdDate = crDate;
+                        //});
+                        //bu.tbl_InvTransactions.AddRange(tbl_InvTransactions);
+
+                        bu.tbl_InvWarehouses.Clear();
+                        var allInvWhs = bu.GetInvWarehouse();
+
+                        foreach (var poDt in bu.tbl_PODetails)
+                        {
+                            List<tbl_InvWarehouse> tbl_InvWarehouses = allInvWhs.Where(x => x.ProductID == poDt.ProductID && x.WHID == bu.tbl_POMaster.WHID).ToList();
+                            tbl_InvWarehouses.ForEach(x =>
+                            {
+                                x.EdUser = Helper.tbl_Users.Username; x.EdDate = crDate;
+                            });
+                            bu.tbl_InvWarehouses.AddRange(tbl_InvWarehouses);
+                        }
+
+                        ret = bu.UpdateData();
+                    }
                 }
                 else
                 {
                     bu = new OD();
 
-                    docno = bu.GenDocNo(docTypeCode);
+                    //docno = bu.GenDocNo(docTypeCode);
                     editFlag = false;
                     bu.PrepareDocRunning(docTypeCode);
 
-                    PreparePOMaster(editFlag);
+                    docno = PreparePOMaster(editFlag);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 11)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
                     PreparePODetail(editFlag);
                     PrepareInvMovement(editFlag);
                     PrepareInvWarehouse();
@@ -691,12 +719,12 @@ namespace AllCashUFormsApp.View.Page
                     //    return;
                     //}
 
-                    ret = bu.UpdateData();
+                    ret = bu.UpdateData(docTypeCode);
                 }
 
                 if (ret == 1)
                 {
-                    this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+                    this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
                     btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
 
@@ -752,8 +780,10 @@ namespace AllCashUFormsApp.View.Page
         {
             bool ret = true;
             List<string> errList = new List<string>();
+            var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
+            var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (dtpDocDate.Value != null && dtpDocDate.Value.Ticks < DateTime.Now.ToDateTimeFormat().Ticks)
+            if (dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -796,9 +826,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else //validate data grid
                 {
-                    var allProduct = bu.GetProduct();
-
-                    ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 5, 6, null, "", false);
+                    ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 5, 6, bu, "", false);
                 }
             }
 
@@ -851,11 +879,12 @@ namespace AllCashUFormsApp.View.Page
         {
             btnEdit.EnableButton(btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, txdDocNo.Text);
 
-            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             ddlDocStatus.Enabled = true;
             validateNewRow = true;
             btnCancel.Enabled = true;
+            txdDocNo.ReadOnly = true;
 
             grdList.CellContentClick -= grdList_CellContentClick;
             grdList.CellContentClick += grdList_CellContentClick;
@@ -872,7 +901,7 @@ namespace AllCashUFormsApp.View.Page
         {
             btnCopy.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnPrint, txdDocNo.Text);
 
-            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == "4"; };
             ddlDocStatus.SelectedValueDropdownList(condition);
@@ -900,7 +929,7 @@ namespace AllCashUFormsApp.View.Page
 
             validateNewRow = true;
 
-            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
+            this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
 
             btnCancel.EnableButton(btnSearchDoc);
 
@@ -912,7 +941,9 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@DocNo", txdDocNo.Text);
+            this.OpenCrystalReportsPopup("ใบสั่งสินค้า", "Form_OD.rpt", "Form_OD", _params);
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -973,22 +1004,31 @@ namespace AllCashUFormsApp.View.Page
                 grd.ClearSelection();
 
                 var cell0 = grd.Rows[currentRowIndex].Cells[0];
+                var cell2 = grd.Rows[currentRowIndex].Cells[2];
+
                 if (curentColIndex == 0)
                 {
+                    bool isNewRow = true;
                     if (cell0.IsNotNullOrEmptyCell())
                     {
                         validateNewRow = true;
 
-                        grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                        var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                        if (!checkDup)
+                        {
+                            GridViewHelper.ShowDupSKUMessage();
+                            cell0.Value = "";
+                            validateNewRow = false;
+                            grd.Rows.RemoveAt(currentRowIndex);
+                            isNewRow = false;
+                        }
 
-                        //ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), currentRowIndex);
-
-                        //(this DataGridView grd, Dictionary< int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable dt, int idIndex, string id, int rowIndex, bool validateNewRow)
-                        grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "ODProduct");
-                        //BindDataGridViewRow(grd, cell0.EditedFormattedValue.ToString(), currentRowIndex);
+                        if (isNewRow)
+                            grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "ODProduct", false);
                     }
 
-                    grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 5];
+                    if (isNewRow)
+                        grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 5];
                 }
                 else if (curentColIndex == 5)
                 {
@@ -996,11 +1036,18 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else if (curentColIndex == 6)
                 {
-                    if (cell0.IsNotNullOrEmptyCell())
+                    if (cell2.IsNotNullOrEmptyCell())
                     {
                         if ((grd.RowCount - 1) == currentRowIndex)
                         {
-                            //AddNewRow(grd, currentRowIndex + 1);
+                            validateNewRow = true;
+
+                            var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                            if (!checkDup)
+                            {
+                                validateNewRow = false;
+                            }
+
                             grdList.AddNewRow(initDataGridList, 0, "", currentRowIndex + 1, validateNewRow);
 
                             if (validateNewRow)
@@ -1070,20 +1117,39 @@ namespace AllCashUFormsApp.View.Page
                 DataGridView _grd = (DataGridView)sender;
                 if (_grd != null && _grd.CurrentRow != null)
                 {
-                    int rowIndex = _grd.CurrentRow.Index;
-                    if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
+                    //edit by sailom 10-06-2021
+                    foreach (DataGridViewRow rowselected in _grd.SelectedRows)
                     {
-                        _grd.Rows.RemoveAt(rowIndex);
-
-                        if (rowIndex <= _grd.RowCount - 1)
+                        int rowIndex = rowselected.Index;
+                        if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
                         {
-                            CalculateRow(_grd, rowIndex);
+                            _grd.Rows.RemoveAt(rowIndex);
+
+                            if (rowIndex <= _grd.RowCount - 1)
+                            {
+                                CalculateRow(_grd, rowIndex);
+                            }
+                        }
+                        else
+                        {
+                            return;
                         }
                     }
-                    else
-                    {
-                        return;
-                    }
+
+                    //int rowIndex = _grd.CurrentRow.Index;
+                    //if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
+                    //{
+                    //    _grd.Rows.RemoveAt(rowIndex);
+
+                    //    if (rowIndex <= _grd.RowCount - 1)
+                    //    {
+                    //        CalculateRow(_grd, rowIndex);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    return;
+                    //}
                 }
             }
         }
@@ -1094,5 +1160,10 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
+
+        private void frmOD_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

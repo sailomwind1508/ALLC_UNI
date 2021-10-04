@@ -7,9 +7,29 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class SaleArea : IObject
+    public class SaleArea : BaseControl, IObject //
     {
-        BaseControl b = new BaseControl("");
+        private Func<tbl_PRMaster, bool> _docTypePredicate = null; //
+        public virtual Func<tbl_PRMaster, bool> docTypePredicate //
+        {
+            get { return _docTypePredicate; }
+            set
+            {
+                _docTypePredicate = value;
+            }
+        }
+        //public DataTable GetCustomerTypeGridData(int flagDel, string searchtext)
+        //{
+        //    return (new tbl_ArCustomerType()).GetCustomerTypeGirdData(flagDel, searchtext);
+        //}
+        public DataTable GetSalAreaData(int flagDel, string searchtext)
+        {
+            return (new tbl_SalArea()).GetSalAreaData(flagDel, searchtext);
+        }
+        public SaleArea() : base("") //
+        {
+            _docTypePredicate = (x => x.DocTypeCode == "");
+        }
 
         public List<tbl_SalArea> GetAllData()
         {

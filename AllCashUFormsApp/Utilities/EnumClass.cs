@@ -7,7 +7,9 @@ namespace AllCashUFormsApp
 {
     enum ObjectType
     {
+        BranchWarehouseID,
         Supplier,
+        SubDistict,
         Promotion,
         PromotionTemp,
         ODProduct,
@@ -19,6 +21,10 @@ namespace AllCashUFormsApp
         TRProduct,
         IVProduct,
         IMProduct,
+        VEProduct,
+        IVPreProduct,
+        IMPreProduct,
+        PreOrderProduct,
         OD,
         REOD,
         RE,
@@ -35,6 +41,12 @@ namespace AllCashUFormsApp
         Customer,
         SaleAreaDistrict,
         IM,
-        IV
+        IV,
+        V,
+        IVPre,
+        IMPre,
+        PreOrder,
+        CustomerPre,
+        IVPrePO
     }
 }

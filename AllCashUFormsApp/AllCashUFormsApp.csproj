@@ -7,10 +7,25 @@
     <ProjectGuid>{3623CCB4-29F7-40FF-B037-F57B6DB05049}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>AllCashUFormsApp</RootNamespace>
-    <AssemblyName>All Cash Back End</AssemblyName>
+    <AssemblyName>U-Force Back-End</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,21 +48,31 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>uni_fXG_1.ico</ApplicationIcon>
+    <ApplicationIcon>facebook_post_940x788_px__1__12T_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>AllCashUFormsApp.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AxShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="ClosedXML">
+      <HintPath>.\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -56,6 +81,11 @@
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,62 +93,96 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\ArCustomerType.cs" />
+    <Compile Include="Controller\BankNote.cs" />
     <Compile Include="Controller\BaseControl.cs" />
     <Compile Include="Controller\Branch.cs" />
     <Compile Include="Controller\BranchWarehouse.cs" />
+    <Compile Include="Controller\Company.cs" />
     <Compile Include="Controller\Customer.cs" />
+    <Compile Include="Controller\CustomerShelf.cs" />
     <Compile Include="Controller\DistributionCenter.cs" />
     <Compile Include="Controller\DocTypeCode.cs" />
     <Compile Include="Controller\Employee.cs" />
+    <Compile Include="Controller\EndDay.cs" />
     <Compile Include="Controller\give_disc_perc_amt.cs" />
     <Compile Include="Controller\give_fix_baht_qty.cs" />
     <Compile Include="Controller\give_disc_baht_qty.cs" />
     <Compile Include="Controller\give_free_free.cs" />
     <Compile Include="Controller\give_reward.cs" />
     <Compile Include="Controller\Igive_reward.cs" />
+    <Compile Include="Controller\IMPre.cs" />
     <Compile Include="Controller\IM.cs" />
+    <Compile Include="Controller\Inventory.cs" />
+    <Compile Include="Controller\IVPre.cs" />
     <Compile Include="Controller\IV.cs" />
     <Compile Include="Controller\Login.cs" />
+    <Compile Include="Controller\MasterDataControl.cs" />
     <Compile Include="Controller\MenuBU.cs" />
     <Compile Include="Controller\OD.cs" />
+    <Compile Include="Controller\Permission.cs" />
     <Compile Include="Controller\PRDPromotion.cs" />
+    <Compile Include="Controller\PreOrder.cs" />
+    <Compile Include="Controller\PriceGroup.cs" />
     <Compile Include="Controller\Product.cs" />
+    <Compile Include="Controller\ProductGroup.cs" />
     <Compile Include="Controller\ProductMovement.cs" />
+    <Compile Include="Controller\ProductSubGroup.cs" />
+    <Compile Include="Controller\ProductType.cs" />
     <Compile Include="Controller\PromotionTemp.cs" />
     <Compile Include="Controller\Promotion.cs" />
     <Compile Include="Controller\PromotionBase.cs" />
+    <Compile Include="Controller\Province.cs" />
     <Compile Include="Controller\RB.cs" />
     <Compile Include="Controller\RE.cs" />
+    <Compile Include="Controller\Report.cs" />
     <Compile Include="Controller\RJ.cs" />
     <Compile Include="Controller\RL.cs" />
+    <Compile Include="Controller\RLSummary.cs" />
     <Compile Include="Controller\RT.cs" />
     <Compile Include="Controller\SaleArea.cs" />
     <Compile Include="Controller\SaleAreaDistrict.cs" />
+    <Compile Include="Controller\SendData.cs" />
+    <Compile Include="Controller\MigrateData.cs" />
+    <Compile Include="Controller\SendToHQ.cs" />
+    <Compile Include="Controller\ShopType.cs" />
+    <Compile Include="Controller\SubDistict.cs" />
     <Compile Include="Controller\Supplier.cs" />
     <Compile Include="Controller\TabletSales.cs" />
     <Compile Include="Controller\TR.cs" />
     <Compile Include="Controller\TXNPromotion.cs" />
     <Compile Include="Controller\Users.cs" />
+    <Compile Include="Controller\VE.cs" />
+    <Compile Include="Dal\AdmControlListDao.cs" />
     <Compile Include="Dal\AdmFormListDao.cs" />
+    <Compile Include="Dal\AdmMenuListDao.cs" />
+    <Compile Include="Dal\AdmRoleControlDao.cs" />
+    <Compile Include="Dal\AmtArCustomerDao.cs" />
     <Compile Include="Dal\ApSupplierDao.cs" />
     <Compile Include="Dal\ApSupplierTypeDao.cs" />
-    <Compile Include="Dal\ArCustomer.cs" />
+    <Compile Include="Dal\ArCustomerDao.cs" />
+    <Compile Include="Dal\ArCustomerShelfDao.cs" />
+    <Compile Include="Dal\ArCustomerTypeDao.cs" />
+    <Compile Include="Dal\BankNoteDao.cs" />
     <Compile Include="Dal\BaseDao.cs" />
     <Compile Include="Dal\BranchDao.cs" />
     <Compile Include="Dal\BranchGroupDao.cs" />
     <Compile Include="Dal\BranchWarehouseDao.cs" />
     <Compile Include="Dal\CauseDao.cs" />
+    <Compile Include="Dal\CfgSettingDao.cs" />
     <Compile Include="Dal\CompanyDao.cs" />
     <Compile Include="Dal\DepartmentDao.cs" />
     <Compile Include="Dal\DiscountTypeDao.cs" />
+    <Compile Include="Dal\DisplayImageDao.cs" />
     <Compile Include="Dal\DocRunningDao.cs" />
     <Compile Include="Dal\DocumentStatusDao.cs" />
     <Compile Include="Dal\DocumentTypeDao.cs" />
     <Compile Include="Dal\EmployeeDao.cs" />
     <Compile Include="Dal\ErrorLogsDao.cs" />
+    <Compile Include="Dal\GetTLDataDao.cs" />
     <Compile Include="Dal\HQ_Promotion_HitDao.cs" />
     <Compile Include="Dal\HQ_Promotion_Hit_TempDao.cs" />
     <Compile Include="Dal\HQ_SKUGroupDao.cs" />
@@ -135,28 +199,42 @@
     <Compile Include="Dal\MstDistrictDao.cs" />
     <Compile Include="Dal\MstProvince.cs" />
     <Compile Include="Dal\MstPartDao.cs" />
+    <Compile Include="Dal\PayDetailDao.cs" />
+    <Compile Include="Dal\PayMasterDao.cs" />
     <Compile Include="Dal\PODetailDao.cs" />
+    <Compile Include="Dal\PODetail_PREDao.cs" />
     <Compile Include="Dal\POMasterDao.cs" />
+    <Compile Include="Dal\POMaster_PREDao.cs" />
     <Compile Include="Dal\PositionDao.cs" />
     <Compile Include="Dal\PRDetailDao.cs" />
     <Compile Include="Dal\PriceGroupDao.cs" />
     <Compile Include="Dal\PRMasterDao.cs" />
     <Compile Include="Dal\ProductDao.cs" />
+    <Compile Include="Dal\ProductFlavourDao.cs" />
     <Compile Include="Dal\ProductGroupDao.cs" />
     <Compile Include="Dal\ProductPriceGroupDao.cs" />
+    <Compile Include="Dal\ProductRemarkRejectDao.cs" />
     <Compile Include="Dal\ProductSubGroupDao.cs" />
+    <Compile Include="Dal\ProductTypeDao.cs" />
     <Compile Include="Dal\ProductUomDao.cs" />
     <Compile Include="Dal\ProductUomSetDao.cs" />
     <Compile Include="Dal\HQ_PromotionDao.cs" />
+    <Compile Include="Dal\ReportDao.cs" />
     <Compile Include="Dal\RolesDao.cs" />
     <Compile Include="Dal\SalAreaDao.cs" />
     <Compile Include="Dal\SalAreaDistrictDao.cs" />
     <Compile Include="Dal\SaleBranchSummaryDao.cs" />
+    <Compile Include="Dal\SendDataDao.cs" />
     <Compile Include="Dal\ShopTypeDao.cs" />
+    <Compile Include="Dal\ShopTypeGroupDao.cs" />
     <Compile Include="Dal\UserDao.cs" />
     <Compile Include="Dal\VanTypeDao.cs" />
     <Compile Include="Dal\ZoneDao.cs" />
+    <Compile Include="Model\ArCustomerView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\BranchEmployeeModel.cs" />
+    <Compile Include="Model\CustomerInfo.cs" />
     <Compile Include="Model\DBModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -172,10 +250,58 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\EndDayPOInfoModel.cs" />
+    <Compile Include="Model\GetBranchWarehouse.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetCust_Routing.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetProduct.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetPromotion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetProvinceAndDistrict.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetSetting.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetTwoBill.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetTwoStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\ProductMovementModel.cs" />
     <Compile Include="Model\ProductPromotionModel.cs" />
+    <Compile Include="Model\ProductView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\PromotionHitTempModel.cs" />
     <Compile Include="Model\PromotionRuleModel.cs" />
     <Compile Include="Model\PromotionUseModel.cs" />
+    <Compile Include="Model\ReceiveTabletDataView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ReceiveTabletDataView_Lastest.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\RPTStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Rpt_DSR.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Rpt_DSR_KPI.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SearchAddressModel.cs" />
     <Compile Include="Model\tbl_AdmAuthorize.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -404,6 +530,9 @@
     <Compile Include="Model\tbl_MstProvince.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_MstProvince_Mapping.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_PaidDetail.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -419,7 +548,13 @@
     <Compile Include="Model\tbl_PODetail.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_PODetail_PRE.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_POMaster.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_POMaster_PRE.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Position.cs">
@@ -548,6 +683,9 @@
     <Compile Include="Model\tbl_SaleExpenseMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_SalesTrace.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_SaleYearTarget.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -587,10 +725,7 @@
     <Compile Include="Model\tbl_TL_ArCustomerShelf.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_TL_ArCustomer_Test.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_TL_DocSignature.cs">
+    <Compile Include="Model\tbl_TL_CustomerCode.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_PODetail.cs">
@@ -599,16 +734,13 @@
     <Compile Include="Model\tbl_TL_POMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_TL_PRDetail.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_TL_PRMaster.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_TL_PromotionCustomer.cs">
+    <Compile Include="Model\tbl_TL_SalesTrace.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_Visit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_VisitShopImage.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_VisitStock.cs">
@@ -623,6 +755,9 @@
     <Compile Include="Model\tbl_TRMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_UpdateInvWH.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_Users.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -630,6 +765,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Visit.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VisitShopImage.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_VisitStock.cs">
@@ -651,6 +789,42 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ValidateRL.cs" />
+    <Compile Include="Model\V_Acutal_Sales_By_VAN.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_BankNote.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CountVisit_UBON.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CUSTOMERDT.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CUSTOMERHD.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_INVDT.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_INVHD.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_StockMovement.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL_Get.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL_Stock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_UBNDashboard.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -658,37 +832,472 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ActualSales_By_Day.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ActualSales_By_Day.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_IV.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_IV.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_OD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_OD.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_RB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_RB.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_RL.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_RL.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_RL_Summary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_RL_Summary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_TR.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_TR.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_V.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_V.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_V_Copy.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_V_Copy.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\From_RE.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>From_RE.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_IV_Sales.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_IV_Sales.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_Sales_By_Customer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_Sales_By_Customer.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_Sales_By_Doc.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_Sales_By_Doc.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_Sales_By_Doc_Detail.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_Sales_By_Doc_Detail.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_Sales_Per_Emp.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_Sales_Per_Emp.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rep_Sum_Shelf.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rep_Sum_Shelf.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rev_V_Sales.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rev_V_Sales.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RPT-DSR-KPI.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPT-DSR-KPI.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RPT-DSR.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPT-DSR.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RPT-DSR2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPT-DSR2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RptStock.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptStock.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\RptStock_R2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptStock_R2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rpt_ActualSalesByBill.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rpt_ActualSalesByBill.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Rpt_ActualSalesByVan.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rpt_ActualSalesByVan.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\V_Bank_Note.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>V_Bank_Note.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utilities\AnimatedCurs.cs" />
     <Compile Include="Utilities\CCBoxItem.cs" />
     <Compile Include="Utilities\Connection.cs" />
     <Compile Include="Utilities\ConvertHelper.cs" />
     <Compile Include="Utilities\DataGridColumn.cs" />
+    <Compile Include="Utilities\DataTableHelper.cs" />
     <Compile Include="Utilities\EnumClass.cs" />
-    <Compile Include="Utilities\IFormEvent.cs" />
+    <Compile Include="Utilities\FlexibleMessageBox.cs" />
     <Compile Include="Utilities\FormHelper.cs" />
     <Compile Include="Utilities\GridViewHelper.cs" />
     <Compile Include="Utilities\Helper.cs" />
+    <Compile Include="Utilities\IFormEvent.cs" />
     <Compile Include="Utilities\IObject.cs" />
     <Compile Include="Utilities\IPromotion.cs" />
+    <Compile Include="Utilities\MemoryManagement.cs" />
+    <Compile Include="Utilities\My_DataTable_Extensions.cs" />
     <Compile Include="Utilities\ObjectFactory.cs" />
     <Compile Include="Utilities\ObjectHelper.cs" />
+    <Compile Include="Utilities\Printer.cs" />
     <Compile Include="Utilities\SerializeHelper.cs" />
+    <Compile Include="View\Page\frm1000SalesPre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frm1000SalesPre.Designer.cs">
+      <DependentUpon>frm1000SalesPre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmBrokenReason.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmBrokenReason.Designer.cs">
+      <DependentUpon>frmBrokenReason.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmCompany.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCompany.designer.cs">
+      <DependentUpon>frmCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmDataMigration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmDataMigration.Designer.cs">
+      <DependentUpon>frmDataMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmDepartment.Designer.cs">
+      <DependentUpon>frmDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\FrmDocument.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\FrmDocument.Designer.cs">
+      <DependentUpon>FrmDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmEmpPosition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmEmpPosition.Designer.cs">
+      <DependentUpon>frmEmpPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmInfomation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmInfomation.Designer.cs">
+      <DependentUpon>frmInfomation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmInventories.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmInventories.Designer.cs">
+      <DependentUpon>frmInventories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmOD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmOD.designer.cs">
+      <DependentUpon>frmOD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmPermission.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmPermission.Designer.cs">
+      <DependentUpon>frmPermission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmPlace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmPlace.designer.cs">
+      <DependentUpon>frmPlace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmPreOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmPreOrder.Designer.cs">
+      <DependentUpon>frmPreOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmProductInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmProductInfo.designer.cs">
+      <DependentUpon>frmProductInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmProductTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmProductTable.Designer.cs">
+      <DependentUpon>frmProductTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmProductUnit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmProductUnit.Designer.cs">
+      <DependentUpon>frmProductUnit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmPromotionSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmPromotionSetting.designer.cs">
+      <DependentUpon>frmPromotionSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmReceiveTabletData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmReceiveTabletData.Designer.cs">
+      <DependentUpon>frmReceiveTabletData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmReport.designer.cs">
+      <DependentUpon>frmReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmRLSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRLSummary.Designer.cs">
+      <DependentUpon>frmRLSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSalesTransfer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSalesTransfer.designer.cs">
+      <DependentUpon>frmSalesTransfer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSendProductInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSendProductInfo.designer.cs">
+      <DependentUpon>frmSendProductInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSendToHQ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSendToHQ.Designer.cs">
+      <DependentUpon>frmSendToHQ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmTabletSalesPre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmTabletSalesPre.Designer.cs">
+      <DependentUpon>frmTabletSalesPre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmTLData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmTLData.Designer.cs">
+      <DependentUpon>frmTLData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmUser.Designer.cs">
+      <DependentUpon>frmUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\Test_AddImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\Test_AddImage.Designer.cs">
+      <DependentUpon>Test_AddImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\AddButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\AddButton.Designer.cs">
+      <DependentUpon>AddButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CancelButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CancelButton.Designer.cs">
+      <DependentUpon>CancelButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CloseButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CloseButton.Designer.cs">
+      <DependentUpon>CloseButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\CopyButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\CopyButton.Designer.cs">
+      <DependentUpon>CopyButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\EditButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\EditButton.Designer.cs">
+      <DependentUpon>EditButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\ExcelButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\ExcelButton.Designer.cs">
+      <DependentUpon>ExcelButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\FlatButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\FlatButton.Designer.cs">
+      <DependentUpon>FlatButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmALLShopType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmALLShopType.designer.cs">
+      <DependentUpon>frmALLShopType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmSendData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmSendData.Designer.cs">
+      <DependentUpon>frmConfirmSendData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmExcel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmExcel.designer.cs">
+      <DependentUpon>frmExcel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmPriceGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmPriceGroup.Designer.cs">
+      <DependentUpon>frmPriceGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmProductSubGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmProductSubGroup.designer.cs">
+      <DependentUpon>frmProductSubGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmPromotion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmPromotion.Designer.cs">
+      <DependentUpon>frmPromotion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchBranchWareHouseList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchBranchWareHouseList.designer.cs">
+      <DependentUpon>frmSearchBranchWareHouseList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchEmployee.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchEmployee.designer.cs">
+      <DependentUpon>frmSearchEmployee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProduct.designer.cs">
+      <DependentUpon>frmSearchProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductGroup.designer.cs">
+      <DependentUpon>frmSearchProductGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductSubGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductSubGroup.designer.cs">
+      <DependentUpon>frmSearchProductSubGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProductType.designer.cs">
+      <DependentUpon>frmSearchProductType.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Page\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Page\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\Page\frmAddMenu.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmAddMenu.Designer.cs">
       <DependentUpon>frmAddMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerInfo.designer.cs">
+      <DependentUpon>frmCustomerInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmDistributionCenter.cs">
       <SubType>Form</SubType>
@@ -702,17 +1311,23 @@
     <Compile Include="View\Page\frmEmployeeInfo.Designer.cs">
       <DependentUpon>frmEmployeeInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmEndDay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmEndDay.Designer.cs">
+      <DependentUpon>frmEndDay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\FrmPay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\FrmPay.designer.cs">
+      <DependentUpon>FrmPay.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmProductMovement.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmProductMovement.Designer.cs">
       <DependentUpon>frmProductMovement.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Page\frmOD.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Page\frmOD.Designer.cs">
-      <DependentUpon>frmOD.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmLogin.cs">
       <SubType>Form</SubType>
@@ -750,6 +1365,12 @@
     <Compile Include="View\Page\frmRT.Designer.cs">
       <DependentUpon>frmRT.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmShelfPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmShelfPopup.Designer.cs">
+      <DependentUpon>frmShelfPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmSupplierInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -768,23 +1389,23 @@
     <Compile Include="View\Page\frmTR.Designer.cs">
       <DependentUpon>frmTR.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmTransferCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmTransferCustomer.designer.cs">
+      <DependentUpon>frmTransferCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmVanSales.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmVanSales.Designer.cs">
       <DependentUpon>frmVanSales.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Page\Test.cs">
+    <Compile Include="View\Page\frmVE.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Page\Test.Designer.cs">
-      <DependentUpon>Test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\UControl\AddButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="View\UControl\AddButton.Designer.cs">
-      <DependentUpon>AddButton.cs</DependentUpon>
+    <Compile Include="View\Page\frmVE.Designer.cs">
+      <DependentUpon>frmVE.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\BunttonCtrlBC.cs">
       <SubType>UserControl</SubType>
@@ -798,51 +1419,60 @@
     <Compile Include="View\UControl\ButtonCtrl.Designer.cs">
       <DependentUpon>ButtonCtrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\UControl\CancelButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="View\UControl\CancelButton.Designer.cs">
-      <DependentUpon>CancelButton.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\UControl\CCBoxItem.cs" />
-    <Compile Include="View\UControl\CheckedComboBox.cs">
-      <SubType>Component</SubType>
+    <Compile Include="View\UControl\frmCrystalReport.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\UControl\CloseButton.cs">
-      <SubType>Component</SubType>
+    <Compile Include="View\UControl\frmCrystalReport.Designer.cs">
+      <DependentUpon>frmCrystalReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\UControl\CloseButton.Designer.cs">
-      <DependentUpon>CloseButton.cs</DependentUpon>
+    <Compile Include="View\UControl\frmSearchAddress.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\UControl\CopyButton.cs">
-      <SubType>Component</SubType>
+    <Compile Include="View\UControl\frmSearchAddress.designer.cs">
+      <DependentUpon>frmSearchAddress.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\UControl\CopyButton.Designer.cs">
-      <DependentUpon>CopyButton.cs</DependentUpon>
+    <Compile Include="View\UControl\frmSearchSalArea.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\UControl\EditButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="View\UControl\EditButton.Designer.cs">
-      <DependentUpon>EditButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\UControl\ExcelButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="View\UControl\ExcelButton.Designer.cs">
-      <DependentUpon>ExcelButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\UControl\FlatButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="View\UControl\FlatButton.Designer.cs">
-      <DependentUpon>FlatButton.cs</DependentUpon>
+    <Compile Include="View\UControl\frmSearchSalArea.designer.cs">
+      <DependentUpon>frmSearchSalArea.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmSearchSupp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\UControl\frmSearchSupp.Designer.cs">
       <DependentUpon>frmSearchSupp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmShelf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmShelf.designer.cs">
+      <DependentUpon>frmShelf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmShopType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmShopType.Designer.cs">
+      <DependentUpon>frmShopType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSKU.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSKU.designer.cs">
+      <DependentUpon>frmSKU.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSupplierType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSupplierType.Designer.cs">
+      <DependentUpon>frmSupplierType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmWait.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmWait.Designer.cs">
+      <DependentUpon>frmWait.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\PrintButton.cs">
       <SubType>Component</SubType>
@@ -853,40 +1483,202 @@
     <Compile Include="View\UControl\RemoveButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="View\UControl\RemoveButton.Designer.cs">
-      <DependentUpon>RemoveButton.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\UControl\SaveButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="View\UControl\SaveButton.Designer.cs">
       <DependentUpon>SaveButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\UControl\ToolStripMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\UControl\ToolStripMenu.Designer.cs">
+      <DependentUpon>ToolStripMenu.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ActualSales_By_Day.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ActualSales_By_Day.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_IV.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_IV.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_OD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_OD.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_RB.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_RB.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_RL.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_RL.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_RL_Summary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_RL_Summary.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_TR.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_TR.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_V.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_V.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_V_Copy.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_V_Copy.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\From_RE.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>From_RE.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_IV_Sales.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_IV_Sales.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_Sales_By_Customer.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_Sales_By_Customer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_Sales_By_Doc.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_Sales_By_Doc.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_Sales_By_Doc_Detail.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_Sales_By_Doc_Detail.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_Sales_Per_Emp.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_Sales_Per_Emp.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rep_Sum_Shelf.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rep_Sum_Shelf.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rev_V_Sales.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rev_V_Sales.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RPT-DSR-KPI.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RPT-DSR-KPI.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RPT-DSR.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RPT-DSR.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RPT-DSR2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RPT-DSR2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RptStock.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptStock.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RptStock_R2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptStock_R2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rpt_ActualSalesByBill.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rpt_ActualSalesByBill.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Rpt_ActualSalesByVan.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rpt_ActualSalesByVan.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\V_Bank_Note.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>V_Bank_Note.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frm1000SalesPre.resx">
+      <DependentUpon>frm1000SalesPre.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmAddMenu.resx">
       <DependentUpon>frmAddMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmBrokenReason.resx">
+      <DependentUpon>frmBrokenReason.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCompany.resx">
+      <DependentUpon>frmCompany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCustomerInfo.resx">
+      <DependentUpon>frmCustomerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmDataMigration.resx">
+      <DependentUpon>frmDataMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmDepartment.resx">
+      <DependentUpon>frmDepartment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmDistributionCenter.resx">
       <DependentUpon>frmDistributionCenter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\FrmDocument.resx">
+      <DependentUpon>FrmDocument.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmEmployeeInfo.resx">
       <DependentUpon>frmEmployeeInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Page\frmProductMovement.resx">
-      <DependentUpon>frmProductMovement.cs</DependentUpon>
+    <EmbeddedResource Include="View\Page\frmEmpPosition.resx">
+      <DependentUpon>frmEmpPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmEndDay.resx">
+      <DependentUpon>frmEndDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmInfomation.resx">
+      <DependentUpon>frmInfomation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmInventories.resx">
+      <DependentUpon>frmInventories.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmOD.resx">
       <DependentUpon>frmOD.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\FrmPay.resx">
+      <DependentUpon>FrmPay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmPermission.resx">
+      <DependentUpon>frmPermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmPlace.resx">
+      <DependentUpon>frmPlace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmPreOrder.resx">
+      <DependentUpon>frmPreOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductInfo.resx">
+      <DependentUpon>frmProductInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductMovement.resx">
+      <DependentUpon>frmProductMovement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductTable.resx">
+      <DependentUpon>frmProductTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductUnit.resx">
+      <DependentUpon>frmProductUnit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmPromotionSetting.resx">
+      <DependentUpon>frmPromotionSetting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmRB.resx">
       <DependentUpon>frmRB.cs</DependentUpon>
@@ -895,14 +1687,35 @@
       <DependentUpon>frmRE.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmReceiveTabletData.resx">
+      <DependentUpon>frmReceiveTabletData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmReport.resx">
+      <DependentUpon>frmReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmRJ.resx">
       <DependentUpon>frmRJ.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmRL.resx">
       <DependentUpon>frmRL.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRLSummary.resx">
+      <DependentUpon>frmRLSummary.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmRT.resx">
       <DependentUpon>frmRT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSalesTransfer.resx">
+      <DependentUpon>frmSalesTransfer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSendProductInfo.resx">
+      <DependentUpon>frmSendProductInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSendToHQ.resx">
+      <DependentUpon>frmSendToHQ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmShelfPopup.resx">
+      <DependentUpon>frmShelfPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSupplierInfo.resx">
       <DependentUpon>frmSupplierInfo.cs</DependentUpon>
@@ -910,14 +1723,29 @@
     <EmbeddedResource Include="View\Page\frmTabletSales.resx">
       <DependentUpon>frmTabletSales.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmTabletSalesPre.resx">
+      <DependentUpon>frmTabletSalesPre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmTLData.resx">
+      <DependentUpon>frmTLData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmTR.resx">
       <DependentUpon>frmTR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmTransferCustomer.resx">
+      <DependentUpon>frmTransferCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmUser.resx">
+      <DependentUpon>frmUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmVanSales.resx">
       <DependentUpon>frmVanSales.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Page\Test.resx">
-      <DependentUpon>Test.cs</DependentUpon>
+    <EmbeddedResource Include="View\Page\frmVE.resx">
+      <DependentUpon>frmVE.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\Test_AddImage.resx">
+      <DependentUpon>Test_AddImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\BunttonCtrlBC.resx">
       <DependentUpon>BunttonCtrlBC.cs</DependentUpon>
@@ -925,8 +1753,74 @@
     <EmbeddedResource Include="View\UControl\ButtonCtrl.resx">
       <DependentUpon>ButtonCtrl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\CloseButton.resx">
+      <DependentUpon>CloseButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmALLShopType.resx">
+      <DependentUpon>frmALLShopType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmConfirmSendData.resx">
+      <DependentUpon>frmConfirmSendData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmCrystalReport.resx">
+      <DependentUpon>frmCrystalReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmExcel.resx">
+      <DependentUpon>frmExcel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmPriceGroup.resx">
+      <DependentUpon>frmPriceGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmProductSubGroup.resx">
+      <DependentUpon>frmProductSubGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchAddress.resx">
+      <DependentUpon>frmSearchAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchBranchWareHouseList.resx">
+      <DependentUpon>frmSearchBranchWareHouseList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchEmployee.resx">
+      <DependentUpon>frmSearchEmployee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchProduct.resx">
+      <DependentUpon>frmSearchProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchProductGroup.resx">
+      <DependentUpon>frmSearchProductGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchProductSubGroup.resx">
+      <DependentUpon>frmSearchProductSubGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchProductType.resx">
+      <DependentUpon>frmSearchProductType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmPromotion.resx">
+      <DependentUpon>frmPromotion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchSalArea.resx">
+      <DependentUpon>frmSearchSalArea.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmSearchSupp.resx">
       <DependentUpon>frmSearchSupp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmShelf.resx">
+      <DependentUpon>frmShelf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmShopType.resx">
+      <DependentUpon>frmShopType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSKU.resx">
+      <DependentUpon>frmSKU.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSupplierType.resx">
+      <DependentUpon>frmSupplierType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmWait.resx">
+      <DependentUpon>frmWait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\ToolStripMenu.resx">
+      <DependentUpon>ToolStripMenu.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -949,14 +1843,153 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="facebook_post_940x788_px__1__12T_icon.ico" />
+    <Content Include="Images\Hourglass.gif" />
+    <Content Include="UNI_LOGO1_ICON-1.ico" />
+    <Content Include="UNI_LOGO1_ICON.ico" />
+    <Content Include="UNI_LOGO7_ICON.ico" />
+    <Content Include="XSLT\proc_ActualSalesByBill.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Distribution.xslt" />
+    <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\proc_DSR_Sales_Summary.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\proc_DSR_Sales_Summary_By_Sku.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\proc_RPTStock.xslt" />
+    <Content Include="XSLT\proc_StockMovement_ByWH.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_BillByDate_AllBill.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Brick.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Carton.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_ExcVat.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_TotalDue.xslt" />
+    <Content Include="XSLT\Rep_BillDuplicate.xslt" />
+    <Content Include="XSLT\Rep_Check_Shelf.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Customer_By_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Customer_By_Sequence.xslt" />
+    <Content Include="XSLT\Rep_Customer_List_By_WH.xslt" />
+    <Content Include="XSLT\Rep_Daily_Sales.xslt" />
+    <Content Include="XSLT\Rep_Detail_Sales_By_Cust.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Bath.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Carton.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Unit.xslt" />
+    <Content Include="XSLT\Rep_IV_Sales2.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_ProductHero_ByDate_XSLT.xslt" />
+    <Content Include="XSLT\Rep_Product_Transfer.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_ReceiveStock.xslt" />
+    <Content Include="XSLT\Rep_Rec_By_Doc.xslt" />
+    <Content Include="XSLT\Rep_Rec_By_Subb.xslt" />
+    <Content Include="XSLT\Rep_Sales_By_Customer.xslt" />
+    <Content Include="XSLT\Rep_Sales_By_Doc_Detail.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Sales_Per_Emp.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Sum_Shelf.xslt" />
+    <Content Include="XSLT\Rep_Sum_Shelf_Daily.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\ActualSales_By_Day.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Visit_Per_Day.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_V_Sales.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Sales_By_Doc.xslt" />
+    <Content Include="XSLT\Rep_Standard.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Test.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Images\cancelSt.ico" />
     <None Include="Images\closeST.ico" />
     <None Include="Images\power-off.ico" />
+    <None Include="Images\add.ico" />
+    <None Include="Images\add2.ico" />
+    <None Include="Images\advnaceSetting.png" />
+    <None Include="Images\AllCashLogo3-Design-PixTeller.png" />
+    <None Include="Images\AllCashLogo4-Design-PixTeller.png" />
+    <None Include="Images\balance.png" />
+    <None Include="Images\Body-PixTeller2.png" />
+    <None Include="Images\browse.ico" />
+    <None Include="Images\browse.png" />
+    <None Include="Images\center.png" />
+    <None Include="Images\completed-task.png" />
+    <None Include="Images\data-storage.png" />
+    <None Include="Images\distribution.png" />
+    <None Include="Images\docstatus.png" />
+    <None Include="Images\document.png" />
+    <None Include="Images\email.png" />
+    <None Include="Images\Header-PixTeller2.png" />
+    <None Include="Images\headquarter.png" />
+    <None Include="Images\import.ico" />
+    <None Include="Images\import.png" />
+    <None Include="Images\login.ico" />
+    <None Include="Images\Logo005-PixTeller.png" />
+    <None Include="Images\Logo006-PixTeller %281%29.png" />
+    <None Include="Images\Logo006-PixTeller.png" />
+    <None Include="Images\Logo007-PixTeller %281%29.png" />
+    <None Include="Images\Logo007-PixTeller.png" />
+    <None Include="Images\master.png" />
+    <None Include="Images\position.png" />
+    <None Include="Images\no-wifi.ico" />
+    <None Include="Images\email-icon.ico" />
+    <None Include="Images\email-icon2.ico" />
+    <None Include="Images\email-icon3.ico" />
+    <None Include="Images\hnet.com-image.ico" />
     <Content Include="Images\power.ico" />
     <None Include="Images\search.ico" />
     <None Include="Images\share.ico" />
+    <None Include="Images\processing.ico" />
+    <None Include="Images\price-list.png" />
+    <None Include="Images\report2.png" />
+    <None Include="Images\salesarea.png" />
+    <None Include="Images\salestranfer.png" />
+    <None Include="Images\search.png" />
+    <None Include="Images\slip.png" />
+    <None Include="Images\squares.png" />
+    <None Include="Images\status.png" />
+    <None Include="Images\SUP-INFO.ico" />
+    <None Include="Images\tablet.png" />
+    <None Include="Images\transfer.png" />
+    <None Include="Images\UfoodsImage.jpg" />
+    <None Include="Images\UNI_LOGO2.png" />
+    <None Include="Images\UNI_LOGO3.png" />
+    <None Include="Images\UNI_LOGO4.png" />
+    <None Include="Images\UNI_LOGO112.png" />
+    <None Include="Images\UNI_LOGO113.png" />
+    <None Include="Images\user.png" />
+    <None Include="Images\van.png" />
+    <None Include="Images\video.png" />
+    <None Include="Images\power_off.ico" />
+    <None Include="Images\wifi.ico" />
+    <None Include="Images\stockBalance-icon.ico" />
     <Content Include="Model\DBModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DBModel.edmx</DependentUpon>
@@ -967,7 +2000,7 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
       <LastGenOutput>DBModel.cs</LastGenOutput>
     </Content>
-    <Content Include="uni_fXG_1.ico" />
+    <None Include="Resources\wifi.ico" />
     <None Include="Images\account.png" />
     <None Include="Images\advance.png" />
     <Content Include="Images\addBtn.ico" />
@@ -1066,6 +2099,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

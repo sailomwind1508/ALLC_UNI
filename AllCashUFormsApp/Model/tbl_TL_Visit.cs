@@ -15,21 +15,18 @@ namespace AllCashUFormsApp.Model
     public partial class tbl_TL_Visit
     {
         public long AutoID { get; set; }
-        public string VisitID { get; set; }
         public string BranchID { get; set; }
         public string WHID { get; set; }
-        public System.DateTime VisitDate { get; set; }
         public string CustomerID { get; set; }
-        public bool VisitStatus { get; set; }
+        public string VisitID { get; set; }
+        public string VisitType { get; set; }
+        public Nullable<System.DateTime> VisitDate { get; set; }
+        public Nullable<bool> VisitStatus { get; set; }
         public Nullable<int> CauseID { get; set; }
         public string CauseRemark { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
+        public Nullable<System.DateTime> CrDate { get; set; }
+        public Nullable<System.DateTime> EdDate { get; set; }
     }
 }

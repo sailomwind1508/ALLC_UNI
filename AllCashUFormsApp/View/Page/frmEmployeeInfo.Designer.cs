@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEmployeeInfo));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
@@ -323,7 +325,23 @@
             this.grdEmpList.AllowUserToAddRows = false;
             this.grdEmpList.AllowUserToDeleteRows = false;
             this.grdEmpList.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdEmpList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.grdEmpList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdEmpList.DefaultCellStyle = dataGridViewCellStyle2;
             this.grdEmpList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdEmpList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdEmpList.Location = new System.Drawing.Point(0, 122);
@@ -355,10 +373,11 @@
             // ddlPosition
             // 
             this.ddlPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlPosition.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlPosition.FormattingEnabled = true;
             this.ddlPosition.Location = new System.Drawing.Point(74, 92);
             this.ddlPosition.Name = "ddlPosition";
-            this.ddlPosition.Size = new System.Drawing.Size(208, 21);
+            this.ddlPosition.Size = new System.Drawing.Size(208, 24);
             this.ddlPosition.TabIndex = 20;
             // 
             // label38
@@ -410,10 +429,11 @@
             // ddlDepartment
             // 
             this.ddlDepartment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlDepartment.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlDepartment.FormattingEnabled = true;
             this.ddlDepartment.Location = new System.Drawing.Point(74, 64);
             this.ddlDepartment.Name = "ddlDepartment";
-            this.ddlDepartment.Size = new System.Drawing.Size(208, 21);
+            this.ddlDepartment.Size = new System.Drawing.Size(208, 24);
             this.ddlDepartment.TabIndex = 19;
             // 
             // btnSearchEmp
@@ -424,11 +444,14 @@
             this.btnSearchEmp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearchEmp.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearchEmp.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearchEmp.Location = new System.Drawing.Point(385, 2);
+            this.btnSearchEmp.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchEmp.Image")));
+            this.btnSearchEmp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchEmp.Location = new System.Drawing.Point(371, 5);
             this.btnSearchEmp.Name = "btnSearchEmp";
-            this.btnSearchEmp.Size = new System.Drawing.Size(50, 25);
+            this.btnSearchEmp.Size = new System.Drawing.Size(72, 26);
             this.btnSearchEmp.TabIndex = 16;
             this.btnSearchEmp.Text = "ค้นหา";
+            this.btnSearchEmp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchEmp.UseVisualStyleBackColor = false;
             // 
             // label37
@@ -445,10 +468,11 @@
             // 
             this.txtSearchEmp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearchEmp.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtSearchEmp.Location = new System.Drawing.Point(74, 7);
             this.txtSearchEmp.MaxLength = 255;
             this.txtSearchEmp.Name = "txtSearchEmp";
-            this.txtSearchEmp.Size = new System.Drawing.Size(305, 20);
+            this.txtSearchEmp.Size = new System.Drawing.Size(294, 23);
             this.txtSearchEmp.TabIndex = 15;
             // 
             // label27
@@ -581,10 +605,11 @@
             // txtIDCard
             // 
             this.txtIDCard.BackColor = System.Drawing.SystemColors.Control;
+            this.txtIDCard.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtIDCard.Location = new System.Drawing.Point(139, 88);
             this.txtIDCard.Mask = "0-0000-00000-00-0";
             this.txtIDCard.Name = "txtIDCard";
-            this.txtIDCard.Size = new System.Drawing.Size(199, 20);
+            this.txtIDCard.Size = new System.Drawing.Size(199, 23);
             this.txtIDCard.TabIndex = 3;
             // 
             // label43
@@ -665,11 +690,12 @@
             // 
             // txtEmpID
             // 
+            this.txtEmpID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtEmpID.Location = new System.Drawing.Point(139, 34);
             this.txtEmpID.MaxLength = 20;
             this.txtEmpID.Name = "txtEmpID";
             this.txtEmpID.ReadOnly = true;
-            this.txtEmpID.Size = new System.Drawing.Size(199, 20);
+            this.txtEmpID.Size = new System.Drawing.Size(199, 23);
             this.txtEmpID.TabIndex = 1;
             // 
             // gbUsers
@@ -727,6 +753,7 @@
             // ddlRoleID
             // 
             this.ddlRoleID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlRoleID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlRoleID.FormattingEnabled = true;
             this.ddlRoleID.Location = new System.Drawing.Point(122, 76);
             this.ddlRoleID.Name = "ddlRoleID";
@@ -745,6 +772,7 @@
             // 
             // txtPassword
             // 
+            this.txtPassword.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtPassword.Location = new System.Drawing.Point(122, 49);
             this.txtPassword.MaxLength = 15;
             this.txtPassword.Name = "txtPassword";
@@ -765,6 +793,7 @@
             // 
             // txtUsername
             // 
+            this.txtUsername.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtUsername.Location = new System.Drawing.Point(122, 22);
             this.txtUsername.MaxLength = 50;
             this.txtUsername.Name = "txtUsername";
@@ -784,20 +813,22 @@
             // 
             // txtLastName
             // 
+            this.txtLastName.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtLastName.Location = new System.Drawing.Point(272, 143);
             this.txtLastName.MaxLength = 100;
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.ReadOnly = true;
-            this.txtLastName.Size = new System.Drawing.Size(227, 20);
+            this.txtLastName.Size = new System.Drawing.Size(227, 23);
             this.txtLastName.TabIndex = 6;
             // 
             // ddlDepo
             // 
             this.ddlDepo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlDepo.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlDepo.FormattingEnabled = true;
             this.ddlDepo.Location = new System.Drawing.Point(139, 226);
             this.ddlDepo.Name = "ddlDepo";
-            this.ddlDepo.Size = new System.Drawing.Size(199, 21);
+            this.ddlDepo.Size = new System.Drawing.Size(199, 24);
             this.ddlDepo.TabIndex = 9;
             // 
             // lblDepo
@@ -829,10 +860,11 @@
             // ddlPositionID
             // 
             this.ddlPositionID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlPositionID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlPositionID.FormattingEnabled = true;
             this.ddlPositionID.Location = new System.Drawing.Point(139, 198);
             this.ddlPositionID.Name = "ddlPositionID";
-            this.ddlPositionID.Size = new System.Drawing.Size(199, 21);
+            this.ddlPositionID.Size = new System.Drawing.Size(199, 24);
             this.ddlPositionID.TabIndex = 8;
             // 
             // lblPositionID
@@ -848,10 +880,11 @@
             // ddlTitleName
             // 
             this.ddlTitleName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlTitleName.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlTitleName.FormattingEnabled = true;
             this.ddlTitleName.Location = new System.Drawing.Point(139, 115);
             this.ddlTitleName.Name = "ddlTitleName";
-            this.ddlTitleName.Size = new System.Drawing.Size(199, 21);
+            this.ddlTitleName.Size = new System.Drawing.Size(199, 24);
             this.ddlTitleName.TabIndex = 4;
             // 
             // button3
@@ -873,10 +906,11 @@
             // ddlDepartmentID
             // 
             this.ddlDepartmentID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlDepartmentID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.ddlDepartmentID.FormattingEnabled = true;
             this.ddlDepartmentID.Location = new System.Drawing.Point(139, 170);
             this.ddlDepartmentID.Name = "ddlDepartmentID";
-            this.ddlDepartmentID.Size = new System.Drawing.Size(199, 21);
+            this.ddlDepartmentID.Size = new System.Drawing.Size(199, 24);
             this.ddlDepartmentID.TabIndex = 7;
             // 
             // lblDepartmentID
@@ -891,11 +925,12 @@
             // 
             // txtFirstName
             // 
+            this.txtFirstName.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtFirstName.Location = new System.Drawing.Point(139, 143);
             this.txtFirstName.MaxLength = 50;
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.ReadOnly = true;
-            this.txtFirstName.Size = new System.Drawing.Size(131, 20);
+            this.txtFirstName.Size = new System.Drawing.Size(131, 23);
             this.txtFirstName.TabIndex = 5;
             // 
             // lblFirstName
@@ -930,11 +965,12 @@
             // 
             // txtEmp_ID_Card
             // 
+            this.txtEmp_ID_Card.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtEmp_ID_Card.Location = new System.Drawing.Point(139, 61);
             this.txtEmp_ID_Card.MaxLength = 20;
             this.txtEmp_ID_Card.Name = "txtEmp_ID_Card";
             this.txtEmp_ID_Card.ReadOnly = true;
-            this.txtEmp_ID_Card.Size = new System.Drawing.Size(199, 20);
+            this.txtEmp_ID_Card.Size = new System.Drawing.Size(199, 23);
             this.txtEmp_ID_Card.TabIndex = 2;
             // 
             // lblEmp_ID_Card
@@ -1054,9 +1090,11 @@
             this.ClientSize = new System.Drawing.Size(1008, 541);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmEmployeeInfo";
             this.Text = "frmEmployee";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmEmployeeInfo_FormClosed);
             this.Load += new System.EventHandler(this.frmEmployeeInfo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).EndInit();
             this.panel4.ResumeLayout(false);

@@ -22,7 +22,9 @@ namespace AllCashUFormsApp.Controller
 
         List<tbl_Product> productList = new List<tbl_Product>();
         List<tbl_Product> allProductList = new List<tbl_Product>();
+        List<tbl_InvMovement> allInvMovementList = new List<tbl_InvMovement>();
         List<tbl_InvMovement> invMovementList = new List<tbl_InvMovement>();
+        List<tbl_InvMovement> invMovementList_BLC = new List<tbl_InvMovement>();
         List<tbl_InvWarehouse> invWarehouseList = new List<tbl_InvWarehouse>();
         List<tbl_InvMovement> invMovementSumList = new List<tbl_InvMovement>();
 
@@ -43,10 +45,10 @@ namespace AllCashUFormsApp.Controller
 
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> predicate)
         {
-            return new tbl_ArCustomer().Select(predicate);
+            return new tbl_ArCustomer().SelectAll().Where(predicate).ToList();
         }
 
-        public List<ProductMovementModel> PrepareProductMovementModel(string whid, string prdGroupID, string prdSubGroupID, string productID, DateTime fDate, DateTime tDate)
+        public List<ProductMovementModel> PrepareProductMovementModel(string fwhid, string twhid, string prdGroupID, string prdSubGroupID, string productID, DateTime fDate, DateTime tDate)
         {
             List<ProductMovementModel> pmmList = new List<ProductMovementModel>();
 
@@ -55,8 +57,9 @@ namespace AllCashUFormsApp.Controller
 
             var _invMovementList = invMovementList.Where(x => x.ProductID == productID).ToList();
 
-            var _invMovementSumList = invMovementSumList.Where(x => x.ProductID == productID && x.WHID == whid && x.TrnType != "X"
-                && fDate.ToDateTimeFormat() >= x.TrnDate.ToDateTimeFormat()).ToList();
+            var _invMovementSumList_BLC = invMovementList_BLC.Where(x => x.ProductID == productID).ToList();
+
+            var _invMovementSumList = invMovementSumList.Where(x => x.ProductID == productID).ToList();
 
             _invMovementList = _invMovementList.OrderBy(x => x.TrnDate).ThenByDescending(x => x.TrnType).ToList();
 
@@ -87,6 +90,8 @@ namespace AllCashUFormsApp.Controller
                 pmm.ToWHID = _invMovementList[i].ToWHID;
                 pmm.InQty = _invMovementList[i].TrnQtyIn;
                 pmm.OutQty = _invMovementList[i].TrnQtyOut;
+                pmm.TrnQty = _invMovementList[i].TrnQty;
+                pmm.CrDate = _invMovementList[i].CrDate;
 
                 decimal sumTrnQty = 0;
                 if (i > 0)
@@ -96,21 +101,34 @@ namespace AllCashUFormsApp.Controller
 
                     var _pmm = pmmList.OrderBy(x => x.TrnDate).FirstOrDefault(x => x.ProductID == _invMovementList[i].ProductID);
                     if (_pmm != null)
-                        pmm.ForwardQty = _pmm.ForwardQty;
+                    {
+                        //pmm.ForwardQty = _pmm.ForwardQty;
+                        pmm.ForwardQty = pmmList[i - 1].DTBalance; //08012021
+                    }
                 }
                 else
                 {
-                    if (_invMovementSumList != null && _invMovementSumList.Count > 0)
-                    {
-                        sumTrnQty = (_invMovementSumList.Sum(x => x.TrnQty) + _invMovementList[i].TrnQtyIn) - _invMovementList[i].TrnQtyOut;
-                        pmm.ForwardQty = _invMovementSumList.Sum(x => x.TrnQty);
-                        pmm.DTBalance = sumTrnQty;
-                    }
+                    pmm.ForwardQty = _invMovementSumList_BLC.Count > 0 ? _invMovementSumList_BLC.Sum(x => x.TrnQty) : 0;
+                    sumTrnQty = (pmm.ForwardQty + _invMovementList[i].TrnQtyIn) - _invMovementList[i].TrnQtyOut;
+
+                    //if (_invMovementSumList != null && _invMovementSumList.Count > 0)
+                    //{
+                    //    sumTrnQty = (_invMovementSumList.Sum(x => x.TrnQty) + _invMovementList[i].TrnQtyIn) - _invMovementList[i].TrnQtyOut;
+                    //    //pmm.ForwardQty = _invMovementSumList.Sum(x => x.TrnQty);
+                    //    pmm.DTBalance = sumTrnQty;
+                    //}
+                    //else
+                    //{
+                    //    //11012021 case TrnQtyIn from TR
+                    //    sumTrnQty = (_invMovementSumList_BLC.Sum(x => x.TrnQty) + _invMovementSumList_BLC[i].TrnQtyIn) - _invMovementSumList_BLC[i].TrnQtyOut;
+                    //    //pmm.ForwardQty = _invMovementSumList.Sum(x => x.TrnQty);
+                    //    pmm.DTBalance = sumTrnQty;
+                    //}
                 }
 
 
                 pmm.DTBalance = sumTrnQty;
-                pmm.WHID = whid;
+                pmm.WHID = _invMovementList[i].WHID; //whid;
 
                 pmmList.Add(pmm);
             }
@@ -118,42 +136,112 @@ namespace AllCashUFormsApp.Controller
             return pmmList;
         }
 
-        public DataTable GetDataTable_Details(string whid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList, DateTime fDate, DateTime tDate)
+        private void PeapreData(string prdGroupID, string prdSubGroupID, List<string> prdCodeList)
+        {
+            Func<tbl_Product, bool> tbl_ProductFunc = (x => x.FlagDel == false && x.ProductGroupID.ToString() == (prdGroupID != "-1" ? prdGroupID : x.ProductGroupID.ToString()) &&
+                x.ProductSubGroupID.ToString() == (prdSubGroupID != "-1" ? prdSubGroupID : x.ProductSubGroupID.ToString()));
+
+            productList = (new tbl_Product()).Select(tbl_ProductFunc);
+            allProductList = productList;
+
+            if (prdCodeList.Count > 0)
+                productList = productList.Where(x => prdCodeList.Contains(x.ProductCode)).ToList();
+
+            Func<tbl_InvMovement, bool> allInvMovementList_func = (x => productList.Select(p => p.ProductID).Contains(x.ProductID));// && x.TrnType != "X");
+
+            MemoryManagement.FlushMemory();
+
+            var tmp = new tbl_InvMovement().SelectForMovement();
+
+            MemoryManagement.FlushMemory();
+
+            List<tbl_InvMovement> mmList = new List<tbl_InvMovement>();
+            foreach (DataRow row in tmp.Rows)
+            {
+                tbl_InvMovement pmm = new tbl_InvMovement();
+                pmm.WHID = row["WHID"].ToString();
+                pmm.ToWHID = row["ToWHID"].ToString();
+                pmm.ProductID = row["ProductID"].ToString();
+                pmm.ProductName = row["ProductName"].ToString();
+                pmm.TrnDate = Convert.ToDateTime(row["TrnDate"]);
+                pmm.RefDocNo = row["RefDocNo"].ToString();
+                pmm.TrnType = row["TrnType"].ToString();
+                pmm.TrnQtyIn = Convert.ToDecimal(row["TrnQtyIn"]);
+                pmm.TrnQtyOut = Convert.ToDecimal(row["TrnQtyOut"]);
+                pmm.TrnQty = Convert.ToDecimal(row["TrnQty"]);
+                pmm.CrDate = Convert.ToDateTime(row["CrDate"]);
+
+                mmList.Add(pmm);
+            }
+
+            allInvMovementList = mmList.Where(allInvMovementList_func).ToList();
+        }
+
+        public List<ProductMovementModel> GetDataTable_SubDetails(string fwhid, string twhid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList, DateTime fDate, DateTime tDate, bool isSummary = false)
+        {
+            try
+            {
+                if (!isSummary)
+                    PeapreData(prdGroupID, prdSubGroupID, prdCodeList);
+
+                invMovementList = new List<tbl_InvMovement>();
+                invMovementList_BLC = new List<tbl_InvMovement>();
+
+                List<ProductMovementModel> pmmList = new List<ProductMovementModel>();
+
+                Func<tbl_InvMovement, bool> tbl_InvMovementFunc_BLC_func = (x => (x.TrnDate.ToDateTimeFormat() < fDate.ToDateTimeFormat()));
+                var tmp_invMovementList_BLC = allInvMovementList.Where(tbl_InvMovementFunc_BLC_func).ToList(); //new tbl_InvMovement().Select(tbl_InvMovementFunc_BLC);
+
+                Func<tbl_InvMovement, bool> tbl_InvMovementFunc = (x => (x.TrnDate.ToDateTimeFormat() >= fDate.ToDateTimeFormat() && x.TrnDate.ToDateTimeFormat() <= tDate.ToDateTimeFormat()));
+                var tmp_invMovementList = allInvMovementList.Where(tbl_InvMovementFunc).ToList(); // new tbl_InvMovement().Select(tbl_InvMovementFunc);
+
+                if (isSummary)
+                {
+                    var allWHID = GetAllBranchWarehouse();
+                    int fSeq = Convert.ToInt32(allWHID.First(x => x.WHID == fwhid).WHSeq);
+                    int tSeq = Convert.ToInt32(allWHID.First(x => x.WHID == twhid).WHSeq);
+
+                    var listOfWHID = allWHID.Where(x => Convert.ToInt32(x.WHSeq) >= fSeq && Convert.ToInt32(x.WHSeq) <= tSeq).Select(a => a.WHID).ToList();
+
+                    if (fwhid != twhid)
+                    {
+                        invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => listOfWHID.Contains(x.WHID)).ToList());
+                        invMovementList.AddRange(tmp_invMovementList.Where(x => listOfWHID.Contains(x.WHID)).ToList());
+                    }
+                    else
+                    {
+                        invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
+                        invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+                    }
+                }
+                else
+                {
+                    invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
+                    invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+                }
+
+                var productIDList = invMovementList.Select(x => x.ProductID).Distinct().OrderBy(x => x).ToList();
+                foreach (var productID in productIDList)
+                {
+                    pmmList.AddRange(PrepareProductMovementModel(fwhid, twhid, prdGroupID, prdSubGroupID, productID, fDate, tDate));
+                }
+
+                return pmmList;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
+        public DataTable GetDataTable_Details(string fwhid, string twhid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList, DateTime fDate, DateTime tDate)
         {
             try
             {
                 List<ProductMovementModel> pmmList = new List<ProductMovementModel>();
 
-                Func<tbl_Product, bool> tbl_ProductFunc = (x => x.FlagDel == false && x.ProductGroupID.ToString() == (prdGroupID != "-1" ? prdGroupID : x.ProductGroupID.ToString()) &&
-                x.ProductSubGroupID.ToString() == (prdSubGroupID != "-1" ? prdSubGroupID : x.ProductSubGroupID.ToString()));
-
-                productList = (new tbl_Product()).Select(tbl_ProductFunc);
-                allProductList = productList;
-
-                if (prdCodeList.Count > 0)
-                {
-                    productList = productList.Where(x => prdCodeList.Contains(x.ProductCode)).ToList();
-                }
-
-                Func<tbl_InvMovement, bool> tbl_InvMovementFunc = (x => productList.Select(p => p.ProductID).Contains(x.ProductID)
-                && x.TrnType != "X" && x.WHID == whid
-                && (x.TrnDate.ToDateTimeFormat() >= fDate.ToDateTimeFormat() && x.TrnDate.ToDateTimeFormat() <= tDate.ToDateTimeFormat()));
-                invMovementList = new tbl_InvMovement().Select(tbl_InvMovementFunc);
-
-                Func<tbl_InvWarehouse, bool> tbl_InvWarehouseFunc = (x => productList.Select(p => p.ProductID).Contains(x.ProductID) && x.WHID == whid);
-                invWarehouseList = new tbl_InvWarehouse().Select(tbl_InvWarehouseFunc);
-
-                Func<tbl_InvMovement, bool> tbl_InvMovement_SumFunc = (x => productList.Select(p => p.ProductID).Contains(x.ProductID) && x.WHID == whid && x.TrnType != "X"
-                && fDate.ToDateTimeFormat() >= x.TrnDate.ToDateTimeFormat());
-                invMovementSumList = new tbl_InvMovement().Select(tbl_InvMovement_SumFunc);
-
-                //invMovementList = invMovementList.OrderBy(x => x.ProductID).ThenBy(x => x.TrnDate).ToList();
-
-                var productIDList = invMovementList.Select(x => x.ProductID).Distinct().OrderBy(x => x).ToList();
-                foreach (var productID in productIDList)
-                {
-                    pmmList.AddRange(PrepareProductMovementModel(whid, prdGroupID, prdSubGroupID, productID, fDate, tDate));
-                }
+                pmmList = GetDataTable_SubDetails(fwhid, twhid, prdGroupID, prdSubGroupID, prdCodeList, fDate, tDate);
 
                 DataTable _dt = new DataTable("pmmDTTable");
                 _dt.Columns.Add("รหัสสินค้า", typeof(string));
@@ -167,7 +255,7 @@ namespace AllCashUFormsApp.Controller
                 _dt.Columns.Add("ออก", typeof(string));
                 _dt.Columns.Add("คงเหลือ", typeof(string));
 
-                var data = pmmList.OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ThenBy(x => x.ProductID).ToList();
+                var data = pmmList.OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ThenBy(x => x.ProductID).ThenBy(x => x.TrnDate).ThenBy(y => y.CrDate).ToList();
                 foreach (var r in data)
                 {
                     _dt.Rows.Add(r.ProductID, r.ProductName, r.TrnDate.ToString("dd/MM/yyyy"), r.RefDocNo, r.TrnType, r.ToWHID, r.ForwardQty.ToStringN0(),
@@ -183,58 +271,62 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
-        public virtual DataTable GetDataTable(string whid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList, DateTime fDate, DateTime tDate)
+        public virtual DataTable GetDataTable(string fwhid, string twhid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList, DateTime fDate, DateTime tDate)
         {
             try
             {
-                List<tbl_Product> productList = new List<tbl_Product>();
-                Func<tbl_Product, bool> tbl_ProductFunc = (x => x.FlagDel == false && x.ProductGroupID.ToString() == (prdGroupID != "-1" ? prdGroupID : x.ProductGroupID.ToString()) &&
-                x.ProductSubGroupID.ToString() == (prdSubGroupID != "-1" ? prdSubGroupID : x.ProductSubGroupID.ToString()));
+                PeapreData(prdGroupID, prdSubGroupID, prdCodeList);
 
-                productList = (new tbl_Product()).Select(tbl_ProductFunc);
-                if (prdCodeList.Count > 0)
+                var tmp_invMovementList = allInvMovementList;
+
+                var _tmp_invMovementList = new List<tbl_InvMovement>();
+
+                var allWHID = GetAllBranchWarehouse();
+                int fSeq = Convert.ToInt32(allWHID.First(x => x.WHID == fwhid).WHSeq);
+                int tSeq = Convert.ToInt32(allWHID.First(x => x.WHID == twhid).WHSeq);
+
+                var listOfWHID = allWHID.Where(x => Convert.ToInt32(x.WHSeq) >= fSeq && Convert.ToInt32(x.WHSeq) <= tSeq).Select(a => a.WHID).ToList();
+
+                if (fwhid != twhid)
                 {
-                    productList = productList.Where(x => prdCodeList.Contains(x.ProductCode)).ToList();
+                    _tmp_invMovementList.AddRange(tmp_invMovementList.Where(x => listOfWHID.Contains(x.WHID)).ToList());
+                    //_tmp_invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+                    //_tmp_invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == twhid));
+                }
+                else
+                {
+                    _tmp_invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
                 }
 
-                List<tbl_ProductUomSet> productUomSetList = new List<tbl_ProductUomSet>();
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => productList.Select(p => p.ProductID).Contains(x.ProductID)); // && x.UomSetID == 1);
-                productUomSetList = (new tbl_ProductUomSet()).Select(tbl_ProductUomSetPre);
-
-                List<tbl_ProductGroup> productGroupList = new List<tbl_ProductGroup>();
-                Func<tbl_ProductGroup, bool> tbl_ProductGroupPre = (x => productList.Select(p => p.ProductGroupID).Contains(x.ProductGroupID));
-                productGroupList = (new tbl_ProductGroup()).Select(tbl_ProductGroupPre);
-
-                List<tbl_ProductSubGroup> productSubGroupList = new List<tbl_ProductSubGroup>();
-                Func<tbl_ProductSubGroup, bool> tbl_ProductSubGroupPre = (x => productList.Select(p => p.ProductSubGroupID).Contains(x.ProductSubGroupID));
-                productSubGroupList = (new tbl_ProductSubGroup()).Select(tbl_ProductSubGroupPre);
-
-                List<tbl_InvMovement> invMovementList = new List<tbl_InvMovement>();
-                Func<tbl_InvMovement, bool> tbl_InvMovementFunc = (x => productList.Select(p => p.ProductID).Contains(x.ProductID)
-                && x.TrnType != "X" && x.WHID == whid
-                && (x.TrnDate.ToDateTimeFormat() >= fDate.ToDateTimeFormat() && x.TrnDate.ToDateTimeFormat() <= tDate.ToDateTimeFormat()));
-
-                invMovementList = new tbl_InvMovement().Select(tbl_InvMovementFunc);
-
-                List<tbl_InvWarehouse> invWarehouseList = new List<tbl_InvWarehouse>();
-                Func<tbl_InvWarehouse, bool> tbl_InvWarehouseFunc = (x => productList.Select(p => p.ProductID).Contains(x.ProductID) && x.WHID == whid);
-                invWarehouseList = new tbl_InvWarehouse().Select(tbl_InvWarehouseFunc);
-
                 List<ProductMovementModel> pmmList = new List<ProductMovementModel>();
-                foreach (var p in productList)
+
+                List<tbl_ProductUomSet> productUomSetList = new List<tbl_ProductUomSet>();
+                productUomSetList = (new tbl_ProductUomSet()).SelectAll();
+
+                pmmList = GetDataTable_SubDetails(fwhid, twhid, prdGroupID, prdSubGroupID, prdCodeList, fDate, tDate, true);
+
+                List<tbl_Product> prds = new List<tbl_Product>();
+                if (prdCodeList.Count == 0)
+                    prds = allProductList.GroupBy(x => x.ProductID).Select(a => a.First()).ToList();
+                else
+                {
+                    //prds = productList.GroupBy(x => x.ProductID).Select(a => a.First()).ToList();
+                    var tmp = pmmList.GroupBy(x => x.ProductID).Select(a => a.First()).ToList();
+                    if (tmp != null && tmp.Count > 0)
+                        prds = allProductList.Where(x => tmp.Select(a => a.ProductID).ToList().Contains(x.ProductID)).ToList();
+                }
+
+                var pmmListSummary = new List<ProductMovementModel>();
+
+                foreach (var p in prds)
                 {
                     ProductMovementModel pmm = new ProductMovementModel();
                     pmm.ProductID = p.ProductID;
-                    pmm.ProductCode = p.ProductCode;
+                    pmm.ProductCode = p.ProductID;
                     pmm.ProductName = p.ProductName;
 
-                    var pg = productGroupList.FirstOrDefault(x => x.ProductGroupID == p.ProductGroupID);
-                    if (pg != null)
-                        pmm.ProductGroupID = pg.ProductGroupID;
-
-                    var psg = productSubGroupList.FirstOrDefault(x => x.ProductSubGroupID == p.ProductSubGroupID);
-                    if (psg != null)
-                        pmm.ProductSubGroupID = psg.ProductSubGroupID;
+                    pmm.ProductGroupID = p.ProductGroupID;
+                    pmm.ProductSubGroupID = p.ProductSubGroupID;
 
                     var uomSet = productUomSetList.Where(x => x.ProductID == p.ProductID).ToList();
                     var puom = uomSet.FirstOrDefault(x => x.UomSetID == 1);
@@ -253,47 +345,40 @@ namespace AllCashUFormsApp.Controller
 
                             puom = _puom;
                         }
+
                     }
 
-                    var invmm = invMovementList.Where(x => x.WHID == whid && x.ProductID == p.ProductID).ToList();
-
-                    var invwh = invWarehouseList.FirstOrDefault(x => x.WHID == whid && x.ProductID == p.ProductID);
-
-                    decimal qtyOnHand = 0;
-                    decimal sumTrnQtyOut = 0;
-                    decimal sumTrnQtyIn = 0;
-
-                    if (invmm != null && invmm.Count > 0)
+                    var tmp = pmmList.Where(x => x.ProductID == p.ProductID).ToList();
+                    if (tmp != null && tmp.Count > 0)
                     {
-                        sumTrnQtyOut = invmm.Sum(x => x.TrnQtyOut);
-                        sumTrnQtyIn = invmm.Sum(x => x.TrnQtyIn);
+                        decimal forwardQty = tmp.First().ForwardQty;
+                        decimal bastQty = puom.BaseQty;
+
+                        decimal temp_qty = forwardQty / bastQty;
+                        pmm.ImpLargeQty = Convert.ToInt32(temp_qty.ToString().Split('.')[0]);
+                        pmm.ImpSmallQty = Convert.ToInt32(forwardQty % bastQty);
+
+                        temp_qty = tmp.Sum(x => x.InQty);
+                        pmm.InQty = Convert.ToInt32(temp_qty);
+                        temp_qty = tmp.Sum(x => x.OutQty);
+                        pmm.OutQty = Convert.ToInt32(temp_qty);
+
+                        var _invMovementList = _tmp_invMovementList.Where(x => x.ProductID == p.ProductID).ToList();
+                        temp_qty = _invMovementList.Sum(x => x.TrnQty) / bastQty;
+                        pmm.QtyOnHandLarge = Convert.ToInt32(temp_qty.ToString().Split('.')[0]);
+                        pmm.QtyOnHandSmall = Convert.ToInt32(_invMovementList.Sum(x => x.TrnQty) % bastQty);
                     }
-
-                    if (invwh != null)
-                        qtyOnHand = invwh.QtyOnHand;
-
-                    int impLargeQty = 0;
-                    int impSmallQty = 0;
-                    if (puom != null)
+                    else
                     {
-                        decimal temp_impLargeQty = ((qtyOnHand + sumTrnQtyOut) - sumTrnQtyIn) / puom.BaseQty;
-                        impLargeQty = Convert.ToInt32(temp_impLargeQty.ToString().Split('.')[0]);
-                        impSmallQty = Convert.ToInt32(((qtyOnHand + sumTrnQtyOut) - sumTrnQtyIn) % puom.BaseQty);
-
-                        pmm.ImpLargeQty = impLargeQty;
-                        pmm.ImpSmallQty = impSmallQty;
-                        pmm.InQty = sumTrnQtyIn;
-                        pmm.OutQty = sumTrnQtyOut;
-
-                        decimal temp_qtyOnHandLarge = qtyOnHand / puom.BaseQty;
-                        pmm.QtyOnHandLarge = Convert.ToInt32(temp_qtyOnHandLarge.ToString().Split('.')[0]);
-                        pmm.QtyOnHandSmall = Convert.ToInt32(qtyOnHand % puom.BaseQty);
+                        pmm.ImpLargeQty = 0;
+                        pmm.ImpSmallQty = 0;
+                        pmm.InQty = 0;
+                        pmm.OutQty = 0;
+                        pmm.QtyOnHandLarge = 0;
+                        pmm.QtyOnHandSmall = 0;
                     }
 
-                    //pmm.TrnDate = null;
-                    pmm.WHID = whid;
-
-                    pmmList.Add(pmm);
+                    pmmListSummary.Add(pmm);
                 }
 
                 DataTable _dt = new DataTable("pmmTable");
@@ -307,7 +392,7 @@ namespace AllCashUFormsApp.Controller
                 _dt.Columns.Add("คงเหลือ\n(ใหญ่)", typeof(string));
                 _dt.Columns.Add("คงเหลือ\n(เล็ก)", typeof(string));
 
-                var data = pmmList.OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ToList();
+                var data = pmmListSummary.OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ToList();
                 foreach (var r in data)
                 {
                     _dt.Rows.Add(r.ProductCode, r.ProductName, r.BaseQty.ToNumberFormat(), r.ImpLargeQty.ToNumberFormat(), r.ImpSmallQty,

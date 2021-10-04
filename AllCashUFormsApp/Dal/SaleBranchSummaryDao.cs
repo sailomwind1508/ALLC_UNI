@@ -1,10 +1,12 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+
 namespace AllCashUFormsApp
 {
     public static class SaleBranchSummaryDao
@@ -19,10 +21,13 @@ namespace AllCashUFormsApp
             List<tbl_SaleBranchSummary> list = new List<tbl_SaleBranchSummary>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SaleBranchSummary.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_SaleBranchSummary.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    //var data = db.tbl_SaleBranchSummary.ToList().Where(predicate);
+                //    list = db.tbl_SaleBranchSummary.Where(predicate).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -42,14 +47,27 @@ namespace AllCashUFormsApp
             List<tbl_SaleBranchSummary> list = new List<tbl_SaleBranchSummary>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SaleBranchSummary.Where(x => x.FlagDel == false).ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_SaleBranchSummary] ";
+
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SaleBranchSummary), sql);
+                list = dynamicListReturned.Cast<tbl_SaleBranchSummary>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_SaleBranchSummary>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_SaleBranchSummary.ToList();
+                //}
             }
             catch (Exception ex)
             {
-
                 ex.WriteLog(tbl_SaleBranchSummary.GetType());
             }
 
@@ -73,6 +91,20 @@ namespace AllCashUFormsApp
                     ret = db.SaveChanges();
                 }
             }
+            //catch (DbEntityValidationException e)
+            //{
+            //    foreach (var eve in e.EntityValidationErrors)
+            //    {
+            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //        foreach (var ve in eve.ValidationErrors)
+            //        {
+            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //                ve.PropertyName, ve.ErrorMessage);
+            //        }
+            //    }
+            //    throw;
+            //}
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_SaleBranchSummary.GetType());
@@ -100,7 +132,7 @@ namespace AllCashUFormsApp
                         {
                             foreach (PropertyInfo tbl_SaleBranchSummaryItem in tbl_SaleBranchSummary.GetType().GetProperties())
                             {
-                                if (updateDataItem.Name == tbl_SaleBranchSummaryItem.Name)
+                                if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_SaleBranchSummaryItem.Name)
                                 {
                                     var value = tbl_SaleBranchSummaryItem.GetValue(tbl_SaleBranchSummary, null);
 
@@ -114,6 +146,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_SaleBranchSummary.Insert();
                     }
                 }
             }

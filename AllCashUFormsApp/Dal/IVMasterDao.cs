@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,6 +15,57 @@ namespace AllCashUFormsApp
 {
     public static class IVMasterDao
     {
+        public static List<tbl_IVMaster> Select(this tbl_IVMaster tbl_IVMaster, DateTime docDate)
+        {
+            List<tbl_IVMaster> list = new List<tbl_IVMaster>();
+            try
+            {
+                string _docDate = docDate.ToString("yyyyMMdd", new CultureInfo("en-US"));
+
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_IVMaster] ";
+                sql += " WHERE FlagDel = 0 ";
+                sql += " AND CAST(DocDate AS DATE) = '" + _docDate + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
+                list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+
+            return list;
+        }
+
+        public static List<tbl_IVMaster> SelectExists(this tbl_IVMaster tbl_IVMaster, string docNo, string docTypeCode = "")
+        {
+            List<tbl_IVMaster> list = new List<tbl_IVMaster>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_IVMaster] ";
+                sql += " WHERE FlagDel = 0 ";
+                sql += " AND DocNo = '" + docNo.Trim() + "' ";
+
+                if (!string.IsNullOrEmpty(docTypeCode))
+                    sql += " AND DocTypeCode = '" + docTypeCode.Trim() + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
+                list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -25,10 +76,13 @@ namespace AllCashUFormsApp
             List<tbl_IVMaster> list = new List<tbl_IVMaster>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_IVMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
-                }
+                list = tbl_IVMaster.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    //var data = db.tbl_IVMaster.ToList().Where(predicate);
+                //    list = db.tbl_IVMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -48,10 +102,23 @@ namespace AllCashUFormsApp
             List<tbl_IVMaster> list = new List<tbl_IVMaster>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_IVMaster.OrderBy(x => x.DocNo).ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_IVMaster] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
+                list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_IVMaster>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_IVMaster.OrderBy(x => x.DocNo).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -59,6 +126,134 @@ namespace AllCashUFormsApp
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_IVMaster"></param>
+        /// <returns></returns>
+        public static void Insert(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                db.tbl_IVMaster.Attach(tbl_IVMaster);
+                db.tbl_IVMaster.Add(tbl_IVMaster);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+        }
+
+        public static int UpdateEntity(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            int ret = 0;
+
+            try
+            {
+                var updateData = db.tbl_IVMaster.FirstOrDefault(x => x.DocNo == tbl_IVMaster.DocNo);
+                if (updateData != null)
+                {
+                    foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                    {
+                        foreach (PropertyInfo tbl_IVMasterItem in tbl_IVMaster.GetType().GetProperties())
+                        {
+                            if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_IVMasterItem.Name)
+                            {
+                                var value = tbl_IVMasterItem.GetValue(tbl_IVMaster, null);
+
+                                Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                updateDataItem.SetValue(updateData, safeValue, null);
+                            }
+                        }
+                    }
+                    db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                }
+                else
+                {
+                    //tbl_IVMaster.Delete(db);
+                    tbl_IVMaster.Insert(db);
+                }
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(db.GetType());
+                ret = 0;
+            }
+
+            return ret;
+        }
+
+        public static int Update(this List<tbl_IVMaster> tbl_IVMasters)
+        {
+            int ret = 0;
+
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    foreach (var tbl_IVMaster in tbl_IVMasters)
+                    {
+                        var updateData = db.tbl_IVMaster.FirstOrDefault(x => x.DocNo == tbl_IVMaster.DocNo);
+                        if (updateData != null)
+                        {
+                            foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                            {
+                                foreach (PropertyInfo tbl_IVMasterItem in tbl_IVMaster.GetType().GetProperties())
+                                {
+                                    if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_IVMasterItem.Name)
+                                    {
+                                        var value = tbl_IVMasterItem.GetValue(tbl_IVMaster, null);
+
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
+                                }
+                            }
+                            db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        }
+                        else
+                        {
+                            tbl_IVMaster.Delete(db);
+                            tbl_IVMaster.Insert(db);
+                        }
+
+                    }
+
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                //ex.WriteLog(tbl_IVMaster);
+            }
+
+            return ret != 0 ? 1 : 0;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_IVMaster"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                db.Entry(tbl_IVMaster).State = EntityState.Deleted;
+                db.tbl_IVMaster.Remove(tbl_IVMaster);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
         }
 
         /// <summary>
@@ -78,20 +273,20 @@ namespace AllCashUFormsApp
                     ret = db.SaveChanges();
                 }
             }
-            catch (DbEntityValidationException e)
-            {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                throw;
-            }
+            //catch (DbEntityValidationException e)
+            //{
+            //    foreach (var eve in e.EntityValidationErrors)
+            //    {
+            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //        foreach (var ve in eve.ValidationErrors)
+            //        {
+            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //                ve.PropertyName, ve.ErrorMessage);
+            //        }
+            //    }
+            //    throw;
+            //}
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_IVMaster.GetType());

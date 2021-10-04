@@ -7,8 +7,22 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class BranchWarehouse : IObject
+    public class BranchWarehouse : BaseControl, IObject
     {
+        private Func<tbl_PRMaster, bool> _docTypePredicate = null;
+        public virtual Func<tbl_PRMaster, bool> docTypePredicate
+        {
+            get { return _docTypePredicate; }
+            set
+            {
+                _docTypePredicate = value;
+            }
+        }
+
+        public BranchWarehouse() : base("")
+        {
+            _docTypePredicate = (x => x.DocTypeCode == "");
+        }
         public List<tbl_BranchWarehouse> GetAllData()
         {
             return new tbl_BranchWarehouse().SelectAll();
@@ -79,6 +93,7 @@ namespace AllCashUFormsApp.Controller
         private DataTable GetWarehouseData(Func<tbl_BranchWarehouse, bool> predicate = null)
         {
             DataTable newTable = new DataTable();
+            DataTable newTableTmp = new DataTable();
 
             if (predicate != null)
             {
@@ -87,38 +102,71 @@ namespace AllCashUFormsApp.Controller
 
                 if (tbl_BranchWarehouses.All(x => x.SaleEmpID == "0"))
                 {
-                    var query = from bhw in tbl_BranchWarehouses
-                                select new
-                                {
-                                    WHID = bhw.WHID,
-                                    BranchID = bhw.BranchID,
-                                    WHCode = bhw.WHCode,
-                                    WHName = bhw.WHName,
-                                    EmpID = "",
-                                    EmpCode = "",
-                                    EmpName = string.Join(" ", "", "")
-                                };
+                    var query1 = from bhw in tbl_BranchWarehouses
+                                 select new
+                                 {
+                                     WHID = bhw.WHID,
+                                     BranchID = bhw.BranchID,
+                                     WHCode = bhw.WHCode,
+                                     WHName = bhw.WHName,
+                                     EmpID = "",
+                                     EmpCode = "",
+                                     EmpName = string.Join(" ", "", "")
+                                 };
 
-                    newTable = query.ToList().ToDataTable();
+                    newTable = query1.ToList().ToDataTable();
                 }
                 else
                 {
+                    var nonVan = tbl_BranchWarehouses.Where(x => x.SaleEmpID == "0").ToList();
+                    var van = tbl_BranchWarehouses.Where(x => x.SaleEmpID != "0").ToList();
+
+                    var query1 = from bhw in nonVan
+                                 select new
+                                 {
+                                     WHID = bhw.WHID,
+                                     BranchID = bhw.BranchID,
+                                     WHCode = bhw.WHCode,
+                                     WHName = bhw.WHName,
+                                     EmpID = "",
+                                     EmpCode = "",
+                                     EmpName = string.Join(" ", "", "")
+                                 };
+
+                    newTable = query1.ToList().ToDataTable();
+                    newTable.Clear();
+
+                    foreach (var item in query1.ToList())
+                    {
+                        newTable.Rows.Add(item.WHID, item.BranchID, item.WHCode, item.WHName, item.EmpID, item.EmpCode, item.EmpName);
+                    }
+
                     var tbl_Employees = (new tbl_Employee()).SelectAll().ToList();
 
-                    var query = from bhw in tbl_BranchWarehouses
-                                join emp in tbl_Employees on bhw.SaleEmpID equals emp.EmpID
-                                select new
-                                {
-                                    WHID = bhw.WHID,
-                                    BranchID = bhw.BranchID,
-                                    WHCode = bhw.WHCode,
-                                    WHName = bhw.WHName,
-                                    EmpID = emp.EmpID,
-                                    EmpCode = emp.EmpCode,
-                                    EmpName = string.Join(" ", emp.TitleName, emp.FirstName)
-                                };
+                    var query2 = from bhw in van
+                                 join emp in tbl_Employees on bhw.SaleEmpID equals emp.EmpID
+                                 select new
+                                 {
+                                     WHID = bhw.WHID,
+                                     BranchID = bhw.BranchID,
+                                     WHCode = bhw.WHCode,
+                                     WHName = bhw.WHName,
+                                     EmpID = emp.EmpID,
+                                     EmpCode = emp.EmpCode,
+                                     EmpName = string.Join(" ", emp.TitleName, emp.FirstName)
+                                 };
 
-                    newTable = query.ToList().ToDataTable();
+
+                    if (query1.ToList().Count == 0)
+                    {
+                        newTable = query2.ToList().ToDataTable();
+                        newTable.Clear();
+                    }
+
+                    foreach (var item in query2.ToList())
+                    {
+                        newTable.Rows.Add(item.WHID, item.BranchID, item.WHCode, item.WHName, item.EmpID, item.EmpCode, item.EmpName);
+                    }
                 }
             }
             else
@@ -144,6 +192,23 @@ namespace AllCashUFormsApp.Controller
             }
 
             return newTable;
+        }
+
+        public DataTable GetBranchWareHouseTable(Func<tbl_BranchWarehouse, bool> func)
+        {
+            try
+            {
+                List<tbl_BranchWarehouse> tbl_BranchWarehouses2 = new List<tbl_BranchWarehouse>();
+                tbl_BranchWarehouses2 = new tbl_BranchWarehouse().Select(func);
+                DataTable dt = new DataTable();
+                dt = tbl_BranchWarehouses2.ToDataTable();
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
         }
     }
 }

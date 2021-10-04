@@ -79,7 +79,8 @@ namespace AllCashUFormsApp.View.Page
             imageList.ImageSize = new Size(30, 30);
             foreach (var item in tbl_MstMenuList)
             {
-                imageList.Images.Add(item.MenuImage.byteArrayToImage());
+                if (item.MenuImage != null)
+                    imageList.Images.Add(item.MenuImage.byteArrayToImage());
             }
 
             listViewPicture.SmallImageList = imageList;
@@ -195,7 +196,7 @@ namespace AllCashUFormsApp.View.Page
             if (!ret)
             {
                 string message = "กรุณากรอกข้อมูลที่จำเป็น \n" + string.Join("\n", errList);
-                MessageBox.Show(message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FlexibleMessageBox.Show(message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             return ret;
@@ -290,7 +291,7 @@ namespace AllCashUFormsApp.View.Page
 
                 if (ret != 0)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Save successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dialogResult = FlexibleMessageBox.Show("Save successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dialogResult == DialogResult.OK)
                     {
                         InitPage();
@@ -298,13 +299,13 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    MessageBox.Show("Save fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Save fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
                 ex.WriteLog(this.GetType());
-                MessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -327,7 +328,7 @@ namespace AllCashUFormsApp.View.Page
 
                 if (ret != 0)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Edit successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult dialogResult = FlexibleMessageBox.Show("Edit successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (dialogResult == DialogResult.OK)
                     {
                         InitPage();
@@ -335,13 +336,13 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    MessageBox.Show("Edit fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FlexibleMessageBox.Show("Edit fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
                 ex.WriteLog(this.GetType());
-                MessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -386,7 +387,7 @@ namespace AllCashUFormsApp.View.Page
         {
             if (string.IsNullOrEmpty(txtMenuID.Text))
             {
-                MessageBox.Show("Please select remove item!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                FlexibleMessageBox.Show("Please select remove item!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -404,7 +405,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret != 0)
             {
-                DialogResult dialogResult = MessageBox.Show("Remove successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult dialogResult = FlexibleMessageBox.Show("Remove successful!", "ข้อความ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 if (dialogResult == DialogResult.OK)
                 {
                     InitPage();
@@ -412,7 +413,7 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
-                MessageBox.Show("Edit fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show("Edit fail!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -475,5 +476,10 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
+
+        private void FrmAddMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

@@ -34,9 +34,9 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -93,6 +93,19 @@
             this.panel1.Size = new System.Drawing.Size(1350, 50);
             this.panel1.TabIndex = 5;
             // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Crimson;
+            this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(1186, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(153, 19);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "U-Force Back-End";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -114,19 +127,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(43, 41);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Crimson;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(1186, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(154, 19);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "All Cash Back End";
             // 
             // MainForm
             // 

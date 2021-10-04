@@ -22,6 +22,7 @@ namespace AllCashUFormsApp.Controller
         {
             give.PromotionID = pro.PromotionID;
             give.ProductGroupID = pro.SKUGroupID1;
+            give.PromotionType = pro.PromotionType;
             give.ProductGroupBeforeCalc = totalUnitAmt;
             give.ConditionAmount = conditionAmount;
             give.DisCountPattern = pro.DisCountPattern;
@@ -30,6 +31,8 @@ namespace AllCashUFormsApp.Controller
             give.RoundHit = roundHit;
             give.PromotionPattern = pro.PromotionPattern;
             give.StepCondition = pro.StepCondition1;
+            give.IsUseCoupon = pro.IsUseCoupon != null ? pro.IsUseCoupon.Value : false;
+            //give.IsUseStep = pro.IsUseStep != null ? pro.IsUseStep.Value : false;
 
             if (pro.PromotionPattern.ToLower() == "prd")
                 give.IgnoreApplied = pro.IgnoreApplied.Value;

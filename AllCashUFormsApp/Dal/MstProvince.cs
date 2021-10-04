@@ -20,10 +20,12 @@ namespace AllCashUFormsApp
             List<tbl_MstProvince> list = new List<tbl_MstProvince>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstProvince.Where(x => x.FlagDel == false).Where(predicate).ToList();
-                }
+                list = tbl_MstProvince.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstProvince.Where(x => x.FlagDel == false).Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +45,16 @@ namespace AllCashUFormsApp
             List<tbl_MstProvince> list = new List<tbl_MstProvince>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_MstProvince.Where(x => x.FlagDel == false).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstProvince] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstProvince), sql);
+                list = dynamicListReturned.Cast<tbl_MstProvince>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_MstProvince.Where(x => x.FlagDel == false).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -55,7 +63,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
-
+      
         /// <summary>
         /// add new data
         /// </summary>
@@ -86,7 +94,7 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="tbl_MstProvince"></param>
         /// <returns></returns>
-        public static int Update(this tbl_MstProvince tbl_MstProvince)
+        public static int Update(this tbl_MstProvince tbl_MstProvince) //
         {
             int ret = 0;
             try
@@ -114,6 +122,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_MstProvince.Insert();
                     }
                 }
             }

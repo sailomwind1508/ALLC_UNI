@@ -28,40 +28,11 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_ApSupplier.Delete();
         }
-
-        public virtual DataTable GetDataTable(bool isPopup = true)
+        public DataTable GetDataTable(bool isPopup = true)
         {
             try
             {
-                List<tbl_ApSupplier> tbl_ApSuppliers = new List<tbl_ApSupplier>();
-                tbl_ApSuppliers = (new tbl_ApSupplier()).SelectAll();
-
-                List<tbl_ApSupplierType> tbl_ApSupplierTypes = new List<tbl_ApSupplierType>();
-                tbl_ApSupplierTypes = (new tbl_ApSupplierType()).SelectAll();
-
-                var query = from s in tbl_ApSuppliers
-                            join st in tbl_ApSupplierTypes on s.SupplierTypeID equals st.APSupplierTypeID
-                            select new
-                            {
-                                SupplierCode = s.SupplierCode,
-                                SuppName = s.SuppName,
-                                SupplierRefCode = s.SupplierRefCode,
-                                ApSupplierTypeName = st.ApSupplierTypeName
-                            };
-
-                DataTable newTable = query.ToList().ToDataTable();
-                newTable.Clear();
-                //newTable.Columns.Add("SupplierCode", typeof(string));
-                //newTable.Columns.Add("SuppName", typeof(string));
-                //newTable.Columns.Add("SupplierRefCode", typeof(string));
-                //newTable.Columns.Add("ApSupplierTypeName", typeof(string));
-
-                foreach (var rowInfo in query)
-                {
-                    newTable.Rows.Add(rowInfo.SupplierCode, rowInfo.SuppName, rowInfo.SupplierRefCode, rowInfo.ApSupplierTypeName);
-                }
-
-                return newTable;
+                return new tbl_ApSupplier().GetDataTable();
             }
             catch (Exception ex)
             {
@@ -69,7 +40,6 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
-
         public virtual DataTable GetDataTableByCondition(string[] filters)
         {
             DataTable dt = new DataTable();

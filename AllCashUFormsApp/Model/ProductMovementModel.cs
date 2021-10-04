@@ -18,6 +18,7 @@ namespace AllCashUFormsApp.Model
         public int ImpSmallQty { get; set; }
         public decimal InQty { get; set; }
         public decimal OutQty { get; set; }
+        public decimal TrnQty { get; set; }
         public decimal QtyOnHandLarge { get; set; }
         public decimal QtyOnHandSmall { get; set; }
         public DateTime TrnDate { get; set; }
@@ -28,5 +29,6 @@ namespace AllCashUFormsApp.Model
         public string ToWHID { get; set; }
         public decimal ForwardQty { get; set; }
         public decimal DTBalance { get; set; }
+        public DateTime CrDate { get; set; }
     }
 }

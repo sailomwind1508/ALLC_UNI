@@ -1022,6 +1022,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCen.BackColor = System.Drawing.Color.Azure;
             this.pnlCen.Controls.Add(this.grdList);
+            this.pnlCen.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.pnlCen.Location = new System.Drawing.Point(0, 182);
             this.pnlCen.Name = "pnlCen";
             this.pnlCen.Size = new System.Drawing.Size(992, 112);
@@ -1139,6 +1140,7 @@
             this.colCommittion.HeaderText = "คอมมิชชั่น";
             this.colCommittion.Name = "colCommittion";
             this.colCommittion.ReadOnly = true;
+            this.colCommittion.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colVAT
             // 
@@ -1170,6 +1172,7 @@
             this.colDiscount.HeaderText = "ส่วนลด";
             this.colDiscount.Name = "colDiscount";
             this.colDiscount.ReadOnly = true;
+            this.colDiscount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colTotal
             // 
@@ -1192,9 +1195,10 @@
             dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
             dataGridViewCellStyle11.Format = "N2";
             this.colCommittionAmt.DefaultCellStyle = dataGridViewCellStyle11;
-            this.colCommittionAmt.HeaderText = "ค่าคอมมิชั่น";
+            this.colCommittionAmt.HeaderText = "ค่าคอมมิชชั่น";
             this.colCommittionAmt.Name = "colCommittionAmt";
             this.colCommittionAmt.ReadOnly = true;
+            this.colCommittionAmt.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colUomSetID
             // 
@@ -1202,6 +1206,7 @@
             this.colUomSetID.HeaderText = "UomSetID";
             this.colUomSetID.Name = "colUomSetID";
             this.colUomSetID.ReadOnly = true;
+            this.colUomSetID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colUomSetID.Visible = false;
             this.colUomSetID.Width = 80;
             // 
@@ -1213,9 +1218,11 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmRT";
             this.Text = "frmRT";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRT_FormClosed);
             this.Load += new System.EventHandler(this.frmRT_Load);
             this.panel5.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

@@ -7,8 +7,24 @@ using System.Text;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class Employee : IObject
+    public class Employee : BaseControl, IObject
     {
+        private Func<tbl_PRMaster, bool> _docTypePredicate = null;
+
+        public virtual Func<tbl_PRMaster, bool> docTypePredicate
+        {
+            get { return _docTypePredicate; }
+            set
+            {
+                _docTypePredicate = value;
+            }
+        }
+
+        public Employee() : base("")
+        {
+            _docTypePredicate = (x => x.DocTypeCode == "");
+        }
+
         public List<tbl_Employee> GetAllData()
         {
             return (new tbl_Employee()).SelectAll();
@@ -22,6 +38,16 @@ namespace AllCashUFormsApp.Controller
         public int UpdateData(tbl_Employee tbl_Employee)
         {
             return tbl_Employee.Update();
+        }
+
+        public int UpdateBranchWareHouseData(tbl_BranchWarehouse tbl_BranchWarehouse)
+        {
+            return tbl_BranchWarehouse.Update();
+        }
+
+        public int UpdateSalAreaData(tbl_SalArea tbl_SalArea)
+        {
+            return tbl_SalArea.Update();
         }
 
         public int RemoveData(tbl_Employee tbl_Employee)
@@ -102,7 +128,7 @@ namespace AllCashUFormsApp.Controller
 
             if (filters != null)
             {
-                
+
             }
             else
             {
@@ -110,6 +136,21 @@ namespace AllCashUFormsApp.Controller
             }
 
             return dt;
+        }
+
+        public DataTable GetSaleEmployee(int PositionID)
+        {
+            return (new tbl_Employee()).GetSaleEmployee(PositionID);
+        }
+
+        public DataTable GetAllSaleEmployee()
+        {
+            return (new tbl_Employee()).GetAllSaleEmployee();
+        }
+
+        public DataTable GetEmployeePopup()
+        {
+            return (new tbl_Employee()).GetEmployeePopup();
         }
     }
 }

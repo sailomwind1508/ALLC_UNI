@@ -18,6 +18,7 @@ namespace AllCashUFormsApp.Model
         public string CustomerID { get; set; }
         public string ShelfID { get; set; }
         public string WHID { get; set; }
+        public string ProductID { get; set; }
         public bool FlagNew { get; set; }
         public bool FlagEdit { get; set; }
         public System.DateTime CrDate { get; set; }
@@ -26,5 +27,6 @@ namespace AllCashUFormsApp.Model
         public string EdUser { get; set; }
         public bool FlagDel { get; set; }
         public bool FlagSend { get; set; }
+        public string ImagePath { get; set; }
     }
 }

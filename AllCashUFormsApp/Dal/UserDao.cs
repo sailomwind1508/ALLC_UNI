@@ -23,10 +23,12 @@ namespace AllCashUFormsApp
             List<tbl_Users> list = new List<tbl_Users>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_Users.Where(predicate).ToList();
-                }
+                list = tbl_Users.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_Users.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -46,6 +48,13 @@ namespace AllCashUFormsApp
             List<tbl_Users> list = new List<tbl_Users>();
             try
             {
+
+                //string sql = "";
+                //sql += " SELECT * FROM [dbo].[tbl_Users] Order By UserID";
+
+                //List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Users), sql);
+                //list = dynamicListReturned.Cast<tbl_Users>().ToList();
+
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
                     list = db.tbl_Users.OrderBy(x => x.UserID).ToList();

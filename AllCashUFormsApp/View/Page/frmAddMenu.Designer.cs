@@ -411,11 +411,11 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtSeq
             // 
-            this.txtSeq.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSeq.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtSeq.Location = new System.Drawing.Point(101, 195);
             this.txtSeq.MaxLength = 5;
             this.txtSeq.Name = "txtSeq";
-            this.txtSeq.Size = new System.Drawing.Size(134, 20);
+            this.txtSeq.Size = new System.Drawing.Size(134, 23);
             this.txtSeq.TabIndex = 6;
             this.txtSeq.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSeq_KeyPress);
             // 
@@ -476,57 +476,57 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtMenuText
             // 
-            this.txtMenuText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMenuText.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtMenuText.Location = new System.Drawing.Point(101, 98);
             this.txtMenuText.MaxLength = 50;
             this.txtMenuText.Name = "txtMenuText";
-            this.txtMenuText.Size = new System.Drawing.Size(209, 20);
+            this.txtMenuText.Size = new System.Drawing.Size(209, 23);
             this.txtMenuText.TabIndex = 3;
             // 
             // txtParent
             // 
-            this.txtParent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtParent.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtParent.Location = new System.Drawing.Point(101, 165);
             this.txtParent.MaxLength = 5;
             this.txtParent.Name = "txtParent";
-            this.txtParent.Size = new System.Drawing.Size(209, 20);
+            this.txtParent.Size = new System.Drawing.Size(209, 23);
             this.txtParent.TabIndex = 5;
             this.txtParent.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtParent_KeyPress);
             // 
             // txtMenuName
             // 
-            this.txtMenuName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMenuName.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtMenuName.Location = new System.Drawing.Point(101, 66);
             this.txtMenuName.MaxLength = 50;
             this.txtMenuName.Name = "txtMenuName";
-            this.txtMenuName.Size = new System.Drawing.Size(209, 20);
+            this.txtMenuName.Size = new System.Drawing.Size(209, 23);
             this.txtMenuName.TabIndex = 2;
             // 
             // txtMenuID
             // 
-            this.txtMenuID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMenuID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtMenuID.Location = new System.Drawing.Point(101, 5);
             this.txtMenuID.Name = "txtMenuID";
             this.txtMenuID.ReadOnly = true;
-            this.txtMenuID.Size = new System.Drawing.Size(209, 20);
+            this.txtMenuID.Size = new System.Drawing.Size(209, 23);
             this.txtMenuID.TabIndex = 0;
             // 
             // txtPicture
             // 
-            this.txtPicture.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPicture.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtPicture.Location = new System.Drawing.Point(67, 259);
             this.txtPicture.Name = "txtPicture";
             this.txtPicture.ReadOnly = true;
-            this.txtPicture.Size = new System.Drawing.Size(243, 20);
+            this.txtPicture.Size = new System.Drawing.Size(243, 23);
             this.txtPicture.TabIndex = 8;
             // 
             // txtFormName
             // 
-            this.txtFormName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFormName.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtFormName.Location = new System.Drawing.Point(101, 130);
             this.txtFormName.MaxLength = 50;
             this.txtFormName.Name = "txtFormName";
-            this.txtFormName.Size = new System.Drawing.Size(209, 20);
+            this.txtFormName.Size = new System.Drawing.Size(209, 23);
             this.txtFormName.TabIndex = 4;
             // 
             // label4
@@ -541,11 +541,11 @@ namespace AllCashUFormsApp.View.Page
             // txtUserID
             // 
             this.txtUserID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtUserID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUserID.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.txtUserID.Location = new System.Drawing.Point(101, 36);
             this.txtUserID.MaxLength = 5;
             this.txtUserID.Name = "txtUserID";
-            this.txtUserID.Size = new System.Drawing.Size(134, 20);
+            this.txtUserID.Size = new System.Drawing.Size(134, 23);
             this.txtUserID.TabIndex = 1;
             this.txtUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUserID_KeyPress);
             // 
@@ -660,8 +660,10 @@ namespace AllCashUFormsApp.View.Page
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmAddMenu";
             this.Text = "frmAddMenu";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmAddMenu_FormClosed);
             this.Load += new System.EventHandler(this.frmAddMenu_Load);
             this.Resize += new System.EventHandler(this.FrmAddMenu_Resize);
             this.panel1.ResumeLayout(false);

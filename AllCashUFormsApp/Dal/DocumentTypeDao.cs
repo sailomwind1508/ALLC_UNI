@@ -23,12 +23,14 @@ namespace AllCashUFormsApp
             List<tbl_DocumentType> list = new List<tbl_DocumentType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_DocumentType.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
+                list = tbl_DocumentType.SelectAll().Where(predicate).ToList();
 
-                    //list = db.tbl_DocumentType.Where(predicate).ToList();
-                }
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_DocumentType.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
+
+                //    //list = db.tbl_DocumentType.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -48,10 +50,16 @@ namespace AllCashUFormsApp
             List<tbl_DocumentType> list = new List<tbl_DocumentType>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_DocumentType.Where(x => x.FlagDel == false).OrderBy(x => x.DocTypeCode).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_DocumentType] WHERE FlagDel = 0 ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DocumentType), sql);
+                list = dynamicListReturned.Cast<tbl_DocumentType>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_DocumentType.Where(x => x.FlagDel == false).OrderBy(x => x.DocTypeCode.Trim()).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -98,7 +106,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode == tbl_DocumentType.DocTypeCode);
+                    var updateData = db.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == tbl_DocumentType.DocTypeCode.Trim());
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
@@ -119,6 +127,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_DocumentType.Insert();
                     }
                 }
             }
@@ -153,6 +165,61 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static List<tbl_DocumentType> SelectAllNonFlag(this tbl_DocumentType tbl_DocumentType)//
+        {
+            List<tbl_DocumentType> list = new List<tbl_DocumentType>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_DocumentType ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DocumentType), sql);
+                list = dynamicListReturned.Cast<tbl_DocumentType>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_DocumentType.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_DocumentType> SelectNonFlag(this tbl_DocumentType tbl_DocumentType, Func<tbl_DocumentType, bool> predicate)//
+        {
+            List<tbl_DocumentType> list = new List<tbl_DocumentType>();
+            try
+            {
+                list = tbl_DocumentType.SelectAllNonFlag().Where(predicate).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_DocumentType.GetType());
+            }
+
+            return list;
+        }
+        public static DataTable GetDocumentTypeData(this tbl_DocumentType tbl_DocumentType, string Search)
+        {
+            DataTable dt = new DataTable();
+            string sql = "SELECT * FROM tbl_DocumentType  WHERE FlagDel = 0";
+            if (!string.IsNullOrEmpty(Search))
+            {
+                sql += " AND (DocTypeCode like '%" + Search + "%'";
+                sql += " OR DocTypeName like '%" + Search + "%')";
+            }
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            return dt;
+        }
+        public static DataTable GetDocRunning(this tbl_DocRunning tbl_DocRunning, string DocTypeCode, string YearDoc, string MonthDoc)
+        {
+            DataTable dt = new DataTable();
+            string sql = " SELECT * FROM tbl_DocRunning ";
+            sql += " WHERE '" + DocTypeCode + "' = CASE WHEN '" + DocTypeCode + "'<>'' THEN DocTypeCode ELSE '' END";
+            sql += " AND '" + YearDoc + "' = CASE WHEN '" + YearDoc + "'<>'' THEN YearDoc ELSE '' END";
+            sql += " AND '" + MonthDoc + "' = CASE WHEN '" + MonthDoc + "'<>'' THEN MonthDoc ELSE '' END";
+            sql += " ORDER BY YearDoc,MonthDoc,DayDoc";
+
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            return dt;
         }
     }
 }

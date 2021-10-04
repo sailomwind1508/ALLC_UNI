@@ -16,35 +16,25 @@ namespace AllCashUFormsApp.Model
     {
         public long AutoID { get; set; }
         public string DocNo { get; set; }
-        public string DocRef { get; set; }
         public string DocTypeCode { get; set; }
-        public short Line { get; set; }
+        public string DocStatus { get; set; }
+        public Nullable<System.DateTime> DocDate { get; set; }
+        public string CustomerID { get; set; }
+        public Nullable<short> Line { get; set; }
         public string ProductID { get; set; }
-        public string ProductName { get; set; }
-        public int OrderUom { get; set; }
+        public string OrderUom { get; set; }
+        public Nullable<int> OrderUnit { get; set; }
         public Nullable<decimal> OrderQty { get; set; }
-        public Nullable<decimal> ReceivedQty { get; set; }
-        public Nullable<decimal> RejectedQty { get; set; }
-        public decimal StockedQty { get; set; }
-        public Nullable<decimal> UnitCost { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
         public Nullable<byte> VatType { get; set; }
-        public string LineDiscountType { get; set; }
-        public decimal LineDiscountRate { get; set; }
-        public decimal LineDiscount { get; set; }
         public Nullable<decimal> LineTotal { get; set; }
-        public string CustType { get; set; }
-        public System.DateTime CrDate { get; set; }
-        public string CrUser { get; set; }
-        public Nullable<System.DateTime> EdDate { get; set; }
-        public string EdUser { get; set; }
-        public bool FlagDel { get; set; }
-        public bool FlagSend { get; set; }
-        public decimal UnitComPrice { get; set; }
-        public decimal LineComTotal { get; set; }
+        public string LineDiscountType { get; set; }
+        public Nullable<decimal> LineDiscountRate { get; set; }
+        public Nullable<decimal> LineDiscount { get; set; }
         public string LineRemark { get; set; }
-        public int FreeQty { get; set; }
-        public byte FreeUom { get; set; }
-        public int FreeUnit { get; set; }
+        public Nullable<int> FreeQty { get; set; }
+        public Nullable<byte> FreeUom { get; set; }
+        public Nullable<int> FreeUnit { get; set; }
+        public string WHID { get; set; }
     }
 }

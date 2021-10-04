@@ -413,7 +413,7 @@ namespace AllCashUFormsApp.Controller
 
                 List<tbl_ArCustomer> tbl_ArCustomerList = new List<tbl_ArCustomer>();
                 Func<tbl_ArCustomer, bool> tbl_ArCustomerFunc = (x => tbl_SalAreaList.Select(a => a.SalAreaID).Contains(x.SalAreaID));
-                tbl_ArCustomerList = new tbl_ArCustomer().Select(tbl_ArCustomerFunc);
+                tbl_ArCustomerList = new tbl_ArCustomer().SelectAll().Where(tbl_ArCustomerFunc).ToList();
 
                 List<tbl_Zone> tbl_ZoneList = new List<tbl_Zone>();
                 tbl_ZoneList = new tbl_Zone().SelectAll();

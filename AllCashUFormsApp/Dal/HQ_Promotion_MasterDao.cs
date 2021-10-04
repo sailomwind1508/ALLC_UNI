@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_Promotion_Master> Select(this tbl_HQ_Promotion_Master obj, object condition)
         {
-            return new tbl_HQ_Promotion_Master().Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -30,10 +31,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Master> list = new List<tbl_HQ_Promotion_Master>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Master.Where(predicate).ToList();
-                }
+                list = tbl_HQ_Promotion_Master.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Master.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -53,10 +56,16 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Master> list = new List<tbl_HQ_Promotion_Master>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Master.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion_Master] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion_Master), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion_Master>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Master.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -162,6 +171,48 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable GetHQ_Promotion_MasterData(this tbl_HQ_Promotion_Master tbl_HQ_Promotion_Master,string search)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_HQ_Promotion_Master";
+                if (!string.IsNullOrEmpty(search))
+                {
+                    sql += " WHERE PromotionID like '%" + search + "%'";
+                    sql += " OR PromotionName like '%" + search + "%'";
+                }
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public static List<tbl_HQ_Promotion_Master> SelectPromotionID_Master(this tbl_HQ_Promotion_Master tbl_HQ_Promotion_Master, string PromotionID = "")
+        {
+            List<tbl_HQ_Promotion_Master> list = new List<tbl_HQ_Promotion_Master>();
+            try
+            {
+
+                string sql = "SELECT * FROM tbl_HQ_Promotion_Master";
+
+                if (!string.IsNullOrEmpty(PromotionID))
+                {
+                    sql += " WHERE PromotionID like '%" + PromotionID + "%'";
+                }
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion_Master), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion_Master>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return list;
         }
     }
 }

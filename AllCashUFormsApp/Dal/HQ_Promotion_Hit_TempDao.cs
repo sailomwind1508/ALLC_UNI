@@ -17,7 +17,7 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_Promotion_Hit_Temp> Select(this tbl_HQ_Promotion_Hit_Temp obj, object condition)
         {
-            return new tbl_HQ_Promotion_Hit_Temp().Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -30,10 +30,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Hit_Temp> list = new List<tbl_HQ_Promotion_Hit_Temp>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Hit_Temp.Where(predicate).ToList();
-                }
+                list = tbl_HQ_Promotion_Hit_Temp.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Hit_Temp.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -53,10 +55,16 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Hit_Temp> list = new List<tbl_HQ_Promotion_Hit_Temp>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Hit_Temp.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion_Hit_Temp] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion_Hit_Temp), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion_Hit_Temp>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Hit_Temp.ToList();
+                //}
             }
             catch (Exception ex)
             {

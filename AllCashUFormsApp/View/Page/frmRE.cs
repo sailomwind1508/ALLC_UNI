@@ -32,6 +32,15 @@ namespace AllCashUFormsApp.View.Page
         int[] numberCell = new int[] { 4, 5, 6 };
         Dictionary<int, string> dataGridList = new Dictionary<int, string>();
         Dictionary<int, string> initDataGridList = new Dictionary<int, string>();
+        List<tbl_Product> allProduct = new List<tbl_Product>();
+        List<tbl_ProductUomSet> allUomSet = new List<tbl_ProductUomSet>();
+        List<tbl_ProductUom> allPrdUOM = new List<tbl_ProductUom>();
+        List<tbl_ProductPriceGroup> allprdPriceList = new List<tbl_ProductPriceGroup>();
+        List<tbl_DiscountType> allLineDiscountType = new List<tbl_DiscountType>();
+
+        List<tbl_PODetail> allPODetails = new List<tbl_PODetail>();
+        List<tbl_ProductUom> prodUOMs = new List<tbl_ProductUom>();
+        bool isAdd = false;
 
         public frmRE()
         {
@@ -58,7 +67,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode == "RE");
+            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "RE");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -101,11 +110,17 @@ namespace AllCashUFormsApp.View.Page
             //data gridview
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
+
+            allProduct = bu.GetProduct();
+            allUomSet = bu.GetUOMSet();
+            allPrdUOM = bu.GetUOM(); //bu.GetUOM(tbl_ProductUomPre);
+            allprdPriceList = bu.GetProductPriceGroup();
+            allLineDiscountType = bu.GetDiscountType();
         }
 
         public void BindREData(string reDocNo)
         {
-            bu.GetDocData(reDocNo);
+            bu.GetDocData(reDocNo, docTypeCode);
 
             var po = bu.tbl_POMaster;
             var poDts = bu.tbl_PODetails;
@@ -123,6 +138,7 @@ namespace AllCashUFormsApp.View.Page
             if (po != null)
             {
                 BindPOMaster(po);
+                dtpDocDate.Value = po.DocDate.ToDateTimeFormat(); //06052021
             }
             if (poDts != null && poDts.Count > 0)
             {
@@ -145,7 +161,9 @@ namespace AllCashUFormsApp.View.Page
 
         public void BindODData(string odDocNo)
         {
-            bu.GetDocData(odDocNo);
+            string _docTypeCode = "OD";
+
+            bu.GetDocData(odDocNo, _docTypeCode);
 
             var po = bu.tbl_POMaster;
             var poDts = bu.tbl_PODetails;
@@ -168,8 +186,8 @@ namespace AllCashUFormsApp.View.Page
             }
             if (poDts != null && poDts.Count > 0)
             {
-                Func<tbl_POMaster, bool> poMaster = (x => x.DocNo == odDocNo && x.DocTypeCode == "OD");
-                var checkCancelOD = bu.GetPOMaster(poMaster);
+                Func<tbl_POMaster, bool> poMaster = (x => x.DocNo == odDocNo && x.DocTypeCode.Trim() == _docTypeCode);
+                var checkCancelOD = bu.GetPOMaster(_docTypeCode, poMaster);
 
                 if (checkCancelOD.Count > 0 && checkCancelOD[0].DocStatus == "5")
                 {
@@ -205,13 +223,13 @@ namespace AllCashUFormsApp.View.Page
             {
                 txtODDoc.Text = po.DocNo;
             }
-            if (po.DocNo.Contains(docTypeCode))
+            if (po.DocNo.Contains("RE"))
             {
                 txdDocNo.Text = po.DocNo;
                 txtODDoc.Text = po.DocRef;
             }
 
-            dtpDocDate.Value = po.DocDate.ToDateTimeFormat();
+            dtpDocDate.Value = DateTime.Now.ToDateTimeFormat(); // po.DocDate.ToDateTimeFormat(); //12022021
 
             txtSupplierCode.Text = po.SupplierID;
             txtSuppName.Text = po.SuppName;
@@ -231,7 +249,13 @@ namespace AllCashUFormsApp.View.Page
             txtTelephone.Text = po.ContactTel;
             txtBillTo.Text = po.Shipto;
             nudCreditDay.Value = po.CreditDay.Value;
-            dtpDueDate.Value = po.DueDate.Value.ToDateTimeFormat();
+
+            int creditDayAmt = 0;
+            if (po.CreditDay != null)
+            {
+                creditDayAmt = po.CreditDay.Value;
+            }
+            dtpDueDate.Value = DateTime.Now.AddDays(creditDayAmt).ToDateTimeFormat(); // po.DueDate.Value.ToDateTimeFormat(); //12022021
 
             if (ddlDocStatus.DataSource == null)
             {
@@ -258,12 +282,21 @@ namespace AllCashUFormsApp.View.Page
         {
             grdList.Rows.Clear();
 
+            var allPOMaster = new List<tbl_POMaster>();
+            var allPODetail = new List<tbl_PODetail>();
+
+            allPOMaster.AddRange(bu.GetPOMaster("OD", x => !x.FlagDel));
+            allPODetail.AddRange(bu.GetPODetails("OD", x => !x.FlagDel));
+
+            allPOMaster.AddRange(bu.GetPOMaster("RE", x => !x.FlagDel));
+            allPODetail.AddRange(bu.GetPODetails("RE", x => !x.FlagDel));
+
             bool hasRefDoc = false;
             bool editREFlag = false;
             Func<tbl_POMaster, bool> tbl_POMasterPre = null;
             if (!string.IsNullOrEmpty(txtODDoc.Text) && bu.CheckExistsPO(txtODDoc.Text))
             {
-                tbl_POMasterPre = (x => x.DocRef == txtODDoc.Text && x.DocTypeCode == "RE" && x.DocStatus != "5");
+                tbl_POMasterPre = (x => x.DocRef.Trim() == txtODDoc.Text && x.DocTypeCode.Trim() == "RE" && x.DocStatus != "5");
                 hasRefDoc = true;
 
                 if (!string.IsNullOrEmpty(txdDocNo.Text) && bu.CheckExistsPO(txdDocNo.Text))
@@ -275,16 +308,16 @@ namespace AllCashUFormsApp.View.Page
             {
                 if (!string.IsNullOrEmpty(txdDocNo.Text))
                 {
-                    tbl_POMasterPre = (x => x.DocNo == txdDocNo.Text && x.DocTypeCode == "RE");
+                    tbl_POMasterPre = (x => x.DocNo == txdDocNo.Text && x.DocTypeCode.Trim() == "RE");
                     hasRefDoc = false;
                 }
             }
 
-            var poList = bu.GetPOMaster(tbl_POMasterPre);
+            var poList = allPOMaster.Where(tbl_POMasterPre).ToList();// bu.GetPOMaster(tbl_POMasterPre);
             if (hasRefDoc && poList.Count == 0)
             {
-                tbl_POMasterPre = (x => x.DocNo == txtODDoc.Text && x.DocTypeCode == "OD");
-                poList = bu.GetPOMaster(tbl_POMasterPre);
+                tbl_POMasterPre = (x => x.DocNo == txtODDoc.Text && x.DocTypeCode.Trim() == "OD");
+                poList = allPOMaster.Where(tbl_POMasterPre).ToList();//bu.GetPOMaster(tbl_POMasterPre);
 
                 hasRefDoc = false;
             }
@@ -292,52 +325,73 @@ namespace AllCashUFormsApp.View.Page
             if (poList != null && poList.Count > 0)
             {
                 Func<tbl_PODetail, bool> tbl_PODetailPre = (x => poList.Select(a => a.DocNo).Contains(x.DocNo));
-                var poDtList = bu.GetPODetails(tbl_PODetailPre);
+                var poDtList = allPODetail.Where(tbl_PODetailPre).ToList();//bu.GetPODetails(tbl_PODetailPre);
 
-                var allProduct = bu.GetProduct();
+                //Last edit by sailom.k 14/09/2021 tunning performance-------------------------
+                isAdd = false;
+                allPODetails = poDts;
+
+                List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
+                disTypeList = bu.GetDiscountType();
+
+                var listPrdID = allPODetails.Select(x => x.ProductID).ToList();
+                prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
+                //Last edit by sailom.k 14/09/2021 tunning performance--------------------
 
                 for (int i = 0; i < poDts.Count; i++)
                 {
-                    grdList.Rows.Add(1);
-
-                    grdList.Rows[i].Cells[0].Value = poDts[i].ProductID;
-
-                    string productName = string.Empty;
-                    if (!string.IsNullOrEmpty(poDts[i].ProductName))
-                    {
-                        productName = poDts[i].ProductName;
-                    }
-                    else
-                    {
-                        var data = allProduct.FirstOrDefault(x => x.ProductID == poDts[i].ProductID);
-                        if (data != null)
-                        {
-                            productName = data.ProductName;
-                        }
-                    }
-
-                    //BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu)
-                    //BindComboBoxCell(grdList.Rows[i], i, false);
-                    grdList.BindComboBoxCell(grdList.Rows[i], i, false, 3, uoms, this, bu, 0);
-
-                    grdList.Rows[i].Cells[2].Value = productName;
-                    grdList.Rows[i].Cells[3].Value = poDts[i].OrderUom;
+                    decimal? receivedQty = 0;
                     if (editREFlag)
                     {
-                        grdList.Rows[i].Cells[4].Value = poDts[i].ReceivedQty;
+                        receivedQty = poDts[i].ReceivedQty;
+                        //grdList.Rows[i].Cells[4].Value = poDts[i].ReceivedQty;
                     }
                     else
                     {
-                        grdList.Rows[i].Cells[4].Value = CalcReceiveQry(poList, poDtList, poDts[i].ProductID, poDts[i].OrderQty, hasRefDoc);
+                        receivedQty = CalcReceiveQry(poList, poDtList, poDts[i].ProductID, poDts[i].OrderQty, hasRefDoc);
+                        //grdList.Rows[i].Cells[4].Value = odQty; //15022021
                     }
-                    grdList.Rows[i].Cells[5].Value = poDts[i].UnitPrice;
-                    grdList.Rows[i].Cells[6].Value = poDts[i].VatType;
 
-                    grdList.Rows[i].Cells[7].Value = poDts[i].LineDiscountType;
+                    if (receivedQty > 0) //15022021 visible ReceivedQty > 0
+                    {
+                        grdList.Rows.Add(1);
 
-                    grdList.Rows[i].Cells[8].Value = poDts[i].LineDiscount;
-                    grdList.Rows[i].Cells[9].Value = poDts[i].LineTotal;
-                    grdList.Rows[i].Cells[10].Value = poDts[i].OrderUom;
+                        int cRowIndex = grdList.Rows.Count - 1;
+
+                        grdList.Rows[cRowIndex].Cells[0].Value = poDts[i].ProductID;
+
+                        string productName = string.Empty;
+                        if (!string.IsNullOrEmpty(poDts[i].ProductName))
+                        {
+                            productName = poDts[i].ProductName;
+                        }
+                        else
+                        {
+                            var data = allProduct.FirstOrDefault(x => x.ProductID == poDts[i].ProductID);
+                            if (data != null)
+                            {
+                                productName = data.ProductName;
+                            }
+                        }
+
+                        //BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu)
+                        //BindComboBoxCell(grdList.Rows[i], i, false);
+                        //grdList.BindComboBoxCell(allProduct, grdList.Rows[cRowIndex], cRowIndex, false, 3, uoms, this, bu, 0);
+                        grdList.BindComboBoxDiscountTypeCell(allProduct, grdList.Rows[cRowIndex], cRowIndex, false, 3, uoms, this, bu, 0, disTypeList, 7); //Last edit by sailom.k 14/09/2021 tunning performance
+
+                        grdList.Rows[cRowIndex].Cells[2].Value = productName;
+                        grdList.Rows[cRowIndex].Cells[3].Value = poDts[i].OrderUom;
+
+                        grdList.Rows[cRowIndex].Cells[4].Value = receivedQty;
+                        grdList.Rows[cRowIndex].Cells[5].Value = poDts[i].UnitPrice;
+                        grdList.Rows[cRowIndex].Cells[6].Value = poDts[i].VatType;
+
+                        grdList.Rows[cRowIndex].Cells[7].Value = poDts[i].LineDiscountType;
+
+                        grdList.Rows[cRowIndex].Cells[8].Value = poDts[i].LineDiscount;
+                        grdList.Rows[cRowIndex].Cells[9].Value = poDts[i].LineTotal;
+                        grdList.Rows[cRowIndex].Cells[10].Value = poDts[i].OrderUom;
+                    }
                 }
             }
         }
@@ -367,7 +421,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.ValidateDuplicateSKU(productDT.Rows[0]["ProductID"].ToString(), 0, rowIndex, ref validateNewRow);
 
 
-            grdList.BindDataGrid(dataGridList, initDataGridList, productDT, 0, rowIndex, validateNewRow, this, uoms, bu, 0);
+            grdList.BindDataGrid(allProduct, dataGridList, initDataGridList, productDT, 0, rowIndex, validateNewRow, this, uoms, bu, 0);
         }
 
         private decimal CalcReceiveQry(List<tbl_POMaster> poList, List<tbl_PODetail> poDts, string productID, decimal? orderQty, bool hasRefOD)
@@ -406,6 +460,8 @@ namespace AllCashUFormsApp.View.Page
             int orderUom = -1;
             string lineDiscountType = "";
 
+
+
             var cell0 = grd.Rows[rowIndex].Cells[0];
             var cell3 = grd.Rows[rowIndex].Cells[3];
             var cell4 = grd.Rows[rowIndex].Cells[4];
@@ -416,7 +472,7 @@ namespace AllCashUFormsApp.View.Page
             if (cell3.IsNotNullOrEmptyCell())
             {
                 //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
-                var allPrdUOM = bu.GetUOM(); //bu.GetUOM(tbl_ProductUomPre);
+
                 var prdUOM = allPrdUOM.FirstOrDefault(x => x.ProductUomName == cell3.EditedFormattedValue.ToString());
                 if (prdUOM != null)
                 {
@@ -425,7 +481,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         string prdCode = cell0.EditedFormattedValue.ToString();
                         Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == orderUom && x.ProductID == prdCode);
-                        var prdPriceList = bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                        var prdPriceList = allprdPriceList.Where(tbl_ProductPriceGroupPre).ToList();
 
                         if (prdPriceList != null && prdPriceList.Count > 0)
                         {
@@ -454,7 +510,6 @@ namespace AllCashUFormsApp.View.Page
             {
                 if (cell7.IsNotNullOrEmptyCell())
                 {
-                    var allLineDiscountType = bu.GetDiscountType();
                     var ldt = allLineDiscountType.FirstOrDefault(x => x.DiscountTypeName == cell7.EditedFormattedValue.ToString());
                     if (ldt != null)
                     {
@@ -575,15 +630,18 @@ namespace AllCashUFormsApp.View.Page
 
             grdList.Rows.Clear();
             //AddNewRow(grdList, 0);
-            grdList.AddNewRow(initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
+            grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
+            isAdd = true; //Last edit by sailom.k 14/09/2021 tunning performance
 
             txtComment.Text = "สั่งสินค้า : ";
 
             txtSupplierCode.Focus();
         }
 
-        private void PreparePOMaster(bool editFlag = false)
+        private string PreparePOMaster(bool editFlag = false)
         {
+            string ret = string.Empty;
+
             var comp = bu.GetCompany();
             var emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
             var supp = bu.GetSupplier(txtSupplierCode.Text);
@@ -611,6 +669,8 @@ namespace AllCashUFormsApp.View.Page
                 po.DocNo = bu.GenDocNo(docTypeCode);
             }
 
+            ret = po.DocNo;
+
             po.RevisionNo = 0;
             po.DocTypeCode = docTypeCode;
             po.DocStatus = ddlDocStatus.SelectedValue.ToString();
@@ -625,7 +685,7 @@ namespace AllCashUFormsApp.View.Page
             {
                 po.DocRef = string.Empty;
             }
-            
+
             po.StatusInOut = null;
             po.SupplierID = txtSupplierCode.Text;
             po.SuppName = txtSuppName.Text;
@@ -691,6 +751,8 @@ namespace AllCashUFormsApp.View.Page
             po.TotalCom = 0.00m;
             po.CNType = 0;
             po.DiscountRate = 0.00m;
+
+            return ret;
         }
 
         private void PreparePODetail(bool editFlag = false)
@@ -723,7 +785,7 @@ namespace AllCashUFormsApp.View.Page
                     poDt.ProductName = cell2.EditedFormattedValue.ToString();
 
                     //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
-                    var allPrdUOM = bu.GetUOM();
+                    //var allPrdUOM = bu.GetUOM();
                     var prdUOM = allPrdUOM.FirstOrDefault(x => x.ProductUomName == cell3.EditedFormattedValue.ToString());
                     if (prdUOM != null)
                     {
@@ -754,7 +816,7 @@ namespace AllCashUFormsApp.View.Page
                     poDt.UnitPrice = Convert.ToDecimal(cell5.EditedFormattedValue);
                     poDt.VatType = Convert.ToByte(Convert.ToDecimal(cell6.EditedFormattedValue));
 
-                    var allLineDiscountType = bu.GetDiscountType();
+                    //var allLineDiscountType = bu.GetDiscountType();
                     var ldt = allLineDiscountType.FirstOrDefault(x => x.DiscountTypeName == cell7.EditedFormattedValue.ToString());
                     if (ldt != null)
                     {
@@ -816,11 +878,15 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ToWHID = "";
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -888,11 +954,15 @@ namespace AllCashUFormsApp.View.Page
                 invtr.BringQty = 0;
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -948,11 +1018,15 @@ namespace AllCashUFormsApp.View.Page
                 //invWh.QtyOnHand = 0;
 
                 decimal unitQty = 0;
-                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                 if (prdUOMSets != null && prdUOMSets.Count > 0)
                 {
-                    if (poDt.OrderUom != 2)
+                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    var minUomID = 2;
+                    minUomID = allUomSet.GetMinUOM(poDt);
+
+                    if (poDt.OrderUom != minUomID)
                         unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                     else
                         unitQty = poDt.ReceivedQty.Value;
@@ -1038,6 +1112,15 @@ namespace AllCashUFormsApp.View.Page
 
                     bu.tbl_POMaster = null;
                     bu.tbl_POMaster = bu.GetPOMaster(docno);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 12)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
+
                     bu.tbl_POMaster.DocStatus = ddlDocStatus.SelectedValue.ToString();
                     bu.tbl_POMaster.EdDate = crDate;
                     bu.tbl_POMaster.EdUser = Helper.tbl_Users.Username;
@@ -1047,40 +1130,46 @@ namespace AllCashUFormsApp.View.Page
                     tbl_InvMovements.ForEach(x =>
                     {
                         x.EdDate = crDate;
+
+                        if (ddlDocStatus.SelectedValue.ToString() == "5")
+                            x.TrnType = "X";
                     });
                     bu.tbl_InvMovements.AddRange(tbl_InvMovements);
-
-                    if (ddlDocStatus.SelectedValue.ToString() == "5")
-                        bu.tbl_InvMovements.ForEach(x => x.TrnType = "X");
 
                     bu.tbl_InvTransactions.Clear();
                     List<tbl_InvTransaction> tbl_InvTransactions = bu.GetInvTransaction(docno);
                     tbl_InvTransactions.ForEach(x =>
                     {
                         x.ModifiedDate = crDate;
+
+                        if (ddlDocStatus.SelectedValue.ToString() == "5")
+                            x.TrnType = "X";
                     });
                     bu.tbl_InvTransactions.AddRange(tbl_InvTransactions);
-
-                    if (ddlDocStatus.SelectedValue.ToString() == "5")
-                        bu.tbl_InvTransactions.ForEach(x => x.TrnType = "X");
 
                     bu.tbl_InvWarehouses.Clear();
 
                     string whID = bu.tbl_POMaster.WHID;
                     var poDts = bu.GetPODetails(docno);
 
+                    var allInvWhs = bu.GetInvWarehouse();
+
                     foreach (var poDt in poDts)
                     {
                         var invWh = new tbl_InvWarehouse();
-                        var invWhs = bu.GetInvWarehouse(poDt.ProductID, whID);
+                        var invWhs = allInvWhs.Where(x => x.ProductID == poDt.ProductID && x.WHID == whID).ToList(); //bu.GetInvWarehouse(poDt.ProductID, whID);
                         invWh = invWhs[0];
 
                         decimal unitQty = 0;
-                        Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.BaseUomID == 2 && x.ProductID == poDt.ProductID);
-                        var prdUOMSets = bu.GetUOMSet(tbl_ProductUomSetPre);
+
+                        var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
                         if (prdUOMSets != null && prdUOMSets.Count > 0)
                         {
-                            if (poDt.OrderUom != 2)
+                            //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                            var minUomID = 2;
+                            minUomID = allUomSet.GetMinUOM(poDt);
+
+                            if (poDt.OrderUom != minUomID)
                                 unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
                             else
                                 unitQty = poDt.ReceivedQty.Value;
@@ -1109,11 +1198,19 @@ namespace AllCashUFormsApp.View.Page
                     if (!cfMsg.ConfirmMessageBox(title))
                         return;
 
-                    docno = bu.GenDocNo(docTypeCode);
+                    //docno = bu.GenDocNo(docTypeCode);
                     editFlag = false;
                     bu.PrepareDocRunning(docTypeCode);
 
-                    PreparePOMaster(editFlag);
+                    docno = PreparePOMaster(editFlag);
+
+                    //validate docno by sailom.k 27-05-2021
+                    if (bu.tbl_POMaster.DocNo.Length < 12)
+                    {
+                        this.ShowDocNoProcessErr();
+                        return;
+                    }
+
                     PreparePODetail(editFlag);
                     PrepareInvMovement(editFlag);
                     PrepareInvTransaction();
@@ -1200,7 +1297,10 @@ namespace AllCashUFormsApp.View.Page
             bool ret = true;
             List<string> errList = new List<string>();
 
-            if (dtpDocDate.Value != null && dtpDocDate.Value.Ticks < DateTime.Now.ToDateTimeFormat().Ticks)
+            var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
+            var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
+
+            if (dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -1256,9 +1356,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                var allProduct = bu.GetProduct();
-
-                ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, null, "", false);
+                ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, bu, "", false);
             }
 
             return ret;
@@ -1300,6 +1398,7 @@ namespace AllCashUFormsApp.View.Page
             }
 
             dtpDocDate.Focus();
+            isAdd = true; //Last edit by sailom.k 14/09/2021 tunning performance
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -1352,7 +1451,9 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@DocNo", txdDocNo.Text);
+            this.OpenCrystalReportsPopup("ใบรับสินค้า", "From_RE.rpt", "Form_RE", _params);
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -1499,9 +1600,26 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            //if (e.ColumnIndex == 0)
+            //{
+            //    grdList.ModifyComboBoxCell(allProduct, e.RowIndex, bu, 3, 0);
+            //}
+
+            //Last edit by sailom.k 14/09/2021 tunning performance
+            if (isAdd) //when click add button
             {
-                grdList.ModifyComboBoxCell(e.RowIndex, bu, 3, 0);
+                if (e.ColumnIndex == 0)
+                    grdList.ModifyComboBoxCell(allProduct, e.RowIndex, bu, 3, 0);
+            }
+            else //when search data
+            {
+                if (e.ColumnIndex == 0)
+                {
+                    if (allPODetails.Count > 0 && prodUOMs.Count > 0)
+                    {
+                        grdList.ModifyComboBoxCell_Tunning(allProduct, e.RowIndex, bu, 3, 0, prodUOMs);
+                    }
+                }
             }
         }
 
@@ -1576,17 +1694,31 @@ namespace AllCashUFormsApp.View.Page
                 var editCols = new int[] { 3, 4, 7, 8 };
 
                 var cell0 = grd.Rows[currentRowIndex].Cells[0];
+                var cell2 = grd.Rows[currentRowIndex].Cells[2];
+
                 if (curentColIndex == 0)
                 {
+                    bool isNewRow = true;
                     if (cell0.IsNotNullOrEmptyCell())
                     {
                         validateNewRow = true;
 
-                        grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
-                        grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "REProduct");
+                        var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                        if (!checkDup)
+                        {
+                            GridViewHelper.ShowDupSKUMessage();
+                            cell0.Value = "";
+                            validateNewRow = false;
+                            grd.Rows.RemoveAt(currentRowIndex);
+                            isNewRow = false;
+                        }
+
+                        if (isNewRow)
+                            grd.BindDataGridViewRow(dataGridList, initDataGridList, dt, 0, cell0.EditedFormattedValue.ToString(), currentRowIndex, 0, ref validateNewRow, "REProduct", false);
                     }
 
-                    grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 3];
+                    if (isNewRow)
+                        grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 3];
                 }
                 else if (editCols.Contains(curentColIndex))
                 {
@@ -1598,12 +1730,21 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else if (curentColIndex == 9)
                 {
-                    if (cell0.IsNotNullOrEmptyCell())
+                    isAdd = true;
+
+                    if (cell2.IsNotNullOrEmptyCell())
                     {
                         if ((grd.RowCount - 1) == currentRowIndex)
                         {
-                            //AddNewRow(grd, currentRowIndex + 1);
-                            grdList.AddNewRow(initDataGridList, 0, "", currentRowIndex + 1, validateNewRow, uoms, bu, this, 0);
+                            validateNewRow = true;
+
+                            var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
+                            if (!checkDup)
+                            {
+                                validateNewRow = false;
+                            }
+
+                            grdList.AddNewRow(allProduct, initDataGridList, 0, "", currentRowIndex + 1, validateNewRow, uoms, bu, this, 0);
 
                             if (validateNewRow)
                             {
@@ -1629,19 +1770,39 @@ namespace AllCashUFormsApp.View.Page
                 DataGridView _grd = (DataGridView)sender;
                 if (_grd != null && _grd.CurrentRow != null)
                 {
-                    int rowIndex = _grd.CurrentRow.Index;
-                    if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
+                    //edit by sailom 10-06-2021
+                    foreach (DataGridViewRow rowselected in _grd.SelectedRows)
                     {
-                        _grd.Rows.RemoveAt(rowIndex);
-                        if (rowIndex <= _grd.RowCount - 1)
+                        int rowIndex = rowselected.Index;
+                        if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
                         {
-                            CalculateRow(_grd, rowIndex);
-                        } 
+                            _grd.Rows.RemoveAt(rowIndex);
+
+                            if (rowIndex <= _grd.RowCount - 1)
+                            {
+                                CalculateRow(_grd, rowIndex);
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
-                    else
-                    {
-                        return;
-                    }
+
+                    //int rowIndex = _grd.CurrentRow.Index;
+                    //if (_grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "White" || _grd.Rows[rowIndex].Cells[0].Style.BackColor.Name == "0")
+                    //{
+                    //    _grd.Rows.RemoveAt(rowIndex);
+
+                    //    if (rowIndex <= _grd.RowCount - 1)
+                    //    {
+                    //        CalculateRow(_grd, rowIndex);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    return;
+                    //}
                 }
             }
         }
@@ -1657,5 +1818,10 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
+
+        private void frmRE_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
     }
 }

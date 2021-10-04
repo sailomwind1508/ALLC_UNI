@@ -22,10 +22,16 @@ namespace AllCashUFormsApp
             List<tbl_DocumentStatus> list = new List<tbl_DocumentStatus>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_DocumentStatus.OrderBy(x => x.DocStatusCode).ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_DocumentStatus] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DocumentStatus), sql);
+                list = dynamicListReturned.Cast<tbl_DocumentStatus>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_DocumentStatus.OrderBy(x => x.DocStatusCode).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -93,6 +99,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_DocumentStatus.Insert();
                     }
                 }
             }

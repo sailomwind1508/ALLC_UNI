@@ -19,9 +19,13 @@ namespace AllCashUFormsApp.Model
         public string PromotionID { get; set; }
         public Nullable<int> RoundHit { get; set; }
         public string SKUGroupID { get; set; }
+        public string SKUID { get; set; }
         public Nullable<decimal> DisCountAmt { get; set; }
         public string SKUGroupRewardID { get; set; }
         public Nullable<int> SKUGroupRewardAmt { get; set; }
+        public string SKUGroupRewardID2 { get; set; }
+        public Nullable<int> SKUGroupRewardAmt2 { get; set; }
+        public string ShelfID { get; set; }
         public string RewardID { get; set; }
         public Nullable<bool> FlagDel { get; set; }
         public Nullable<bool> FlagSend { get; set; }
@@ -29,6 +33,5 @@ namespace AllCashUFormsApp.Model
         public string CrUser { get; set; }
         public Nullable<System.DateTime> EdDate { get; set; }
         public string EdUser { get; set; }
-        public string SKUID { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace AllCashUFormsApp.Model
     
     public partial class tbl_HQ_SKUGroup_EXC
     {
-        public string SKUGroupID { get; set; }
         public string SKU_ID { get; set; }
     }
 }

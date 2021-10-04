@@ -18,6 +18,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
+                    tbl_error_logs.time_log = DateTime.Now;
                     db.tbl_error_logs.Add(tbl_error_logs);
                     ret = db.SaveChanges();
                 }
@@ -26,10 +27,10 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    db.tbl_error_logs.Add(new tbl_error_logs { user_code = Helper.user_name, form_name = tbl_error_logs.GetType().Name, function_name = Helper.GetCurrentMethod(), err_desc = ex.Message });
+                    db.tbl_error_logs.Add(new tbl_error_logs { user_code = Helper.user_name, form_name = tbl_error_logs.GetType().Name, function_name = Helper.GetCurrentMethod(), err_desc = ex.Message, time_log = DateTime.Now });
                     ret = db.SaveChanges();
                 }
-                MessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FlexibleMessageBox.Show(ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return ret;

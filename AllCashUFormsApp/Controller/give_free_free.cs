@@ -16,13 +16,36 @@ namespace AllCashUFormsApp.Controller
             try
             {
                 decimal _disCountAmt = 0;
-                int _useAmount = pro.ConditionEnd.Value * roundHit;
+                int _useAmount = 0;
+                if (pro.ConditionEnd != null)
+                {
+                    _useAmount = pro.ConditionEnd.Value * roundHit;
+                }
+                if (pro.ConditionStart != null)
+                {
+                    _useAmount = pro.ConditionStart.Value * roundHit;
+                }
+
                 decimal _productGroupAfterCalc = give.ProductGroupBeforeCalc - give.DisCountAmt;
 
                 SetSubGive(give, pro, totalUnitAmt, roundHit, pro.ConditionStart.Value, _disCountAmt, _useAmount, totalUnitAmt, pp);
-                give.ConditionAmount = pro.ConditionEnd.Value;
+                if (pro.ConditionEnd != null)
+                {
+                    give.ConditionAmount = pro.ConditionEnd.Value;
+                }
+                if (pro.ConditionStart != null)
+                {
+                    give.ConditionAmount = pro.ConditionStart.Value;
+                }
+
                 give.PruductGroupRewardID = pro.PruductGroupRewardID;
                 give.PruductGroupRewardAmt = pro.PruductGroupRewardAmt.Value * roundHit;
+
+                if (pro.PruductGroupRewardAmt2 != null)
+                {
+                    give.PruductGroupRewardID2 = pro.PruductGroupRewardID2;
+                    give.PruductGroupRewardAmt2 = pro.PruductGroupRewardAmt2.Value * roundHit;
+                }
             }
             catch (Exception ex)
             {

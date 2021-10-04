@@ -1,15 +1,47 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 namespace AllCashUFormsApp
 {
     public static class SalAreaDistrictDao
     {
+        //public static DataTable GetSalAreaByWHID(this tbl_SalAreaDistrict tbl_SalAreaDistrict, int flagDel)
+        //{
+        //    DataSet ds = new DataSet();
+        //    try
+        //    {
+        //        string sql = " ";
+        //        sql += "select t1.WHID,t1.SalAreaID,t2.SalAreaName,CrDate,CrUser,EdDate,EdUser,FlagDel from tbl_SalAreaDistrict AS t1 left join tbl_SalArea as t2 on t1.SalAreaID = t2.SalAreaID";
+        //        if (frmCustomerInfo._WHID != null)
+        //        {
+        //            sql += " where WHID='" + frmCustomerInfo._WHID + "'" + " AND FlagDel=" + flagDel + "";
+        //        }
+        //        else
+        //        {
+        //            sql += " where FlagDel=" + flagDel + "";
+        //        }
+        //        SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+        //        da.Fill(ds, "area");
+        //        return ds.Tables["area"];
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.WriteLog(tbl_SalAreaDistrict.GetType());
+        //        return null;
+        //    }
+
+        //}
+
+
         /// <summary>
         /// select data
         /// </summary>
@@ -20,10 +52,12 @@ namespace AllCashUFormsApp
             List<tbl_SalAreaDistrict> list = new List<tbl_SalAreaDistrict>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SalAreaDistrict.Where(predicate).AsQueryable().ToList();
-                }
+                list = tbl_SalAreaDistrict.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_SalAreaDistrict.Where(predicate).AsQueryable().ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -43,10 +77,23 @@ namespace AllCashUFormsApp
             List<tbl_SalAreaDistrict> list = new List<tbl_SalAreaDistrict>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_SalAreaDistrict.ToList();
-                }
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_SalAreaDistrict] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalAreaDistrict), sql);
+                list = dynamicListReturned.Cast<tbl_SalAreaDistrict>().ToList();
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                //list = ConvertHelper.ConvertDataTable<tbl_SalAreaDistrict>(dt);
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_SalAreaDistrict.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -152,6 +199,23 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+        public static DataTable GetDataTable(this tbl_SalAreaDistrict tbl_SalAreaDistrict)
+        {
+            try
+            {
+                DataTable newTable = new DataTable("DistrictTable");
+
+                string sql = "proc_SalAreaDistrict_GetDataTable";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

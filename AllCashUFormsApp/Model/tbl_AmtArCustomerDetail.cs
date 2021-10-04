@@ -33,7 +33,7 @@ namespace AllCashUFormsApp.Model
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public Nullable<System.DateTime> GPSDate { get; set; }
-        public byte[] CustomerImg { get; set; }
+        public string CustomerImg { get; set; }
         public bool FlagShelf { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,7 +18,7 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_Reward> Select(this tbl_HQ_Reward obj, object condition)
         {
-            return new tbl_HQ_Reward().Select(x => x.RewardID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.RewardID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -29,10 +31,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Reward> list = new List<tbl_HQ_Reward>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Reward.Where(predicate).ToList();
-                }
+                list = tbl_HQ_Reward.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Reward.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -52,10 +56,16 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Reward> list = new List<tbl_HQ_Reward>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Reward.ToList();
-                }
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Reward] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Reward), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Reward>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Reward.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -158,6 +168,88 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_HQ_Reward.GetType());
+            }
+
+            return ret;
+        }
+        public static DataTable GetHQ_RewardData(this tbl_HQ_Reward tbl_HQ_Reward, string search)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_HQ_Reward";
+                if (!string.IsNullOrEmpty(search))
+                {
+                    sql += " WHERE RewardID like '%" + search + "%'";
+                    sql += " OR RewardName like '%" + search + "%'";
+                }
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        private static string PrePareUpdateQuery()
+        {
+            string query = "UPDATE tbl_HQ_Reward SET RewardName = @RewardName WHERE RewardID = @RewardID";
+            return query;
+        }
+        private static string PrePareInsertQuery()
+        {
+            string query = "INSERT INTO tbl_HQ_Reward (RewardID,RewardName) VALUES (@RewardID,@RewardName)";
+       
+            return query;
+        }
+        public static int UpdateHQ_Reward(this List<tbl_HQ_Reward> tbl_HQ_RewardList)
+        {
+            int ret = 0;
+            var list = new List<tbl_HQ_Reward>();
+            try
+            {
+                var tbl_HQ_Rewardlist = new List<tbl_HQ_Reward>();
+
+                SqlConnection con = new SqlConnection(Connection.ConnectionString);
+
+
+                var HQ_Promotion = new tbl_HQ_Promotion();
+
+                SqlCommand cmd = new SqlCommand();
+
+                string sql = "SELECT * FROM tbl_HQ_Reward";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Reward), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Reward>().ToList();
+
+                foreach (var item in tbl_HQ_RewardList)
+                {
+                    var Reward = list.FirstOrDefault(x => x.RewardID == item.RewardID);
+
+                    string query = "";
+
+                    if (Reward != null)
+                    {
+                        query = PrePareUpdateQuery();
+                    }
+                    else
+                    {
+                        query = PrePareInsertQuery();
+                    }
+
+                    cmd = new SqlCommand(query, con);
+                    con.Open();
+
+                    cmd.Parameters.AddWithValue("@RewardID" , item.RewardID);
+                    cmd.Parameters.AddWithValue("@RewardName" , item.RewardName);
+
+                    ret = cmd.ExecuteNonQuery();
+
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
 
             return ret;

@@ -17,7 +17,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static IEnumerable<tbl_HQ_Promotion_Hit> Select(this tbl_HQ_Promotion_Hit obj, object condition)
         {
-            return new tbl_HQ_Promotion_Hit().Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
+            return obj.Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).ToList();
+
+            //return new tbl_HQ_Promotion_Hit().Select(x => x.PromotionID.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
 
         /// <summary>
@@ -30,10 +32,12 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Hit> list = new List<tbl_HQ_Promotion_Hit>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Hit.Where(predicate).ToList();
-                }
+                list = tbl_HQ_Promotion_Hit.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Hit.Where(predicate).ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -53,10 +57,17 @@ namespace AllCashUFormsApp
             List<tbl_HQ_Promotion_Hit> list = new List<tbl_HQ_Promotion_Hit>();
             try
             {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    list = db.tbl_HQ_Promotion_Hit.ToList();
-                }
+                string sql = "";
+
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion_Hit] ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion_Hit), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion_Hit>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_HQ_Promotion_Hit.ToList();
+                //}
             }
             catch (Exception ex)
             {
@@ -104,7 +115,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_HQ_Promotion_Hit.FirstOrDefault(x => x.PK == tbl_HQ_Promotion_Hit.PK);
+                    var updateData = db.tbl_HQ_Promotion_Hit.FirstOrDefault(x => x.DocNo == tbl_HQ_Promotion_Hit.DocNo && x.PromotionID == tbl_HQ_Promotion_Hit.PromotionID);
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())

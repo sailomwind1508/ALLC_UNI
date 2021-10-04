@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,48 @@ namespace AllCashUFormsApp
 {
     public static class ShopTypeDao
     {
+        public static DataTable GetShopTypeGirdData(this tbl_ShopType tbl_ShopType, int flagDel, string text)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ShopType WHERE FlagDel = " + flagDel + "";
+              
+                if (!string.IsNullOrEmpty(text))
+                {
+                    sql += " AND cast(ShopTypeID as nvarchar(50)) like '%" + text + "%'";
+                    sql += " OR ShopTypeName like '%" + text + "%'";
+                }
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                return dt;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        public static List<tbl_ShopType> Select(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)
+        {
+            List<tbl_ShopType> list = new List<tbl_ShopType>();
+            try
+            {
+                list = tbl_ShopType.SelectAll().Where(predicate).ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ShopType.Where(predicate).ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ShopType.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select all data
         /// </summary>
@@ -20,9 +63,63 @@ namespace AllCashUFormsApp
             List<tbl_ShopType> list = new List<tbl_ShopType>();
             try
             {
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_ShopType] WHERE FlagDel = 0 Order By ShopTypeID";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ShopType), sql);
+                list = dynamicListReturned.Cast<tbl_ShopType>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ShopType.Where(x => x.FlagDel == false).OrderBy(x => x.ShopTypeID).ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ShopType.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_ShopType> SelectFlag(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)//
+        {
+            List<tbl_ShopType> list = new List<tbl_ShopType>();
+            try
+            {
+                list = tbl_ShopType.SelectAllFlag().Where(predicate).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ShopType.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_ShopType> SelectAllFlag(this tbl_ShopType tbl_ShopType)//
+        {
+            List<tbl_ShopType> list = new List<tbl_ShopType>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ShopType";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ShopType), sql);
+                list = dynamicListReturned.Cast<tbl_ShopType>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ShopType.GetType());
+            }
+
+            return list;
+        }
+        public static List<tbl_ShopType> SelectAllFlagPredi(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)
+        {
+            List<tbl_ShopType> list = new List<tbl_ShopType>();
+            try
+            {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    list = db.tbl_ShopType.Where(x => x.FlagDel == false).OrderBy(x => x.ShopTypeID).ToList();
+                    list = db.tbl_ShopType.Where(predicate).ToList();
                 }
             }
             catch (Exception ex)
@@ -32,7 +129,6 @@ namespace AllCashUFormsApp
 
             return list;
         }
-
         /// <summary>
         /// add new data
         /// </summary>
@@ -53,6 +149,61 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_ShopType.GetType());
+            }
+
+            return ret;
+        }
+
+        public static void Insert(this tbl_ShopType tbl_ShopType, DB_ALL_CASH_UNIEntities db)
+        {
+            try
+            {
+                db.tbl_ShopType.Attach(tbl_ShopType);
+                db.tbl_ShopType.Add(tbl_ShopType);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(db.GetType());
+            }
+        }
+
+        public static int UpdateEntity(this tbl_ShopType tbl_ShopType, DB_ALL_CASH_UNIEntities db)
+        {
+            int ret = 0;
+            try
+            {
+                var updateData = db.tbl_ShopType.FirstOrDefault(x => x.ShopTypeID == tbl_ShopType.ShopTypeID);
+                if (updateData != null)
+                {
+                    foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                    {
+                        foreach (PropertyInfo tbl_ShopTypeItem in tbl_ShopType.GetType().GetProperties())
+                        {
+                            if (updateDataItem.Name == tbl_ShopTypeItem.Name)
+                            {
+                                var value = tbl_ShopTypeItem.GetValue(tbl_ShopType, null);
+
+                                Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                updateDataItem.SetValue(updateData, safeValue, null);
+                            }
+                        }
+                    }
+
+                    db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                }
+                else
+                {
+                    tbl_ShopType.Insert(db);
+                }
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(db.GetType());
+                ret = 0;
             }
 
             return ret;
@@ -91,6 +242,10 @@ namespace AllCashUFormsApp
 
                         db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_ShopType.Insert();
                     }
                 }
             }

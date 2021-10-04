@@ -69,6 +69,9 @@
             this.btnSearchFromProductCode = new System.Windows.Forms.Button();
             this.lblFromProductCode = new System.Windows.Forms.Label();
             this.pnlBL = new System.Windows.Forms.Panel();
+            this.grdDetails = new System.Windows.Forms.GroupBox();
+            this.txtBaseQty = new System.Windows.Forms.TextBox();
+            this.chkFixBaseQty = new System.Windows.Forms.CheckBox();
             this.txtRemark = new System.Windows.Forms.TextBox();
             this.lblRemark = new System.Windows.Forms.Label();
             this.pnlBot = new System.Windows.Forms.Panel();
@@ -89,11 +92,11 @@
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.grdDetails = new System.Windows.Forms.GroupBox();
             this.pnlTop.SuspendLayout();
             this.pnlTR.SuspendLayout();
             this.pnlTL.SuspendLayout();
             this.pnlBL.SuspendLayout();
+            this.grdDetails.SuspendLayout();
             this.pnlBot.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
@@ -101,7 +104,6 @@
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.grdDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -540,9 +542,56 @@
             this.pnlBL.Size = new System.Drawing.Size(992, 347);
             this.pnlBL.TabIndex = 116;
             // 
+            // grdDetails
+            // 
+            this.grdDetails.Controls.Add(this.txtBaseQty);
+            this.grdDetails.Controls.Add(this.chkFixBaseQty);
+            this.grdDetails.Controls.Add(this.txtFromProductCode);
+            this.grdDetails.Controls.Add(this.lblUOM);
+            this.grdDetails.Controls.Add(this.btnSearchToProductCode);
+            this.grdDetails.Controls.Add(this.txtToProductCode);
+            this.grdDetails.Controls.Add(this.lblOrderQty);
+            this.grdDetails.Controls.Add(this.lblToProductCode);
+            this.grdDetails.Controls.Add(this.txtToProductName);
+            this.grdDetails.Controls.Add(this.txtOrderQty);
+            this.grdDetails.Controls.Add(this.txtFromProductName);
+            this.grdDetails.Controls.Add(this.lblStock);
+            this.grdDetails.Controls.Add(this.txtToStock);
+            this.grdDetails.Controls.Add(this.btnSearchFromProductCode);
+            this.grdDetails.Controls.Add(this.lblFromProductCode);
+            this.grdDetails.Controls.Add(this.txtFromStock);
+            this.grdDetails.Location = new System.Drawing.Point(5, 10);
+            this.grdDetails.Name = "grdDetails";
+            this.grdDetails.Size = new System.Drawing.Size(984, 133);
+            this.grdDetails.TabIndex = 145;
+            this.grdDetails.TabStop = false;
+            // 
+            // txtBaseQty
+            // 
+            this.txtBaseQty.BackColor = System.Drawing.SystemColors.Window;
+            this.txtBaseQty.Enabled = false;
+            this.txtBaseQty.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBaseQty.Location = new System.Drawing.Point(836, 90);
+            this.txtBaseQty.MaxLength = 5;
+            this.txtBaseQty.Name = "txtBaseQty";
+            this.txtBaseQty.Size = new System.Drawing.Size(85, 23);
+            this.txtBaseQty.TabIndex = 146;
+            this.txtBaseQty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // chkFixBaseQty
+            // 
+            this.chkFixBaseQty.AutoSize = true;
+            this.chkFixBaseQty.Location = new System.Drawing.Point(724, 92);
+            this.chkFixBaseQty.Name = "chkFixBaseQty";
+            this.chkFixBaseQty.Size = new System.Drawing.Size(106, 20);
+            this.chkFixBaseQty.TabIndex = 145;
+            this.chkFixBaseQty.Text = "หน่วยคูณ(เล็ก)";
+            this.chkFixBaseQty.UseVisualStyleBackColor = true;
+            this.chkFixBaseQty.CheckedChanged += new System.EventHandler(this.chkFixBaseQty_CheckedChanged);
+            // 
             // txtRemark
             // 
-            this.txtRemark.Location = new System.Drawing.Point(103, 124);
+            this.txtRemark.Location = new System.Drawing.Point(103, 149);
             this.txtRemark.MaxLength = 255;
             this.txtRemark.Multiline = true;
             this.txtRemark.Name = "txtRemark";
@@ -553,7 +602,7 @@
             // lblRemark
             // 
             this.lblRemark.AutoSize = true;
-            this.lblRemark.Location = new System.Drawing.Point(32, 124);
+            this.lblRemark.Location = new System.Drawing.Point(32, 149);
             this.lblRemark.Name = "lblRemark";
             this.lblRemark.Size = new System.Drawing.Size(71, 16);
             this.lblRemark.TabIndex = 110;
@@ -843,28 +892,6 @@
             this.panel2.Size = new System.Drawing.Size(1008, 512);
             this.panel2.TabIndex = 27;
             // 
-            // grdDetails
-            // 
-            this.grdDetails.Controls.Add(this.txtFromProductCode);
-            this.grdDetails.Controls.Add(this.lblUOM);
-            this.grdDetails.Controls.Add(this.btnSearchToProductCode);
-            this.grdDetails.Controls.Add(this.txtToProductCode);
-            this.grdDetails.Controls.Add(this.lblOrderQty);
-            this.grdDetails.Controls.Add(this.lblToProductCode);
-            this.grdDetails.Controls.Add(this.txtToProductName);
-            this.grdDetails.Controls.Add(this.txtOrderQty);
-            this.grdDetails.Controls.Add(this.txtFromProductName);
-            this.grdDetails.Controls.Add(this.lblStock);
-            this.grdDetails.Controls.Add(this.txtToStock);
-            this.grdDetails.Controls.Add(this.btnSearchFromProductCode);
-            this.grdDetails.Controls.Add(this.lblFromProductCode);
-            this.grdDetails.Controls.Add(this.txtFromStock);
-            this.grdDetails.Location = new System.Drawing.Point(5, 10);
-            this.grdDetails.Name = "grdDetails";
-            this.grdDetails.Size = new System.Drawing.Size(959, 100);
-            this.grdDetails.TabIndex = 145;
-            this.grdDetails.TabStop = false;
-            // 
             // frmTR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -873,9 +900,11 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmTR";
             this.Text = "frmTR";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmTR_FormClosed);
             this.Load += new System.EventHandler(this.frmTR_Load);
             this.pnlTop.ResumeLayout(false);
             this.pnlTR.ResumeLayout(false);
@@ -884,6 +913,8 @@
             this.pnlTL.PerformLayout();
             this.pnlBL.ResumeLayout(false);
             this.pnlBL.PerformLayout();
+            this.grdDetails.ResumeLayout(false);
+            this.grdDetails.PerformLayout();
             this.pnlBot.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).EndInit();
@@ -892,8 +923,6 @@
             this.panel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.grdDetails.ResumeLayout(false);
-            this.grdDetails.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -960,5 +989,7 @@
         private System.Windows.Forms.Button btnSearchFromProductCode;
         private System.Windows.Forms.Label lblFromProductCode;
         private System.Windows.Forms.GroupBox grdDetails;
+        private System.Windows.Forms.TextBox txtBaseQty;
+        private System.Windows.Forms.CheckBox chkFixBaseQty;
     }
 }

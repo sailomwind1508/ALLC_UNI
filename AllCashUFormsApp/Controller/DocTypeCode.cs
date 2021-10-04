@@ -11,65 +11,122 @@ namespace AllCashUFormsApp.Controller
 {
     public class DocTypeCode
     {
-        CultureInfo cultures = CultureInfo.CreateSpecificCulture("th-TH");
+        CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
 
         public string GenDocNo(string docTypeCode, string whCode = null)
         {
             try
             {
                 string ret = string.Empty;
-                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode == docTypeCode);
+                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
                 if (tbl_DocumentType != null) //PO
                 {
                     int runLength = tbl_DocumentType.RunLength.Value;
                     string mode = "";
 
-                    Func<tbl_POMaster, bool> tbl_POMasterPre = null;
-                    if (docTypeCode != "IM")
-                        tbl_POMasterPre = (x => x.DocTypeCode == docTypeCode);
-                    else if (docTypeCode == "IM")
-                        tbl_POMasterPre = (x => x.DocTypeCode == "IV" && x.DocRef == docTypeCode);
-
-                    var tbl_POMasters = (new tbl_POMaster()).Select(tbl_POMasterPre);
-                    if (tbl_POMasters != null && tbl_POMasters.Count > 0)
+                    var endDayMode = new List<string> { "H", "C", "M" }.ToList();
+                    if (string.IsNullOrEmpty(mode) && endDayMode.Contains(docTypeCode))
                     {
-                        mode = "PO";
-                        var maxAutoID = tbl_POMasters.Max(x => x.AutoID);
-                        tbl_POMaster tbl_POMaster = tbl_POMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
-                   
-                        ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_POMaster.DocNo);
-                    }
-
-                    if (string.IsNullOrEmpty(mode)) //(tbl_POMasters.Count == 0) //PR
-                    {
-                        Func<tbl_PRMaster, bool> tbl_PRMasterPre = (x => x.DocTypeCode == docTypeCode);
-                        var tbl_PRMasters = (new tbl_PRMaster()).Select(tbl_PRMasterPre);
-                        if (tbl_PRMasters != null && tbl_PRMasters.Count > 0)
+                        if (docTypeCode == "H")
                         {
-                            mode = "PR";
-                            var maxAutoID = tbl_PRMasters.Max(x => x.AutoID);
-                            var tbl_PRMaster = tbl_PRMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+                            var tbl_IVMasters = new tbl_IVMaster().Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                            if (tbl_IVMasters != null && tbl_IVMasters.Count > 0)
+                            {
+                                var maxAutoID = tbl_IVMasters.Max(x => x.AutoID);
+                                var tbl_IVMaster = tbl_IVMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+                                ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_IVMaster.DocNo);
+                            }
+                            else
+                                ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength, whCode);
+                        }
+                        else if (docTypeCode == "C" || docTypeCode == "M")
+                        {
+                            string _docTypeCode = docTypeCode == "C" ? "RL" : "RB";
 
-                            ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_PRMaster.DocNo);
+                            var tbl_PRMasters = new tbl_PRMaster().Select(x => x.DocTypeCode.Trim() == _docTypeCode.Trim()
+                            && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Contains(docTypeCode), _docTypeCode.Trim());
+
+                            if (tbl_PRMasters != null && tbl_PRMasters.Count > 0)
+                            {
+                                var maxAutoID = tbl_PRMasters.Max(x => x.AutoID);
+                                var tbl_IVMaster = tbl_PRMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+                                ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_IVMaster.DocRef);
+                            }
+                            else
+                                ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength, whCode);
+                        }
+                        else
+                            ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength, whCode);
+                    }
+                    else
+                    {
+                        Func<tbl_POMaster, bool> tbl_POMasterPre = null;
+                        if (docTypeCode != "IM")
+                            tbl_POMasterPre = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                        else if (docTypeCode == "IM")
+                            tbl_POMasterPre = (x => x.DocTypeCode.Trim() == "IV" && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Trim() == docTypeCode);
+
+                        var tbl_POMasters = (new tbl_POMaster()).Select(tbl_POMasterPre, (docTypeCode == "IM" ? "IV" : docTypeCode.Trim()));
+                        if (tbl_POMasters != null && tbl_POMasters.Count > 0)
+                        {
+                            mode = "PO";
+                            var maxAutoID = tbl_POMasters.Max(x => x.AutoID);
+                            tbl_POMaster tbl_POMaster = tbl_POMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+
+                            ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_POMaster.DocNo);
+                        }
+
+                        if (string.IsNullOrEmpty(mode)) //(tbl_POMasters.Count == 0) //PR
+                        {
+                            var tbl_PRMasters = new List<tbl_PRMaster>();
+                            if (docTypeCode.Trim() == "RL")
+                            {
+                                tbl_PRMasters = (new tbl_PRMaster()).Select(x => !x.DocNo.Contains("V") && x.DocTypeCode.Trim() == docTypeCode.Trim(), docTypeCode.Trim());
+                            } 
+                            else
+                            {
+                                tbl_PRMasters = (new tbl_PRMaster()).Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim(), docTypeCode.Trim());
+                            }
+
+                            if (tbl_PRMasters != null && tbl_PRMasters.Count > 0)
+                            {
+                                mode = "PR";
+                                var maxAutoID = tbl_PRMasters.Max(x => x.AutoID);
+                                var tbl_PRMaster = tbl_PRMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+
+                                ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_PRMaster.DocNo);
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(mode))
+                        {
+                            Func<tbl_IVMaster, bool> tbl_IVMasterPre = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                            var tbl_IVMasters = (new tbl_IVMaster()).Select(tbl_IVMasterPre);
+                            if (tbl_IVMasters != null && tbl_IVMasters.Count > 0)
+                            {
+                                mode = "IV";
+                                //var maxAutoID = tbl_IVMasters.Where(x => x.DocDate.Day == 23 && x.DocDate.Month == 8 && x.DocDate.Year == 2021 && x.DocNo != "V9644802").Max(x => x.AutoID);/////////////////////////////////////////////
+                                var maxAutoID = tbl_IVMasters.Max(x => x.AutoID);
+                                var tbl_IVMaster = tbl_IVMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+
+                                ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_IVMaster.DocNo);
+                                //if (ret == "V9644802")
+                                //{
+                                //    ret = "V9644803";
+                                //}
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(mode))
+                        {
+                            if (!string.IsNullOrEmpty(whCode))
+                            {
+                                ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength, whCode);
+                            }
+                            else
+                                ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength);
                         }
                     }
-                    
-                    if (string.IsNullOrEmpty(mode))
-                    {
-                        Func<tbl_IVMaster, bool> tbl_IVMasterPre = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());
-                        var tbl_IVMasters = (new tbl_IVMaster()).Select(tbl_IVMasterPre);
-                        if (tbl_IVMasters != null && tbl_IVMasters.Count > 0)
-                        {
-                            mode = "IV";
-                            var maxAutoID = tbl_IVMasters.Max(x => x.AutoID);
-                            var tbl_IVMaster = tbl_IVMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
-
-                            ret = CheckDocNo(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_IVMaster.DocNo);
-                        }
-                    }
-                    
-                    if (string.IsNullOrEmpty(mode))
-                        ret = GenDocNo(docTypeCode, tbl_DocumentType, "0", runLength);
                 }
 
                 return ret;
@@ -114,17 +171,39 @@ namespace AllCashUFormsApp.Controller
                 startLen = 2;
             }
 
-            tempMonth = Convert.ToDateTime(DateTime.Now, cultures).ToString(dateFormate);
+            tempMonth = DateTime.Now.ToString(dateFormate, cultures);
+            //tempMonth = Convert.ToDateTime(DateTime.Now, cultures).ToString(dateFormate);
 
             if (docNo.Substring(startLen, dateFormate.Length) == tempMonth)
             {
                 _rNoTemp = docNo.Substring(docNo.Length - runLength, runLength);
                 ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
-            }          
+            }
             else
             {
+                var _tbl_PRMasters = new List<tbl_PRMaster>();
+                if (docTypeCode.Trim() == "RL")
+                    _tbl_PRMasters = (new tbl_PRMaster()).Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim() && !x.DocNo.Contains("V") && x.DocNo.Contains(tempMonth), docTypeCode.Trim());
+                else
+                    _tbl_PRMasters = (new tbl_PRMaster()).Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim() && x.DocNo.Contains(tempMonth), docTypeCode.Trim());
+
+                if (_tbl_PRMasters != null && _tbl_PRMasters.Count > 0)
+                {
+                    int autoID = _tbl_PRMasters.Max(a => a.AutoID);
+                    var tbl_PRMaster = _tbl_PRMasters.FirstOrDefault(x => x.AutoID == autoID);
+                    if (tbl_PRMaster != null)
+                    {
+                        string tmpRunning = tbl_PRMaster.DocNo.Substring(9, docNo.Length - 9);
+                        _rNoTemp = tmpRunning;
+                    }
+                }
+
                 if (docTypeCode == "IV" || docTypeCode == "IM" || docTypeCode == "V")
                     ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+                else if (docTypeCode == "H" || docTypeCode == "C" || docTypeCode == "M")
+                    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+                //else if (docTypeCode == "RL")
+                //    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
                 else
                     ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength);
             }
@@ -136,6 +215,7 @@ namespace AllCashUFormsApp.Controller
         {
             string ret = "";
             string docFormat = tbl_DocumentType.DocFormat;
+            var allBranch = new IV().GetBranch();
 
             List<char> docFormatArr = new List<char>();
             docFormatArr = docFormat.ToCharArray().ToList();
@@ -177,13 +257,39 @@ namespace AllCashUFormsApp.Controller
                     }
                     else if (docTypeCode == "V")
                     {
-                        Func<tbl_Branch, bool> whFunc = (x => x.BranchCode == whCode.Split('V')[0]);
-                        var wh = (new IV()).GetBranch(whFunc);
-                        if (wh != null && wh.Count > 0)
-                            _compCode = wh[0].AgentID;
+                        if (!string.IsNullOrEmpty(whCode))
+                        {
+                            Func<tbl_Branch, bool> whFunc = (x => x.BranchCode == whCode.Split('V')[0]);
+                            var wh = (new IV()).GetBranch(whFunc);
+                            if (wh != null && wh.Count > 0)
+                                _compCode = wh[0].AgentID;
+                        }
+                    }
+                    //else if(docTypeCode == "RL")
+                    //{
+                    //    if (whCode != null && !string.IsNullOrEmpty(whCode))
+                    //        _compCode = whCode;
+                    //}
+                    else if (docTypeCode == "H" ||
+                        docTypeCode == "C" ||
+                        docTypeCode == "M")
+                    {
+                        if (!string.IsNullOrEmpty(whCode))
+                        {
+                            string whID = string.Join("", whCode.ToCharArray().Take(3));
+                            Func<tbl_Branch, bool> whFunc = (x => x.BranchCode == whID);
+                            var wh = allBranch.Where(whFunc).ToList();// (new IV()).GetBranch(whFunc);
+                            if (wh != null && wh.Count > 0)
+                                _compCode = wh[0].AgentID;
+                        }
                     }
                     else
                         _compCode = compCode;
+
+                    if (string.IsNullOrEmpty(_compCode))
+                    {
+                        _compCode = compCode;
+                    }
                 }
                 if (docFormatArr[i] == 'Y')
                 {
@@ -215,9 +321,12 @@ namespace AllCashUFormsApp.Controller
                 }
                 if (docFormatArr[i] == 'D')
                 {
-                    var dFormat = docFormatArr[i].ToString() + docFormatArr[i + 1].ToString();
-                    if (dFormat == "DD")
-                        _day = cDate.ToString("dd", cultures);
+                    if (i + 1 < docFormatArr.Count)
+                    {
+                        var dFormat = docFormatArr[i].ToString() + docFormatArr[i + 1].ToString();
+                        if (dFormat == "DD")
+                            _day = cDate.ToString("dd", cultures);
+                    }
                 }
                 if (docFormatArr[i] == '0')
                 {
@@ -227,8 +336,16 @@ namespace AllCashUFormsApp.Controller
 
             if (docTypeCode == "IM")
                 ret = string.Join("", _docType, _compCode, _year, _month, _day, _m, _runningNo);
+            else if (docTypeCode == "H")
+                ret = string.Join("", _docType, _compCode, _month, _year, _day, _runningNo);
             else
+            {
+                //if (docTypeCode == "RL")
+                //    ret = string.Join("", _docType, _compCode, _year, _month, _day);
+                //else
                 ret = string.Join("", _docType, _compCode, _year, _month, _day, _runningNo);
+            }
+
 
             return ret;
         }

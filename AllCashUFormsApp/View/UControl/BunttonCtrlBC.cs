@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace AllCashUFormsApp.View.UControl
 {
-    public partial class BunttonCtrlBC : UserControl
+    public partial class BunttonCtrlBC : System.Windows.Forms.UserControl
     {
         public BunttonCtrlBC()
         {
