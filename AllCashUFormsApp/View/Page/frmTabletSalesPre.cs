@@ -90,7 +90,7 @@ namespace AllCashUFormsApp.View.Page
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
-                runDigit = documentType.DocFormat.Length; // - 2; edit by sailom 03/10/2021 for support tablet docno 14 digit;
+                runDigit = documentType.DocFormat.Length; // - 2; edit by sailom 03/10/2021 for support tablet docno 14 digit; 
 
                 this.ClearControl(docTypeCode, runDigit);
                 txtComment.Text = documentType.DocRemark;
