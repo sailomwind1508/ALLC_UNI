@@ -23,6 +23,7 @@ namespace AllCashUFormsApp.Controller
         {
             _docTypePredicate = (x => x.DocTypeCode == "");
         }
+
         //public DataTable GetSalAreaByWHID(int flagDel)
         //{
         //    return (new tbl_SalAreaDistrict()).GetSalAreaByWHID(flagDel);
@@ -96,6 +97,11 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
+        public DataTable SelectSingleDT(string _SalAreaID)
+        {
+            return new tbl_SalAreaDistrict().SelectSingleDT(_SalAreaID);
+        }
+
         public DataTable GetDataTableByCondition(Func<tbl_SalAreaDistrict, bool> predicate)
         {
             DataTable dt = new DataTable();
@@ -111,5 +117,31 @@ namespace AllCashUFormsApp.Controller
 
             return dt;
         }
+
+        public DataTable GetProvinceFromSalAreaDistrict()
+        {
+            return new tbl_SalAreaDistrict().GetProvinceFromSalAreaDistrict();
+        }
+
+        public DataTable GetSalAreaDistrictData(string _WHID = "")
+        {
+            return new tbl_SalAreaDistrict().GetSalAreaDistrictData(_WHID);
+        }
+
+        public int DeleteByWHID(string WHID)
+        {
+            return new tbl_SalAreaDistrict().DeleteByWHID(WHID);
+        }
+
+        public int InsertSalAreaDistrict(DataRow drs)
+        {
+            return new tbl_SalAreaDistrict().InsertSalAreaDistrict(drs);
+        }
+
+        public DataTable GetSalAreaDistrictByWHID(string _WHID = "")
+        {
+            return new tbl_SalAreaDistrict().GetSalAreaDistrictByWHID(_WHID);
+        }
+
     }
 }

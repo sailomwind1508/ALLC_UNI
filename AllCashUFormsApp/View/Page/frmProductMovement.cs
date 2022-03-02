@@ -130,7 +130,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindCcb()
         {
-            var allProduct = bu.GetProduct().OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ToList();
+            var allProduct = bu.GetProduct().OrderBy(x => x.ProductID).ToList(); //.OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ThenBy(x => x.Seq).ToList();
             productArr = allProduct.Select(x => x.ProductCode + ":" + x.ProductName).ToArray();
 
             for (int i = 0; i < productArr.Length; i++)
@@ -139,7 +139,7 @@ namespace AllCashUFormsApp.View.Page
                 ccbProductCode.Items.Add(item);
             }
             // If more then 5 items, add a scroll bar to the dropdown.
-            //ccbProductCode.MaxDropDownItems = 5;
+            ccbProductCode.MaxDropDownItems = 20;
             // Make the "Name" property the one to display, rather than the ToString() representation.
             ccbProductCode.DisplayMember = "Name";
             ccbProductCode.ValueSeparator = ", ";
@@ -150,11 +150,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void SearchSummary()
         {
-            var fbwh = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
+            var allBWH = bu.GetAllBranchWarehouse();
+            var fbwh = allBWH.FirstOrDefault(x => x.WHCode == txtFromWHCode.Text);
             if (fbwh != null)
             {
-                string fwhid = fbwh.WHID;
-                var tbwh = bu.GetBranchWarehouse(x => x.WHCode == txtToWHCode.Text);
+                string fwhid = chkAllMM.Checked ? "-1" : fbwh.WHID;
+                var tbwh = allBWH.FirstOrDefault(x => x.WHCode == txtToWHCode.Text);
 
                 if (tbwh != null)
                 {
@@ -205,7 +206,7 @@ namespace AllCashUFormsApp.View.Page
             var fbwh = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
             if (fbwh != null)
             {
-                string fwhid = fbwh.WHID;
+                string fwhid = chkAllMM.Checked ? "-1" : fbwh.WHID;
                 var tbwh = bu.GetBranchWarehouse(x => x.WHCode == txtToWHCode.Text);
 
                 if (tbwh != null)
@@ -266,6 +267,9 @@ namespace AllCashUFormsApp.View.Page
 
             grd.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdList_CellFormatting);
             grd.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.grdList_CellPainting);
+
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
 
         #endregion
@@ -376,25 +380,114 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-            frmWait wait = new frmWait();
-            wait.Show();
+            //frmWait wait = new frmWait();
+            //wait.Show();
 
-            string dir = @"C:\AllCashExcels";
-            if (!Directory.Exists(dir))
+            //FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+            //string dir = @"C:\AllCashExcels";
+            //if (!Directory.Exists(dir))
+            //{
+            //    Directory.CreateDirectory(dir);
+            //}
+
+            ////string _excelName = dir + @"\" + excelName + ".xlsx";
+            //string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+            //string _excelName = dir + @"\" + string.Join("", excelName, '_', cDate) + ".xls";
+
+            //My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { tmpDTData }, _excelName, "ตรวจสอบสินค้าเคลื่อนไหว");
+
+            //wait.Hide();
+            //wait.Dispose();
+            //wait.Close();
+            if (grdList.RowCount > 0 && rdoDetails.Checked)
             {
-                Directory.CreateDirectory(dir);
+                DataTable dtDetails = new DataTable("Details");
+                SetProductMovement_Details(dtDetails);
+
+                this.OpenExcelReportsPopup("รายงานสินค้าเคลื่อนไหว(รายละเอียด)", "ProductMovement_Details.xslt", dtDetails, true);
             }
+            else if (grdList.RowCount > 0 && rdoSummary.Checked)
+            {
+                DataTable dtSummary = new DataTable("Summary");
+                SetProductMovement_Summary(dtSummary);
 
-            //string _excelName = dir + @"\" + excelName + ".xlsx";
-            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
-            string _excelName = dir + @"\" + string.Join("", excelName, '_', cDate) + ".xls";
-
-            My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { tmpDTData }, _excelName, "ตรวจสอบสินค้าเคลื่อนไหว");
-
-            wait.Hide();
-            wait.Dispose();
-            wait.Close();
+                this.OpenExcelReportsPopup("รายงานสินค้าเคลื่อนไหว(สรุป)", "ProductMovement_Summary.xslt", dtSummary, true);
+            }
         }
+
+        private void SetProductMovement_Details(DataTable _dt)
+        {
+            var branch = bu.GetBranch();
+            var branchWH = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
+
+            _dt.Columns.Add("ProductID", typeof(string));
+            _dt.Columns.Add("ProductName", typeof(string));
+            _dt.Columns.Add("TrnDate", typeof(string));
+            _dt.Columns.Add("RefDocNo", typeof(string));
+            _dt.Columns.Add("TrnType", typeof(string));
+            _dt.Columns.Add("ToWHID", typeof(string));
+            _dt.Columns.Add("ForwardQty", typeof(string));
+            _dt.Columns.Add("InQty", typeof(string));
+            _dt.Columns.Add("OutQty", typeof(string));
+            _dt.Columns.Add("DTBalance", typeof(string));
+            _dt.Columns.Add("DateFr", typeof(string));
+            _dt.Columns.Add("DateTo", typeof(string));
+            _dt.Columns.Add("BranchName", typeof(string));
+
+            _dt.Columns.Add("FromWHID", typeof(string));
+            _dt.Columns.Add("WHName", typeof(string));
+
+            foreach (DataRow r in tmpDTData.Rows)
+            {
+                var tmpDate = r["เวลา"].ToString().Split('/');
+                var tmpDate2 = string.Join("/", tmpDate[1], tmpDate[0], tmpDate[2]);
+                DateTime _dateTime = Convert.ToDateTime(tmpDate2);
+                _dt.Rows.Add(r["รหัสสินค้า"], r["ชื่อสินค้า"]
+                    , _dateTime.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
+                    , r["เลขที่เอกสาร"]
+                    , r["ประเภท"], r["จาก/ไป(คลัง)"], r["ยกมา"], r["เข้า"], r["ออก"], r["คงเหลือ"]
+                    , dtpFromDate.Value.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
+                    , dtpToDate.Value.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
+                    , branch == null ? "" : branch[0].BranchName
+                    , branchWH == null ? "" : branchWH.WHID
+                    , branchWH == null ? "" : branchWH.WHName);
+            }
+        }
+
+        private void SetProductMovement_Summary(DataTable _dt)
+        {
+            var branch = bu.GetBranch();
+            var branchWH = bu.GetBranchWarehouse(x => x.WHCode == txtFromWHCode.Text);
+
+            _dt.Columns.Add("ProductCode", typeof(string));
+            _dt.Columns.Add("ProductName", typeof(string));
+            _dt.Columns.Add("BaseQty", typeof(string));
+            _dt.Columns.Add("ImpLargeQty", typeof(string));
+            _dt.Columns.Add("ImpSmallQty", typeof(string));
+            _dt.Columns.Add("InQty", typeof(string));
+            _dt.Columns.Add("OutQty", typeof(string));
+            _dt.Columns.Add("QtyOnHandLarge", typeof(string));
+            _dt.Columns.Add("QtyOnHandSmall", typeof(string));
+
+            _dt.Columns.Add("DateFr", typeof(string));
+            _dt.Columns.Add("DateTo", typeof(string));
+            _dt.Columns.Add("BranchName", typeof(string));
+            _dt.Columns.Add("FromWHID", typeof(string));
+            _dt.Columns.Add("WHName", typeof(string));
+
+            foreach (DataRow r in tmpDTData.Rows)
+            {
+                _dt.Rows.Add(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8]
+                , dtpFromDate.Value.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
+                , dtpToDate.Value.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
+                , branch == null ? null : branch[0].BranchName
+                , branchWH == null ? "" : branchWH.WHID
+                , branchWH == null ? "" : branchWH.WHName);
+            }
+            //รหัสสินค้า,ชื่อสินค้า,หน่วยคูณ,ยกมา\n(ใหญ่),ยกมา\n(เล็ก),เข้า\n(เล็ก),ออก\n(เล็ก),คงเหลือ\n(ใหญ่),คงเหลือ\n(เล็ก)
+        }
+
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
@@ -408,7 +501,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchBranchCode_Click(object sender, EventArgs e)
         {
-            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกสาขา/ซุ้ม");
+            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
         }
 
         private void btnSearchFromWHCode_Click(object sender, EventArgs e)
@@ -491,17 +584,27 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoDetails_CheckedChanged(object sender, EventArgs e)
         {
-            if (rdoDetails.Checked)
-            {
-                string msg = "รูปแบบรายงาน 'แบบรายละเอียด' จะดูได้ทีละคลังเท่านั้น!!!";
-                msg.ShowInfoMessage();
-                return;
-            }
+            //if (rdoDetails.Checked)
+            //{
+            //    string msg = "รูปแบบรายงาน 'แบบรายละเอียด' จะดูได้ทีละคลังเท่านั้น!!!";
+            //    msg.ShowInfoMessage();
+            //    return;
+            //}
         }
 
         private void frmProductMovement_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void chkAllMM_CheckedChanged(object sender, EventArgs e)
+        {
+            //if (chkAllMM.Checked)
+            //{
+            //    string msg = "การเลือกดึงข้อมูลทุกคลัง อาจใช้เวลานานขึ้น!!!";
+            //    msg.ShowInfoMessage();
+            //    return;
+            //}
         }
     }
 }

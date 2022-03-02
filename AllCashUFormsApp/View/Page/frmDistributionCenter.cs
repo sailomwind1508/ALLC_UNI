@@ -19,15 +19,12 @@ namespace AllCashUFormsApp.View.Page
         MenuBU menuBU = new MenuBU();
         DistributionCenter bu = new DistributionCenter();
         DataTable dt = new DataTable();
-        ObjectFactory objectFactory = new ObjectFactory();
 
         List<Control> saleEmpList = new List<Control>();
         List<Control> driverEmpList = new List<Control>();
         List<Control> helperEmpList = new List<Control>();
 
         List<tbl_SalArea> tbl_SalAreaList = new List<tbl_SalArea>();
-
-        private List<string> selectProdect = new List<string>();
 
         Dictionary<Control, Label> validateDepoCtrls = new Dictionary<Control, Label>();
         List<string> readOnlyDepoControls = new List<string>();
@@ -203,8 +200,32 @@ namespace AllCashUFormsApp.View.Page
 
             MemoryManagement.FlushMemory();
 
-            #region Initial Tab Employee
+            InitialTab_Employee();
 
+            MemoryManagement.FlushMemory();
+
+            InitialTab_BranchWarehouse();
+
+            MemoryManagement.FlushMemory();
+
+            InitialTab_Van();
+
+            MemoryManagement.FlushMemory();
+
+            InitialTab_MKT();
+
+            MemoryManagement.FlushMemory();
+        }
+
+        private void InitPart()
+        {
+            GenBranchID(ddlPartID);
+            rdoBranchC.Enabled = false;
+            rdoBranchN.Enabled = false;
+        }
+
+        private void InitialTab_Employee()
+        {
             var titleList = new Dictionary<string, string>();
             titleList = bu.GetAllTitleName();
             ddlTitleName.BindDropdownList(titleList, "key", "value");
@@ -237,8 +258,6 @@ namespace AllCashUFormsApp.View.Page
             var branchList = bu.GetBranch();
             ddlDepo.BindDropdownList(branchList, "BranchName", "BranchID");
 
-            BindEmployeeData();
-
             grdEmpList.SetDataGridViewStyle();
 
             SetDefaultGridViewEvent(grdEmpList);
@@ -251,15 +270,10 @@ namespace AllCashUFormsApp.View.Page
 
             rdoEmpStatusN.Enabled = false;
             rdoEmpStatusC.Enabled = false;
+        }
 
-            #endregion
-
-            MemoryManagement.FlushMemory();
-
-            #region Tab Branch Warehouse
-
-            //BindBranchWarehouseData();
-
+        private void InitialTab_BranchWarehouse()
+        {
             grdBWHList.SetDataGridViewStyle();
 
             SetDefaultGridViewEvent(grdBWHList);
@@ -270,13 +284,10 @@ namespace AllCashUFormsApp.View.Page
 
             rdoBWHStatusN.Enabled = false;
             rdoBWHStatusC.Enabled = false;
+        }
 
-            #endregion
-
-            MemoryManagement.FlushMemory();
-
-            #region Tab Van
-
+        private void InitialTab_Van()
+        {
             PrepareCashVan();
 
             grdVanList.SetDataGridViewStyle();
@@ -289,13 +300,10 @@ namespace AllCashUFormsApp.View.Page
 
             rdoStatusVanN.Enabled = false;
             rdoStatusVanC.Enabled = false;
+        }
 
-            #endregion
-
-            MemoryManagement.FlushMemory();
-
-            #region Tab MKT
-
+        private void InitialTab_MKT()
+        {
             var zoneList = new List<tbl_Zone>();
             var _zoneList = bu.GetZone();
             zoneList.Add(new tbl_Zone { ZoneID = -1, ZoneName = "==เลือก==" });
@@ -323,17 +331,6 @@ namespace AllCashUFormsApp.View.Page
 
             rdoMKTStatusN.Enabled = false;
             rdoMKTStatusC.Enabled = false;
-
-            #endregion
-
-            MemoryManagement.FlushMemory();
-        }
-
-        private void InitPart()
-        {
-            GenBranchID(ddlPartID);
-            rdoBranchC.Enabled = false;
-            rdoBranchN.Enabled = false;
         }
 
         public void SetDefaultGridViewEvent(DataGridView grd)
@@ -760,16 +757,35 @@ namespace AllCashUFormsApp.View.Page
 
         private void tctrlDistribution_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pnlBranchDT.OpenControl(false, readOnlyDepoControls.ToArray());
-            pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
-            pnlBWH.OpenControl(false, readOnlyBWHControls.ToArray());
-            pnlVANDT.OpenControl(false, readOnlyVANDTControls.ToArray());
-            pnlMKT.OpenControl(false, readOnlyMKTControls.ToArray());
-
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnAdd.Enabled = true;
             btnEdit.Enabled = true;
             btnCancel.Enabled = false;
+
+            if (tctrlDistribution.SelectedTab == tabDepo)
+            {
+                pnlBranchDT.OpenControl(false, readOnlyDepoControls.ToArray());
+            }
+            else if (tctrlDistribution.SelectedTab == tabEmp)
+            {
+                btnSearchEmp.PerformClick();
+                pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
+            }
+            else if (tctrlDistribution.SelectedTab == tabWarehouse)
+            {
+                btnSearchWarehouse.PerformClick();
+                pnlBWH.OpenControl(false, readOnlyBWHControls.ToArray());
+            }
+            else if (tctrlDistribution.SelectedTab == tabVan)
+            {
+                btnSearchVan.PerformClick();
+                pnlVANDT.OpenControl(false, readOnlyVANDTControls.ToArray());
+            }
+            else if (tctrlDistribution.SelectedTab == tabMarket)
+            {
+                btnSearchMKT.PerformClick();
+                pnlMKT.OpenControl(false, readOnlyMKTControls.ToArray());
+            }
         }
 
         #endregion
@@ -975,12 +991,7 @@ namespace AllCashUFormsApp.View.Page
             Cursor.Current = Cursors.WaitCursor;
 
             BindBranchData();
-
-            BindBranchWarehouseData();
-
-            BindVaneData();
-
-            BindMKTData();
+            BindBranchDetail();
 
             Cursor.Current = Cursors.Default;
         }
@@ -997,7 +1008,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdDepo_SelectionChanged(object sender, EventArgs e)
         {
-            BindBranchDetail();
+            //BindBranchDetail();
         }
 
         private void ddlProvince_SelectedIndexChanged(object sender, EventArgs e)
@@ -1043,12 +1054,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoCancel_CheckedChanged(object sender, EventArgs e)
         {
-            BindBranchData();
+            //BindBranchData();
         }
 
         private void rdoNormal_CheckedChanged(object sender, EventArgs e)
         {
-            BindBranchData();
+            //BindBranchData();
         }
 
         private void txtSearchBranch_KeyDown(object sender, KeyEventArgs e)
@@ -1135,7 +1146,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         string _no = tbl_EmployeeList.Max(x => x.EmpID);
                         var no = Convert.ToInt32(_no.Substring(4, _no.Length - 4)) + 1;
-                        _empID = code + no.ToString("000");
+                        _empID = code + "E" + no.ToString("000");
                     }
                     else
                         _empID = code + "E001";
@@ -1197,6 +1208,8 @@ namespace AllCashUFormsApp.View.Page
                         eData.EmpID = ddlDepo.SelectedValue + "E000";
                 }
 
+                eData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue); //Adisorn 22/12/2564
+
                 eData.LastName = string.IsNullOrEmpty(txtLastName.Text) ? "" : txtLastName.Text;
                 eData.NickName = "";
                 eData.EmpCode = eData.EmpID;
@@ -1239,8 +1252,6 @@ namespace AllCashUFormsApp.View.Page
                         {
                             uData = userList[0];
                             uData.FlagDel = rdoEmpStatusC.Checked;
-                            uData.Username = txtUsername.Text;
-                            uData.Password = txtPassword.Text;
                             uData.EdDate = DateTime.Now;
                             uData.EdUser = Helper.tbl_Users.Username;
                         }
@@ -1266,6 +1277,11 @@ namespace AllCashUFormsApp.View.Page
                         else if (rdoEmpStatusC.Checked)
                             uData.FlagDel = true;
                     }
+
+                    uData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue); //Edit By Adisorn 22/12/2564
+
+                    uData.Username = txtUsername.Text; //Edit By Adisorn 20/12/2564 
+                    uData.Password = txtPassword.Text; //เก็บ UserID และ Pass เมื่อเพิ่มหรือแก้ไข ข้อมูลพนักงาน
 
                     ret = u.UpdateData(uData);
                 }
@@ -1358,32 +1374,81 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void BindEmployeeData()
+        //private void BindEmployeeData()
+        //{
+        //    string text = txtSearchEmp.Text;
+
+        //    Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
+        //    if (ddlDepartment.SelectedValue != null && ddlDepartment.SelectedValue.ToString() == "-1")
+        //    {
+        //        tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+        //        x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
+        //        (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+        //    }
+        //    else if (ddlPosition.SelectedValue != null && ddlPosition.SelectedValue.ToString() == "-1")
+        //    {
+        //        tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+        //        x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
+        //        (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+        //    }
+        //    else
+        //    {
+        //        tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+        //        x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
+        //        x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
+        //        (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+        //    }
+
+        //    var dt = bu.GetEmpTable(tbl_EmployeeFunc);
+
+        //    if (dt != null)
+        //    {
+        //        grdEmpList.DataSource = null;
+
+        //        var grd = grdEmpList;
+        //        grd.DataSource = dt;
+
+        //        DataGridViewColumn col0 = grd.Columns[0];
+        //        DataGridViewColumn col1 = grd.Columns[1];
+        //        DataGridViewColumn col2 = grd.Columns[2];
+        //        DataGridViewColumn col3 = grd.Columns[3];
+        //        DataGridViewColumn col4 = grd.Columns[4];
+        //        DataGridViewColumn col5 = grd.Columns[5];
+        //        DataGridViewColumn col6 = grd.Columns[6];
+        //        DataGridViewColumn col7 = grd.Columns[7];
+        //        DataGridViewColumn col8 = grd.Columns[8];
+        //        DataGridViewColumn col9 = grd.Columns[9];
+        //        DataGridViewColumn col10 = grd.Columns[10];
+
+        //        col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col1.SetColumnStyle(140, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 140);
+        //        col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+        //        col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+        //        col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+        //        col10.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0, new DataGridViewCheckBoxColumn());
+
+        //        lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
+        //    }
+        //}
+
+        private void BindEmployeeData_V2()
         {
-            string text = txtSearchEmp.Text;
+            int _DepartmentID = ddlDepartment.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlDepartment.SelectedValue);
+            int _PositionID = ddlPosition.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPosition.SelectedValue);
+            int _flagDel = rdoEmpN.Checked ? 0 : 1;
 
-            Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
-            if (ddlDepartment.SelectedValue != null && ddlDepartment.SelectedValue.ToString() == "-1")
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
-            else if (ddlPosition.SelectedValue != null && ddlPosition.SelectedValue.ToString() == "-1")
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
-            else
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
-                x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@flagDel", _flagDel);
+            _params.Add("@DepartmentID", _DepartmentID);
+            _params.Add("@PositionID", _PositionID);
+            _params.Add("@Search", txtSearchEmp.Text);
 
-            var dt = bu.GetEmpTable(tbl_EmployeeFunc);
+            var dt = bu.proc_GetEmployee_Data(_params);
 
             if (dt != null)
             {
@@ -1418,35 +1483,109 @@ namespace AllCashUFormsApp.View.Page
 
                 lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
             }
+            SelectEmployeeDetail(null);
         }
 
         private void BindEmployeeDetail()
         {
-            if (grdEmpList.RowCount > 0 && grdEmpList.CurrentCell != null)
+            //if (grdEmpList.RowCount > 0 && grdEmpList.CurrentCell != null)
+            //{
+            //    int rowIndex = grdEmpList.CurrentCell.RowIndex;
+
+            //    if (rowIndex != -1)
+            //    {
+            //        var empCode = grdEmpList.Rows[rowIndex].Cells[0].Value.ToString();
+            //        Func<tbl_Employee, bool> tbl_EmployeeFunc = (x => x.EmpCode == empCode);
+            //        var empDT = bu.GetEmpDetails(tbl_EmployeeFunc);
+
+            //        if (empDT != null && empDT.Count > 0)
+            //        {
+            //            rdoEmpStatusN.Checked = empDT[0].FlagDel == false;
+            //            rdoEmpStatusC.Checked = empDT[0].FlagDel == true;
+
+            //            pnlEmpDT.Controls.SetTextBoxControlValue(empDT[0]);
+
+            //            ddlDepartmentID.SelectedValue = empDT[0].DepartmentID;
+            //            ddlPositionID.SelectedValue = empDT[0].PositionID;
+
+            //            if (ddlDepo.Items != null && ddlDepo.Items.Count > 0)
+            //                ddlDepo.SelectedIndex = 0;
+
+            //            ddlRoleID.SelectedValue = empDT[0].RoleID;
+            //            ddlTitleName.SelectedValue = empDT[0].TitleName;
+
+            //            pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
+
+            //            btnSearchBranch.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+            //            btnAdd.Enabled = true;
+            //            btnCopy.Enabled = false;
+            //            btnRemove.Enabled = true;
+
+            //            btnRemove.Enabled = !empDT[0].FlagDel;
+            //        }
+            //    }
+            //}
+        }
+
+        private void SelectEmployeeDetail(DataGridViewCellEventArgs e)
+        {
+            try
             {
-                int rowIndex = grdEmpList.CurrentCell.RowIndex;
+                DataGridViewRow grdRows = null;
 
-                if (rowIndex != -1)
+                if (e != null)
                 {
-                    var empCode = grdEmpList.Rows[rowIndex].Cells[0].Value.ToString();
-                    Func<tbl_Employee, bool> tbl_EmployeeFunc = (x => x.EmpCode == empCode);
-                    var empDT = bu.GetEmpDetails(tbl_EmployeeFunc);
+                    if (e.RowIndex == -1)
+                        return;
+                    else
+                        grdRows = grdEmpList.Rows[e.RowIndex];
+                }
+                else
+                {
+                    grdRows = grdEmpList.CurrentRow;
+                }
 
-                    if (empDT != null && empDT.Count > 0)
+                if (grdRows != null)
+                {
+                    string _EmpCode = grdRows.Cells[0].Value.ToString();
+
+                    int _DepartmentID = ddlDepartment.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlDepartment.SelectedValue);
+                    int _PositionID = ddlPosition.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPosition.SelectedValue);
+                    int _flagDel = rdoEmpN.Checked ? 0 : 1;
+
+                    Dictionary<string, object> _params = new Dictionary<string, object>();
+                    _params.Add("@flagDel", _flagDel);
+                    _params.Add("@DepartmentID", _DepartmentID);
+                    _params.Add("@PositionID", _PositionID);
+                    _params.Add("@Search", txtSearchEmp.Text);
+
+                    var dtEmployee = bu.proc_GetEmployee_Data(_params, true);
+
+                    DataRow r = dtEmployee.AsEnumerable().FirstOrDefault(x => x.Field<string>("EmpCode") == _EmpCode);
+
+                    if (r != null)
                     {
-                        rdoEmpStatusN.Checked = empDT[0].FlagDel == false;
-                        rdoEmpStatusC.Checked = empDT[0].FlagDel == true;
+                        bool flagDel = Convert.ToBoolean(r["FlagDel"]);
+                        rdoEmpStatusN.Checked = flagDel == false;
+                        rdoEmpStatusC.Checked = flagDel == true;
 
-                        pnlEmpDT.Controls.SetTextBoxControlValue(empDT[0]);
+                        txtEmpID.Text = r["EmpCode"].ToString();
+                        txtEmp_ID_Card.Text = r["EmpIDCard"].ToString(); //รหัสบัญชี
+                        txtIDCard.Text = r["IDCard"].ToString();
+                        ddlTitleName.SelectedValue = r["TitleName"].ToString();
+                        txtFirstName.Text = r["FirstName"].ToString();
+                        txtLastName.Text = r["LastName"].ToString();
 
-                        ddlDepartmentID.SelectedValue = empDT[0].DepartmentID;
-                        ddlPositionID.SelectedValue = empDT[0].PositionID;
+                        ddlDepartmentID.SelectedValue = Convert.ToInt32(r["DepartmentID"]);
+                        ddlPositionID.SelectedValue = Convert.ToInt32(r["PositionID"]);
 
                         if (ddlDepo.Items != null && ddlDepo.Items.Count > 0)
                             ddlDepo.SelectedIndex = 0;
 
-                        ddlRoleID.SelectedValue = empDT[0].RoleID;
-                        ddlTitleName.SelectedValue = empDT[0].TitleName;
+                        txtUsername.Text = r["Username"].ToString();
+                        txtPassword.Text = r["Password"].ToString();
+
+                        ddlRoleID.SelectedValue = Convert.ToInt32(r["RoleID"]);
 
                         pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
 
@@ -1455,20 +1594,28 @@ namespace AllCashUFormsApp.View.Page
                         btnCopy.Enabled = false;
                         btnRemove.Enabled = true;
 
-                        btnRemove.Enabled = !empDT[0].FlagDel;
+                        btnRemove.Enabled = !flagDel;
                     }
                 }
+
+
             }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+
+            
         }
 
         private void grdEmpList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            BindEmployeeDetail();
+            SelectEmployeeDetail(e);
         }
 
         private void grdEmpList_SelectionChanged(object sender, EventArgs e)
         {
-            BindEmployeeDetail();
+            //BindEmployeeDetail();
         }
 
         private void grdEmpList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -1478,33 +1625,38 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoEmpN_CheckedChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
         }
 
         private void rdoEmpC_CheckedChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
         }
 
         private void ddlDepartment_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2(); //Edit By Adisorn 20/12/2564
         }
 
         private void ddlPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2(); //Edit By Adisorn 20/12/2564
         }
 
         private void btnSearchEmp_Click(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2(); //Edit By Adisorn 20/12/2564
+           
         }
 
         private void txtSearchEmp_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                BindEmployeeData();
+                //BindEmployeeData();
+                BindEmployeeData_V2(); //Edit By Adisorn 20/12/2564
         }
 
         #endregion
@@ -1756,6 +1908,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnSearchWarehouse_Click(object sender, EventArgs e)
         {
             BindBranchWarehouseData();
+            BindBranchWarehouseDetail();
         }
 
         private void txtSearchWarehouse_KeyDown(object sender, KeyEventArgs e)
@@ -1766,12 +1919,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoWHNormal_CheckedChanged(object sender, EventArgs e)
         {
-            BindBranchWarehouseData();
+            //BindBranchWarehouseData();
         }
 
         private void rdoWHCancel_CheckedChanged(object sender, EventArgs e)
         {
-            BindBranchWarehouseData();
+            //BindBranchWarehouseData();
         }
 
         private void grdBWHList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -1781,7 +1934,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdBWHList_SelectionChanged(object sender, EventArgs e)
         {
-            BindBranchWarehouseDetail();
+            //BindBranchWarehouseDetail();
         }
 
         private void grdBWHList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -2109,6 +2262,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnSearchVan_Click(object sender, EventArgs e)
         {
             BindVaneData();
+            BindVanDetail();
         }
 
         private void txtSearchVan_KeyDown(object sender, KeyEventArgs e)
@@ -2124,7 +2278,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdVanList_SelectionChanged(object sender, EventArgs e)
         {
-            BindVanDetail();
+            //BindVanDetail();
         }
 
         private void grdVanList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -2134,12 +2288,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoVanN_CheckedChanged(object sender, EventArgs e)
         {
-            BindVaneData();
+            //BindVaneData();
         }
 
         private void rdoVanC_CheckedChanged(object sender, EventArgs e)
         {
-            BindVaneData();
+            //BindVaneData();
         }
 
         private void btnSaleEmpID_Click(object sender, EventArgs e)
@@ -2489,10 +2643,12 @@ namespace AllCashUFormsApp.View.Page
 
                         ddlZoneID.SelectedValue = sa[0].ZoneID == 0 ? -1 : sa[0].ZoneID;
 
-                        var saleAreDistinct = bu.GetSaleAreaDistrict(x => x.SalAreaID == salAreaID);
-                        if (saleAreDistinct != null && saleAreDistinct.Count > 0)
+                        var saleAreDistinct1 = bu.SelectSalAreaDistrict(salAreaID);
+
+                        //var saleAreDistinct = bu.GetSaleAreaDistrict(x => x.SalAreaID == salAreaID);
+                        if (saleAreDistinct1 != null && saleAreDistinct1.Count > 0)
                         {
-                            ddlWHID.SelectedValue = saleAreDistinct[0].WHID.ToString();
+                            ddlWHID.SelectedValue = saleAreDistinct1[0].WHID.ToString();
                         }
                         else
                             ddlWHID.SelectedValue = "-1";
@@ -2510,26 +2666,51 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
+            else
+            {
+                DataTable _dt = new DataTable();
+                SetSalAreaDistrict(_dt);
+                grdSaleDistrictList.DataSource = _dt;
+                lblDistrictCount.Text = _dt.Rows.Count.ToNumberFormat();
+
+                pnlMKT.ClearControl();
+                pnlMKT.OpenControl(false, readOnlyVANDTControls.ToArray());
+
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
+                btnSave.Enabled = false;
+                btnCancel.Enabled = false;
+
+            }
         }
 
         private void BindMKTData()
         {
-            string text = txtSearchMKT.Text;
             var selZone = Convert.ToInt32(ddlZone.SelectedValue);
 
-            Func<tbl_SalArea, bool> tbl_SalAreaFunc = null;
+           // Func<tbl_SalArea, bool> tbl_SalAreaFunc = null;
+           // int _zoneID = (selZone != -1 ? selZone : 0);
+           // tbl_SalAreaFunc = (x => x.FlagDel == rdoMKTC.Checked &&
+           //(x.ZoneID == (selZone != -1 ? selZone : x.ZoneID)) &&
+           //(x.SalAreaID.Contains(txtSearchMKT.Text) || x.SalAreaName.Contains(txtSearchMKT.Text)));
 
-            tbl_SalAreaFunc = (x => x.FlagDel == rdoMKTC.Checked &&
-           (x.ZoneID == (selZone != -1 ? selZone : x.ZoneID)) &&
-           (x.SalAreaID.Contains(text) || x.SalAreaName.Contains(text)));
+            int _flagDel = rdoMKTN.Checked ? 0 : 1;
+            int _ZoneID = selZone != -1 ? selZone : 0;
 
-            var dt = bu.GetMKTTable(tbl_SalAreaFunc);
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@Search", txtSearchMKT.Text);
+            _params.Add("@FlagDel", _flagDel);
+            _params.Add("@ZoneID", _ZoneID);
 
-            if (dt != null)
+            //var dt = bu.GetMKTTable(tbl_SalAreaFunc);//657
+
+            var dt2 = bu.proc_GetMKT_Data(_params);//366
+
+            var grd = grdSaleAreaList;
+            grd.DataSource = dt2;
+            lblMKTCount.Text = dt2.Rows.Count.ToNumberFormat();
+
+            if (dt2 != null && dt2.Rows.Count > 0)
             {
-                var grd = grdSaleAreaList;
-                grd.DataSource = dt;
-
                 DataGridViewColumn col0 = grd.Columns[0];
                 DataGridViewColumn col1 = grd.Columns[1];
                 DataGridViewColumn col2 = grd.Columns[2];
@@ -2543,8 +2724,6 @@ namespace AllCashUFormsApp.View.Page
                 col3.SetColumnStyle(80, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-
-                lblMKTCount.Text = dt.Rows.Count.ToNumberFormat();
             }
         }
 
@@ -2583,18 +2762,37 @@ namespace AllCashUFormsApp.View.Page
             lblDistrictCount.Text = dataTable.Rows.Count.ToNumberFormat();
         }
 
-        private void BindSaleAreaDistrict(string salAreaID)
+        private void SetSalAreaDistrict(DataTable dt)
         {
-            if (!string.IsNullOrEmpty(salAreaID))
+            dt.Columns.Add("จังหวัด", typeof(string));
+            dt.Columns.Add("อำเภอ", typeof(string));
+            dt.Columns.Add("รหัสตำบล", typeof(string));
+            dt.Columns.Add("ชื่อตำบล", typeof(string));
+        }
+
+        private void BindSaleAreaDistrict(string _SalAreaID)
+        {
+            if (!string.IsNullOrEmpty(_SalAreaID))
             {
-                Func<tbl_SalAreaDistrict, bool> tbl_SalAreaDistrictFunc = (x => x.SalAreaID == salAreaID);
-                var dt = new SaleAreaDistrict().GetDataTable(tbl_SalAreaDistrictFunc);
+                //Func<tbl_SalAreaDistrict, bool> tbl_SalAreaDistrictFunc = (x => x.SalAreaID == _SalAreaID);
+                //var dt = new SaleAreaDistrict().GetDataTable(tbl_SalAreaDistrictFunc);//3000
+                var _dt = new SaleAreaDistrict().SelectSingleDT(_SalAreaID); //new
 
-                if (dt != null)
+                DataTable districtDT = new DataTable();
+
+                SetSalAreaDistrict(districtDT);
+
+                foreach (DataRow r in _dt.Rows)
                 {
-                    var grd = grdSaleDistrictList;
-                    grd.DataSource = dt;
+                    districtDT.Rows.Add(r["ProvinceName"], r["AreaName"], r["DistrictCode"], r["DistrictName"]);
+                }
 
+                var grd = grdSaleDistrictList;
+                grd.DataSource = districtDT;
+                lblDistrictCount.Text = districtDT.Rows.Count.ToNumberFormat();
+
+                if (districtDT != null)
+                {
                     DataGridViewColumn col0 = grd.Columns[0];
                     DataGridViewColumn col1 = grd.Columns[1];
                     DataGridViewColumn col2 = grd.Columns[2];
@@ -2604,8 +2802,6 @@ namespace AllCashUFormsApp.View.Page
                     col1.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                     col2.SetColumnStyle(80, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                     col3.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 0);
-
-                    lblDistrictCount.Text = dt.Rows.Count.ToNumberFormat();
                 }
             }
         }
@@ -2613,22 +2809,26 @@ namespace AllCashUFormsApp.View.Page
         private void btnSearchMKT_Click(object sender, EventArgs e)
         {
             BindMKTData();
+            BindMKTDetail();
         }
 
         private void txtSearchMKT_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 BindMKTData();
+                BindMKTDetail();
+            }
         }
 
         private void rdoMKTN_CheckedChanged(object sender, EventArgs e)
         {
-            BindMKTData();
+            //BindMKTData();
         }
 
         private void rdoMKTC_CheckedChanged(object sender, EventArgs e)
         {
-            BindMKTData();
+            //BindMKTData();
         }
 
         private void btnDistrict_Click(object sender, EventArgs e)
@@ -2641,7 +2841,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdSaleAreaList_SelectionChanged(object sender, EventArgs e)
         {
-            BindMKTDetail();
+            //BindMKTDetail();
         }
 
         private void grdSaleAreaList_CellClick(object sender, DataGridViewCellEventArgs e)

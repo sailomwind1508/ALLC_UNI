@@ -15,6 +15,30 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="tbl_ArCustomerShelf"></param>
         /// <returns></returns>
+        public static List<tbl_ArCustomerShelf> SelectByCustID(this tbl_ArCustomerShelf tbl_ArCustomerShelf, string customerID)
+        {
+            List<tbl_ArCustomerShelf> list = new List<tbl_ArCustomerShelf>();
+            try
+            {
+                string sql = " SELECT CustomerID, WHID, ProductID, ShelfID FROM [dbo].[tbl_ArCustomerShelf] WHERE FlagDel = 0 AND CustomerID = '" + customerID + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomerShelf), sql);
+                list = dynamicListReturned.Cast<tbl_ArCustomerShelf>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_ArCustomerShelf"></param>
+        /// <returns></returns>
         public static List<tbl_ArCustomerShelf> Select(this tbl_ArCustomerShelf tbl_ArCustomerShelf, Func<tbl_ArCustomerShelf, bool> predicate)
         {
             List<tbl_ArCustomerShelf> list = new List<tbl_ArCustomerShelf>();
@@ -72,6 +96,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_ArCustomerShelf tbl_ArCustomerShelf)
         {
+            string msg = "start ArCustomerShelfDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -87,11 +114,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ArCustomerShelf.GetType());
             }
 
+            msg = "end ArCustomerShelfDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static void Insert(this tbl_ArCustomerShelf tbl_ArCustomerShelf, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ArCustomerShelfDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
 
@@ -102,10 +135,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_ArCustomerShelf.GetType());
             }
+
+            msg = "end ArCustomerShelfDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this tbl_ArCustomerShelf tbl_ArCustomerShelf, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ArCustomerShelfDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -144,6 +183,9 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end ArCustomerShelfDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -154,6 +196,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_ArCustomerShelf tbl_ArCustomerShelf)
         {
+            string msg = "start ArCustomerShelfDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -192,6 +237,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ArCustomerShelf.GetType());
             }
 
+            msg = "end ArCustomerShelfDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -202,6 +250,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_ArCustomerShelf tbl_ArCustomerShelf)
         {
+            string msg = "start ArCustomerShelfDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -216,6 +267,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_ArCustomerShelf.GetType());
             }
+
+            msg = "end ArCustomerShelfDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

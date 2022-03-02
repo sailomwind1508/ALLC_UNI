@@ -68,14 +68,28 @@ namespace AllCashUFormsApp.Controller
                 ProductMovementModel pmm = new ProductMovementModel();
                 pmm.ProductID = _invMovementList[i].ProductID;
 
-                if (!string.IsNullOrEmpty(_invMovementList[i].ProductName))
-                    pmm.ProductName = _invMovementList[i].ProductName;
+                //if (!string.IsNullOrEmpty(_invMovementList[i].ProductName))
+                //    pmm.ProductName = _invMovementList[i].ProductName;
+                //else
+                //{
+                //    var prd = allProductList.FirstOrDefault(x => x.ProductID == _invMovementList[i].ProductID);
+                //    if (prd != null)
+                //        pmm.ProductName = prd.ProductName;
+                //}
+
+                //get product name from tbl_product only Last edit by sailom .k 12/09/2021-----------------------------
+                var prd = allProductList.FirstOrDefault(x => x.ProductID == _invMovementList[i].ProductID);
+                if (prd != null)
+                    pmm.ProductName = prd.ProductName;
                 else
                 {
-                    var prd = allProductList.FirstOrDefault(x => x.ProductID == _invMovementList[i].ProductID);
-                    if (prd != null)
-                        pmm.ProductName = prd.ProductName;
+                    var prdList = GetProduct(x => x.ProductID == _invMovementList[i].ProductID);
+                    if (prdList.Count > 0)
+                    {
+                        pmm.ProductName = prdList[0].ProductName;
+                    }
                 }
+                //-----------------------------------------------------------------------------------------------------
 
                 var prdItem = allProductList.FirstOrDefault(x => x.ProductID == _invMovementList[i].ProductID);
                 if (prdItem != null)
@@ -136,12 +150,13 @@ namespace AllCashUFormsApp.Controller
             return pmmList;
         }
 
-        private void PeapreData(string prdGroupID, string prdSubGroupID, List<string> prdCodeList)
+        private void PeapreData(string whid, string prdGroupID, string prdSubGroupID, List<string> prdCodeList)
         {
-            Func<tbl_Product, bool> tbl_ProductFunc = (x => x.FlagDel == false && x.ProductGroupID.ToString() == (prdGroupID != "-1" ? prdGroupID : x.ProductGroupID.ToString()) &&
-                x.ProductSubGroupID.ToString() == (prdSubGroupID != "-1" ? prdSubGroupID : x.ProductSubGroupID.ToString()));
+            //Func<tbl_Product, bool> tbl_ProductFunc = (x => x.FlagDel == false && x.ProductGroupID.ToString() == (prdGroupID != "-1" ? prdGroupID : x.ProductGroupID.ToString()) &&
+            //    x.ProductSubGroupID.ToString() == (prdSubGroupID != "-1" ? prdSubGroupID : x.ProductSubGroupID.ToString()));
 
-            productList = (new tbl_Product()).Select(tbl_ProductFunc);
+            //productList = (new tbl_Product()).Select(tbl_ProductFunc
+            productList = (new tbl_Product()).SelectForMovement(prdGroupID, prdSubGroupID);
             allProductList = productList;
 
             if (prdCodeList.Count > 0)
@@ -151,7 +166,7 @@ namespace AllCashUFormsApp.Controller
 
             MemoryManagement.FlushMemory();
 
-            var tmp = new tbl_InvMovement().SelectForMovement();
+            var tmp = new tbl_InvMovement().SelectForMovement(whid, productList.Select(p => p.ProductID).ToList());
 
             MemoryManagement.FlushMemory();
 
@@ -182,7 +197,7 @@ namespace AllCashUFormsApp.Controller
             try
             {
                 if (!isSummary)
-                    PeapreData(prdGroupID, prdSubGroupID, prdCodeList);
+                    PeapreData(fwhid, prdGroupID, prdSubGroupID, prdCodeList);
 
                 invMovementList = new List<tbl_InvMovement>();
                 invMovementList_BLC = new List<tbl_InvMovement>();
@@ -210,14 +225,20 @@ namespace AllCashUFormsApp.Controller
                     }
                     else
                     {
-                        invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
-                        invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+                        //invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
+                        //invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+
+                        invMovementList_BLC.AddRange(tmp_invMovementList_BLC);
+                        invMovementList.AddRange(tmp_invMovementList);
                     }
                 }
                 else
                 {
-                    invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
-                    invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+                    //invMovementList_BLC.AddRange(tmp_invMovementList_BLC.Where(x => x.WHID == fwhid));
+                    //invMovementList.AddRange(tmp_invMovementList.Where(x => x.WHID == fwhid));
+
+                    invMovementList_BLC.AddRange(tmp_invMovementList_BLC);
+                    invMovementList.AddRange(tmp_invMovementList);
                 }
 
                 var productIDList = invMovementList.Select(x => x.ProductID).Distinct().OrderBy(x => x).ToList();
@@ -275,9 +296,11 @@ namespace AllCashUFormsApp.Controller
         {
             try
             {
-                PeapreData(prdGroupID, prdSubGroupID, prdCodeList);
+                PeapreData(fwhid, prdGroupID, prdSubGroupID, prdCodeList);
 
-                var tmp_invMovementList = allInvMovementList;
+                //var tmp_invMovementList = allInvMovementList;
+                Func<tbl_InvMovement, bool> tbl_InvMovementFunc_BLC_func = (x => (x.TrnDate.ToDateTimeFormat() <= tDate.ToDateTimeFormat()));
+                var tmp_invMovementList = allInvMovementList.Where(tbl_InvMovementFunc_BLC_func).ToList(); //new tbl_InvMovement().Select(tbl_InvMovementFunc_BLC);
 
                 var _tmp_invMovementList = new List<tbl_InvMovement>();
 

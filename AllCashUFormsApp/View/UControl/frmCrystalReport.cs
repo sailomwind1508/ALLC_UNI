@@ -1,6 +1,4 @@
-﻿using CrystalDecisions.CrystalReports.Engine;
-using CrystalDecisions.Shared;
-using CrystalDecisions.Windows.Forms;
+﻿
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
@@ -32,7 +30,7 @@ namespace AllCashUFormsApp.View.UControl
         Dictionary<string, object> Params = new Dictionary<string, object>();
         private string ReportPath = ConfigurationManager.AppSettings["ReportPath"];
         private string XSLTPath = ConfigurationManager.AppSettings["XSLTPath"];
-        ReportDocument rprt = new ReportDocument();
+        //ReportDocument rprt = new ReportDocument();
 
         List<string> colsNameList = new List<string>();
 
@@ -61,19 +59,18 @@ namespace AllCashUFormsApp.View.UControl
         private string headerRemark = "";
         public string excelName { get; set; }
 
-        //private QuarterlyDetailsDao quarterlyDetailsDao = new QuarterlyDetailsDao();
-        //private EmployeeDao employeeDao = new EmployeeDao();
-        //EmployeeTimeDao employeeTimeDao = new EmployeeTimeDao();
-        //private QuarterlyBonusDao quarterlyBonusDao = new QuarterlyBonusDao();
-        //List<QuarterlyBonusModel> quarterlyBonusModelList = new List<QuarterlyBonusModel>();
-        //List<EmployeeTimeModel> employeeTimeModelList = new List<EmployeeTimeModel>();
-        //private FilterModel filterModel = new FilterModel();
+        
 
         CultureInfo newCulture = new CultureInfo("th-TH");
 
         public frmCrystalReport()
         {
             InitializeComponent();
+        }
+
+        private void frmCrystalReport_Load(object sender, EventArgs e)
+        {
+           
         }
 
         public void PrepareReportPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool _autoGenExcel = false)
@@ -176,55 +173,150 @@ namespace AllCashUFormsApp.View.UControl
             }
         }
 
-        private ParameterField SetCrystalParam(string paramName, string paramValue)
+        public void PrepareManualExcelCenterReportPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool _autoGenExcel = false)
         {
-            ParameterField pfItemYr = new ParameterField();
-
             try
             {
-                pfItemYr.ParameterFieldName = paramName;
+                //formName = frmName;
+                formText = popUPText;
+                ReportName = reportName;
+                StoreName = storeName;
+                Params = _params;
+                autoGenEx = _autoGenExcel;
 
-                ParameterDiscreteValue dcItemYr = new ParameterDiscreteValue();
+                if (formText == "รายงานสัดส่วน")
+                {
+                    empname = "ชื่อศูนย์";
+                    van = "แวน";
+                    actualexvat_ex = "Actual (Exc Vat)";
+                    actualexvat = "Actual (Inc Vat)";
+                    actualperday = "Act./ Day";
+                    percentage = "% Count./Van.";
+                    visited = "Visited";
+                    visit_per_day = "Visit/Day";
+                    visit_perc = "% Visited";
+                    bought = "Bought";
+                    boughtperday = "Bought/Day";
+                    sku = "SKU";
+                    invoice = "Invoice";
+                    sku_inv = "SKU./Invoice";
 
-                dcItemYr.Value = paramValue;
+                    headerReportName = "รายงานสัดส่วน";
+                    headerDate = "วันที่ : ";
 
-                pfItemYr.CurrentValues.Add(dcItemYr);
+                    colsNameList = new List<string> { empname, van, actualexvat_ex, actualexvat, actualperday, percentage, visited, visit_per_day, visit_perc, bought, boughtperday, sku, invoice, sku_inv };
 
-                return pfItemYr;
+                    ExportRatioCenterToExcel();
+                }
+                else if (formText == "รายงานสัดส่วน(KPI)")
+                {
+                    empname = "ชื่อศูนย์";
+                    van = "แวน";
+                    actualexvat = "Actual(Exc Vat)";
+                    actualinvat = "Actual(Inc Vat)";
+                    bought = "Bought(นับซ้ำ)";
+                    sku = "SKU";
+                    visited = "Visited";
+                    com = "Com";
+                    perc_com = "% Com";
+                    invoice = "Invoice";
+                    sku_inv = "SKU./Invoice";
+
+                    headerReportName = "รายงานสัดส่วน(KPI)";
+                    headerDate = "วันที่ : ";
+
+                    colsNameList = new List<string> { empname, van, actualexvat, actualinvat, bought, sku, visited, com, perc_com, invoice, sku_inv };
+
+                    ExportRatioKPICenterToExcel();
+                }
             }
             catch (Exception ex)
             {
                 ex.WriteLog(this.GetType());
+            }
+        }
 
-                //string msg = ex.Message;
-                //msg.ShowErrorMessage();
 
-                return new ParameterField();
+        public void PrepareExcelReportWithDTPopup(string popUPText, string reportName, DataTable dt, bool _autoGenExcel = false)
+        {
+            try
+            {
+                //formName = frmName;
+                formText = popUPText;
+                ReportName = reportName;
+                //StoreName = storeName;
+                //Params = _params;
+                autoGenEx = _autoGenExcel;
+
+                //PrepareCrytalToExcelReport();
+                CreateExcelFromXSLT(popUPText, dt);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
             }
         }
 
         private void frmCrystalReport_FormClosed(object sender, FormClosedEventArgs e)
         {
+            
+        }
+
+        private XPathDocument GetDocument(DataTable dt)
+        {
+            using (StringWriter sw = new StringWriter())
+            {
+                DataSet ds = new DataSet();
+                ds.Tables.Add(dt);
+                ds.WriteXml(sw);
+                using (StringReader sr = new StringReader(sw.ToString()))
+                {
+                    return new XPathDocument(sr);
+                }
+            }
+        }
+
+        private void CreateExcelFromXSLT(string excelName, DataTable dt)
+        {
             try
             {
-                crystalReportViewer1.ReportSource = null;
+                string _reportPath = XSLTPath + ReportName;
 
-                crystalReportViewer1.Refresh();
+                XPathDocument input = GetDocument(dt);
+                string dir = @"C:\AllCashExcels";
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
 
-                rprt = new ReportDocument();
+                string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+                if (formText != "ใบรับสินค้า")
+                {
+                    excelName = string.Join("", excelName, '_', cDate);
+                }
+                else
+                    excelName = "Sheet1";
 
-                rprt.Close();
-                rprt.Dispose();
+                string _excelName = dir + @"\" + excelName + ".xls";
+                FormHelper.PrintingReportName.Add(_excelName);
 
-                GC.Collect();
+                using (FileStream output = new FileStream(_excelName, FileMode.Create))
+                {
+                    XslCompiledTransform xslt = new XslCompiledTransform();
+                    xslt.Load(_reportPath);
+                    xslt.Transform(input, null, output);
+                }
 
-                this.Controls.Clear();
-                this.Dispose();
-                this.Close();
+                if (FormHelper.ShowPrintingReportName)
+                    System.Diagnostics.Process.Start(_excelName);
             }
             catch (Exception ex)
             {
+
                 ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
             }
         }
 
@@ -271,8 +363,15 @@ namespace AllCashUFormsApp.View.UControl
                 }
 
                 string cDate = DateTime.Now.ToString("yyMMddhhmmss");
-                excelName = string.Join("", excelName, '_', cDate);
+                if (formText != "ใบรับสินค้า")
+                {
+                    excelName = string.Join("", excelName, '_', cDate);
+                }
+                else
+                    excelName = "Sheet1";
+
                 string _excelName = dir + @"\" + excelName + ".xls";
+                FormHelper.PrintingReportName.Add(_excelName);
 
                 using (FileStream output = new FileStream(_excelName, FileMode.Create))
                 {
@@ -281,7 +380,8 @@ namespace AllCashUFormsApp.View.UControl
                     xslt.Transform(input, null, output);
                 }
 
-                System.Diagnostics.Process.Start(_excelName);
+                if (FormHelper.ShowPrintingReportName)
+                    System.Diagnostics.Process.Start(_excelName);  
             }
             catch (Exception ex)
             {
@@ -297,45 +397,45 @@ namespace AllCashUFormsApp.View.UControl
         {
             try
             {
-                //string excelName = @"C:\AllCashExcels\test-report.xls";
-                string dir = @"C:\AllCashExcels";
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
+                ////string excelName = @"C:\AllCashExcels\test-report.xls";
+                //string dir = @"C:\AllCashExcels";
+                //if (!Directory.Exists(dir))
+                //{
+                //    Directory.CreateDirectory(dir);
+                //}
 
-                string _excelName = dir + @"\" + excelName + ".xls";
+                //string _excelName = dir + @"\" + excelName + ".xls";
 
-                ReportDocument cryRpt = rprt;
+                //ReportDocument cryRpt = rprt;
 
-                ParameterFields paramFields = new ParameterFields();
-                foreach (var item in Params)
-                {
-                    cryRpt.SetParameterValue(item.Key, item.Value.ToString());
-                }
+                //ParameterFields paramFields = new ParameterFields();
+                //foreach (var item in Params)
+                //{
+                //    cryRpt.SetParameterValue(item.Key, item.Value.ToString());
+                //}
 
-                ExportOptions CrExportOptions;
+                //ExportOptions CrExportOptions;
 
-                DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
-                ExcelFormatOptions CrFormatTypeOptions = new ExcelFormatOptions();
-                CrDiskFileDestinationOptions.DiskFileName = _excelName;
-                CrExportOptions = cryRpt.ExportOptions;
-                CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
-                CrExportOptions.ExportFormatType = ExportFormatType.Excel;
-                CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
-                CrExportOptions.FormatOptions = CrFormatTypeOptions;
-                cryRpt.Export();
+                //DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
+                //ExcelFormatOptions CrFormatTypeOptions = new ExcelFormatOptions();
+                //CrDiskFileDestinationOptions.DiskFileName = _excelName;
+                //CrExportOptions = cryRpt.ExportOptions;
+                //CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
+                //CrExportOptions.ExportFormatType = ExportFormatType.Excel;
+                //CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
+                //CrExportOptions.FormatOptions = CrFormatTypeOptions;
+                //cryRpt.Export();
 
-                //open excel
-                System.Diagnostics.Process.Start(_excelName);
+                ////open excel
+                //System.Diagnostics.Process.Start(_excelName);
 
-                //Microsoft.Office.Interop.Excel.Application xlapp;
-                //Microsoft.Office.Interop.Excel.Workbook xlworkbook;
-                //xlapp = new Microsoft.Office.Interop.Excel.Application();
+                ////Microsoft.Office.Interop.Excel.Application xlapp;
+                ////Microsoft.Office.Interop.Excel.Workbook xlworkbook;
+                ////xlapp = new Microsoft.Office.Interop.Excel.Application();
 
-                //xlworkbook = xlapp.Workbooks.Open(_excelName, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                ////xlworkbook = xlapp.Workbooks.Open(_excelName, 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
 
-                //xlapp.Visible = true;
+                ////xlapp.Visible = true;
             }
             catch (Exception ex)
             {
@@ -350,139 +450,37 @@ namespace AllCashUFormsApp.View.UControl
         {
             try
             {
-                this.Text = formText;
+                //this.Text = formText;
 
-                string _reportPath = ReportPath + ReportName;
+                //string _reportPath = ReportPath + ReportName;
 
-                rprt.Load(_reportPath);
+                //rprt.Load(_reportPath);
 
-                TableLogOnInfos crTableLogOnInfos = new TableLogOnInfos();
+                //TableLogOnInfos crTableLogOnInfos = new TableLogOnInfos();
 
-                TableLogOnInfo crTableLogOnInfo = new TableLogOnInfo();
-                ConnectionInfo tConnInfo = new ConnectionInfo();
+                //TableLogOnInfo crTableLogOnInfo = new TableLogOnInfo();
+                //ConnectionInfo tConnInfo = new ConnectionInfo();
 
-                var conStr = Helper.ConnectionString;
+                //var conStr = Helper.ConnectionString;
 
-                string ServerName = conStr.Split('=')[4].Split(';')[0];
-                string DatabaseName = conStr.Split('=')[5].Split(';')[0];
-                string UserName = conStr.Split('=')[6].Split(';')[0];
-                string Password = conStr.Split('=')[7].Split(';')[0];
+                //string ServerName = conStr.Split('=')[4].Split(';')[0];
+                //string DatabaseName = conStr.Split('=')[5].Split(';')[0];
+                //string UserName = conStr.Split('=')[6].Split(';')[0];
+                //string Password = conStr.Split('=')[7].Split(';')[0];
 
-                tConnInfo.ServerName = ServerName;
-                tConnInfo.DatabaseName = DatabaseName;
-                tConnInfo.UserID = UserName;
-                tConnInfo.Password = Password;
-                foreach (CrystalDecisions.CrystalReports.Engine.Table crTable in rprt.Database.Tables)
-                {
-                    crTableLogOnInfo = crTable.LogOnInfo;
-                    crTableLogOnInfo.ConnectionInfo = tConnInfo;
-                    crTable.ApplyLogOnInfo(crTableLogOnInfo);
-                    crTableLogOnInfos.Add(crTableLogOnInfo);
-                }
-                crystalReportViewer1.LogOnInfo = crTableLogOnInfos;
-
-
-                DataSet ds = new DataSet();
-
-                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
-                {
-                    SqlCommand cmd = new SqlCommand(StoreName, con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 0;
-                    foreach (var item in Params)
-                    {
-                        cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
-                    }
-
-                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
-
-                    sda.Fill(ds, StoreName);
-                }
-
-                ParameterFields paramFields = new ParameterFields();
-                foreach (var item in Params)
-                {
-                    paramFields.Add(SetCrystalParam(item.Key, item.Value.ToString()));
-                }
-
-                //string stashPrinterName = Printer.Session_DefaultPrinter;
-
-
-                //rprt.PrintOptions.PrinterName = stashPrinterName;
-                //rprt.PrintToPrinter(1, true, 1, 1);
-
-                //crystalReportViewer1.ParameterFieldInfo = paramFields;
-
-                rprt.SetDataSource(ds);
-
-                //crystalReportViewer1.ReportSource = rprt;
-
-                //crystalReportViewer1.RefreshReport();
-
-                PrintToExcel(ReportName.Split('.')[0].ToString());
-
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-
-                //string msg = ex.Message;
-                //msg.ShowErrorMessage();
-            }
-        }
-
-        private void frmCrystalReport_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                frmWait wait = new frmWait();
-                wait.Show();
-
-                this.Text = formText;
-
-                string _reportPath = ReportPath + ReportName;
-
-                rprt.Load(_reportPath);
-
-                TableLogOnInfos crTableLogOnInfos = new TableLogOnInfos();
-
-                TableLogOnInfo crTableLogOnInfo = new TableLogOnInfo();
-                ConnectionInfo tConnInfo = new ConnectionInfo();
-
-                var conStr = Helper.ConnectionString;
-
-                string ServerName = conStr.Split('=')[4].Split(';')[0];
-                string DatabaseName = conStr.Split('=')[5].Split(';')[0];
-                string UserName = conStr.Split('=')[6].Split(';')[0];
-                string Password = conStr.Split('=')[7].Split(';')[0];
-
-                //TableLogOnInfo crtableLogoninfo = new TableLogOnInfo();
-
-                //ConnectionInfo crConnectionInfo = new ConnectionInfo();
-
-                //Tables CrTables;
-
-                //crConnectionInfo.ServerName = ServerName;
-
-                //crConnectionInfo.DatabaseName = DatabaseName;
-
-                //crConnectionInfo.UserID = UserName;
-
-                //crConnectionInfo.Password = Password;
-
-                //CrTables = rprt.Database.Tables;
-
-                //foreach (CrystalDecisions.CrystalReports.Engine.Table CrTable in CrTables)
-
+                //tConnInfo.ServerName = ServerName;
+                //tConnInfo.DatabaseName = DatabaseName;
+                //tConnInfo.UserID = UserName;
+                //tConnInfo.Password = Password;
+                //foreach (CrystalDecisions.CrystalReports.Engine.Table crTable in rprt.Database.Tables)
                 //{
-
-                //    crtableLogoninfo = CrTable.LogOnInfo;
-
-                //    crtableLogoninfo.ConnectionInfo = crConnectionInfo;
-
-                //    CrTable.ApplyLogOnInfo(crtableLogoninfo);
-
+                //    crTableLogOnInfo = crTable.LogOnInfo;
+                //    crTableLogOnInfo.ConnectionInfo = tConnInfo;
+                //    crTable.ApplyLogOnInfo(crTableLogOnInfo);
+                //    crTableLogOnInfos.Add(crTableLogOnInfo);
                 //}
+                //crystalReportViewer1.LogOnInfo = crTableLogOnInfos;
+
 
                 //DataSet ds = new DataSet();
 
@@ -500,7 +498,6 @@ namespace AllCashUFormsApp.View.UControl
 
                 //    sda.Fill(ds, StoreName);
                 //}
-                //rprt.SetDataSource(ds);
 
                 //ParameterFields paramFields = new ParameterFields();
                 //foreach (var item in Params)
@@ -508,68 +505,21 @@ namespace AllCashUFormsApp.View.UControl
                 //    paramFields.Add(SetCrystalParam(item.Key, item.Value.ToString()));
                 //}
 
-                //crystalReportViewer1.ParameterFieldInfo = paramFields;
-
-                //crystalReportViewer1.ReportSource = rprt;
+                ////string stashPrinterName = Printer.Session_DefaultPrinter;
 
 
-                tConnInfo.ServerName = ServerName;
-                tConnInfo.DatabaseName = DatabaseName;
-                tConnInfo.UserID = UserName;
-                tConnInfo.Password = Password;
-                foreach (CrystalDecisions.CrystalReports.Engine.Table crTable in rprt.Database.Tables)
-                {
-                    crTableLogOnInfo = crTable.LogOnInfo;
-                    crTableLogOnInfo.ConnectionInfo = tConnInfo;
-                    crTable.ApplyLogOnInfo(crTableLogOnInfo);
-                    crTableLogOnInfos.Add(crTableLogOnInfo);
-                }
-                crystalReportViewer1.LogOnInfo = crTableLogOnInfos;
+                ////rprt.PrintOptions.PrinterName = stashPrinterName;
+                ////rprt.PrintToPrinter(1, true, 1, 1);
 
+                ////crystalReportViewer1.ParameterFieldInfo = paramFields;
 
-                DataSet ds = new DataSet();
+                //rprt.SetDataSource(ds);
 
-                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
-                {
-                    SqlCommand cmd = new SqlCommand(StoreName, con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 0;
-                    foreach (var item in Params)
-                    {
-                        cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
-                    }
+                ////crystalReportViewer1.ReportSource = rprt;
 
-                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                ////crystalReportViewer1.RefreshReport();
 
-                    sda.Fill(ds, StoreName);
-                }
-
-                ParameterFields paramFields = new ParameterFields();
-                foreach (var item in Params)
-                {
-                    paramFields.Add(SetCrystalParam(item.Key, item.Value.ToString()));
-                }
-
-                //string stashPrinterName = Printer.Session_DefaultPrinter;
-
-
-                //rprt.PrintOptions.PrinterName = stashPrinterName;
-                //rprt.PrintToPrinter(1, true, 1, 1);
-
-                crystalReportViewer1.ParameterFieldInfo = paramFields;
-
-                rprt.SetDataSource(ds);
-
-                crystalReportViewer1.ReportSource = rprt;
-
-                crystalReportViewer1.RefreshReport();
-
-                //wait.Hide();
-                wait.Dispose();
-                wait.Close();
-
-                //if (autoGenEx)
-                //    PrintToExcel(ReportName.Split('.')[0].ToString());
+                //PrintToExcel(ReportName.Split('.')[0].ToString());
 
             }
             catch (Exception ex)
@@ -581,8 +531,173 @@ namespace AllCashUFormsApp.View.UControl
             }
         }
 
-        
         #region รายงานสัดส่วน
+
+        public bool ExportRatioCenterToExcel()
+        {
+            bool result = false;
+
+            string _reportPath = XSLTPath + ReportName;
+
+            DataSet ds = new DataSet();
+
+            using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(StoreName, con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+                foreach (var item in Params)
+                {
+                    cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
+                }
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+
+                sda.Fill(ds, StoreName);
+            }
+
+            XPathDocument input = GetDocument(ds);
+            string dir = @"C:\AllCashExcels";
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+            headerReportName = string.Join("", headerReportName, '_', cDate);
+            string _excelName = dir + @"\" + headerReportName + ".xls";
+
+            //Cursor.Current = Cursors.WaitCursor;
+            //SaveFileDialog saveFileDialog1 = null;
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            excel.ScreenUpdating = false;
+            excel.Visible = false;
+            excel.DisplayAlerts = false;
+            excel.Interactive = false;
+
+            Microsoft.Office.Interop.Excel.Workbook worKbooK = excel.Workbooks.Add(Type.Missing);
+
+            int pid = -1;
+            HandleRef hwnd = new HandleRef(excel, (IntPtr)excel.Hwnd);
+            GetWindowThreadProcessId(hwnd, out pid);
+
+            List<DataTable> dtList = new List<DataTable>();
+
+            try
+            {
+                DataTable dt = ds.Tables[0];
+                var enumList = dt.AsEnumerable().ToList();
+                var dayGroup = enumList.GroupBy(x => x.Field<int>("day")).Select(y => new { data = y.First() }).ToList();
+                //decimal countVan = Convert.ToDecimal(enumList.Select(x => x.Field<string>("whid")).Distinct().Count());
+
+                DataTable dtClone = new DataTable();
+                foreach (var item in colsNameList)
+                {
+                    dtClone.Columns.Add(item);
+                }
+
+                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                int dof = _dayGroup.Count;
+                foreach (var day in _dayGroup)
+                {
+                    var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
+                    decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("BranchID")).Distinct().Count());
+
+                    dtClone.Clear();
+
+                    var tempDataRow = new List<DataRow>();
+                    tempDataRow = dt.AsEnumerable().Where(x => x.Field<int>("day") == day.data.Field<int>("day")).ToList();
+
+                    string sheetName = dof.ToString();// day.data.Field<int>("day").ToString(); //change request by manager UBN last edit by sailom 19/10/2021
+                    if (day.data.Field<int>("day") == 99)
+                    {
+                        sheetName = "สัดส่วน";
+                    }
+
+                    dof--;
+
+                    for (int i = 0; i < tempDataRow.Count; i++)
+                    {
+                        var r = tempDataRow[i];
+                        dtClone.Rows.Add(r["branchname"].ToString(), r["BranchID"].ToString(), r["actualexvat"].ToString(), r["actualincvat"].ToString(), r["actualperday"].ToString(), r["percentage"].ToString()
+                        , r["visit_cust"].ToString(), r["visit_cust"].ToString(), r["perc_visit"].ToString(), r["custbought"].ToString(), r["boughtperday"].ToString(), r["sku"].ToString()
+                        , r["invoice"].ToString(), r["sku/inv"].ToString());
+                    }
+                    //Add total row
+                    var total_actualexvat = tempDataRow.Sum(x => x.Field<decimal>("actualexvat"));
+                    var total_actualincvat = tempDataRow.Sum(x => x.Field<decimal>("actualincvat"));
+                    var total_actualperday = tempDataRow.Sum(x => x.Field<decimal>("actualperday"));
+                    var total_percentage = tempDataRow.Sum(x => x.Field<decimal>("percentage"));
+                    var total_visit_cust = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
+                    var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
+
+                    var total_custbought = tempDataRow.Sum(x => x.Field<decimal>("custbought"));
+                    var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday"));
+                    var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
+                    var total_invoice = tempDataRow.Sum(x => x.Field<decimal>("invoice"));
+                    var total_sku_inv = tempDataRow.Sum(x => x.Field<decimal>("sku/inv"));
+                    var total_perc_visit = total_invoice / (total_visit_cust == 0 ? 1 : total_visit_cust); //tempDataRow.Sum(x => x.Field<decimal>("perc_visit"));
+
+                    dtClone.Rows.Add("TOTAL:", "-", total_actualexvat, total_actualincvat, total_actualperday, total_percentage, total_visit_cust, total_visit_cust2,
+                        total_perc_visit, total_custbought, total_boughtperday, total_sku, total_invoice, total_sku_inv);
+
+                    //Add ACG row
+                    var avg_actualexvat = total_actualexvat / (countVan == 0 ? 1 : countVan);
+                    var avg_actualincvat = total_actualincvat / (countVan == 0 ? 1 : countVan);
+                    var avg_actualperday = total_actualperday / (countVan == 0 ? 1 : countVan);
+                    var avg_percentage = total_percentage / (countVan == 0 ? 1 : countVan);
+                    var avg_visit_cust = total_visit_cust / (countVan == 0 ? 1 : countVan);
+                    var avg_visit_cust2 = total_visit_cust2 / (countVan == 0 ? 1 : countVan);
+
+                    var avg_custbought = total_custbought / (countVan == 0 ? 1 : countVan);
+                    var avg_boughtperday = total_boughtperday / (countVan == 0 ? 1 : countVan);
+                    var avg_sku = total_sku / (countVan == 0 ? 1 : countVan);
+                    var avg_invoice = total_invoice / (countVan == 0 ? 1 : countVan);
+                    var avg_sku_inv = total_sku_inv / (countVan == 0 ? 1 : countVan);
+                    var avg_perc_visit = avg_invoice / (avg_visit_cust == 0 ? 1 : avg_visit_cust);
+
+                    dtClone.Rows.Add("AVG/VAN:", "-", avg_actualexvat, avg_actualincvat, avg_actualperday, avg_percentage, avg_visit_cust, avg_visit_cust2,
+                        avg_perc_visit, avg_custbought, avg_boughtperday, avg_sku, avg_invoice, avg_sku_inv);
+
+                    if (dtClone != null && dtClone.Rows.Count > 0)
+                    {
+                        DataRow row1 = dt.Rows[0];
+                        //string fDate = tempDataRow.First()["HDate"].ToString();// _dayGroup.First().data.Field<string>("HDate");
+                        //string lDate = tempDataRow.Last()["HDate"].ToString();// _dayGroup.Last().data.Field<string>("HDate");
+                        //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
+
+                        string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), "CENTER"
+                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+
+                        CreateRatioWorkSheet(worKbooK, dtClone, header);
+                    }
+                }
+
+                worKbooK.SaveAs(_excelName);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
+            finally
+            {
+                worKbooK.Close(false, Type.Missing, Type.Missing);
+                NAR(worKbooK);
+                excel.Quit();
+                NAR(excel);
+
+                //Finally
+                KillProcess(pid, "EXCEL");
+
+                System.Diagnostics.Process.Start(_excelName);
+            }
+
+            return result;
+        }
 
         public bool ExportRatioToExcel()
         {
@@ -648,21 +763,24 @@ namespace AllCashUFormsApp.View.UControl
                 }
 
                 var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                int dof = _dayGroup.Count;
                 foreach (var day in _dayGroup)
                 {
                     var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
                     decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("whid")).Distinct().Count());
-
+         
                     dtClone.Clear();
 
                     var tempDataRow = new List<DataRow>();
                     tempDataRow = dt.AsEnumerable().Where(x => x.Field<int>("day") == day.data.Field<int>("day")).ToList();
 
-                    string sheetName = day.data.Field<int>("day").ToString();
+                    string sheetName = dof.ToString();// day.data.Field<int>("day").ToString(); //change request by manager UBN last edit by sailom 19/10/2021
                     if (day.data.Field<int>("day") == 99)
                     {
                         sheetName = "สัดส่วน";
                     }
+
+                    dof--;
 
                     for (int i = 0; i < tempDataRow.Count; i++)
                     {
@@ -684,25 +802,25 @@ namespace AllCashUFormsApp.View.UControl
                     var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
                     var total_invoice = tempDataRow.Sum(x => x.Field<decimal>("invoice"));
                     var total_sku_inv = tempDataRow.Sum(x => x.Field<decimal>("sku/inv"));
-                    var total_perc_visit = total_invoice / total_visit_cust; //tempDataRow.Sum(x => x.Field<decimal>("perc_visit"));
+                    var total_perc_visit = total_invoice / (total_visit_cust == 0 ? 1 : total_visit_cust); //tempDataRow.Sum(x => x.Field<decimal>("perc_visit"));
 
                     dtClone.Rows.Add("TOTAL:", "-", total_actualexvat, total_actualincvat, total_actualperday, total_percentage, total_visit_cust, total_visit_cust2,
                         total_perc_visit, total_custbought, total_boughtperday, total_sku, total_invoice, total_sku_inv);
 
                     //Add ACG row
-                    var avg_actualexvat = total_actualexvat / countVan;
-                    var avg_actualincvat = total_actualincvat / countVan;
-                    var avg_actualperday = total_actualperday / countVan;
-                    var avg_percentage = total_percentage / countVan;
-                    var avg_visit_cust = total_visit_cust / countVan;
-                    var avg_visit_cust2 = total_visit_cust2 / countVan;
+                    var avg_actualexvat = total_actualexvat / (countVan == 0 ? 1 : countVan);
+                    var avg_actualincvat = total_actualincvat / (countVan == 0 ? 1 : countVan);
+                    var avg_actualperday = total_actualperday / (countVan == 0 ? 1 : countVan);
+                    var avg_percentage = total_percentage / (countVan == 0 ? 1 : countVan);
+                    var avg_visit_cust = total_visit_cust / (countVan == 0 ? 1 : countVan);
+                    var avg_visit_cust2 = total_visit_cust2 / (countVan == 0 ? 1 : countVan);
                     
-                    var avg_custbought = total_custbought / countVan;
-                    var avg_boughtperday = total_boughtperday / countVan;
-                    var avg_sku = total_sku / countVan;
-                    var avg_invoice = total_invoice / countVan;
-                    var avg_sku_inv = total_sku_inv / countVan;
-                    var avg_perc_visit = avg_invoice / avg_visit_cust;
+                    var avg_custbought = total_custbought / (countVan == 0 ? 1 : countVan);
+                    var avg_boughtperday = total_boughtperday / (countVan == 0 ? 1 : countVan);
+                    var avg_sku = total_sku / (countVan == 0 ? 1 : countVan);
+                    var avg_invoice = total_invoice / (countVan == 0 ? 1 : countVan);
+                    var avg_sku_inv = total_sku_inv / (countVan == 0 ? 1 : countVan);
+                    var avg_perc_visit = avg_invoice / (avg_visit_cust == 0 ? 1 : avg_visit_cust);
 
                     dtClone.Rows.Add("AVG/VAN:", "-", avg_actualexvat, avg_actualincvat, avg_actualperday, avg_percentage, avg_visit_cust, avg_visit_cust2,
                         avg_perc_visit, avg_custbought, avg_boughtperday, avg_sku, avg_invoice, avg_sku_inv);
@@ -820,23 +938,23 @@ namespace AllCashUFormsApp.View.UControl
                     }
 
                     // Write this data to the excel worksheet.
-                    Range beginWrite = (Range)worKsheeT.Cells[beginRows, 1];
-                    Range endWrite = (Range)worKsheeT.Cells[rows + beginRows, columns];
+                    Microsoft.Office.Interop.Excel.Range beginWrite = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[beginRows, 1];
+                    Microsoft.Office.Interop.Excel.Range endWrite = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[rows + beginRows, columns];
 
-                    Range sheetData = worKsheeT.Range[beginWrite, endWrite];
+                    Microsoft.Office.Interop.Excel.Range sheetData = worKsheeT.Range[beginWrite, endWrite];
                     sheetData.Value2 = data;
 
                     sheetData.Font.Size = 10;
                     sheetData.Font.Bold = false;
 
-                    Range beginWriteTT = (Range)worKsheeT.Cells[(rows + beginRows) - 1, 1];
-                    Range endWriteTT = (Range)worKsheeT.Cells[(rows + beginRows) - 1, columns];
+                    Microsoft.Office.Interop.Excel.Range beginWriteTT = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows) - 1, 1];
+                    Microsoft.Office.Interop.Excel.Range endWriteTT = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows) - 1, columns];
 
-                    Range beginWriteAVG = (Range)worKsheeT.Cells[(rows + beginRows), 1];
-                    Range endWriteAVG = (Range)worKsheeT.Cells[(rows + beginRows), columns];
+                    Microsoft.Office.Interop.Excel.Range beginWriteAVG = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows), 1];
+                    Microsoft.Office.Interop.Excel.Range endWriteAVG = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows), columns];
 
-                    Range total = worKsheeT.Range[beginWriteTT, endWriteTT];
-                    Range avg = worKsheeT.Range[beginWriteAVG, endWriteAVG];
+                    Microsoft.Office.Interop.Excel.Range total = worKsheeT.Range[beginWriteTT, endWriteTT];
+                    Microsoft.Office.Interop.Excel.Range avg = worKsheeT.Range[beginWriteAVG, endWriteAVG];
 
                     total.Font.Bold = true;
                     avg.Font.Bold = true;
@@ -893,6 +1011,165 @@ namespace AllCashUFormsApp.View.UControl
         #endregion
 
         #region รายงานสัดส่วน(KPI)
+
+        public bool ExportRatioKPICenterToExcel()
+        {
+            bool result = false;
+
+            string _reportPath = XSLTPath + ReportName;
+
+            DataSet ds = new DataSet();
+
+            using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(StoreName, con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+                foreach (var item in Params)
+                {
+                    cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
+                }
+
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+
+                sda.Fill(ds, StoreName);
+            }
+
+            XPathDocument input = GetDocument(ds);
+            string dir = @"C:\AllCashExcels";
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+            headerReportName = string.Join("", headerReportName, '_', cDate);
+            string _excelName = dir + @"\" + headerReportName + ".xls";
+
+            //Cursor.Current = Cursors.WaitCursor;
+            //SaveFileDialog saveFileDialog1 = null;
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            excel.ScreenUpdating = false;
+            excel.Visible = false;
+            excel.DisplayAlerts = false;
+            excel.Interactive = false;
+
+            Microsoft.Office.Interop.Excel.Workbook worKbooK = excel.Workbooks.Add(Type.Missing);
+
+            int pid = -1;
+            HandleRef hwnd = new HandleRef(excel, (IntPtr)excel.Hwnd);
+            GetWindowThreadProcessId(hwnd, out pid);
+
+            List<DataTable> dtList = new List<DataTable>();
+
+            try
+            {
+                DataTable dt = ds.Tables[0];
+                var enumList = dt.AsEnumerable().ToList();
+                var dayGroup = enumList.GroupBy(x => x.Field<int>("day")).Select(y => new { data = y.First() }).ToList();
+
+                DataTable dtClone = new DataTable();
+                foreach (var item in colsNameList)
+                {
+                    dtClone.Columns.Add(item);
+                }
+
+                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                int dof = _dayGroup.Count;
+                foreach (var day in _dayGroup)
+                {
+                    var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
+                    decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("BranchID")).Distinct().Count());
+
+                    dtClone.Clear();
+
+                    var tempDataRow = new List<DataRow>();
+                    tempDataRow = dt.AsEnumerable().Where(x => x.Field<int>("day") == day.data.Field<int>("day")).ToList();
+                    tempDataRow = tempDataRow.OrderBy(x => x.Field<string>("BranchID")).ToList();
+
+                    string sheetName = dof.ToString();// day.data.Field<int>("day").ToString(); //change request by manager UBN last edit by sailom 19/10/2021
+                    if (day.data.Field<int>("day") == 99)
+                    {
+                        sheetName = "สัดส่วน";
+                    }
+
+                    dof--;
+
+                    for (int i = 0; i < tempDataRow.Count; i++)
+                    {
+                        var r = tempDataRow[i];
+
+                        dtClone.Rows.Add(r["branchname"].ToString(), r["BranchID"].ToString(), r["actualexvat"].ToString(), r["actualincvat"].ToString(), r["CustBought"].ToString(), r["sku"].ToString()
+                        , r["visited"].ToString(), r["com"].ToString(), r["perc_com"].ToString(), r["invoice"].ToString(), r["sku_inv"].ToString());
+                    }
+
+                    //Add total row
+                    var total_actualexvat = tempDataRow.Sum(x => x.Field<decimal>("actualexvat"));
+                    var total_actualincvat = tempDataRow.Sum(x => x.Field<decimal>("actualincvat"));
+                    var total_bought = tempDataRow.Sum(x => x.Field<decimal>("CustBought"));
+                    var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
+                    var total_visited = tempDataRow.Sum(x => x.Field<decimal>("visited"));
+                    var total_com = tempDataRow.Sum(x => x.Field<decimal>("com"));
+                    var total_perc_com = total_com / (total_visited == 0 ? 1 : total_visited);
+                    var total_invoice = tempDataRow.Sum(x => x.Field<decimal>("invoice"));
+                    var total_sku_inv = tempDataRow.Sum(x => x.Field<decimal>("sku_inv"));
+
+                    dtClone.Rows.Add("TOTAL:", "-", total_actualexvat, total_actualincvat, total_bought, total_sku, total_visited, total_com,
+                        total_perc_com, total_invoice, total_sku_inv);
+
+                    //Add ACG row
+                    var avg_actualexvat = total_actualexvat / (countVan == 0 ? 1 : countVan);
+                    var avg_actualincvat = total_actualincvat / (countVan == 0 ? 1 : countVan);
+                    var avg_bought = total_bought / (countVan == 0 ? 1 : countVan);
+                    var avg_sku = total_sku / (countVan == 0 ? 1 : countVan);
+                    var avg_visited = total_visited / (countVan == 0 ? 1 : countVan);
+                    var avg_com = total_com / (countVan == 0 ? 1 : countVan);
+                    var avg_perc_com = avg_com / (avg_visited == 0 ? 1 : avg_visited);
+                    var avg_invoice = total_invoice / (countVan == 0 ? 1 : countVan);
+                    var avg_sku_inv = total_sku_inv / (countVan == 0 ? 1 : countVan);
+
+                    dtClone.Rows.Add("AVG/VAN:", "-", avg_actualexvat, avg_actualincvat, avg_bought, avg_sku, avg_visited, avg_com,
+                        avg_perc_com, avg_invoice, avg_sku_inv);
+
+                    if (dtClone != null && dtClone.Rows.Count > 0)
+                    {
+                        DataRow row1 = dt.Rows[0];
+                        //string fDate = tempDataRow.First()["HDate"].ToString();
+                        //string lDate = tempDataRow.Last()["HDate"].ToString();
+                        //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
+
+                        string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), "CENTER"
+                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+
+                        CreateRatioKPIWorkSheet(worKbooK, dtClone, header);
+                    }
+                }
+
+                worKbooK.SaveAs(_excelName);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
+            finally
+            {
+                worKbooK.Close(false, Type.Missing, Type.Missing);
+                NAR(worKbooK);
+                excel.Quit();
+                NAR(excel);
+
+                //Finally
+                KillProcess(pid, "EXCEL");
+
+                System.Diagnostics.Process.Start(_excelName);
+            }
+
+            return result;
+        }
 
         public bool ExportRatioKPIToExcel()
         {
@@ -957,22 +1234,25 @@ namespace AllCashUFormsApp.View.UControl
                 }
 
                 var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                int dof = _dayGroup.Count;
                 foreach (var day in _dayGroup)
                 {
                     var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
                     decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("whid")).Distinct().Count());
-
+           
                     dtClone.Clear();
 
                     var tempDataRow = new List<DataRow>();
                     tempDataRow = dt.AsEnumerable().Where(x => x.Field<int>("day") == day.data.Field<int>("day")).ToList();
                     tempDataRow = tempDataRow.OrderBy(x => x.Field<string>("whid")).ToList();
 
-                    string sheetName = day.data.Field<int>("day").ToString();
+                    string sheetName = dof.ToString();// day.data.Field<int>("day").ToString(); //change request by manager UBN last edit by sailom 19/10/2021
                     if (day.data.Field<int>("day") == 99)
                     {
                         sheetName = "สัดส่วน";
                     }
+
+                    dof--;
 
                     for (int i = 0; i < tempDataRow.Count; i++)
                     {
@@ -1120,23 +1400,23 @@ namespace AllCashUFormsApp.View.UControl
                     }
 
                     // Write this data to the excel worksheet.
-                    Range beginWrite = (Range)worKsheeT.Cells[beginRows, 1];
-                    Range endWrite = (Range)worKsheeT.Cells[rows + beginRows, columns];
+                    Microsoft.Office.Interop.Excel.Range beginWrite = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[beginRows, 1];
+                    Microsoft.Office.Interop.Excel.Range endWrite = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[rows + beginRows, columns];
 
-                    Range sheetData = worKsheeT.Range[beginWrite, endWrite];
+                    Microsoft.Office.Interop.Excel.Range sheetData = worKsheeT.Range[beginWrite, endWrite];
                     sheetData.Value2 = data;
 
                     sheetData.Font.Size = 10;
                     sheetData.Font.Bold = false;
 
-                    Range beginWriteTT = (Range)worKsheeT.Cells[(rows + beginRows) - 1, 1];
-                    Range endWriteTT = (Range)worKsheeT.Cells[(rows + beginRows) - 1, columns];
+                    Microsoft.Office.Interop.Excel.Range beginWriteTT = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows) - 1, 1];
+                    Microsoft.Office.Interop.Excel.Range endWriteTT = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows) - 1, columns];
 
-                    Range beginWriteAVG = (Range)worKsheeT.Cells[(rows + beginRows), 1];
-                    Range endWriteAVG = (Range)worKsheeT.Cells[(rows + beginRows), columns];
+                    Microsoft.Office.Interop.Excel.Range beginWriteAVG = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows), 1];
+                    Microsoft.Office.Interop.Excel.Range endWriteAVG = (Microsoft.Office.Interop.Excel.Range)worKsheeT.Cells[(rows + beginRows), columns];
 
-                    Range total = worKsheeT.Range[beginWriteTT, endWriteTT];
-                    Range avg = worKsheeT.Range[beginWriteAVG, endWriteAVG];
+                    Microsoft.Office.Interop.Excel.Range total = worKsheeT.Range[beginWriteTT, endWriteTT];
+                    Microsoft.Office.Interop.Excel.Range avg = worKsheeT.Range[beginWriteAVG, endWriteAVG];
 
                     total.Font.Bold = true;
                     avg.Font.Bold = true;
@@ -1279,265 +1559,7 @@ namespace AllCashUFormsApp.View.UControl
         }
 
 
-        //private void CreateExcelFromXSLT2(string excelName)
-        //{
-        //    try
-        //    {
-        //        string _reportPath = XSLTPath + ReportName;
-
-        //        DataSet ds = new DataSet();
-        //        //DataTable _dt = new DataTable("Table");
-        //        //DataTable dt = new DataTable("Table1");
-        //        //DataTable dt2 = new DataTable("Table2");
-
-        //        using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
-        //        {
-        //            DataSet _ds = new DataSet();
-
-        //            SqlCommand cmd = new SqlCommand(StoreName, con);
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.CommandTimeout = 0;
-        //            foreach (var item in Params)
-        //            {
-        //                cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
-        //            }
-
-        //            SqlDataAdapter sda = new SqlDataAdapter(cmd);
-
-        //            sda.Fill(ds, StoreName);
-        //            //_dt = _ds.Tables[0];
-        //        }
-
-        //        //dt = _dt.Clone();
-        //        //dt = _dt.Copy();
-        //        //dt.TableName = "Table1";
-        //        //ds.Tables.Add(dt);
-        //        //dt2 = dt.Clone();
-        //        //dt2 = dt.Copy();
-        //        //dt2.TableName = "Table2";
-        //        //ds.Tables.Add(dt2);
-
-        //        //XPathDocument input = GetDocument(ds);
-        //        string dir = @"C:\AllCashExcels";
-        //        if (!Directory.Exists(dir))
-        //        {
-        //            Directory.CreateDirectory(dir);
-        //        }
-
-        //        string cDate = DateTime.Now.ToString("yyMMddhhmmss");
-        //        excelName = string.Join("", excelName, '_', cDate);
-        //        string _excelName = dir + @"\" + excelName + ".xls";
-
-        //        StringWriter sw = new StringWriter();
-        //        {
-        //            ds.WriteXml(sw);
-        //            using (StringReader sr = new StringReader(sw.ToString()))
-        //            {
-
-        //            }
-        //        }
-
-        //        XmlDocument xdoc = new XmlDocument();
-        //        xdoc.LoadXml(sw.ToString());
-        //        //xdoc.Load(sw.ToString());
-        //        XmlNodeList nodes = xdoc.SelectNodes("//Rep_V_Sales_XSLT");
-        //        int i = 0;
-        //        foreach (XmlNode node in nodes)
-        //        {
-        //            i++;
-        //            XmlDocument a = new XmlDocument();
-        //            a.LoadXml("<?xml version='1.0' encoding='UTF-8'?>" + node.OuterXml);
-        //            //XmlDeclaration declaration =a.CreateXmlDeclaration("1.0", "UTF-8", null);
-        //            //a.AppendChild(declaration);
-        //            XslCompiledTransform xct = new XslCompiledTransform();
-        //            xct.Load(_reportPath);
-
-        //            string _exName = dir + @"\" + excelName + "_" + i.ToString() + ".xls";
-        //            XmlTextWriter writer = new XmlTextWriter(_exName, null);
-        //            writer.WriteProcessingInstruction("xml", "version='1.0'");
-        //            xct.Transform(a, null, writer);
-        //            writer.Close();
-
-        //            System.Diagnostics.Process.Start(_exName);
-        //        }
-
-
-        //        //using (XmlTextWriter tw = new XmlTextWriter(_excelName, null))
-        //        //{
-        //        //    tw.Formatting = Formatting.Indented;
-        //        //    tw.Indentation = 10;
-        //        //    tw.WriteStartDocument();
-        //        //    tw.WriteProcessingInstruction("xml-stylesheet", StoreName);
-        //        //    ds.WriteXml(tw);
-
-        //        //}
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        ex.WriteLog(this.GetType());
-
-        //        string msg = ex.Message;
-        //        msg.ShowErrorMessage();
-        //    }
-        //}
-
-        //private void LoadReport()
-        //{
-        //    //CrystalReportSource CrystalReportSource1 = new CrystalReportSource();
-        //    CrystalReportViewer CrystalReportViewer1 = new CrystalReportViewer();
-        //    CrystalReportViewer1 = crystalReportViewer1;
-
-        //    CrystalReportViewer1.ReportSource = rprt;
-        //    CrystalReportViewer1.EnableParameterPrompt = false;
-        //    CrystalReportSource1.Report.FileName = "Report3.rpt";
-        //    CrystalReportSource1.EnableCaching = false;
-
-        //    CrystalReportSource1.ReportDocument.SetParameterValue(0, ponumber);
-        //    CrystalReportSource1.ReportDocument.SetParameterValue(1, receiptno);
-
-
-
-        //    TableLogOnInfo logOnInfo = new TableLogOnInfo();
-
-        //    logOnInfo.ConnectionInfo.ServerName = ConfigurationManager.AppSettings["WarehouseReportServerName"];
-        //    logOnInfo.ConnectionInfo.DatabaseName = ConfigurationManager.AppSettings["WarehouseReportDatabaseName"];
-        //    logOnInfo.ConnectionInfo.UserID = ConfigurationManager.AppSettings["WarehouseReportUserID"];
-        //    logOnInfo.ConnectionInfo.Password = ConfigurationManager.AppSettings["WarehouseReportPassword"];
-
-        //    TableLogOnInfos infos = new TableLogOnInfos();
-        //    infos.Add(logOnInfo);
-        //    CrystalReportViewer1.LogOnInfo = infos;
-
-        //    maindiv.Controls.Add(CrystalReportSource1);
-        //    maindiv.Controls.Add(CrystalReportViewer1);
-
-
-        //    CrystalReportViewer1.DataBind();
-        //}
-
-
-        //private void CreateExcelFromXSLT(string excelName)
-        //{
-        //    try
-        //    {
-        //        string _reportPath = XSLTPath + ReportName;
-
-
-        //        DataSet ds = new DataSet();
-        //        DataTable _dt = new DataTable("Table");
-        //        DataTable dt = new DataTable("Table1");
-        //        DataTable dt2 = new DataTable("Table2");
-
-        //        int i = 0;
-        //        using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
-        //        {
-        //            DataSet _ds = new DataSet();
-
-        //            SqlCommand cmd = new SqlCommand(StoreName, con);
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.CommandTimeout = 0;
-        //            foreach (var item in Params)
-        //            {
-        //                cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
-        //            }
-
-        //            SqlDataAdapter sda = new SqlDataAdapter(cmd);
-
-        //            sda.Fill(_ds, StoreName);
-        //            _dt = _ds.Tables[0];
-        //        }
-
-        //        dt = _dt.Clone();
-        //        dt = _dt.Copy();
-        //        dt.TableName = "Table1";
-        //        ds.Tables.Add(dt);
-        //        dt2 = dt.Clone();
-        //        dt2 = dt.Copy();
-        //        dt2.TableName = "Table2";
-        //        ds.Tables.Add(dt2);
-
-        //        //XPathDocument input = GetDocument(ds);
-        //        string dir = @"C:\AllCashExcels";
-        //        //if (!Directory.Exists(dir))
-        //        //{
-        //        //    Directory.CreateDirectory(dir);
-        //        //}
-
-        //        string cDate = DateTime.Now.ToString("yyMMddhhmmss");
-        //        excelName = string.Join("", excelName, '_', cDate);
-        //        string _excelName = dir + @"\" + excelName + ".xls";
-
-        //        StreamReader xml;
-        //        XmlDocument objXmlDocument = new XmlDocument();
-        //        XPathDocument objXPathDocument;
-        //        XslCompiledTransform objXslTransform = new XslCompiledTransform();
-        //        FileStream fs;
-        //        string strXMLFilePath = string.Empty;
-        //        string strXSLTPath = string.Empty;
-
-        //        DataSet dsWklyCollOutStdBillClone = new DataSet();
-        //        //string strXMLFilePath = string.Empty;
-        //        FileInfo objFileInfo;     //Common fileinfor for all Xml file objects
-
-        //        //Get Xml from DataSet
-        //        objXmlDocument.LoadXml(ds.GetXml());
-        //        strXMLFilePath = _excelName;
-        //        //Delete old Xml file
-        //        if (!strXMLFilePath.Equals(string.Empty))
-        //        {
-        //            objFileInfo = new FileInfo(strXMLFilePath);
-        //            if (objFileInfo.Exists)
-        //            {
-        //                objFileInfo.Delete();
-        //            }
-        //        }
-        //        objXmlDocument.Save(strXMLFilePath);
-
-        //        //Load XML document
-        //        xml = new StreamReader(strXMLFilePath);
-        //        objXPathDocument = new XPathDocument(xml);
-
-        //        //Load Xslt
-        //        //strXSLTPath = strInstallPath + "WklyCollRrtOutstdBill_Template.xslt";
-        //        objXmlDocument.Load(_excelName);
-
-        //        //strExcelFileOutstdBill = string.Format(filePath + @"\" + "Outstanding Bills for {0} as on {1}.xml", strCurrentPartnerName, dtCollectionMailLastRunDate.AddDays(-1).ToString("ddMMMyyyy"));
-
-        //        //Create output stream
-        //        fs = new FileStream(_excelName, FileMode.Create);
-
-        //        //Do actual transform of Xml
-        //        objXslTransform.Load(objXmlDocument);
-        //        objXslTransform.Transform(objXPathDocument, null, fs);
-
-        //        //AppLogWklyCollReport.WriteLine(string.Format("[{0}] - Writing to excel file " + strExcelFileOutstdBill + " is complete.", CurrentDateTime));
-
-        //        xml.Close();
-        //        xml.Dispose();
-        //        fs.Close();
-        //        fs.Dispose();
-
-        //        //Delete newly created Xml file
-        //        objFileInfo = new FileInfo(strXMLFilePath);
-        //        if (objFileInfo.Exists)
-        //        {
-        //            objFileInfo.Delete();
-        //        }
-
-        //        System.Diagnostics.Process.Start(_excelName);
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        ex.WriteLog(this.GetType());
-
-        //        string msg = ex.Message;
-        //        msg.ShowErrorMessage();
-        //    }
-        //}
+        
 
 
 

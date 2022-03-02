@@ -15,6 +15,11 @@ namespace AllCashUFormsApp.Controller
 
         }
 
+        public List<tbl_SalArea> GetAllSaleArea(List<string> listOfSalAreaID)
+        {
+            return new tbl_SalArea().Select(listOfSalAreaID);
+        }
+
         public List<tbl_SalArea> GetAllSaleArea()
         {
             return new tbl_SalArea().SelectAll();
@@ -34,42 +39,49 @@ namespace AllCashUFormsApp.Controller
         {
             try
             {
-                List<tbl_POMaster> tbl_POMaster = new List<tbl_POMaster>();
-                tbl_POMaster = (new tbl_POMaster()).Select(docTypepredicate);
+                //List<tbl_POMaster> tbl_POMaster = new List<tbl_POMaster>();
+                //tbl_POMaster = (new tbl_POMaster()).Select(docTypepredicate);
 
-                var docStatus = GetDocStatus();
-                var allEmp = GetEmployee();
+                //var docStatus = GetDocStatus();
+                //var allEmp = GetEmployee();
 
-                DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
-                //newTable.Clear();
+                //DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
+                ////newTable.Clear();
 
-                newTable.Columns.Add("DocNo", typeof(string));
-                newTable.Columns.Add("DocStatusImg", typeof(Bitmap));  //Type.GetType("System.Byte[]"));
-                newTable.Columns.Add("DocStatus", typeof(string));
-                newTable.Columns.Add("DocRef", typeof(string));
-                newTable.Columns.Add("DocDate", typeof(DateTime));
-                newTable.Columns.Add("SuppName", typeof(string));
-                newTable.Columns.Add("CreditDay", typeof(short));
-                newTable.Columns.Add("DueDate", typeof(DateTime));
-                newTable.Columns.Add("TotalDue", typeof(decimal));
-                newTable.Columns.Add("CrUser", typeof(string));
-                newTable.Columns.Add("Remark", typeof(string));
+                //newTable.Columns.Add("DocNo", typeof(string));
+                //newTable.Columns.Add("DocStatusImg", typeof(Bitmap));  //Type.GetType("System.Byte[]"));
+                //newTable.Columns.Add("DocStatus", typeof(string));
+                //newTable.Columns.Add("DocRef", typeof(string));
+                //newTable.Columns.Add("DocDate", typeof(DateTime));
+                //newTable.Columns.Add("SuppName", typeof(string));
+                //newTable.Columns.Add("CreditDay", typeof(short));
+                //newTable.Columns.Add("DueDate", typeof(DateTime));
+                //newTable.Columns.Add("TotalDue", typeof(decimal));
+                //newTable.Columns.Add("CrUser", typeof(string));
+                //newTable.Columns.Add("Remark", typeof(string));
 
-                foreach (var r in tbl_POMaster)
-                {
-                    Bitmap closeImg = new Bitmap(Properties.Resources.power_off);
-                    Bitmap cancelmg = new Bitmap(Properties.Resources.closeBtn);
-                    Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
+                //foreach (var r in tbl_POMaster)
+                //{
+                //    Bitmap closeImg = new Bitmap(Properties.Resources.power_off);
+                //    Bitmap cancelmg = new Bitmap(Properties.Resources.closeBtn);
+                //    Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
 
-                    string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
-                    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
-                    string crUser = "";
-                    if (emp != null)
-                        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
+                //    string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
+                //    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
+                //    string crUser = "";
+                //    if (emp != null)
+                //        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
 
-                    newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
-                        r.SuppName, r.CreditDay, r.DueDate, r.TotalDue, crUser, r.Remark);
-                }
+                //    newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
+                //        r.SuppName, r.CreditDay, r.DueDate, r.TotalDue, crUser, r.Remark);
+                //}
+
+                //return newTable;
+
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_RT_GetDataTable";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
 
                 return newTable;
             }

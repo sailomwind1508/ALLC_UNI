@@ -42,6 +42,12 @@ namespace AllCashUFormsApp.View.UControl
             predicateEmp = null;
             predicateDistrict = null;
             predicateCust = null;
+
+            //searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
+            //searchBWHControls = new List<Control> { txtWHCode, txtWHName };
+            //txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
+            //txtWHCode.KeyDown += TxtWHCode_KeyDown;
+
             //predicateSAR = null;
         }
 
@@ -49,6 +55,7 @@ namespace AllCashUFormsApp.View.UControl
         {
             if (e.KeyCode == Keys.Enter)
             {
+                searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
                 TextBox txt = (TextBox)sender;
                 this.BindData("Customer", searchCustControls, txt.Text);
             }
@@ -58,22 +65,26 @@ namespace AllCashUFormsApp.View.UControl
         {
             if (e.KeyCode == Keys.Enter)
             {
+                searchBWHControls = new List<Control> { txtWHCode, txtWHName };
                 TextBox txt = (TextBox)sender;
                 this.BindData("BranchWarehouse", searchBWHControls, txt.Text);
             }
         }
 
-        public void PreparePopupForm(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, string[] _conditionString = null)
+        public void PreparePopupForm(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, string[] _conditionString = null, bool isHideExSearch = false)
         {
+
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             conditionString = _conditionString;
             //predicate = null;
             //predicateEmp = null;
             //predicateSAR = null;
+
         }
 
         public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_BranchWarehouse, bool> _predicate = null)
         {
+
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             predicate = _predicate;
             //predicateEmp = null;
@@ -81,18 +92,20 @@ namespace AllCashUFormsApp.View.UControl
         }
         public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_MstDistrict, bool> _predicate = null)
         {
+
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             predicateDistrict = _predicate; // 
 
         }
         public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_Employee, bool> _predicate = null)
         {
+
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             predicateEmp = _predicate;
             //predicate = null;
             //predicateSAR = null;
         }
-        public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_ArCustomer, bool> _predicate = null)
+        public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_ArCustomer, bool> _predicate = null, bool isHideExSearch = false)
         {
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             predicateCust = _predicate;
@@ -102,6 +115,7 @@ namespace AllCashUFormsApp.View.UControl
 
         public void PreparePopupFormWithPredicate(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, Func<tbl_SalAreaDistrict, bool> _predicate = null)
         {
+
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             //predicateSAR = _predicate;
             //predicate = null;
@@ -124,6 +138,7 @@ namespace AllCashUFormsApp.View.UControl
                 case "RJProduct": { _objType = ObjectType.RJProduct; rowindex = _rowIndex.Value; } break;
                 case "RTProduct": { _objType = ObjectType.RTProduct; rowindex = _rowIndex.Value; } break;
                 case "TRProduct": { _objType = ObjectType.TRProduct; } break;
+                case "CCProduct": { _objType = ObjectType.CCProduct; } break;
                 case "IVProduct": { _objType = ObjectType.IVProduct; rowindex = _rowIndex.Value; } break;
                 case "IMProduct": { _objType = ObjectType.IMProduct; rowindex = _rowIndex.Value; } break;
                 case "VEProduct": { _objType = ObjectType.VEProduct; rowindex = _rowIndex.Value; } break;
@@ -148,6 +163,7 @@ namespace AllCashUFormsApp.View.UControl
                 case "SaleAreaDistrict": { _objType = ObjectType.SaleAreaDistrict; } break;
                 case "IM": { _objType = ObjectType.IM; } break;
                 case "IV": { _objType = ObjectType.IV; } break;
+                case "CCIV": { _objType = ObjectType.CCIV; } break;
                 case "IVPre": { _objType = ObjectType.IVPre; } break;
                 case "IMPre": { _objType = ObjectType.IMPre; } break;
                 case "PreOrder": { _objType = ObjectType.PreOrder; } break;
@@ -207,8 +223,21 @@ namespace AllCashUFormsApp.View.UControl
             //}
             else
             {
-                //if (_objType != ObjectType.IV)
-                dt = obj.GetDataTableByCondition(conditionString);
+                //edit by sailom .k 14/12/2021-----------------------------------
+                if (_objType == ObjectType.IV)
+                {
+                    if (conditionString != null)
+                    {
+                        conditionString = new string[] { "19000101" };
+                        dt = obj.GetDataTableByCondition(conditionString);
+                    }
+                    else
+                        dt = obj.GetDataTableByCondition(null);
+                }//edit by sailom .k 14/12/2021-----------------------------------
+                else
+                {
+                    dt = obj.GetDataTableByCondition(conditionString);
+                }
 
                 searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
                 searchBWHControls = new List<Control> { txtWHCode, txtWHName };
@@ -227,7 +256,7 @@ namespace AllCashUFormsApp.View.UControl
 
             if (_gridColumn[0].AddNumberInFirstRow)
             {
-                grdList.RowPostPaint += gridView_RowPostPaint;
+                //grdList.RowPostPaint += gridView_RowPostPaint;
                 grdList.RowHeadersVisible = true;
 
                 dtpDocDate.SetDateTimePickerFormat();
@@ -251,17 +280,29 @@ namespace AllCashUFormsApp.View.UControl
                 pnlAdcSearch.Visible = true;
                 pnlAdcSearch.Show();
 
-                if (_gridColumn[0].AddSearchAddOn)
-                {
-                    lnkSearchAddOn.Visible = true;
-                    lnkSearchAddOn.Show();
-                }
+                //if (_gridColumn[0].AddSearchAddOn)
+                //{
+                //    lnkSearchAddOn.Visible = true;
+                //    lnkSearchAddOn.Show();
+                //}
             }
             else
             {
-                grdList.RowPostPaint -= gridView_RowPostPaint;
+                //grdList.RowPostPaint -= gridView_RowPostPaint;
                 grdList.RowHeadersVisible = false;
+            }
 
+            if (_gridColumn[0].AddSearchAddOn)
+            {
+
+                pnlAdcSearch.Hide();
+                pnlAdcSearch.Visible = true;
+
+                lnkSearchAddOn.Hide();
+                lnkSearchAddOn.Visible = true;
+            }
+            else
+            {
                 pnlAdcSearch.Hide();
                 pnlAdcSearch.Visible = false;
 
@@ -278,18 +319,26 @@ namespace AllCashUFormsApp.View.UControl
 
         private void gridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
-            var grid = sender as DataGridView;
-            var rowIdx = (e.RowIndex + 1).ToString();
+            //var grid = sender as DataGridView;
+            //var rowIdx = (e.RowIndex + 1).ToString();
 
-            var centerFormat = new StringFormat()
-            {
-                // right alignment might actually make more sense for numbers
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center
-            };
+            //var centerFormat = new StringFormat()
+            //{
+            //    // right alignment might actually make more sense for numbers
+            //    Alignment = StringAlignment.Center,
+            //    LineAlignment = StringAlignment.Center
+            //};
 
-            var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
-            e.Graphics.DrawString(rowIdx, this.Font, SystemBrushes.ControlText, headerBounds, centerFormat);
+            //var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+            //e.Graphics.DrawString(rowIdx, this.Font, SystemBrushes.ControlText, headerBounds, centerFormat);
+
+            //grid.RowsDefaultCellStyle.BackColor = Color.White;
+            //grid.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+
+            //grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(69, 171, 213);
+            //grid.EnableHeadersVisualStyles = false;
+
+            grdList.SetRowPostPaint(sender, e, this.Font);
         }
 
         private void BindDataGrid(DataTable _dt)
@@ -303,9 +352,14 @@ namespace AllCashUFormsApp.View.UControl
                 grdList.Columns[i].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
 
+            //grdList.DataBindingComplete += (o, e) =>
+            // {
+            //     foreach (DataGridViewRow row in grdList.Rows)
+            //         row.HeaderCell.Value = (row.Index + 1).ToString();
+            // };
+
             lblCountList.Text = _dt.Rows.Count.ToNumberFormat();
         }
-
 
         private void Search()
         {
@@ -315,7 +369,7 @@ namespace AllCashUFormsApp.View.UControl
 
             try
             {
-                string searchText = txtSSuppCode.Text;
+                string searchText = txtSSuppCode.Text.ToUpper();
                 SelectItem(searchText, ref _dt, ref filteredRows);
 
                 //if (_objType == ObjectType.IV) //for IV
@@ -366,6 +420,7 @@ namespace AllCashUFormsApp.View.UControl
                 case ObjectType.RJProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.RTProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.TRProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
+                case ObjectType.CCProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.IVProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.IMProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
                 case ObjectType.VEProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
@@ -385,11 +440,12 @@ namespace AllCashUFormsApp.View.UControl
                 case ObjectType.FromBranchID: SubSelectItem(text, ref _dt, ref filteredRows, "BranchCode", "BranchName", null); break;
                 case ObjectType.Employee: SubSelectItem(text, ref _dt, ref filteredRows, "EmpCode", "EmpName", null); break;
                 case ObjectType.EmployeeName: SubSelectItem(text, ref _dt, ref filteredRows, "EmpCode", "EmpName", null); break;
-                case ObjectType.Customer: SubSelectItem(text, ref _dt, ref filteredRows, "CustomerCode", "CustName", "SalAreaName", "WHID"); break;
-                case ObjectType.CustomerPre: SubSelectItem(text, ref _dt, ref filteredRows, "CustomerCode", "CustName", "SalAreaName", "WHID"); break;
+                case ObjectType.Customer: SubSelectItem(text, ref _dt, ref filteredRows, "CustomerID", "CustName", "SalAreaName", "WHID"); break;
+                case ObjectType.CustomerPre: SubSelectItem(text, ref _dt, ref filteredRows, "CustomerID", "CustName", "SalAreaName", "WHID"); break;
                 case ObjectType.SaleAreaDistrict: SubSelectProductItem(text, ref _dt, ref filteredRows, "DistrictCode", "DistrictName", "DistrictID"); break;
                 case ObjectType.IM: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IV: FilterItem(text, ref _dt, ref filteredRows); break;
+                case ObjectType.CCIV: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IVPre: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IMPre: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.PreOrder: FilterItem(text, ref _dt, ref filteredRows); break;
@@ -419,13 +475,22 @@ namespace AllCashUFormsApp.View.UControl
 
         private void SubSelectItem(string text, ref DataTable _dt, ref DataRow[] filteredRows, string code, string name, string saleArea, string whid)
         {
+            List<DataRow> filteredRowsTemp = new List<DataRow>();
             if (!string.IsNullOrEmpty(text))
             {
-                filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%' OR {6} LIKE '%{7}%'", code, text, name, text, saleArea, text, whid, text));
-                if (filteredRows != null)
-                {
-                    _dt.AddDataTableRow(ref filteredRows);
-                }
+                var tmp = string.Format("({0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%' OR {6} LIKE '%{7}%') AND " + "{8} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{8}" : " '{9}' ") + " AND {10} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{10}" : " '{11}' ")
+                    , code, text, name, text, saleArea, text, whid, text, whid, txtWHCode.Text, code, txtCustomerCode.Text);
+                filteredRows = dt.Select(tmp);
+            }
+            else
+            {
+                var tmp = string.Format("{0} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{0}" : " '{1}' ") + " AND {2} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{2}" : " '{3}' "), whid, txtWHCode.Text, code, txtCustomerCode.Text);
+                filteredRows = dt.Select(tmp);
+            }
+
+            if (filteredRows != null)
+            {
+                _dt.AddDataTableRow(ref filteredRows);
             }
         }
 
@@ -449,7 +514,7 @@ namespace AllCashUFormsApp.View.UControl
                     //last edit by sailom 11-06-2021---------------------------------------------------------
                     filteredRows = dt.AsEnumerable().Where(x => (
                     x.Field<string>("DocNo").Contains(text) &&
-                    x.Field<string>("DocStatus") == docStatus)).ToArray(); 
+                    x.Field<string>("DocStatus") == docStatus)).ToArray();
 
                     if (filteredRows.Count() == 0)
                     {
@@ -603,6 +668,7 @@ namespace AllCashUFormsApp.View.UControl
                                     case ObjectType.RJProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.RTProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.TRProduct: frm.BindData("TRProduct", controlList, selectCode); break;
+                                    case ObjectType.CCProduct: frm.BindData("CCProduct", controlList, selectCode); break;
                                     case ObjectType.IVProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.IMProduct: BindProduct(frm, _objType, selectCode); break;
                                     case ObjectType.VEProduct: BindProduct(frm, _objType, selectCode); break;
@@ -620,6 +686,7 @@ namespace AllCashUFormsApp.View.UControl
                                     case ObjectType.RJRB: ((frmRJ)frm).BindRBData(selectCode); break;
                                     case ObjectType.IM: ((frmVanSales)frm).BindVanSalesData(selectCode); break;
                                     case ObjectType.IV: ((frmTabletSales)frm).BindTabletSalesData(selectCode); break;
+                                    case ObjectType.CCIV: ((frmCancelPOItem)frm).BindTabletSalesData(selectCode); break;
                                     case ObjectType.IVPre: ((frmTabletSalesPre)frm).BindTabletSalesData(selectCode); break;
                                     case ObjectType.IMPre: ((frm1000SalesPre)frm).BindVanSalesData(selectCode); break;
                                     case ObjectType.PreOrder: ((frmPreOrder)frm).BindVanSalesData(selectCode, "IV2"); break;
@@ -732,12 +799,14 @@ namespace AllCashUFormsApp.View.UControl
 
         private void btnSearchWHCode_Click(object sender, EventArgs e)
         {
+            searchBWHControls = new List<Control> { txtWHCode, txtWHName };
             this.OpenBranchWarehousePopup(searchBWHControls, "เลือกคลังสินค้า");
         }
 
         private void btnSearchCust_Click(object sender, EventArgs e)
         {
-            this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า");
+            searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
+            this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า", null);
         }
 
         private void grdList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

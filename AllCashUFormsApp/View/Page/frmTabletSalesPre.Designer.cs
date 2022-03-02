@@ -112,7 +112,7 @@ namespace AllCashUFormsApp.View.Page
             this.txtBillTo = new System.Windows.Forms.TextBox();
             this.lblBillTo = new System.Windows.Forms.Label();
             this.txtCustName = new System.Windows.Forms.TextBox();
-            this.txtCustomerCode = new System.Windows.Forms.TextBox();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
             this.btnSearchCust = new System.Windows.Forms.Button();
             this.lblCustomerCode = new System.Windows.Forms.Label();
             this.pnlCen = new System.Windows.Forms.Panel();
@@ -742,7 +742,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlTL.Controls.Add(this.txtBillTo);
             this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.txtCustName);
-            this.pnlTL.Controls.Add(this.txtCustomerCode);
+            this.pnlTL.Controls.Add(this.txtCustomerID);
             this.pnlTL.Controls.Add(this.btnSearchCust);
             this.pnlTL.Controls.Add(this.lblCustomerCode);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
@@ -976,13 +976,13 @@ namespace AllCashUFormsApp.View.Page
             this.txtCustName.Size = new System.Drawing.Size(235, 23);
             this.txtCustName.TabIndex = 120;
             // 
-            // txtCustomerCode
+            // txtCustomerID
             // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(81, 5);
-            this.txtCustomerCode.MaxLength = 13;
-            this.txtCustomerCode.Name = "txtCustomerCode";
-            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
-            this.txtCustomerCode.TabIndex = 118;
+            this.txtCustomerID.Location = new System.Drawing.Point(81, 5);
+            this.txtCustomerID.MaxLength = 13;
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.Size = new System.Drawing.Size(153, 23);
+            this.txtCustomerID.TabIndex = 118;
             // 
             // btnSearchCust
             // 
@@ -1553,7 +1553,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.TextBox txtBillTo;
         private System.Windows.Forms.Label lblBillTo;
         private System.Windows.Forms.TextBox txtCustName;
-        private System.Windows.Forms.TextBox txtCustomerCode;
+        private System.Windows.Forms.TextBox txtCustomerID;
         private System.Windows.Forms.Button btnSearchCust;
         private System.Windows.Forms.Label lblCustomerCode;
         private System.Windows.Forms.Panel pnlCen;

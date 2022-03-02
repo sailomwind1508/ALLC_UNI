@@ -33,6 +33,7 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+
         public static List<tbl_ShopType> Select(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)
         {
             List<tbl_ShopType> list = new List<tbl_ShopType>();
@@ -81,6 +82,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         public static List<tbl_ShopType> SelectFlag(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)//
         {
             List<tbl_ShopType> list = new List<tbl_ShopType>();
@@ -95,6 +97,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         public static List<tbl_ShopType> SelectAllFlag(this tbl_ShopType tbl_ShopType)//
         {
             List<tbl_ShopType> list = new List<tbl_ShopType>();
@@ -112,6 +115,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         public static List<tbl_ShopType> SelectAllFlagPredi(this tbl_ShopType tbl_ShopType, Func<tbl_ShopType, bool> predicate)
         {
             List<tbl_ShopType> list = new List<tbl_ShopType>();
@@ -129,6 +133,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         /// <summary>
         /// add new data
         /// </summary>
@@ -136,6 +141,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_ShopType tbl_ShopType)
         {
+            string msg = "start ShopTypeDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -151,11 +159,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ShopType.GetType());
             }
 
+            msg = "end ShopTypeDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static void Insert(this tbl_ShopType tbl_ShopType, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ShopTypeDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_ShopType.Attach(tbl_ShopType);
@@ -165,10 +179,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end ShopTypeDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this tbl_ShopType tbl_ShopType, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ShopTypeDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -206,6 +226,9 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end ShopTypeDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -216,6 +239,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_ShopType tbl_ShopType)
         {
+            string msg = "start ShopTypeDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -254,6 +280,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ShopType.GetType());
             }
 
+            msg = "end ShopTypeDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -264,6 +293,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_ShopType tbl_ShopType)
         {
+            string msg = "start ShopTypeDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -278,6 +310,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_ShopType.GetType());
             }
+
+            msg = "end ShopTypeDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

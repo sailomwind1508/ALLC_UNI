@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,10 +18,51 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="tbl_HQ_Promotion"></param>
         /// <returns></returns>
-        public static IEnumerable<tbl_HQ_Promotion> Select(this tbl_HQ_Promotion obj, object condition)
+        public static IEnumerable<tbl_HQ_Promotion> SelectPRD(this tbl_HQ_Promotion obj, object condition, string whid)
+        {
+            List<tbl_HQ_Promotion> list = new List<tbl_HQ_Promotion>();
+
+            try
+            {
+                DateTime cDate = DateTime.Now;
+
+                Func<tbl_BranchWarehouse, bool> predicate = x => x.WHID == whid;
+                int? saleTypeID = (new tbl_BranchWarehouse()).Select(predicate).First().SaleTypeID;
+
+                string conDate = cDate.ToString("yyyy-MM-dd HH:mm:ss", new CultureInfo("en-US"));
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion] WHERE PromotionPattern = 'prd' AND '" + conDate + "' BETWEEN EffectiveDate AND ExpireDate AND SaleTypeID = " + saleTypeID + " ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion>().ToList();
+                list = list.Where(x => x.SKUGroupID1.Trim() == condition.ToString().Trim()).ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(obj.GetType());
+            }
+
+            return list;
+
+            //return obj.Select(x => x.PromotionPattern.ToLower() == "prd" && x.SaleTypeID == saleTypeID.Value &&
+            //cDate >= x.EffectiveDate && cDate <= x.ExpireDate &&
+            //x.SKUGroupID1.Trim() == condition.ToString().Trim()).AsEnumerable();
+        }
+
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_HQ_Promotion"></param>
+        /// <returns></returns>
+        public static IEnumerable<tbl_HQ_Promotion> Select(this tbl_HQ_Promotion obj, object condition, string whid)
         {
             DateTime cDate = DateTime.Now;
-            return obj.Select(x => x.PromotionPattern.ToLower() == "prd" &&
+
+            Func<tbl_BranchWarehouse, bool> predicate = x => x.WHID == whid;
+            int? saleTypeID = (new tbl_BranchWarehouse()).Select(predicate).First().SaleTypeID;
+
+            return obj.Select(x => x.PromotionPattern.ToLower() == "prd" && x.SaleTypeID == saleTypeID.Value && 
             cDate >= x.EffectiveDate && cDate <= x.ExpireDate &&
             x.SKUGroupID1.Trim() == condition.ToString().Trim()).AsEnumerable();
         }
@@ -71,6 +113,32 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
 
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// select all data
+        /// </summary>
+        /// <param name="tbl_HQ_Promotion"></param>
+        /// <returns></returns>
+        public static List<tbl_HQ_Promotion> SelectTXN(this tbl_HQ_Promotion tbl_HQ_Promotion, int saleTypeID)
+        {
+            DateTime cDate = DateTime.Now;
+            List<tbl_HQ_Promotion> list = new List<tbl_HQ_Promotion>();
+            try
+            {
+                string conDate = cDate.ToString("yyyy-MM-dd HH:mm:ss", new CultureInfo("en-US"));
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_Promotion] WHERE PromotionPattern = 'txn' AND '" + conDate + "' BETWEEN EffectiveDate AND ExpireDate AND SaleTypeID = " + saleTypeID + " ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_Promotion), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_Promotion>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_HQ_Promotion.GetType());
             }
 
             return list;

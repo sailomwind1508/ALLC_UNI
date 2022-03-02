@@ -79,7 +79,7 @@ namespace AllCashUFormsApp.View.Page
         }
         private void btnSearchBranch_Click(object sender, EventArgs e)
         {
-            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกสาขา/ซุ้ม");
+            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
         }
         private void NotSortColumnsGridView(List<DataGridView> grdList)
         {

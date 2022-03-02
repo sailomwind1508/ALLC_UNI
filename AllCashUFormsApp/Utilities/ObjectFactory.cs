@@ -36,6 +36,11 @@ namespace AllCashUFormsApp
                         obj = new PromotionTemp();
                     }
                     break;
+                case ObjectType.PromotionProduct:
+                    {
+                        obj = new PromotionProduct();
+                    }
+                    break;
                 case ObjectType.Supplier:
                     {
                         obj = new Supplier();
@@ -72,6 +77,11 @@ namespace AllCashUFormsApp
                     }
                     break;
                 case ObjectType.TRProduct:
+                    {
+                        obj = new Product();
+                    }
+                    break;
+                case ObjectType.CCProduct:
                     {
                         obj = new Product();
                     }
@@ -192,6 +202,11 @@ namespace AllCashUFormsApp
                     }
                     break;
                 case ObjectType.IV: //Tablet Sales
+                    {
+                        obj = new IV();
+                    }
+                    break;
+                case ObjectType.CCIV: //Cancel Tablet Sales
                     {
                         obj = new IV();
                     }

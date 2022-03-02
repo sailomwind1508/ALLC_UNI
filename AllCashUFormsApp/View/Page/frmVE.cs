@@ -30,6 +30,7 @@ namespace AllCashUFormsApp.View.Page
         bool validateNewRow = true;
         string docTypeCode = "";
         int runDigit = 0;
+        static bool isCyrsRpt = false;
 
         List<Control> searchCustControls = new List<Control>();
         List<Control> searchPromotionControls = new List<Control>();
@@ -54,6 +55,7 @@ namespace AllCashUFormsApp.View.Page
         List<tbl_ProductSubGroup> allProdSubGroup = new List<tbl_ProductSubGroup>();
 
         List<tbl_PODetail> allPODetails = new List<tbl_PODetail>();
+        List<tbl_IVDetail> allIVDetails = new List<tbl_IVDetail>();
         List<tbl_ProductUom> prodUOMs = new List<tbl_ProductUom>();
 
         private ContextMenuStrip printContextMenuStrip;
@@ -62,7 +64,7 @@ namespace AllCashUFormsApp.View.Page
         {
             InitializeComponent();
 
-            searchCustControls = new List<Control> { txtCustomerCode, txtCustName, txtBillTo, txtContact, txtTelephone };
+            searchCustControls = new List<Control> { txtCustomerID, txtCustName, txtBillTo, txtContact, txtTelephone };
             searchBWHControls = new List<Control> { txtWHCode, txtWHName };
             searchEmpControls = new List<Control> { txtEmpCode };
             readOnlyControls = new List<string>() { txtCustName.Name, txtWHName.Name, txtEmpCode.Name, txtCrUser.Name };
@@ -72,7 +74,7 @@ namespace AllCashUFormsApp.View.Page
 
             txdDocNo.KeyDown += TxdDocNo_KeyDown;
             txtWHCode.KeyDown += TxtWHCode_KeyDown;
-            txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
+            txtCustomerID.KeyDown += TxtCustomerCode_KeyDown;
 
             dtpDocDate.ValueChanged += DtpDocDate_ValueChanged;
             nudCreditDay.ValueChanged += NudCreditDay_ValueChanged;
@@ -105,6 +107,7 @@ namespace AllCashUFormsApp.View.Page
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
@@ -145,6 +148,9 @@ namespace AllCashUFormsApp.View.Page
             allProductPrice = bu.GetProductPriceGroup();
             //allProdGroup = bu.GetProductGroup();
             //allProdSubGroup = bu.GetProductSubGroup();
+
+            if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
+                btnPrint.Enabled = ddlDocStatus.SelectedValue.ToString() == "4"; //Last edit by sailom.k 03/11/2021 request by admin UBN
         }
 
         private void CreatePrintBtnList()
@@ -194,9 +200,17 @@ namespace AllCashUFormsApp.View.Page
             m.MenuImage = printImage;
             menuList.Add(m);
 
+            m = new tbl_MstMenu();
+            m.MenuID = 103;
+            m.MenuName = "IVOriginal";
+            m.MenuText = "พิมพ์ใบกำกับภาษีอย่างย่อ";
+            m.FormName = "frmCrystalReport";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
             foreach (var item in menuList)
             {
-                printContextMenuStrip.Items.Add(item.MenuText, item.MenuImage.byteArrayToImage(), ToolStripMenuItem_Click);                
+                printContextMenuStrip.Items.Add(item.MenuText, item.MenuImage.byteArrayToImage(), ToolStripMenuItem_Click);
             }
 
             // Set Cancel to false. 
@@ -210,20 +224,78 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
 
             string frmText = ((System.Windows.Forms.ToolStripItem)sender).Text;
-            if (frmText == "พิมพ์ทั้งหมด")
+
+            if (isCyrsRpt)
             {
-                this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "Form_V.rpt", "Form_IV", _params);
-                this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "Form_V_Copy.rpt", "Form_IV", _params);
+                if (frmText == "พิมพ์ทั้งหมด")
+                {
+                    this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "Form_V.rpt", "Form_V_Crys", _params);
+                    this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "Form_V_Copy.rpt", "Form_V_Crys", _params);
+                }
+                else if (frmText == "พิมพ์ต้นฉบับ")
+                {
+                    this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "Form_V.rpt", "Form_V_Crys", _params);
+                }
+                else if (frmText == "พิมพ์สำเนา")
+                {
+                    this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "Form_V_Copy.rpt", "Form_V_Crys", _params);
+                }
+                else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
+                {
+                    if (!string.IsNullOrEmpty(txtCustPONo.Text))
+                    {
+                        _params = new Dictionary<string, object>();
+                        _params.Add("@DocNo", txtCustPONo.Text);
+                        this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+                    }
+                    else
+                    {
+                        string message = "ไม่สามารถพิมพ์ใบกำกับภาษีอย่างย่อได้ !!!";
+                        message.ShowWarningMessage();
+                        return;
+                    }
+                }
             }
-            else if (frmText == "พิมพ์ต้นฉบับ")
+            else
             {
-                this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "Form_V.rpt", "Form_IV", _params);
+                if (frmText == "พิมพ์ทั้งหมด")
+                {
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", txdDocNo.Text);
+                    _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", txdDocNo.Text);
+                    _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                }
+                else if (frmText == "พิมพ์ต้นฉบับ")
+                {
+                    _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                }
+                else if (frmText == "พิมพ์สำเนา")
+                {
+                    _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                }
+                else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
+                {
+                    if (!string.IsNullOrEmpty(txtCustPONo.Text))
+                    {
+                        _params = new Dictionary<string, object>();
+                        _params.Add("@DocNo", txtCustPONo.Text);
+                        this.OpenTestCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+                    }
+                    else
+                    {
+                        string message = "ไม่สามารถพิมพ์ใบกำกับภาษีอย่างย่อได้ !!!";
+                        message.ShowWarningMessage();
+                        return;
+                    }
+                }
             }
-            else if (frmText == "พิมพ์สำเนา")
-            {
-                this.OpenCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "Form_V_Copy.rpt", "Form_IV", _params);
-            }
-            
         }
 
         public void BindVEData(string ivDocNo)
@@ -255,6 +327,7 @@ namespace AllCashUFormsApp.View.Page
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
             btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
             //btnPrint.Enabled = true;
 
             txdDocNo.DisableTextBox(false);
@@ -267,6 +340,9 @@ namespace AllCashUFormsApp.View.Page
             btnUpdateAddress.Enabled = true;
             btnCopy.Enabled = false;
             //btnGenCustIVNo.Enabled = true;
+
+            if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
+                btnPrint.Enabled = ddlDocStatus.SelectedValue.ToString() == "4"; //Last edit by sailom.k 03/11/2021 request by admin UBN
         }
 
         private void BindIVMaster(tbl_IVMaster obj)
@@ -278,7 +354,7 @@ namespace AllCashUFormsApp.View.Page
             txtCustPONo.Text = obj.DocRef;
             dtpDocDate.Value = obj.DocDate.ToDateTimeFormat();
 
-            txtCustomerCode.Text = obj.CustomerID;
+            txtCustomerID.Text = obj.CustomerID;
             txtCustName.Text = obj.CustName;
             txtContact.Text = obj.ContactName;
             txtTelephone.Text = obj.ContactTel;
@@ -287,13 +363,13 @@ namespace AllCashUFormsApp.View.Page
             txtCustInvNO.Text = obj.CustInvNO;
             txtRemark.Text = obj.Remark;
 
-            var employee = allEmp.FirstOrDefault(x => x.EmpID == Helper.tbl_Users.EmpID);
+            var employee = allEmp.FirstOrDefault(x => x.EmpID == obj.EmpID);// edit by sailom.k 13/12/2021 Helper.tbl_Users.EmpID);
             if (employee != null)
-                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
 
             var emp = allEmp.FirstOrDefault(x => x.EmpID == obj.SaleEmpID);
             if (emp != null)
-                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
 
             txtWHCode.Text = obj.WHID;
             Func<tbl_BranchWarehouse, bool> func = (x => x.WHID == obj.WHID);
@@ -308,7 +384,7 @@ namespace AllCashUFormsApp.View.Page
 
             txtComment.Text = obj.Comment;
 
-            txnAmount.Text = obj.IncVat.Value.ToStringN2(); //obj.Amount.Value.ToStringN2();
+            txnAmount.Text = (obj.TotalDue + obj.Discount.Value).ToStringN2(); //Last edit by sailom 27/02/2022  // obj.Amount.Value.ToStringN2(); //Last edit by sailom 07/01/2022 txnAmount.Text = obj.IncVat.Value.ToStringN2(); //obj.Amount.Value.ToStringN2();
             txnDiscountAmt.Text = obj.Discount.Value.ToStringN2();
 
             //decimal amt = 0;
@@ -325,7 +401,6 @@ namespace AllCashUFormsApp.View.Page
             //    vatRate = obj.VatRate.Value;
 
             //decimal incVat = ((amt - excVat - discount) * 100) / (100 + vatRate);
-
             txnBeforeVat.Text = (obj.IncVat.Value - obj.Discount.Value - obj.VatAmt.Value - obj.ExcVat.Value).ToStringN2();//(obj.IncVat.Value - obj.VatAmt.Value).ToStringN2();
             txnVatAmt.Text = obj.VatAmt.Value.ToStringN2();
             lblVatType.Text = obj.VatRate != null ? obj.VatRate.Value.ToStringN0() : ""; //obj.VatRate.Value.ToStringN0();
@@ -343,13 +418,27 @@ namespace AllCashUFormsApp.View.Page
             //var allUOMSet = bu.GetUOMSet();
 
             //Last edit by sailom.k 14/09/2021 tunning performance-------------------------
+            var listPrdID = new List<string>();
             var allPOMaster = bu.GetPOMasterByCustInvNo(bu.tbl_IVMaster.DocNo);
-            allPODetails.AddRange(bu.GetPODetails(allPOMaster.Select(x => x.DocNo).ToList()));
+            if (allPOMaster != null)
+            {
+                allPODetails.AddRange(bu.GetPODetails(allPOMaster.Select(x => x.DocNo).ToList()));
+                listPrdID = allPODetails.Select(x => x.ProductID).Distinct().ToList();
+            }
+            else
+            {
+                listPrdID = obj.Select(x => x.ProductID).Distinct().ToList();
+                if (allPODetails.Count == 0)
+                {
+                    allIVDetails = obj;
+                }
+            }
 
             List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
             disTypeList = bu.GetDiscountType();
 
-            var listPrdID = allPODetails.Select(x => x.ProductID).ToList();
+            
+            prodUOMs = new List<tbl_ProductUom>();
             prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
             //Last edit by sailom.k 14/09/2021 tunning performance--------------------
 
@@ -380,24 +469,33 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 grdList.Rows[i].Cells[2].Value = productName;
-                grdList.BindComboBoxDiscountTypeCell(allProduct, grdList.Rows[i], i, false, 3, uoms, this, bu, 0, disTypeList, 8); //Last edit by sailom.k 14/09/2021 tunning performance
+                
+                grdList.BindComboBoxDiscountTypeCell(allProduct, grdList.Rows[i], i, false, 3, prodUOMs, this, bu, 0, disTypeList, 8); //Last edit by sailom.k 14/09/2021 tunning performance
 
                 decimal? orderQty = obj[i].OrderQty;
                 int orderUom = obj[i].OrderUom;
                 decimal? unitPrice = obj[i].UnitPrice;
 
-                var poMst = allPOMaster.FirstOrDefault(x => x.CustInvNO == txdDocNo.Text);
-                if (poMst != null)
+                if (allPOMaster != null)
                 {
-                    var poDT = allPODetails.FirstOrDefault(x => x.DocNo == poMst.DocNo && x.ProductID == obj[i].ProductID);
-                    if (poDT != null)
+                    var poMst = allPOMaster.FirstOrDefault(x => x.CustInvNO == txdDocNo.Text);
+                    if (poMst != null)
                     {
-                        if (obj[i].OrderUom != poDT.OrderUom)
+                        var poDT = allPODetails.FirstOrDefault(x => x.DocNo == poMst.DocNo && x.ProductID == obj[i].ProductID);
+                        if (poDT != null)
                         {
-                            orderUom = poDT.OrderUom;
-                            orderQty = poDT.OrderQty;
+                            if (obj[i].OrderUom != poDT.OrderUom)
+                            {
+                                orderUom = poDT.OrderUom;
+                                orderQty = poDT.OrderQty;
+                            }
                         }
                     }
+                }
+                else
+                {
+                    orderUom = obj[i].OrderUom;
+                    orderQty = obj[i].OrderQty;
                 }
 
                 var _prdPriceList = allProductPrice.FirstOrDefault(x => x.ProductUomID == orderUom && x.ProductID == obj[i].ProductID);
@@ -417,7 +515,7 @@ namespace AllCashUFormsApp.View.Page
                 grdList.Rows[i].Cells[11].Value = obj[i].LineComTotal;
                 grdList.Rows[i].Cells[12].Value = orderUom; // obj[i].OrderUom;
                 grdList.Rows[i].Cells[11].Value = 0.00;
-                
+
 
                 //if (orderUom != -1)
                 //{
@@ -446,6 +544,7 @@ namespace AllCashUFormsApp.View.Page
             btnAdd.Enabled = true;
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             validateNewRow = true;
 
@@ -682,7 +781,7 @@ namespace AllCashUFormsApp.View.Page
 
                     var emp = bu.GetEmployee(cust[0].EmpID);
                     if (emp != null)
-                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == cust[0].WHID);
                     var wh = bu.GetBranchWarehouse(whFunc);
@@ -711,6 +810,7 @@ namespace AllCashUFormsApp.View.Page
             this.ClearControl(bu, docTypeCode, runDigit);
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, readOnlyControls.ToArray(), cellEdit);
 
@@ -727,7 +827,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
 
             var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
 
             //txtCustomerCode.Focus();
         }
@@ -738,7 +838,7 @@ namespace AllCashUFormsApp.View.Page
 
             var comp = bu.GetCompany();
             var emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            var supp = bu.GetSupplier(txtCustomerCode.Text);
+            var supp = bu.GetSupplier(txtCustomerID.Text);
 
             Dictionary<string, string> allEmp = new Dictionary<string, string>();
             KeyValuePair<string, string> selEmp = new KeyValuePair<string, string>();
@@ -780,15 +880,16 @@ namespace AllCashUFormsApp.View.Page
             po.Shipto = txtBillTo.Text;
 
             po.CreditDay = Convert.ToInt16(nudCreditDay.Value);
-            Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-            var cust = bu.GetCustomer(func);
+            //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+            //var cust = bu.GetCustomer(func);
+            var cust = bu.GetCustomer(txtCustomerID.Text); //edit by sailom.k 10/12/2021
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
                 po.CustType = cust[0].CustomerTypeID.Value.ToString();
             }
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
-            po.CustomerID = txtCustomerCode.Text;
+            po.CustomerID = txtCustomerID.Text;
             po.CustName = txtCustName.Text;
             po.CustInvNO = txtCustInvNO.Text;
             po.CustInvDate = null;
@@ -1130,12 +1231,13 @@ namespace AllCashUFormsApp.View.Page
                     else
                         ret = 1;
                 }
-              
+
                 if (ret == 1)
                 {
                     this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
                     btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
+                    btnPrintCrys.Enabled = btnPrint.Enabled;
 
                     txdDocNo.Text = docno;
 
@@ -1145,7 +1247,7 @@ namespace AllCashUFormsApp.View.Page
                     msg.ShowInfoMessage();
 
                     ddlDocStatus.SelectedValue.ToString().CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
-                   
+
                     ClearForm();
 
                     btnUpdateAddress.Enabled = true;
@@ -1201,10 +1303,10 @@ namespace AllCashUFormsApp.View.Page
                 message.ShowWarningMessage();
                 ret = false;
             }
-            
+
             if (ret)
             {
-                errList.SetErrMessageList(txtCustomerCode, lblCustomerCode);
+                errList.SetErrMessageList(txtCustomerID, lblCustomerCode);
                 errList.SetErrMessageList(txtBillTo, lblBillTo);
                 errList.SetErrMessageList(txtContact, lblContact);
                 errList.SetErrMessageList(txtEmpCode, lblEmpCode);
@@ -1212,13 +1314,14 @@ namespace AllCashUFormsApp.View.Page
 
                 if (errList.Count == 0)
                 {
-                    Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-                    var sup = bu.GetCustomer(func);
+                    //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+                    //var sup = bu.GetCustomer(func);
+                    var sup = bu.GetCustomer(txtCustomerID.Text); //edit by sailom.k 10/12/2021
                     if (sup == null)
                     {
                         string t = lblCustomerCode.Text;
                         errList.Add(string.Format("--> {0}", t));
-                        txtCustomerCode.ErrorTextBox();
+                        txtCustomerID.ErrorTextBox();
                     }
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == txtWHCode.Text);
@@ -1274,9 +1377,10 @@ namespace AllCashUFormsApp.View.Page
             }
 
             btnEdit.EnableButton(btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, txdDocNo.Text);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             txdDocNo.DisableTextBox(false);
-            txtCustomerCode.DisableTextBox(false);
+            txtCustomerID.DisableTextBox(false);
             txtCustPONo.DisableTextBox(false);
             btnSearchCust.Enabled = true;
             txtCustInvNO.DisableTextBox(false);
@@ -1305,6 +1409,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnCopy_Click(object sender, EventArgs e)
         {
             btnCopy.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnPrint, txdDocNo.Text);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, readOnlyControls.ToArray(), cellEdit);
 
@@ -1345,6 +1450,7 @@ namespace AllCashUFormsApp.View.Page
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
             btnPrint.Enabled = false;
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             validateNewRow = true;
 
@@ -1359,12 +1465,25 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            isCyrsRpt = false;
+
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+            printContextMenuStrip.Show(btnPrint, new Point(0, btnPrint.Height));
+        }
+
+        private void btnPrintCrys_Click(object sender, EventArgs e)
+        {
+            isCyrsRpt = true;
+
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
             printContextMenuStrip.Show(btnPrint, new Point(0, btnPrint.Height));
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -1391,7 +1510,7 @@ namespace AllCashUFormsApp.View.Page
         {
             this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า");
 
-            FilterSaleArea(txtCustomerCode.Text);
+            FilterSaleArea(txtCustomerID.Text);
         }
 
         private void btnCustInfo_Click(object sender, EventArgs e)
@@ -1452,6 +1571,10 @@ namespace AllCashUFormsApp.View.Page
             if (e.ColumnIndex == 0)
             {
                 if (allPODetails.Count > 0 && prodUOMs.Count > 0)
+                {
+                    grdList.ModifyComboBoxCell_Tunning(allProduct, e.RowIndex, bu, 3, 0, prodUOMs);
+                }
+                else if (allIVDetails.Count > 0 && prodUOMs.Count > 0)
                 {
                     grdList.ModifyComboBoxCell_Tunning(allProduct, e.RowIndex, bu, 3, 0, prodUOMs);
                 }
@@ -1651,36 +1774,49 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetCellClick(sender, e, cellEdit, 0);
         }
 
-
         #endregion
 
         private void btnUpdateAddress_Click(object sender, EventArgs e)
         {
-            string cfMsg = "ต้องการปรับปรุงที่อยู่ใช่หรือไม่?";
-            string title = "ยืนยันการบันทึก!!";
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
             bool checkEditMode = bu.CheckExistsIV(txdDocNo.Text);
             if (checkEditMode)
             {
+                string cfMsg = "ต้องการปรับปรุงที่อยู่ใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
                 bool ret = bu.UpdateCustomerAddress(txdDocNo.Text, true);
                 if (ret)
                 {
                     //bu.tbl_POMaster = bu.GetPOMaster(txdDocNo.Text);
                     //if (bu.tbl_POMaster != null)
                     {
-                        var cust = bu.GetCustomer(txtCustomerCode.Text);
+                        var cust = bu.GetCustomer(txtCustomerID.Text);
                         if (cust != null && cust.Count > 0)
                         {
                             txtBillTo.Text = cust[0].BillTo;
                             txtCustName.Text = cust[0].CustName;
                             txtTelephone.Text = cust[0].Telephone;
                             txtContact.Text = cust[0].Contact;
+
+                            string message = "เปลี่ยนแปลงที่อยู่เรียบร้อยแล้ว!!!";
+                            message.ShowInfoMessage();
                         }
 
                     }
 
+                }
+            }
+            else //last edit by sailom 27/01/2022 
+            {
+                var cust = bu.GetCustomer(txtCustomerID.Text);
+                if (cust != null && cust.Count > 0)
+                {
+                    txtBillTo.Text = cust[0].BillTo;
+                    txtCustName.Text = cust[0].CustName;
+                    txtTelephone.Text = cust[0].Telephone;
+                    txtContact.Text = cust[0].Contact;
                 }
             }
         }
@@ -1689,5 +1825,6 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
     }
 }

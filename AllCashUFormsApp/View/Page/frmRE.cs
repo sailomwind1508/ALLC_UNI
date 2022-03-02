@@ -40,6 +40,9 @@ namespace AllCashUFormsApp.View.Page
 
         List<tbl_PODetail> allPODetails = new List<tbl_PODetail>();
         List<tbl_ProductUom> prodUOMs = new List<tbl_ProductUom>();
+        tbl_Employee emp = new tbl_Employee();
+        tbl_ApSupplier supp = new tbl_ApSupplier();
+
         bool isAdd = false;
 
         public frmRE()
@@ -83,7 +86,7 @@ namespace AllCashUFormsApp.View.Page
 
             this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
 
-            this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, btnPrintCrys, "");
 
             var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
@@ -148,6 +151,7 @@ namespace AllCashUFormsApp.View.Page
             this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
 
             btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             txdDocNo.DisableTextBox(false);
             txdDocNo.BackColor = Color.Turquoise; // Translator.FromHtml("#7FFFD4");
@@ -183,6 +187,7 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPOMaster(po);
                 txtComment.Text = "สั่งสินค้า : " + po.DocNo;
+                supp = bu.GetSupplier(txtSupplierCode.Text);
             }
             if (poDts != null && poDts.Count > 0)
             {
@@ -198,7 +203,7 @@ namespace AllCashUFormsApp.View.Page
                     return;
                 }
 
-                BindPODetail(poDts);
+                BindPODetail(poDts, true);
             }
 
             //btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
@@ -265,8 +270,11 @@ namespace AllCashUFormsApp.View.Page
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == po.DocStatus; };
             ddlDocStatus.SelectedValueDropdownList(condition);
 
-            var emp = bu.GetEmployeeByUserName(po.CrUser);
-            txtCrUser.Text = string.Join(" ", emp.TitleName, emp.FirstName);
+            var emp = bu.GetEmployeeByUserName(po.EmpID);
+            if (emp != null)
+                txtCrUser.Text = string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName);
+            else
+                txtCrUser.Text = po.CrUser;
 
             txtRemark.Text = po.Remark;
             txtComment.Text = po.Comment;
@@ -278,18 +286,28 @@ namespace AllCashUFormsApp.View.Page
             txnTotalDue.Text = po.TotalDue.ToStringN2();
         }
 
-        private void BindPODetail(List<tbl_PODetail> poDts)
+        private void BindPODetail(List<tbl_PODetail> poDts, bool isOD = false)
         {
             grdList.Rows.Clear();
 
             var allPOMaster = new List<tbl_POMaster>();
             var allPODetail = new List<tbl_PODetail>();
 
-            allPOMaster.AddRange(bu.GetPOMaster("OD", x => !x.FlagDel));
-            allPODetail.AddRange(bu.GetPODetails("OD", x => !x.FlagDel));
+            //edit by sailom .k 14/12/2021---------------------------
+            if (isOD)
+            {
+                allPOMaster.AddRange(bu.GetPOMaster("OD", x => !x.FlagDel));
+                allPODetail.AddRange(bu.GetPODetails("OD", x => !x.FlagDel));
 
-            allPOMaster.AddRange(bu.GetPOMaster("RE", x => !x.FlagDel));
-            allPODetail.AddRange(bu.GetPODetails("RE", x => !x.FlagDel));
+                allPOMaster.AddRange(bu.GetPOMaster("RE", x => !x.FlagDel));
+                allPODetail.AddRange(bu.GetPODetails("RE", x => !x.FlagDel));
+            }
+            else
+            {
+                allPOMaster.AddRange(bu.GetPOMaster("RE", x => !x.FlagDel));
+                allPODetail.AddRange(bu.GetPODetails("RE", x => !x.FlagDel));
+            }
+            //edit by sailom .k 14/12/2021---------------------------
 
             bool hasRefDoc = false;
             bool editREFlag = false;
@@ -358,7 +376,8 @@ namespace AllCashUFormsApp.View.Page
 
                         int cRowIndex = grdList.Rows.Count - 1;
 
-                        grdList.Rows[cRowIndex].Cells[0].Value = poDts[i].ProductID;
+                        string _prodID = poDts[i].ProductID;
+                        grdList.Rows[cRowIndex].Cells[0].Value = _prodID;
 
                         string productName = string.Empty;
                         if (!string.IsNullOrEmpty(poDts[i].ProductName))
@@ -602,7 +621,7 @@ namespace AllCashUFormsApp.View.Page
             this.BindData("BranchWarehouse", searchBWHControls, "1000");
 
             var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
 
             dtpDocDate.SetDateTimePickerFormat();
             dtpDueDate.SetDateTimePickerFormat();
@@ -617,6 +636,7 @@ namespace AllCashUFormsApp.View.Page
             this.ClearControl(docTypeCode, runDigit);
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
 
@@ -636,16 +656,22 @@ namespace AllCashUFormsApp.View.Page
             txtComment.Text = "สั่งสินค้า : ";
 
             txtSupplierCode.Focus();
+
+            emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
+            supp = bu.GetSupplier(txtSupplierCode.Text); 
         }
 
         private string PreparePOMaster(bool editFlag = false)
         {
             string ret = string.Empty;
 
-            var comp = bu.GetCompany();
-            var emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            var supp = bu.GetSupplier(txtSupplierCode.Text);
             var odPO = bu.GetPOMaster(txtODDoc.Text);
+            var comp = bu.tbl_Companies;
+
+            if (emp == null || emp.EmpID == null)
+                emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
+            if (supp == null || supp.SupplierID == null)
+                supp = bu.GetSupplier(txtSupplierCode.Text);
 
             var po = bu.tbl_POMaster;
             bool checkEditMode = bu.CheckExistsPO(txdDocNo.Text);
@@ -689,7 +715,7 @@ namespace AllCashUFormsApp.View.Page
             po.StatusInOut = null;
             po.SupplierID = txtSupplierCode.Text;
             po.SuppName = txtSuppName.Text;
-            po.WHID = comp.WHID;
+            po.WHID = comp[0].WHID;
             po.EmpID = emp.EmpID;
             po.SaleEmpID = "0";
             po.SalAreaID = "0";
@@ -1004,39 +1030,62 @@ namespace AllCashUFormsApp.View.Page
             bu.tbl_InvWarehouses.Clear();
 
             var invWhs = bu.tbl_InvWarehouses;
-            var poDts = bu.tbl_PODetails;
-            var po = bu.tbl_POMaster;
+            //var poDts = bu.tbl_PODetails;
+            //var po = bu.tbl_POMaster;
 
             DateTime crDate = DateTime.Now;
 
-            foreach (var poDt in poDts)
+            //var allWHStock = bu.GetInvWarehouse(po.WHID); //edit by sailom 13/12/2021
+
+            //edit by sailom .k 16/12/201----------------------------------------------------
+            List<tbl_InvMovement> invWhItems = new List<tbl_InvMovement>();
+            List<string> prdList = new List<string>();
+            for (int i = 0; i < grdList.RowCount; i++)
+            {
+                var prdCodeCell = grdList.Rows[i].Cells[0];
+                var qtyCell = grdList.Rows[i].Cells[4];
+                if (prdCodeCell.IsNotNullOrEmptyCell() && qtyCell.IsNotNullOrEmptyCell()) //check over recieve
+                {
+                    var _productID = prdCodeCell.EditedFormattedValue.ToString();
+                    prdList.Add(_productID);
+                }
+            }
+
+            if (prdList.Count > 0)
+                invWhItems = bu.GetTotalStockMovement(prdList, bu.tbl_Companies.First().WHID); //  edit by sailom 13/12/2021
+
+            //edit by sailom .k 16/12/201----------------------------------------------------
+
+            foreach (var item in invWhItems)
             {
                 var invWh = new tbl_InvWarehouse();
 
-                invWh.ProductID = poDt.ProductID;
-                invWh.WHID = po.WHID;
+                invWh.ProductID = item.ProductID;
+                invWh.WHID = item.WHID;
+                invWh.QtyOnHand = item.TrnQty;
+
                 //invWh.QtyOnHand = 0;
 
-                decimal unitQty = 0;
+                //decimal unitQty = 0;
 
-                var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
-                if (prdUOMSets != null && prdUOMSets.Count > 0)
-                {
-                    //if (poDt.OrderUom != 2) //06042021 by sailom.k
-                    var minUomID = 2;
-                    minUomID = allUomSet.GetMinUOM(poDt);
+                //var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
+                //if (prdUOMSets != null && prdUOMSets.Count > 0)
+                //{
+                //    //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                //    var minUomID = 2;
+                //    minUomID = allUomSet.GetMinUOM(poDt);
 
-                    if (poDt.OrderUom != minUomID)
-                        unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
-                    else
-                        unitQty = poDt.ReceivedQty.Value;
-                }
-                else
-                {
-                    unitQty = poDt.ReceivedQty.Value;
-                }
+                //    if (poDt.OrderUom != minUomID)
+                //        unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
+                //    else
+                //        unitQty = poDt.ReceivedQty.Value;
+                //}
+                //else
+                //{
+                //    unitQty = poDt.ReceivedQty.Value;
+                //}
 
-                SetQtyOnHand(invWh, unitQty, poDt.ProductID, po.WHID, editFlag);
+                //SetQtyOnHand(invWh, allWHStock, unitQty, poDt.ProductID, po.WHID, editFlag);
 
                 invWh.QtyOnOrder = 0;
                 invWh.QtyOnBackOrder = 0;
@@ -1062,9 +1111,10 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void SetQtyOnHand(tbl_InvWarehouse invWh, decimal unitQty, string productID, string whID, bool editFlag)
+        private void SetQtyOnHand(tbl_InvWarehouse invWh, List<tbl_InvWarehouse> allWHStock, decimal unitQty, string productID, string whID, bool editFlag)
         {
-            var invWhItem = bu.GetInvWarehouse(productID, whID);
+            //var invWhItem = bu.GetInvWarehouse(productID, whID);
+            var invWhItem = allWHStock.Where(x => x.ProductID == productID && x.WHID == whID).ToList(); //edit by sailom .k 13/12/2021
             if (editFlag)
             {
                 if (invWhItem != null && invWhItem.Count > 0)
@@ -1103,6 +1153,19 @@ namespace AllCashUFormsApp.View.Page
                         return;
 
                     bu = new RE();
+
+                    //validate edit PO and not change status by sailom/k 07/10/2021
+                    var chkPO = bu.GetPOMaster(txdDocNo.Text);
+                    if (chkPO != null && chkPO.DocStatus == "4")
+                    {
+                        if (ddlDocStatus.SelectedValue.ToString() == chkPO.DocStatus)
+                        {
+                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                            msg.ShowInfoMessage();
+
+                            return;
+                        }
+                    }
 
                     DateTime crDate = DateTime.Now;
 
@@ -1149,42 +1212,55 @@ namespace AllCashUFormsApp.View.Page
 
                     bu.tbl_InvWarehouses.Clear();
 
-                    string whID = bu.tbl_POMaster.WHID;
-                    var poDts = bu.GetPODetails(docno);
+                    //string whID = bu.tbl_POMaster.WHID;
+                    //var poDts = bu.GetPODetails(docno);
 
-                    var allInvWhs = bu.GetInvWarehouse();
+                    //var allInvWhs = bu.GetInvWarehouse();
 
-                    foreach (var poDt in poDts)
-                    {
-                        var invWh = new tbl_InvWarehouse();
-                        var invWhs = allInvWhs.Where(x => x.ProductID == poDt.ProductID && x.WHID == whID).ToList(); //bu.GetInvWarehouse(poDt.ProductID, whID);
-                        invWh = invWhs[0];
+                    //var allWHStock = bu.GetInvWarehouse(whID); //edit by sailom 13/12/2021
 
-                        decimal unitQty = 0;
+                    //foreach (var poDt in poDts)
+                    //{
+                    //    var invWh = new tbl_InvWarehouse();
+                    //    var invWhs = allWHStock.Where(x => x.ProductID == poDt.ProductID && x.WHID == whID).ToList(); //bu.GetInvWarehouse(poDt.ProductID, whID);
+                    //    invWh = invWhs[0];
 
-                        var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
-                        if (prdUOMSets != null && prdUOMSets.Count > 0)
-                        {
-                            //if (poDt.OrderUom != 2) //06042021 by sailom.k
-                            var minUomID = 2;
-                            minUomID = allUomSet.GetMinUOM(poDt);
+                    //    decimal unitQty = 0;
 
-                            if (poDt.OrderUom != minUomID)
-                                unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
-                            else
-                                unitQty = poDt.ReceivedQty.Value;
-                        }
-                        else
-                        {
-                            unitQty = poDt.ReceivedQty.Value;
-                        }
+                    //    var prdUOMSets = bu.GetProductUOMSet(allUomSet, poDt.ProductID);
+                    //    if (prdUOMSets != null && prdUOMSets.Count > 0)
+                    //    {
+                    //        //if (poDt.OrderUom != 2) //06042021 by sailom.k
+                    //        var minUomID = 2;
+                    //        minUomID = allUomSet.GetMinUOM(poDt);
 
-                        SetQtyOnHand(invWh, unitQty, poDt.ProductID, whID, editFlag);
+                    //        if (poDt.OrderUom != minUomID)
+                    //            unitQty = (poDt.ReceivedQty.Value * prdUOMSets[0].BaseQty);
+                    //        else
+                    //            unitQty = poDt.ReceivedQty.Value;
+                    //    }
+                    //    else
+                    //    {
+                    //        unitQty = poDt.ReceivedQty.Value;
+                    //    }
 
-                        bu.tbl_InvWarehouses.Add(invWh);
-                    }
+                    //    SetQtyOnHand(invWh, allWHStock, unitQty, poDt.ProductID, whID, editFlag);
 
-                    ret = bu.UpdateData();
+                    //    bu.tbl_InvWarehouses.Add(invWh);
+                    //}
+
+                    //ret = bu.UpdateData();
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
+
+                    //edit by sailom .k 16/12/2021
+                    bu.tbl_POMaster = new tbl_POMaster();
+                    bu.tbl_PODetails.Clear();
+                    bu.tbl_InvMovements.Clear();
+                    bu.tbl_InvTransactions.Clear();
+                    bu.tbl_DocRunning.Clear();
+                    PrepareInvWarehouse();//edit by sailom .k 16/12/2021
+
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 16/12/2021
                 }
                 else
                 {
@@ -1214,7 +1290,7 @@ namespace AllCashUFormsApp.View.Page
                     PreparePODetail(editFlag);
                     PrepareInvMovement(editFlag);
                     PrepareInvTransaction();
-                    PrepareInvWarehouse();
+                    //PrepareInvWarehouse();
 
                     //ret = bu.RemovePODetails();
                     //if (ret == 0)
@@ -1235,7 +1311,18 @@ namespace AllCashUFormsApp.View.Page
                     //    return;
                     //}
 
-                    ret = bu.UpdateData();
+                    //ret = bu.UpdateData();
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
+
+                    //edit by sailom .k 16/12/2021
+                    bu.tbl_POMaster = new tbl_POMaster();
+                    bu.tbl_PODetails.Clear();
+                    bu.tbl_InvMovements.Clear();
+                    bu.tbl_InvTransactions.Clear();
+                    bu.tbl_DocRunning.Clear();
+                    PrepareInvWarehouse();//edit by sailom .k 16/12/2021
+
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 16/12/2021
                 }
 
                 if (ret == 1)
@@ -1243,6 +1330,7 @@ namespace AllCashUFormsApp.View.Page
                     this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
 
                     btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
+                    btnPrintCrys.Enabled = btnPrint.Enabled;
 
                     txdDocNo.Text = docno;
 
@@ -1300,7 +1388,7 @@ namespace AllCashUFormsApp.View.Page
             var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (dtpDocDate.Value != null && docDate < cDate)
+            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -1309,7 +1397,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (!dtpDocDate.ValidateEndDay(bu))
+                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
                 {
                     string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
                     message.ShowWarningMessage();
@@ -1336,8 +1424,9 @@ namespace AllCashUFormsApp.View.Page
                         txtSupplierCode.ErrorTextBox();
                     }
 
-                    Func<tbl_BranchWarehouse, bool> branchWarehousePre = (x => x.WHCode.ToLower() == txtWHCode.Text.ToLower());
-                    var wh = bu.GetBranchWarehouse(branchWarehousePre);
+                    //Func<tbl_BranchWarehouse, bool> branchWarehousePre = (x => x.WHCode.ToLower() == txtWHCode.Text.ToLower());
+                    //var wh = bu.GetBranchWarehouse(branchWarehousePre);
+                    var wh = bu.GetBranchWarehouse(txtWHCode.Text); //Last edit by sailom .k 07/02/2022
                     if (wh == null)
                     {
                         string t = lblWHCode.Text;
@@ -1373,12 +1462,22 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            string msg = "start frmRE=>btnAdd_Click";
+            msg.WriteLog(this.GetType());
+
             InitialData();
+
+            msg = "end frmRE=>btnAdd_Click";
+            msg.WriteLog(this.GetType());
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            string msg = "start frmRE=>btnEdit_Click";
+            msg.WriteLog(this.GetType());
+
             btnEdit.EnableButton(btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, txdDocNo.Text);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             txdDocNo.DisableTextBox(false);
             txdDocNo.BackColor = Color.Turquoise; // Translator.FromHtml("#7FFFD4");
@@ -1399,16 +1498,18 @@ namespace AllCashUFormsApp.View.Page
 
             dtpDocDate.Focus();
             isAdd = true; //Last edit by sailom.k 14/09/2021 tunning performance
-        }
 
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-
+            msg = "end frmRE=>btnEdit_Click";
+            msg.WriteLog(this.GetType());
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
+            string msg = "start frmRE=>btnCopy_Click";
+            msg.WriteLog(this.GetType());
+
             btnCopy.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnPrint, txdDocNo.Text);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, new string[] { txtSuppName.Name, txtCrUser.Name }, cellEdit);
 
@@ -1421,21 +1522,38 @@ namespace AllCashUFormsApp.View.Page
 
             validateNewRow = true;
 
+            emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
+            supp = bu.GetSupplier(txtSupplierCode.Text);
+
             grdList.CellContentClick -= grdList_CellContentClick;
             grdList.CellContentClick += grdList_CellContentClick;
+
+
+            msg = "end frmRE=>btnCopy_Click";
+            msg.WriteLog(this.GetType());
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            string msg  = "start frmRE=>btnSave_Click";
+            msg.WriteLog(this.GetType());
+
             Save();
+
+            msg = "end frmRE=>btnSave_Click";
+            msg.WriteLog(this.GetType());
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            string msg = "start frmRE=>btnCancel_Click";
+            msg.WriteLog(this.GetType());
+
             this.ClearControl(docTypeCode, runDigit);
 
             btnAdd.Enabled = true;
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             validateNewRow = true;
 
@@ -1447,18 +1565,39 @@ namespace AllCashUFormsApp.View.Page
             txdDocNo.BackColor = Color.Turquoise;
 
             grdList.CellContentClick -= grdList_CellContentClick;
+
+            msg = "end frmRE=>btnCancel_Click";
+            msg.WriteLog(this.GetType());
         }
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            string msg = "start frmRE=>btnPrint_Click";
+            msg.WriteLog(this.GetType());
+
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@DocNo", txdDocNo.Text);
-            this.OpenCrystalReportsPopup("ใบรับสินค้า", "From_RE.rpt", "Form_RE", _params);
+            //this.OpenCrystalReportsPopup("ใบรับสินค้า", "From_RE.rpt", "Form_RE", _params);
+
+            this.OpenTestCrystalReportsPopup("ใบรับสินค้า", "Form_RE.rdlc", "Form_RE", _params); //Reporting service by sailom 30/11/2021
+
+            msg = "end frmRE=>btnPrint_Click";
+            msg.WriteLog(this.GetType());
         }
 
-        private void btnExcel_Click(object sender, EventArgs e)
-        {
 
+        private void btnPrintCrys_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txdDocNo.Text))
+            {
+                FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                this.OpenCrystalReportsPopup("ใบรับสินค้า", "From_RE.rpt", "Form_RE", _params);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -1823,5 +1962,31 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
+        private void btnExcel_Click(object sender, EventArgs e)
+        {
+            bool flagExExcel = false;
+            if (!string.IsNullOrEmpty(txdDocNo.Text))
+            {
+                var chkPO = bu.GetPOMaster(txdDocNo.Text);
+                if (chkPO != null)
+                    flagExExcel = true;
+            }
+
+            if (flagExExcel)
+            {
+                FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                this.OpenExcelReportsPopup("ใบรับสินค้า", "Form_RE_XSLT.xslt", "Form_RE", _params, true);
+            }
+            else
+            {
+                FlexibleMessageBox.Show("ไม่พบช้อมูลใบรับสินค้า", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+        }
+
     }
 }

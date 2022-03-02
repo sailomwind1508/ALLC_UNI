@@ -105,7 +105,7 @@ namespace AllCashUFormsApp
             {
                 using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
                 {
-                    var updateData = db.tbl_Users.FirstOrDefault(x => x.UserID == tbl_Users.UserID);
+                    var updateData = db.tbl_Users.FirstOrDefault(x => x.EmpID == tbl_Users.EmpID);
                     if (updateData != null)
                     {
                         foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
@@ -161,6 +161,102 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ex.WriteLog(tbl_Users.GetType());
+            }
+
+            return ret;
+        }
+
+        public static DataTable proc_User_Data(this tbl_Users tbl_Users, Dictionary<string, object> _params)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_User_Data";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+
+                return newTable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public static List<tbl_Users> SelectUserList(this tbl_Users tbl_Users, string allEmpID = "")
+        {
+            List<tbl_Users> list = new List<tbl_Users>();
+            try
+            {
+                string sql = "SELECT * FROM [dbo].[tbl_Users]";
+
+                if (!string.IsNullOrEmpty(allEmpID))
+                {
+                    sql += " WHERE EmpID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + allEmpID + "', ',')) ";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Users), sql);
+                list = dynamicListReturned.Cast<tbl_Users>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Users.GetType());
+            }
+
+            return list;
+        }
+
+        private static string SetQueryInsert(string db_server, string db_name)
+        {
+            string sql = "INSERT INTO [" + db_server + "]." + db_name + ".dbo.[tbl_Users]";
+            sql += " ([Username] ,[Password] ,[FirstName]  ,[LastName] ,[Email]";
+            sql += " ,[EmpID]  ,[RoleID] ,[CrDate] ,[CrUser] ,[FlagDel] ,[FlagSend] )";
+
+            sql += " VALUES (";
+            sql += " @Username ,@Password ,@FirstName ,@LastName ,@Email";
+            sql += " ,@EmpID  ,@RoleID ,@CrDate ,@CrUser ,@FlagDel ,@FlagSend";
+            sql += ")";
+
+            return sql;
+        }
+
+        public static int InsertUser(this tbl_Users tbl_User, string db_name, string db_server)
+        {
+            int ret = 0;
+
+            SqlConnection con = new SqlConnection(Connection.ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+
+            try
+            {
+                string sql = "";
+                sql = SetQueryInsert(db_server, db_name);
+
+                cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("@Username", tbl_User.Username);
+                cmd.Parameters.AddWithValue("@Password", tbl_User.Password);
+                cmd.Parameters.AddWithValue("@FirstName", tbl_User.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", tbl_User.LastName);
+                cmd.Parameters.AddWithValue("@Email", tbl_User.Email);
+
+                cmd.Parameters.AddWithValue("@EmpID", tbl_User.EmpID);
+                cmd.Parameters.AddWithValue("@RoleID", tbl_User.RoleID);
+
+
+                cmd.Parameters.AddWithValue("@CrDate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@CrUser", Helper.tbl_Users.Username);
+
+                cmd.Parameters.AddWithValue("@FlagDel", false);
+                cmd.Parameters.AddWithValue("@FlagSend", false);
+
+                ret = cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_User.GetType());
             }
 
             return ret;

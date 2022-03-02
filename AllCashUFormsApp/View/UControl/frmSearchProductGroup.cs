@@ -15,7 +15,7 @@ namespace AllCashUFormsApp.View.AControl
         private void BindData()
         {
             DataTable dt = new DataTable();
-            dt = bu.GetProductGroupTable();
+            dt = bu.GetProductGroupTable(0);
 
             grdList.DataSource = dt;
 

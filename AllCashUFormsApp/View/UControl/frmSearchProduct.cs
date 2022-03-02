@@ -16,7 +16,15 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchProduct()
         {
             InitializeComponent();
+
+            this.Load += frmSearchProduct_Load;
+
+            btnAccept.Click += btnAccept_Click;
+            btnCancel.Click += btnCancel_Click;
+
+            grdList.RowPostPaint += grdList_RowPostPaint;
         }
+
         private void BindData()
         {
             DataTable dt = new DataTable();
@@ -58,15 +66,18 @@ namespace AllCashUFormsApp.View.UControl
 
             lblgridCount.Text = dtPrd.Rows.Count.ToNumberFormat();
         }
+
         private void frmSearchProduct_Load(object sender, EventArgs e)
         {
             grdList.AutoGenerateColumns = false;
             BindData();
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void btnAccept_Click(object sender, EventArgs e)
         {
             List<string> selectList = new List<string>();
@@ -81,6 +92,7 @@ namespace AllCashUFormsApp.View.UControl
             frmReport._txtPro = joinString;
             this.Close();
         }
+
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender, e, this.Font);

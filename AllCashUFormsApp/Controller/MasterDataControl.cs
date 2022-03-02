@@ -193,9 +193,22 @@ namespace AllCashUFormsApp.Controller
             {
                 return new tbl_Branch().Get_proc_SendProductInfo_GetDataTable();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
+            }
+        }
+
+        public void GetSendProductInfoPrepareData()//
+        {
+            try
+            {
+                new tbl_Branch().GetSendProductInfoPrepareData();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
             }
         }
 
@@ -337,7 +350,11 @@ namespace AllCashUFormsApp.Controller
         public int UpdateHQ_SKUGroupData(tbl_HQ_SKUGroup tbl_HQ_SKUGroup)
         {
             return tbl_HQ_SKUGroup.Update();
-        }//new
+        }
+        public int UpdateSKUGroup(tbl_HQ_SKUGroup tbl_HQ_SKUGroup, string OldSKU_ID)
+        {
+            return tbl_HQ_SKUGroup.UpdateSKUGroup(OldSKU_ID);
+        }
 
         public DataTable GetHQ_SKUGroup_ExcData(string search)
         {
@@ -347,7 +364,12 @@ namespace AllCashUFormsApp.Controller
         public int UpdateHQ_SKUGroup_ExcData(tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC, string OldSKU_ID)
         {
             return tbl_HQ_SKUGroup_EXC.UpdateSKUGroupExc(OldSKU_ID);
-        }//
+        }
+
+        public int Remove_SKUGroupEXC(tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC)
+        {
+            return tbl_HQ_SKUGroup_EXC.Delete();
+        }
 
         public int UpdateSKUGroup_ExcData(tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC)
         {
@@ -401,5 +423,53 @@ namespace AllCashUFormsApp.Controller
             }
             return ret;
         }
+
+        public List<tbl_SaleType> GetSaleTypeData()
+        {
+            return new tbl_SaleType().SelectAll();
+        }
+        public DataTable proc_Employee_Data(Dictionary<string, object> _params)
+        {
+            try
+            {
+                return new tbl_Employee().proc_Employee_Data(_params);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }//20-12-2564 adisorn
+
+        public int InsertEmployee(tbl_Employee tbl_Employee, string db_name, string db_server)
+        {
+            return tbl_Employee.InsertEmployee(db_name, db_server);
+        }//20-12-2564 adisorn
+
+        public DataTable proc_User_Data(Dictionary<string, object> _params)
+        {
+            try
+            {
+                return new tbl_Users().proc_User_Data(_params);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }//20-12-2564 adisorn
+
+        public List<tbl_Employee> SelectEmpList(string allEmpID)
+        {
+            return new tbl_Employee().SelectEmpList(allEmpID);
+        }//20-12-2564 adisorn
+
+        public List<tbl_Users> SelectUserList(string allEmpID)
+        {
+            return new tbl_Users().SelectUserList(allEmpID);
+        }//20-12-2564 adisorn
+
+        public int InsertUser(tbl_Users tbl_Users, string db_name, string db_server)
+        {
+            return tbl_Users.InsertUser(db_name, db_server);
+        }//20-12-2564 adisorn
     }
 }

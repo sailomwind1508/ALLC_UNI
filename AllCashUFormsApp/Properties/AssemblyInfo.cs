@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("IT United Foods")]
 [assembly: AssemblyProduct("U-ForceFormsApp")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright @ 2020-2021 All right reversed")]
+[assembly: AssemblyTrademark("Power by U-Force Team (United Foods Co., Ltd)")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.1.2")]
-[assembly: AssemblyFileVersion("1.2.1.2")]
+[assembly: AssemblyVersion("2.2.6.8")]
+[assembly: AssemblyFileVersion("2.2.6.8")]

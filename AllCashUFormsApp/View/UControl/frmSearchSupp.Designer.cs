@@ -121,6 +121,7 @@
             this.grdList.TabIndex = 2;
             this.grdList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellDoubleClick);
             this.grdList.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdList_CellFormatting);
+            this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.gridView_RowPostPaint);
             // 
             // pnlSearchAddOn
             // 
@@ -345,7 +346,7 @@
             this.btnSearchSupp.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearchSupp.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearchSupp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchSupp.Location = new System.Drawing.Point(547, 1);
+            this.btnSearchSupp.Location = new System.Drawing.Point(547, 2);
             this.btnSearchSupp.Name = "btnSearchSupp";
             this.btnSearchSupp.Size = new System.Drawing.Size(70, 26);
             this.btnSearchSupp.TabIndex = 2;
@@ -447,7 +448,6 @@
         private System.Windows.Forms.Label lblCountListText;
         private System.Windows.Forms.Button btnSearchSupp;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.DataGridView grdList;
         private System.Windows.Forms.Panel pnlAdcSearch;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox ddlDocStatus;
@@ -466,5 +466,6 @@
         private System.Windows.Forms.TextBox txtWHName;
         private System.Windows.Forms.TextBox txtWHCode;
         private System.Windows.Forms.Button btnSearchWHCode;
+        private System.Windows.Forms.DataGridView grdList;
     }
 }

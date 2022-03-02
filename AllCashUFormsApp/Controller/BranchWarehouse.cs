@@ -23,6 +23,7 @@ namespace AllCashUFormsApp.Controller
         {
             _docTypePredicate = (x => x.DocTypeCode == "");
         }
+
         public List<tbl_BranchWarehouse> GetAllData()
         {
             return new tbl_BranchWarehouse().SelectAll();
@@ -153,7 +154,7 @@ namespace AllCashUFormsApp.Controller
                                      WHName = bhw.WHName,
                                      EmpID = emp.EmpID,
                                      EmpCode = emp.EmpCode,
-                                     EmpName = string.Join(" ", emp.TitleName, emp.FirstName)
+                                     EmpName = string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName)
                                  };
 
 
@@ -209,6 +210,16 @@ namespace AllCashUFormsApp.Controller
                 ex.WriteLog(this.GetType());
                 return null;
             }
+        }
+
+        public int SaveWithStore(List<tbl_BranchWarehouse> tbl_BranchWarehouse)
+        {
+            return tbl_BranchWarehouse.SaveWithStore();
+        }
+
+        public DataTable GetBranchWarehouseData(string _WHID)
+        {
+            return new tbl_BranchWarehouse().GetBranchWarehouseData(_WHID);
         }
     }
 }

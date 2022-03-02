@@ -21,5 +21,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<System.DateTime> Datamodify { get; set; }
         public string LinkUrl { get; set; }
         public Nullable<int> Seq { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

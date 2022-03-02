@@ -291,7 +291,7 @@ namespace AllCashUFormsApp
 
                 if (!string.IsNullOrEmpty(ProductID)) //where ไม่ให้มีบรรทัด LIKE เมื่อ ProductID เป็นค่า '' ไม่ได้ เลยไม่ใช้ Store
                 {
-                    sql += " AND t1.ProductID LIKE '%'+'" + ProductID + "'+'%'";
+                    sql += " AND t1.ProductID LIKE '%'+'" + ProductID + "'+'%' OR t2.ProductName LIKE '%'+'" + ProductID + "'+'%'";
                 }
 
                 sql += " ORDER BY t2.ProductGroupID,t2.ProductID,t2.ProductSubGroupID";

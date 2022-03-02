@@ -149,7 +149,6 @@
             this.colProductTypeID.HeaderText = "ลำดับ";
             this.colProductTypeID.Name = "colProductTypeID";
             this.colProductTypeID.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colProductTypeID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colProductTypeID.Width = 120;
             // 
             // colProductTypeName
@@ -161,7 +160,6 @@
             this.colProductTypeName.HeaderText = "ประเภทสินค้า";
             this.colProductTypeName.MaxInputLength = 50;
             this.colProductTypeName.Name = "colProductTypeName";
-            this.colProductTypeName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // frmSearchProductType
             // 

@@ -76,6 +76,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_AdmControlList tbl_AdmControlList)
         {
+            string msg = "start AdmControlListDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -91,6 +94,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_AdmControlList.GetType());
             }
 
+            msg = "end AdmControlListDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -101,6 +107,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_AdmControlList tbl_AdmControlList)
         {
+            string msg = "start AdmControlListDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -139,6 +148,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_AdmControlList.GetType());
             }
 
+            msg = "end AdmControlListDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -149,6 +161,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_AdmControlList tbl_AdmControlList)
         {
+            string msg = "start AdmControlListDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -163,6 +178,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_AdmControlList.GetType());
             }
+
+            msg = "end AdmControlListDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

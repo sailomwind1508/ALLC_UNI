@@ -21,7 +21,15 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchProductSubGroup()
         {
             InitializeComponent();
+
+            this.Load += frmSearchProductSubGroup_Load;
+
+            btnAccept.Click += btnAccept_Click;
+            btnCancel.Click += btnCancel_Click;
+
+            grdList.RowPostPaint += grdList_RowPostPaint;
         }
+
         private void BindData()
         {
             DataTable dt = new DataTable();
@@ -37,16 +45,19 @@ namespace AllCashUFormsApp.View.UControl
                 grdList.CreateCheckBoxHeaderColumn("colSelect");
             }
         }
+
         private void frmSearchProductSubGroup_Load(object sender, EventArgs e)
         {
             grdList.AutoGenerateColumns = false;
 
             BindData();
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void btnAccept_Click(object sender, EventArgs e)
         {
             List<string> selectList = new List<string>();
@@ -65,6 +76,7 @@ namespace AllCashUFormsApp.View.UControl
 
             this.Close();
         }
+
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender, e, this.Font);

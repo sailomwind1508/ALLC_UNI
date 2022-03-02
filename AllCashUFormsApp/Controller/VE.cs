@@ -69,14 +69,16 @@ namespace AllCashUFormsApp.Controller
 
         public List<tbl_IVMaster> GetInvVEMaster(string docNo)
         {
-            Func<tbl_IVMaster, bool> tbl_IVMasterPre = (x => x.DocNo == docNo);
-            return new tbl_IVMaster().Select(tbl_IVMasterPre);
+            //Func<tbl_IVMaster, bool> tbl_IVMasterPre = (x => x.DocNo == docNo);
+            //return new tbl_IVMaster().Select(tbl_IVMasterPre);
+            return new tbl_IVMaster().SelectWithDocNo(docNo);
         }
 
         public List<tbl_IVDetail> GetInvVEDetails(string docNo)
         {
-            Func<tbl_IVDetail, bool> tbl_IVDetailPre = (x => x.DocNo == docNo);
-            return new tbl_IVDetail().Select(tbl_IVDetailPre);
+            //Func<tbl_IVDetail, bool> tbl_IVDetailPre = (x => x.DocNo == docNo);
+            //return new tbl_IVDetail().Select(tbl_IVDetailPre);
+            return new tbl_IVDetail().SelectWithDocNo(docNo);
         }
 
         public List<tbl_SalArea> GetAllSaleArea()

@@ -275,65 +275,68 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdCalendar_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            var whid = grdCalendar.Rows[e.RowIndex].Cells["colWHID"];
-            var sendFlag = grdCalendar.Rows[e.RowIndex].Cells["colSendFlag"];
-            var pullFlag = grdCalendar.Rows[e.RowIndex].Cells["colPullFlag"];
-            var sendDate = grdCalendar.Rows[e.RowIndex].Cells["colDateSend"];
-
-            string _whid = whid.Value.ToString();
-
-            if (e.ColumnIndex == 4) //ยังไม่ส่งยอด
+            if (e.RowIndex != -1)
             {
-                sendFlag.Value = false;
-                pullFlag.Value = false;
+                var whid = grdCalendar.Rows[e.RowIndex].Cells["colWHID"];
+                var sendFlag = grdCalendar.Rows[e.RowIndex].Cells["colSendFlag"];
+                var pullFlag = grdCalendar.Rows[e.RowIndex].Cells["colPullFlag"];
+                var sendDate = grdCalendar.Rows[e.RowIndex].Cells["colDateSend"];
 
-                int ret = bu.ClearTLdata(_whid);
+                string _whid = whid.Value.ToString();
 
-                if (ret != 0)
-                    Save(e, grdCalendar, 4, _whid);
-            }
-            else if (e.ColumnIndex == 5) // ส่งยอดแล้ว
-            {
-                sendFlag.Value = true;
-
-                Save(e, grdCalendar, 5, _whid);
-            }
-            else if (e.ColumnIndex == 6) //ดึงยอดแล้ว
-            {
-                sendFlag.Value = true;
-                pullFlag.Value = true;
-
-                Save(e, grdCalendar, 6, _whid);
-            }
-            else if (e.ColumnIndex == 7) //ลบ
-            {
-                string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
-                string title = "ทำการยืนยัน!!";
-
-                if (!cfMsg.ConfirmMessageBox(title))
-                    return;
-
-                bu = new SendData();
-
-                int ret = 0;
-
-                var datesend = Convert.ToDateTime(sendDate.Value).ToShortDateString();
-
-                List<tbl_SendData> tbl_SendDatas = new List<tbl_SendData>();
-                tbl_SendDatas = bu.GetSendData(x => x.WHID == _whid && x.DateSend.ToShortDateString() == datesend);
-
-                ret = bu.RemoveData(tbl_SendDatas.First());
-
-                if (ret == 1)
+                if (e.ColumnIndex == 4) //ยังไม่ส่งยอด
                 {
-                    ret = bu.ClearTLdata(_whid);
+                    sendFlag.Value = false;
+                    pullFlag.Value = false;
+
+                    int ret = bu.ClearTLdata(_whid);
 
                     if (ret != 0)
-                    {
-                        string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
-                        msg.ShowInfoMessage();
+                        Save(e, grdCalendar, 4, _whid);
+                }
+                else if (e.ColumnIndex == 5) // ส่งยอดแล้ว
+                {
+                    sendFlag.Value = true;
 
-                        BindSendData();
+                    Save(e, grdCalendar, 5, _whid);
+                }
+                else if (e.ColumnIndex == 6) //ดึงยอดแล้ว
+                {
+                    sendFlag.Value = true;
+                    pullFlag.Value = true;
+
+                    Save(e, grdCalendar, 6, _whid);
+                }
+                else if (e.ColumnIndex == 7) //ลบ
+                {
+                    string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+                    string title = "ทำการยืนยัน!!";
+
+                    if (!cfMsg.ConfirmMessageBox(title))
+                        return;
+
+                    bu = new SendData();
+
+                    int ret = 0;
+
+                    var datesend = Convert.ToDateTime(sendDate.Value).ToShortDateString();
+
+                    List<tbl_SendData> tbl_SendDatas = new List<tbl_SendData>();
+                    tbl_SendDatas = bu.GetSendData(x => x.WHID == _whid && x.DateSend.ToShortDateString() == datesend);
+
+                    ret = bu.RemoveData(tbl_SendDatas.First());
+
+                    if (ret == 1)
+                    {
+                        ret = bu.ClearTLdata(_whid);
+
+                        if (ret != 0)
+                        {
+                            string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
+                            msg.ShowInfoMessage();
+
+                            BindSendData();
+                        }
                     }
                 }
             }
@@ -424,6 +427,11 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+            {
+                return;
+            }
+
             var whid = grdList.Rows[e.RowIndex].Cells["colWHID2"].Value.ToString();
             var datesend = grdList.Rows[e.RowIndex].Cells["colDateSend2"];
             var sendFlag = grdList.Rows[e.RowIndex].Cells["colFlagSend2"];

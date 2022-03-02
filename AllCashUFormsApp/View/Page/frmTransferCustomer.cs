@@ -42,6 +42,11 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
+
+            grdList.RowsDefaultCellStyle.BackColor = Color.White;
+            grdList.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+            grdList2.RowsDefaultCellStyle.BackColor = Color.White;
+            grdList2.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
 
         private void BindDropDownSalArea(ComboBox ddl1)
@@ -158,16 +163,24 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindDDLVan(ComboBox ddl,TextBox txt)
         {
-            List<tbl_SalAreaDistrict> SalAreaDistrictList = bu.GetSaleAreaDistrict(x => x.WHID == txt.Text);
-            if (SalAreaDistrictList.Count != 0)
-            {
-                List<string> listSalArea = SalAreaDistrictList.Select(x => x.SalAreaID).ToList();
-                var SalAreaList = bu.GetSaleArea(x => listSalArea.Contains(x.SalAreaID));
-                List<tbl_SalArea> AddList = new List<tbl_SalArea>();
-                AddList.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
-                AddList.AddRange(SalAreaList);
-                ddl.BindDropdownList(AddList, "SalAreaName", "SalAreaID");
-            }
+            //List<tbl_SalAreaDistrict> SalAreaDistrictList = bu.GetSaleAreaDistrict(x => x.WHID == txt.Text);
+            //if (SalAreaDistrictList.Count != 0)
+            //{
+            //    List<string> listSalArea = SalAreaDistrictList.Select(x => x.SalAreaID).ToList();
+            //    var SalAreaList = bu.GetSaleArea(x => listSalArea.Contains(x.SalAreaID));
+            //    List<tbl_SalArea> AddList = new List<tbl_SalArea>();
+            //    AddList.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
+            //    AddList.AddRange(SalAreaList);
+            //    ddl.BindDropdownList(AddList, "SalAreaName", "SalAreaID");
+            //}
+
+            string WHID = txt.Text.Substring(3, 3);
+            var _salearea = bu.GetSaleArea(x => x.SalAreaName.Contains(WHID));
+
+            var AddList = new List<tbl_SalArea>();
+            AddList.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
+            AddList.AddRange(_salearea);
+            ddl.BindDropdownList(AddList, "SalAreaName", "SalAreaID");
         }
       
         private void btnSearchVan2_Click(object sender, EventArgs e)
@@ -255,11 +268,9 @@ namespace AllCashUFormsApp.View.Page
 
             string _SalAreaID = ddlSalArea.SelectedValue.ToString() != "" ? ddlSalArea.SelectedValue.ToString() : "";
 
-            string _CustName = txtSearch.Text;
-
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@SalAreaID", _SalAreaID);
-            _params.Add("@CustName", _CustName);
+            _params.Add("@CustName", "");
             _params.Add("@WHID", _WareHouseID);
 
             var dt = bu.GetTransferCustomerData(_params);
@@ -483,18 +494,19 @@ namespace AllCashUFormsApp.View.Page
 
                 int ret = 0;
                 bu = new Customer();
-                List<tbl_ArCustomer> tbl_ArCustomerList = new List<tbl_ArCustomer>();
+                var tbl_ArCustomerList = new List<tbl_ArCustomer>();
 
                 var allCust = bu.GetCustomer(x => x.FlagDel == false); // where ด้วย SalAreaIDได้ ??
+
+                var bwhName = bu.GetAllBranchWarehouse(x => x.WHName == _txtWHName.Text);
 
                 foreach (DataGridViewRow r in grdList2.Rows)  //เช็ค Validate ไม่ให้ทำก่อน loop foreach
                 {
                     string _CustomerID = r.Cells[1].Value.ToString();
-                    List<tbl_ArCustomer> custList = allCust.Where(x => x.CustomerID == _CustomerID).ToList();
+                    var custList = allCust.Where(x => x.CustomerID == _CustomerID).ToList();
 
-                    tbl_ArCustomer cData = new tbl_ArCustomer();
+                    var cData = new tbl_ArCustomer();
                     cData = custList[0];
-                    List<tbl_BranchWarehouse> bwhName = bu.GetAllBranchWarehouse(x => x.WHName == _txtWHName.Text);
                     cData.WHID = bwhName[0].WHCode;
                     cData.SalAreaID = _ddlSalArea.SelectedValue.ToString();
                     cData.EdDate = DateTime.Now;
@@ -535,11 +547,9 @@ namespace AllCashUFormsApp.View.Page
             }
             catch (Exception ex)
             {
-                ex.WriteLog(this.GetType());
-                string msg = ex.Message;
-                msg.ShowErrorMessage();
+                ex.Message.ShowErrorMessage();
+                return;
             }
-
         }
 
         private void ClearData()

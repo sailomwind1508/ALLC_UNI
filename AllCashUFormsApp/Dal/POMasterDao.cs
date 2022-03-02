@@ -17,6 +17,9 @@ namespace AllCashUFormsApp
     {
         public static int UpdateCustInvNo(this tbl_POMaster tbl_POMaster)
         {
+            string msg = "start POMasterDao=>UpdateCustInvNo";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -30,8 +33,11 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
+
+            msg = "end POMasterDao=>UpdateCustInvNo";
+            msg.WriteLog(null);
 
             return ret;
         }
@@ -55,7 +61,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
@@ -81,7 +87,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
@@ -107,12 +113,11 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
         }
-
 
         /// <summary>
         /// select data
@@ -144,7 +149,78 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
+        //x.DocTypeCode.Trim() == "IV" && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Trim() == docTypeCode
+
+        public static List<tbl_POMaster> SelectRefMaxAutoID(this tbl_POMaster tbl_POMaster, string docTypeCode = "")
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                    sql += " WHERE ISNULL(DocRef,'') <> '' AND DocTypeCode = 'IV' AND ISNULL(DocRef,'') = '" + docTypeCode.Trim() + "') ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+
+                }
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_POMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
+        public static List<tbl_POMaster> SelectMaxAutoID(this tbl_POMaster tbl_POMaster, string docTypeCode = "")
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    if (docTypeCode.Trim() == "IV")
+                    {
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND ISNULL(DocRef, '') = '' )";
+                    }
+                    else
+                    {
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' )";
+                    }
+                    
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+       
+                }
+                
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_POMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
@@ -183,7 +259,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
@@ -222,7 +298,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
             return list;
@@ -235,6 +311,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_POMaster tbl_POMaster, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start POMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_POMaster.Attach(tbl_POMaster);
@@ -242,12 +321,49 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
+
+            msg = "end POMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_POMaster"></param>
+        /// <returns></returns>
+        public static int Insert(this tbl_POMaster tbl_POMaster)
+        {
+            string msg = "start POMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_POMaster.Attach(tbl_POMaster);
+                    db.tbl_POMaster.Add(tbl_POMaster);
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int UpdateEntity(this tbl_POMaster tbl_POMaster, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
+            string msg = "start POMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -286,11 +402,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end POMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_POMaster> tbl_POMasters)
         {
+            string msg = "start POMasterDao=>Update->List<tbl_POMaster>";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -335,50 +457,10 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_POMaster);
             }
 
+            msg = "end POMasterDao=>Update->List<tbl_POMaster>";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
-        }
-
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_POMaster"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_POMaster tbl_POMaster, DB_ALL_CASH_UNIEntities db)
-        {
-            try
-            {
-                db.Entry(tbl_POMaster).State = EntityState.Deleted;
-                db.tbl_POMaster.Remove(tbl_POMaster);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_POMaster.GetType());
-            }
-        }
-
-        /// <summary>
-        /// add new data
-        /// </summary>
-        /// <param name="tbl_POMaster"></param>
-        /// <returns></returns>
-        public static int Insert(this tbl_POMaster tbl_POMaster)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_POMaster.Attach(tbl_POMaster);
-                    db.tbl_POMaster.Add(tbl_POMaster);
-                    ret = db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_POMaster.GetType());
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -388,6 +470,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_POMaster tbl_POMaster)
         {
+            string msg = "start POMasterDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -423,14 +508,20 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
+
+            msg = "end POMasterDao=>Update";
+            msg.WriteLog(null);
 
             return ret;
         }
 
         public static int UpdateSQL(this tbl_POMaster tbl_POMaster, string sqlCmd)
         {
+            string msg = "start POMasterDao=>UpdateSQL";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -438,8 +529,11 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
+
+            msg = "end POMasterDao=>UpdateSQL";
+            msg.WriteLog(null);
 
             return ret;
         }
@@ -451,6 +545,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_POMaster tbl_POMaster)
         {
+            string msg = "start POMasterDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -463,10 +560,61 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
             }
 
+            msg = "end POMasterDao=>Delete";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_POMaster"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_POMaster tbl_POMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start POMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_POMaster).State = EntityState.Deleted;
+                db.tbl_POMaster.Remove(tbl_POMaster);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
+        }
+
+        public static List<tbl_POMaster> SelectCustomer_POMaster(this tbl_POMaster tbl_POMaster,string CustomerID)
+        {
+            string msg = "start POMasterDao=>SelectCustomer_POMaster";
+            msg.WriteLog(null);
+
+            var list = new List<tbl_POMaster>();
+            try
+            {
+                string sql = "SELECT TOP 1 * FROM tbl_POMaster WHERE CustomerID = '" + CustomerID + "' ORDER BY DocDate DESC";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>SelectCustomer_POMaster";
+            msg.WriteLog(null);
+
+            return list;
         }
     }
 }

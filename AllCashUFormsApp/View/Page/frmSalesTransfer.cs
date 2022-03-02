@@ -15,10 +15,20 @@ namespace AllCashUFormsApp.View.Page
     public partial class frmSalesTransfer : Form
     {
         Employee bu = new Employee();
+        BranchWarehouse bbu = new BranchWarehouse();
         MenuBU menuBU = new MenuBU();
+        List<Control> FromBranchWHControls = new List<Control>();
+        List<Control> ToBranchWHControls = new List<Control>();
+        Dictionary<Control, Label> validateSaveCtrls = new Dictionary<Control, Label>();
         public frmSalesTransfer()
         {
             InitializeComponent();
+
+            FromBranchWHControls = new List<Control> { txtFromWHCode, txtFromWHName };
+            ToBranchWHControls = new List<Control> { txtToWHCode, txtToWHName };
+
+            validateSaveCtrls.Add(txtFromWHCode, lblFromWHCode);//
+            validateSaveCtrls.Add(txtToWHCode, lblToWHCode);//
         }
 
         #region #--# Variable
@@ -40,54 +50,13 @@ namespace AllCashUFormsApp.View.Page
             BindBranchWareHouse();
         }
 
-        private void btnAddTransferTo_Click(object sender, EventArgs e)
-        {
-            if (lsbTransferFr.Items.Count > 0)
-            {
-                lsbTransferFr.SelectedIndex = 0;
-
-                lsbSelected(lsbTransferFr, lsbTransferTo);
-            }
-        }
-
-        private void btnAddTransferFr_Click(object sender, EventArgs e)
-        {
-            if (lsbTransferTo.Items.Count > 0)
-            {
-                lsbTransferTo.SelectedIndex = 0;
-
-                lsbSelected(lsbTransferTo, lsbTransferFr);
-            }
-        }
-
-        private void btnAllTransferTo_Click(object sender, EventArgs e)
-        {
-            lsbSelectedAll(lsbTransferTo, lsbTransferFr);
-        }
-
-        private void btnAllTransferFr_Click(object sender, EventArgs e)
-        {
-            lsbSelectedAll(lsbTransferFr, lsbTransferTo);
-        }
-
-        private void btnTrasferFrToTop_Click(object sender, EventArgs e)
-        {
-            SelectItemToTop();
-        }
-
-        private void btnMoveItemDown_Click(object sender, EventArgs e)
-        {
-            SelectMoveItemDown();
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void tabPage_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabName = tabPage.SelectedTab.Text.ToString();
+
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
 
             if (tabName == "โอนย้ายตลาด")
             {
@@ -97,109 +66,21 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindSaleEmp();
             }
+            else if (tabName == "ผ่าแวน")
+            {
+                BindVan();
+
+                txtFromWHCode.DisableTextBox(true);
+                txtToWHCode.DisableTextBox(true);
+
+                btnSearchFromWHCode.Enabled = false;
+                btnSearchToWHCode.Enabled = false;
+            }
         }
 
         private void grdSaleEmp_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdSaleEmp.SetRowPostPaint(sender, e, this.Font);
-        }
-
-        private void btnEmpSwap_Click(object sender, EventArgs e)
-        {
-            SwapEmployee();
-        }
-
-        private void btnDeleteSalArea_Click(object sender, EventArgs e)
-        {
-            DeleteSalArea();
-        }
-
-        private void btnSaveSaleEmp_Click(object sender, EventArgs e)
-        {
-            SaveSaleEmp();
-        }
-
-        private void btnSaveSalAreaSeq_Click(object sender, EventArgs e)
-        {
-            //เปลี่ยนลำดับ SalArea
-            try
-            {
-                if (lsbTransferFr.Items.Count == 0)
-                {
-                    string msg = "กรุณาเลือก Van ที่ต้องการโอนย้ายตลาด !!";
-                    msg.ShowWarningMessage();
-                    return;
-                }
-                else
-                {
-                    string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                    string title = "ยืนยันการบันทึก!!";
-
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
-
-                    int ret = 0;
-
-                    var allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false);
-
-                    var ListSalArea = new List<tbl_SalArea>();
-
-                    short Seq = 1;
-
-                    for (int i = 0; i < lsbTransferFr.Items.Count; i++)
-                    {
-                        var SaleArea = new tbl_SalArea();
-
-                        SaleArea = allSalArea.FirstOrDefault(x => x.SalAreaName == lsbTransferFr.Items[i].ToString());
-
-                        if (SaleArea != null)
-                        {
-                            SaleArea.Seq = Seq++;
-                            ListSalArea.Add(SaleArea);
-                        }
-                    }
-
-                    foreach (var data in ListSalArea)
-                    {
-                        ret = bu.UpdateSalAreaData(data);
-                    }
-
-                    if (ret == 1)
-                    {
-                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                        msg.ShowInfoMessage();
-
-                        PrePareBranchWH();
-                    }
-                    else
-                    {
-                        this.ShowProcessErr();
-                        return;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-                return;
-            }
-        }
-
-        private void btnClearGrdData_Click(object sender, EventArgs e)
-        {
-            if (grdSaleEmp.RowCount > 0)
-            {
-                for (int i = 0; i < grdSaleEmp.RowCount; i++)
-                {   //Clear ข้อมูลในช่อง รหัส และช่อง เป็นพนักงาน ทั้งหมด
-                    grdSaleEmp.Rows[i].Cells["colEmployeeID"].Value = null;
-                    grdSaleEmp.Rows[i].Cells["colEmployeeName"].Value = null;
-                }
-            }
-        }
-
-        private void btnSaveBranchWH_Click(object sender, EventArgs e)
-        {
-            SaveBranchWH();
         }
 
         private void rdoPreOrder_Click(object sender, EventArgs e)
@@ -240,7 +121,7 @@ namespace AllCashUFormsApp.View.Page
 
         #endregion
 
-        #region Method
+        #region #--Method--#
         private void InitPage()
         {
             var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
@@ -443,6 +324,30 @@ namespace AllCashUFormsApp.View.Page
             DataTable newDT = new DataTable();
             newDT = bu.GetAllSaleEmployee();
             grdSaleEmp.DataSource = newDT;
+        }
+
+        private void BindVan()
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnAdd.Enabled = true;
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
+
+            var dt = bu.GetBranchWarehouseMappingDT();
+            grdSpecialVan.DataSource = dt;
+            lblgrdQty.Text = dt.Rows.Count.ToNumberFormat();
+
+            if (dt.Rows.Count > 0)
+            {
+                btnRemove.Enabled = true;
+            }
+            else
+            {
+                txtFromWHCode.Text = "";
+                txtToWHCode.Text = "";
+                txtFromWHName.Text = "";
+                txtToWHName.Text = "";
+            }
         }
 
         private void SwapEmployee()
@@ -703,6 +608,383 @@ namespace AllCashUFormsApp.View.Page
 
         #endregion
 
+        private bool ValidateSave()
+        {
+            bool ret = true;
+            List<string> errList = new List<string>();
+
+            if (ret)
+            {
+                errList.SetErrMessage(validateSaveCtrls);
+            }
+            if (errList.Count > 0)
+            {
+                string message = "กรุณากรอกข้อมูลที่จำเป็น \n\n" + string.Join("\n", errList);
+                message.ShowWarningMessage();
+                ret = false;
+            }
+            return ret;
+        }
+
+        private void btnAddVan_Click(object sender, EventArgs e)
+        {
+            if (!ValidateSave())
+            {
+                return;
+            }
+
+            string msg = "";
+
+            if (txtFromWHCode.Text == txtToWHCode.Text)
+            {
+                msg += "Van (ต้นทาง) และ (ปลายทาง) : ห้ามซ้ำ !!\n";
+            }
+
+            var dt = new DataTable();
+            dt = ((DataTable)grdSpecialVan.DataSource).Clone();
+
+            dt.Rows.Clear();
+
+            for (int i = 0; i < grdSpecialVan.Rows.Count; i++)
+            {
+                string _WHIDFrom = grdSpecialVan.Rows[i].Cells["colWHIDFrom"].Value.ToString();
+                string _WHIDTo = grdSpecialVan.Rows[i].Cells["colWHIDTo"].Value.ToString();
+
+                if (!string.IsNullOrEmpty(_WHIDFrom) && !string.IsNullOrEmpty(_WHIDTo))
+                {
+                    dt.Rows.Add(_WHIDFrom, _WHIDTo);
+                }
+            }
+
+            if (grdSpecialVan.Rows.Count > 0)
+            {
+                var _WHIDFr = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHIDFrom") == txtFromWHCode.Text || x.Field<string>("WHIDFrom") == txtToWHCode.Text);
+                var _WHIDTo = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHIDTo") == txtFromWHCode.Text || x.Field<string>("WHIDTo") == txtToWHCode.Text);
+
+                if (_WHIDFr != null || _WHIDTo != null)
+                {
+                    msg += "Van (ต้นทาง) หรือ (ปลายทาง) : ซ้ำ !!\n";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(msg))
+            {
+                msg.ShowWarningMessage();
+                return;
+            }
+            else
+            {
+                dt.Rows.Add(txtFromWHCode.Text, txtToWHCode.Text);
+                grdSpecialVan.DataSource = dt;
+            }
+        }
+
+        private void grdSpecialVan_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdSpecialVan.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void Save()
+        {
+            string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+            string title = "ยืนยันการบันทึก!!";
+
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            if (!ValidateSave())
+            {
+                return;
+            }
+
+            var AllBranchWH = bu.GetAllBranchWarehouse(x => x.WHType == 1);
+
+            if (!ValidateDupplicate(AllBranchWH))
+            {
+                return;
+            }
+
+
+            try
+            {
+                var branchWHMapList = new List<tbl_BranchWarehouseMapping>();
+
+                for (int i = 0; i < grdSpecialVan.RowCount; i++)
+                {
+                    var branchWHMap = new tbl_BranchWarehouseMapping();
+                    branchWHMap.WHIDFrom = grdSpecialVan.Rows[i].Cells["colWHIDFrom"].Value.ToString();
+                    branchWHMap.WHIDTo = grdSpecialVan.Rows[i].Cells["colWHIDTo"].Value.ToString();
+                    branchWHMapList.Add(branchWHMap);
+                }
+
+                var BranchWH = new List<tbl_BranchWarehouse>();
+
+                for (int i = 0; i < branchWHMapList.Count; i++)
+                {
+                    string WHIDFr = branchWHMapList[i].WHIDFrom;
+                    string WHIDTo = branchWHMapList[i].WHIDTo;
+
+                    var BranchWHFr = AllBranchWH.FirstOrDefault(x => x.WHID == WHIDFr);
+                    if (BranchWHFr != null)
+                    {
+                        BranchWHFr.SaleTypeID = 2;
+                        BranchWH.Add(BranchWHFr);
+                    }
+
+                    var BranchWHTo = AllBranchWH.FirstOrDefault(x => x.WHID == WHIDTo);
+                    if (BranchWHTo != null)
+                    {
+                        BranchWHTo.SaleTypeID = 3;
+                        BranchWH.Add(BranchWHTo);
+                    }
+
+                }
+
+                int retBranchWHMap = 0;
+                int retBranchWH = 0;
+                if (branchWHMapList.Count > 0)
+                {
+                    retBranchWHMap = bu.SaveWithStore(branchWHMapList);
+                }
+
+                if (BranchWH.Count > 0)
+                {
+                    retBranchWH = bbu.SaveWithStore(BranchWH);
+                }
+
+                if (retBranchWHMap > 0 && retBranchWH > 0)
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว";
+                    msg.ShowInfoMessage();
+
+                    BindVan();
+
+                    txtFromWHCode.DisableTextBox(true);
+                    txtToWHCode.DisableTextBox(true);
+
+                    btnSearchFromWHCode.Enabled = false;
+                    btnSearchToWHCode.Enabled = false;
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private bool ValidateDupplicate(List<tbl_BranchWarehouse> AllBranchWH)
+        {
+
+            bool ret = true;
+
+            string msg = "";
+
+            var chkBranchFr = AllBranchWH.FirstOrDefault(x => x.WHID == txtFromWHCode.Text);
+            var chkBranchTo = AllBranchWH.FirstOrDefault(x => x.WHID == txtToWHCode.Text);
+
+            if (chkBranchFr == null || chkBranchTo == null)
+            {
+                msg += "คลังต้นทาง หรือ คลังปลายทาง ไม่ถูกต้อง !!\n";
+            }
+
+            else if (txtFromWHCode.Text == txtToWHCode.Text)
+            {
+                msg += "คลังต้นทาง และ คลังปลายทาง : ห้ามซ้ำ !!\n";
+            }
+            else
+            {
+                var dt = new DataTable();
+                dt = ((DataTable)grdSpecialVan.DataSource).Clone();
+
+                dt.Rows.Clear();
+
+                if (grdSpecialVan.Rows.Count > 0)
+                {
+                    for (int i = 0; i < grdSpecialVan.Rows.Count; i++)
+                    {
+                        string WHIDFrom = grdSpecialVan.Rows[i].Cells["colWHIDFrom"].Value.ToString();
+                        string WHIDTo = grdSpecialVan.Rows[i].Cells["colWHIDTo"].Value.ToString();
+
+                        if (!string.IsNullOrEmpty(WHIDFrom) && !string.IsNullOrEmpty(WHIDTo))
+                        {
+                            dt.Rows.Add(WHIDFrom, WHIDTo);
+                        }
+                    }
+
+                    var _WHIDFr = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHIDFrom") == txtFromWHCode.Text || x.Field<string>("WHIDFrom") == txtToWHCode.Text);
+                    var _WHIDTo = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHIDTo") == txtFromWHCode.Text || x.Field<string>("WHIDTo") == txtToWHCode.Text);
+
+                    if (_WHIDFr != null || _WHIDTo != null)
+                    {
+                        msg += "คลังต้นทาง หรือ คลังปลายทาง : ซ้ำ !!\n";
+                    }
+                    else
+                    {
+                        dt.Rows.Add(txtFromWHCode.Text, txtToWHCode.Text);
+                        grdSpecialVan.DataSource = dt;
+                    }
+                }
+                else
+                {
+                    dt.Rows.Add(txtFromWHCode.Text, txtToWHCode.Text);
+                    grdSpecialVan.DataSource = dt;
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(msg))
+            {
+                msg.ShowWarningMessage();
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        private void txtFromWHCode_TextChanged(object sender, EventArgs e)
+        {
+            if (txtFromWHCode.TextLength == 6)
+            {
+                var branchWH = bu.GetBranchWarehouse(x=>x.WHID == txtFromWHCode.Text);
+                if (branchWH != null)
+                {
+                    txtFromWHName.Text = branchWH.WHName;
+                }
+            }
+        }
+
+        private void txtToWHCode_TextChanged(object sender, EventArgs e)
+        {
+            if (txtToWHCode.TextLength == 6)
+            {
+                var branchWH = bu.GetBranchWarehouse(x => x.WHID == txtToWHCode.Text);
+                if (branchWH != null)
+                {
+                    txtToWHName.Text = branchWH.WHName;
+                }
+            }
+        }
+
+        private void SelectDetails(DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                DataGridViewRow grdRows = null;
+
+                if (e != null)
+                {
+                    if (e.RowIndex == -1)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        grdRows = grdSpecialVan.Rows[e.RowIndex];
+                    }
+                }
+                else
+                {
+                    grdRows = grdSpecialVan.CurrentRow;
+                }
+
+                if (grdRows != null)
+                {
+                    txtFromWHCode.Text = grdRows.Cells["colWHIDFrom"].Value.ToString();
+                    txtToWHCode.Text = grdRows.Cells["colWHIDTo"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void grdSpecialVan_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            SelectDetails(e);
+        }
+
+        private void grdSpecialVan_SelectionChanged(object sender, EventArgs e)
+        {
+            SelectDetails(null);
+        }
+
+        private void RemoveVan()
+        {
+            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+            string title = "ทำการยืนยัน!!";
+
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            try
+            {
+                var BranchWarehouseMP = new tbl_BranchWarehouseMapping();
+                BranchWarehouseMP.WHIDFrom = grdSpecialVan.CurrentRow.Cells["colWHIDFrom"].Value.ToString();
+                BranchWarehouseMP.WHIDTo = grdSpecialVan.CurrentRow.Cells["colWHIDTo"].Value.ToString();
+
+                var bwh = bu.GetAllBranchWarehouse(x => x.WHType == 1);
+
+                var bwhList = new List<tbl_BranchWarehouse>();
+
+                var bwhFr = bwh.FirstOrDefault(x => x.WHID == BranchWarehouseMP.WHIDFrom);
+                if (bwhFr != null)
+                {
+                    bwhFr.SaleTypeID = 1;
+                    bwhList.Add(bwhFr);
+                }
+
+                var bwhTo = bwh.FirstOrDefault(x => x.WHID == BranchWarehouseMP.WHIDTo);
+                if (bwhTo != null)
+                {
+                    bwhTo.SaleTypeID = 1;
+                    bwhList.Add(bwhTo);
+                }
+
+                int ret = 0;
+                int retBranchWH = 0;
+
+                if (bwhList.Count > 0)
+                {
+                    ret = bu.DeleteWithStore(BranchWarehouseMP);
+                    retBranchWH = bbu.SaveWithStore(bwhList);
+                }
+
+                if (ret > 0 && retBranchWH > 0)
+                {
+                    string msg = "ลบข้อมูลเรียบร้อยแล้ว";
+                    msg.ShowInfoMessage();
+
+                    btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                    btnAdd.Enabled = true;
+                    btnEdit.Enabled = true;
+                    btnSave.Enabled = false;
+                    btnCancel.Enabled = false;
+
+                    BindVan();
+
+                    txtFromWHCode.DisableTextBox(true);
+                    txtToWHCode.DisableTextBox(true);
+
+                    btnSearchFromWHCode.Enabled = false;
+                    btnSearchToWHCode.Enabled = false;
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
         private void frmSalesTransfer_Load(object sender, EventArgs e)
         {
             InitPage();
@@ -713,5 +995,241 @@ namespace AllCashUFormsApp.View.Page
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
         }
+
+        #region #-----ButtonEvent-----#
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            string tabName = tabPage.SelectedTab.Text.ToString();
+
+            if (tabName == "ผ่าแวน")
+            {
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+
+                txtFromWHCode.DisableTextBox(false);
+                txtToWHCode.DisableTextBox(false);
+
+                btnSearchFromWHCode.Enabled = true;
+                btnSearchToWHCode.Enabled = true;
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            string tabName = tabPage.SelectedTab.Text.ToString();
+
+            if (tabName == "ผ่าแวน")
+            {
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                btnSave.Enabled = false;
+                btnCancel.Enabled = false;
+                btnAdd.Enabled = true;
+
+                txtFromWHCode.DisableTextBox(true);
+                txtToWHCode.DisableTextBox(true);
+
+                btnSearchFromWHCode.Enabled = false;
+                btnSearchToWHCode.Enabled = false;
+
+                BindVan();
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            string tabName = tabPage.SelectedTab.Text.ToString();
+
+            if (tabName == "ผ่าแวน")
+            {
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+
+                txtFromWHCode.DisableTextBox(false);
+                txtToWHCode.DisableTextBox(false);
+
+                txtFromWHCode.Text = "";
+                txtFromWHName.Text = "";
+
+                txtToWHCode.Text = "";
+                txtToWHName.Text = "";
+
+                btnSearchFromWHCode.Enabled = true;
+                btnSearchToWHCode.Enabled = true;
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            string tabName = tabPage.SelectedTab.Text.ToString();
+
+            if (tabName == "ผ่าแวน")
+            {
+                Save();
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnEmpSwap_Click(object sender, EventArgs e)
+        {
+            SwapEmployee();
+        }
+
+        private void btnDeleteSalArea_Click(object sender, EventArgs e)
+        {
+            DeleteSalArea();
+        }
+
+        private void btnSaveSaleEmp_Click(object sender, EventArgs e)
+        {
+            SaveSaleEmp();
+        }
+
+        private void btnSaveSalAreaSeq_Click(object sender, EventArgs e)
+        {
+            //เปลี่ยนลำดับ SalArea
+            try
+            {
+                if (lsbTransferFr.Items.Count == 0)
+                {
+                    string msg = "กรุณาเลือก Van ที่ต้องการโอนย้ายตลาด !!";
+                    msg.ShowWarningMessage();
+                    return;
+                }
+                else
+                {
+                    string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                    string title = "ยืนยันการบันทึก!!";
+
+                    if (!cfMsg.ConfirmMessageBox(title))
+                        return;
+
+                    int ret = 0;
+
+                    var allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false);
+
+                    var ListSalArea = new List<tbl_SalArea>();
+
+                    short Seq = 1;
+
+                    for (int i = 0; i < lsbTransferFr.Items.Count; i++)
+                    {
+                        var SaleArea = new tbl_SalArea();
+
+                        SaleArea = allSalArea.FirstOrDefault(x => x.SalAreaName == lsbTransferFr.Items[i].ToString());
+
+                        if (SaleArea != null)
+                        {
+                            SaleArea.Seq = Seq++;
+                            ListSalArea.Add(SaleArea);
+                        }
+                    }
+
+                    foreach (var data in ListSalArea)
+                    {
+                        ret = bu.UpdateSalAreaData(data);
+                    }
+
+                    if (ret == 1)
+                    {
+                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                        msg.ShowInfoMessage();
+
+                        PrePareBranchWH();
+                    }
+                    else
+                    {
+                        this.ShowProcessErr();
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+                return;
+            }
+        }
+
+        private void btnClearGrdData_Click(object sender, EventArgs e)
+        {
+            if (grdSaleEmp.RowCount > 0)
+            {
+                for (int i = 0; i < grdSaleEmp.RowCount; i++)
+                {   //Clear ข้อมูลในช่อง รหัส และช่อง เป็นพนักงาน ทั้งหมด
+                    grdSaleEmp.Rows[i].Cells["colEmployeeID"].Value = null;
+                    grdSaleEmp.Rows[i].Cells["colEmployeeName"].Value = null;
+                }
+            }
+        }
+
+        private void btnSaveBranchWH_Click(object sender, EventArgs e)
+        {
+            SaveBranchWH();
+        }
+
+        private void btnSearchFromWHCode_Click(object sender, EventArgs e)
+        {
+            this.OpenBranchWarehousePopup(FromBranchWHControls, "เลือกคลังสินค้า", x => x.WHType == 1);
+        }
+
+        private void btnSearchToWHCode_Click(object sender, EventArgs e)
+        {
+            this.OpenBranchWarehousePopup(ToBranchWHControls, "เลือกคลังสินค้า", x => x.WHType == 1);
+        }
+
+        private void btnAddTransferTo_Click(object sender, EventArgs e)
+        {
+            if (lsbTransferFr.Items.Count > 0)
+            {
+                lsbTransferFr.SelectedIndex = 0;
+
+                lsbSelected(lsbTransferFr, lsbTransferTo);
+            }
+        }
+
+        private void btnAddTransferFr_Click(object sender, EventArgs e)
+        {
+            if (lsbTransferTo.Items.Count > 0)
+            {
+                lsbTransferTo.SelectedIndex = 0;
+
+                lsbSelected(lsbTransferTo, lsbTransferFr);
+            }
+        }
+
+        private void btnAllTransferTo_Click(object sender, EventArgs e)
+        {
+            lsbSelectedAll(lsbTransferTo, lsbTransferFr);
+        }
+
+        private void btnAllTransferFr_Click(object sender, EventArgs e)
+        {
+            lsbSelectedAll(lsbTransferFr, lsbTransferTo);
+        }
+
+        private void btnTrasferFrToTop_Click(object sender, EventArgs e)
+        {
+            SelectItemToTop();
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            string tabName = tabPage.SelectedTab.Text;
+
+            if (tabName == "ผ่าแวน")
+            {
+                RemoveVan();
+            }
+        }
+
+        private void btnMoveItemDown_Click(object sender, EventArgs e)
+        {
+            SelectMoveItemDown();
+        }
+
+        #endregion
     }
 }

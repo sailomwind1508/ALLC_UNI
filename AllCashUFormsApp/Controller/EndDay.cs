@@ -159,6 +159,38 @@ namespace AllCashUFormsApp.Controller
             return tbl_SaleBranchSummary.Delete();
         }
 
+        public bool FixIVDetails(string ivDocNo, string whid, DateTime docdate)
+        {
+            bool ret = false;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand("proc_tbl_IVDetail_EndDay_fix", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+                    cmd.Parameters.Add(new SqlParameter("@IVDocNo", ivDocNo));
+                    cmd.Parameters.Add(new SqlParameter("@WHID", whid));
+                    cmd.Parameters.Add(new SqlParameter("@DocDate", docdate.ToString("yyyyMMdd", new CultureInfo("en-US"))));
+                    var result = cmd.ExecuteNonQuery();
+                    ret = true;
+
+                    con.Close();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
+
         public DataTable GetEndDay_PO(DateTime docDate, string docTypeCode, bool isEndDayProcess, bool isSum = true)
         {
             try
@@ -173,7 +205,7 @@ namespace AllCashUFormsApp.Controller
 
                 //edit by sailom 14-06-2021
                 //var tbl_IVMasters = (new tbl_IVMaster()).Select(x => x.DocDate.ToShortDateString() == docDate.ToShortDateString());// && x.Remark == "สร้างใบกำกับจากการปิดวัน");
-                var tbl_IVMasters = (new tbl_IVMaster()).Select(docDate); 
+                var tbl_IVMasters = (new tbl_IVMaster()).Select(docDate);
                 if (isEndDayProcess)
                 {
                     tbl_IVMasters = tbl_IVMasters.Where(x => string.IsNullOrEmpty(x.CustInvNO)).ToList();
@@ -204,7 +236,7 @@ namespace AllCashUFormsApp.Controller
                 //tbl_ArCustomers = (new tbl_ArCustomer()).SelectAll().Where(x => tbl_POMasters.Select(a => a.CustomerID.Trim()).ToList().Contains(x.CustomerID.Trim())).ToList();
 
                 var data = from po in tbl_POMasters
-                           //join cust in tbl_ArCustomers
+                               //join cust in tbl_ArCustomers
                            join emp in tbl_Employees
                            on po.SaleEmpID.Trim() equals emp.EmpID.Trim()
                            select new EndDayPOInfoModel
@@ -212,7 +244,7 @@ namespace AllCashUFormsApp.Controller
                                DocNo = po.DocNo,
                                WHID = po.WHID,
                                CustomerID = emp.EmpID,//po.CustomerID,
-                               CustName = string.Join(" ", emp.TitleName, emp.FirstName),
+                               CustName = string.IsNullOrEmpty(po.CustInvNO) ? string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName) : tbl_IVMasters.First(x => x.DocNo == po.CustInvNO).CustName, //last edit by sailom 27/01/2022
                                BeforeVat = Convert.ToDecimal(((po.Amount - po.ExcVat - po.Discount) * 100) / (100 + po.VatRate)).ToDecimalN2(),
                                VatAmt = po.VatAmt.Value.ToDecimalN2(),
                                TotalDue = po.TotalDue.ToDecimalN2(),
@@ -224,7 +256,7 @@ namespace AllCashUFormsApp.Controller
                 newTable.Columns.Add("DocNo", typeof(string));
                 newTable.Columns.Add("VAN", typeof(string));
                 newTable.Columns.Add("CustomerID", typeof(string));
-                newTable.Columns.Add("พนักงานขาย", typeof(string));  
+                newTable.Columns.Add("พนักงานขาย/ร้านค้า", typeof(string));  //last edit by sailom 27/01/2022 
                 newTable.Columns.Add("ก่อนภาษี", typeof(decimal));
                 newTable.Columns.Add("ภาษี", typeof(decimal));
                 newTable.Columns.Add("รวมภาษี", typeof(decimal));
@@ -269,7 +301,7 @@ namespace AllCashUFormsApp.Controller
                         }
                     }
 
-                    
+
 
                     //foreach (var r in totalData)
                     //{
@@ -298,8 +330,7 @@ namespace AllCashUFormsApp.Controller
                     //    //else
                     //    //    sumEndDayPOInfoModel.Add(r);
                     //}
-
-                    foreach (var r in sumEndDayPOInfoModel)
+                    foreach (var r in sumEndDayPOInfoModel.OrderBy(x => x.WHID).ThenBy(a => a.DocNo).ToList())
                     {
                         newTable.Rows.Add(r.DocNo, r.WHID, r.CustomerID, r.CustName, r.BeforeVat, r.VatAmt, r.TotalDue, r.CustInvNo);
                     }
@@ -332,7 +363,7 @@ namespace AllCashUFormsApp.Controller
                 Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
                 sqlParmas.Add("@DocTypeCode", docTypeCode);
                 sqlParmas.Add("@DocDate", docDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
-                
+
 
                 newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
 
@@ -478,7 +509,7 @@ namespace AllCashUFormsApp.Controller
 
                 var docStatus = GetDocStatus();
 
-                DataTable newTable = new DataTable(); 
+                DataTable newTable = new DataTable();
 
                 return newTable;
             }
@@ -504,5 +535,16 @@ namespace AllCashUFormsApp.Controller
 
             return dt;
         }
+
+        public DataTable VerifyFlagBill(string docDate)
+        {
+            return new tbl_ArCustomer().VerifyFlagBill(docDate);
+        }
+
+        public List<tbl_POMaster> SelectCustomer_POMaster(string CustomerID)
+        {
+            return new tbl_POMaster().SelectCustomer_POMaster(CustomerID);
+        }
+
     }
 }

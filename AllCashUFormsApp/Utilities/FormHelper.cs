@@ -16,6 +16,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -51,8 +54,241 @@ namespace AllCashUFormsApp
         private static List<Control> prdControlList = new List<Control>();
         private static List<Control> supDistictControlList = new List<Control>();
         private static List<Control> whIDControlList = new List<Control>();
+        public static List<tbl_InvMovement> invWhItems = new List<tbl_InvMovement>();
+        public static List<string> PrintingReportName = new List<string>();
+        public static bool ShowPrintingReportName = true;
 
         private static Form frm;
+
+        public static void CreateAndSendMail(string reportName, string branchName, string date)
+        {
+
+            string subject = string.Join(" ", new string[] { reportName, " ของ ", branchName, " ประจำวันที่ ", date });
+            string bodyHtmlString = @" <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'>
+            <span style='font-size:17px;font-family:'Cordia New',sans-serif;'>นี่คือข้อความอัตโนมัติจากระบบ&nbsp;</span>U-Force : &nbsp;<span id='isPasted' style='color: rgb(0, 0, 0); font-family: 'Cordia New', sans-serif; font-size: 17px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;'>ตรวจ</span>
+            <span style='font-size:17px;font-family:'Cordia New',sans-serif;'>&nbsp;</span>" + reportName + @"<span style='font-size:17px;font-family:'Cordia New',sans-serif;'>&nbsp;ประจำ &nbsp; " + branchName + @" &nbsp;ของวันที่ &nbsp;" + date + @"</span>&nbsp;</p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p id='isPasted' style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><u><span style='font-size:13px;font-family:'Arial',sans-serif;'>Best Regard</span></u></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><span style='font-size:13px;font-family:'Arial',sans-serif;'>Sailom Kaewpeela</span></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><span style='font-size:13px;font-family:'Arial',sans-serif;'>Senior System Analyst(IT)</span></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Angsana New',serif;color:#4472C4;'><img width='55' src='data:image/jpeg;base64,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' style='height: 0'572in; width: 0'572in;' alt='image'><span style='background:white;'>&nbsp;</span></span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:red;background:white;'>United Foods Public Co, Ltd</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>95 Moo'7 Thakarm Rd' Samaedam&nbsp;</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Bangkhuntien&nbsp;</span><span style='font-size:13px;font-family:'Arial',sans-serif;'>&nbsp;<span style='color:black;background:white;'>Bangkok 10150 Thailand</span></span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Tel: 061-8579990</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Fax: -</span></p> ";
+
+            FormHelper.SendMail(subject, bodyHtmlString, "");
+        }
+
+        public static void CreateAndSendMailWithAttachFile(string reportName, string branchName, string date)
+        {
+
+            string subject = string.Join(" ", new string[] { reportName, " ของ ", branchName, " ประจำวันที่ ", date });
+            string bodyHtmlString = @" <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'>
+            <span style='font-size:17px;font-family:'Cordia New',sans-serif;'>นี่คือข้อความอัตโนมัติจากระบบ&nbsp;</span>U-Force : &nbsp;<span id='isPasted' style='color: rgb(0, 0, 0); font-family: 'Cordia New', sans-serif; font-size: 17px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;'>ตรวจ</span>
+            <span style='font-size:17px;font-family:'Cordia New',sans-serif;'>&nbsp;</span>" + reportName + @"<span style='font-size:17px;font-family:'Cordia New',sans-serif;'>&nbsp;ประจำ &nbsp; " + branchName + @" &nbsp;ของวันที่ &nbsp;" + date + @"</span>&nbsp; 
+            <span style='font-size:17px;font-family:'Cordia New',sans-serif;'>โดยมีรายละเอียดตามไฟล์แนบ&nbsp;</span></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:'Tahoma',sans-serif;margin:0cm;'><br></p>
+            <p id='isPasted' style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><u><span style='font-size:13px;font-family:'Arial',sans-serif;'>Best Regard</span></u></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><span style='font-size:13px;font-family:'Arial',sans-serif;'>Sailom Kaewpeela</span></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><strong><span style='font-size:13px;font-family:'Arial',sans-serif;'>Senior System Analyst(IT)</span></strong></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Angsana New',serif;color:#4472C4;'><img width='55' src='data:image/jpeg;base64,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' style='height: 0'572in; width: 0'572in;' alt='image'><span style='background:white;'>&nbsp;</span></span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:red;background:white;'>United Foods Public Co, Ltd</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>95 Moo'7 Thakarm Rd' Samaedam&nbsp;</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Bangkhuntien&nbsp;</span><span style='font-size:13px;font-family:'Arial',sans-serif;'>&nbsp;<span style='color:black;background:white;'>Bangkok 10150 Thailand</span></span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Tel: 061-8579990</span></p>
+            <p style='margin:0cm;font-size:15px;font-family:'Calibri',sans-serif;'><span style='font-size:13px;font-family:'Arial',sans-serif;color:black;background:white;'>Fax: -</span></p> ";
+
+            //string body = string.Join(" ", new string[] { "ข้อความอัตโนมัติจากระบบ U-Force : พบการบันทึก Bank Note ของ ", bu.tbl_Branchs[0].BranchName, " ประจำวันที่ ", cdate, " โดยมีรายละเอียดตามไฟล์แนบ " });
+            //string excelPath = FormHelper.PrintingReportName;
+
+            FormHelper.SendMail(subject, bodyHtmlString, FormHelper.PrintingReportName);
+        }
+
+        public static void SendMail(string subject, object body, List<string> attachment_path)
+        {
+            try
+            {
+                //string mail_from = ConfigurationManager.AppSettings["mail_from"].ToString();
+                //string mail_from_pass = ConfigurationManager.AppSettings["mail_from_pass"].ToString();
+                //string mail_to = ""; // ConfigurationManager.AppSettings["mail_to"].ToString();
+                //string mail_port = ConfigurationManager.AppSettings["mail_port"].ToString();
+                //string mail_host = ConfigurationManager.AppSettings["mail_host"].ToString();
+
+                var conStr = ConfigurationManager.AppSettings["CenterConnect"].ToString();
+                var conn = new SqlConnection(conStr);
+
+                string sql = " SELECT * FROM tbl_CfgMailSetting ";
+                DataTable dt = new DataTable("MailSetting");
+                dt = My_DataTable_Extensions.GetDataTable(sql, conn, CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var r = dt.Rows[0];
+                    string mail_to = "";
+                    string mail_from = r["MailFrom"].ToString();
+                    string mail_from_pass = r["MailFromPass"].ToString();
+                    string mail_port = r["MailPort"].ToString();
+                    string mail_host = r["MailHost"].ToString();
+
+                    sql = " SELECT MailAddress FROM tbl_CfgMailAddress WHERE [Active] = 1 ";
+                    dt = new DataTable("MailAddess");
+                    dt = My_DataTable_Extensions.GetDataTable(sql, conn, CommandType.Text);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            if (!string.IsNullOrEmpty(dr["MailAddress"].ToString()))
+                            {
+                                mail_to = dr["MailAddress"].ToString();
+
+                                SmtpClient smtp = new SmtpClient();
+                                smtp.Port = Convert.ToInt32(mail_port);
+                                smtp.Host = mail_host;
+                                smtp.EnableSsl = true;
+                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                smtp.UseDefaultCredentials = false;
+                                smtp.Credentials = new NetworkCredential(mail_from, mail_from_pass);
+
+                                MailMessage mail = new MailMessage();
+                                mail.From = new MailAddress(mail_from);
+                                mail.To.Add(mail_to);
+                                mail.Subject = subject;
+                                mail.Body = body.ToString();
+                                mail.IsBodyHtml = true;
+
+                                //if (!string.IsNullOrEmpty(attachment_path))
+                                if (attachment_path.Count > 0)
+                                {
+                                    foreach (var item in attachment_path)
+                                    {
+                                        Attachment attachment = new Attachment(item, MediaTypeNames.Application.Octet);
+                                        ContentDisposition disposition = attachment.ContentDisposition;
+                                        disposition.CreationDate = File.GetCreationTime(item);
+                                        disposition.ModificationDate = File.GetLastWriteTime(item);
+                                        disposition.ReadDate = File.GetLastAccessTime(item);
+                                        disposition.FileName = Path.GetFileName(item);
+                                        disposition.Size = new FileInfo(item).Length;
+                                        disposition.DispositionType = DispositionTypeNames.Attachment;
+                                        mail.Attachments.Add(attachment);
+                                    }
+
+                                }
+
+                                smtp.Send(mail);
+                            }
+                        }
+                    }
+                }
+
+                var result = "ส่งเมลล์เรียบร้อยแล้ว!!";
+                result.ShowInfoMessage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("err: " + ex.Message);
+            }
+        }
+
+        public static void SendMail(string subject, object body, string attachment_path = "")
+        {
+            try
+            {
+                //string mail_from = ConfigurationManager.AppSettings["mail_from"].ToString();
+                //string mail_from_pass = ConfigurationManager.AppSettings["mail_from_pass"].ToString();
+                //string mail_to = ""; // ConfigurationManager.AppSettings["mail_to"].ToString();
+                //string mail_port = ConfigurationManager.AppSettings["mail_port"].ToString();
+                //string mail_host = ConfigurationManager.AppSettings["mail_host"].ToString();
+
+                var conStr = ConfigurationManager.AppSettings["CenterConnect"].ToString();
+                var conn = new SqlConnection(conStr);
+
+                string sql = " SELECT * FROM tbl_CfgMailSetting ";
+                DataTable dt = new DataTable("MailSetting");
+                dt = My_DataTable_Extensions.GetDataTable(sql, conn, CommandType.Text);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var r = dt.Rows[0];
+                    string mail_to = "";
+                    string mail_from = r["MailFrom"].ToString();
+                    string mail_from_pass = r["MailFromPass"].ToString();
+                    string mail_port = r["MailPort"].ToString();
+                    string mail_host = r["MailHost"].ToString();
+
+                    sql = " SELECT MailAddress FROM tbl_CfgMailAddress WHERE [Active] = 1 ";
+                    dt = new DataTable("MailAddess");
+                    dt = My_DataTable_Extensions.GetDataTable(sql, conn, CommandType.Text);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            if (!string.IsNullOrEmpty(dr["MailAddress"].ToString()))
+                            {
+                                mail_to = dr["MailAddress"].ToString();
+
+                                SmtpClient smtp = new SmtpClient();
+                                smtp.Port = Convert.ToInt32(mail_port);
+                                smtp.Host = mail_host;
+                                smtp.EnableSsl = true;
+                                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                smtp.UseDefaultCredentials = false;
+                                smtp.Credentials = new NetworkCredential(mail_from, mail_from_pass);
+
+                                MailMessage mail = new MailMessage();
+                                mail.From = new MailAddress(mail_from);
+                                mail.To.Add(mail_to);
+                                mail.Subject = subject;
+                                mail.Body = body.ToString();
+                                mail.IsBodyHtml = true;
+
+                                if (!string.IsNullOrEmpty(attachment_path))
+                                {
+                                    Attachment attachment = new Attachment(attachment_path, MediaTypeNames.Application.Octet);
+                                    ContentDisposition disposition = attachment.ContentDisposition;
+                                    disposition.CreationDate = File.GetCreationTime(attachment_path);
+                                    disposition.ModificationDate = File.GetLastWriteTime(attachment_path);
+                                    disposition.ReadDate = File.GetLastAccessTime(attachment_path);
+                                    disposition.FileName = Path.GetFileName(attachment_path);
+                                    disposition.Size = new FileInfo(attachment_path).Length;
+                                    disposition.DispositionType = DispositionTypeNames.Attachment;
+                                    mail.Attachments.Add(attachment);
+                                }
+
+                                smtp.Send(mail);
+                            }
+                        }
+                    }
+                }
+
+                var result = "ส่งเมลล์เรียบร้อยแล้ว!!";
+                result.ShowInfoMessage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("err: " + ex.Message);
+            }
+        }
+
+        private static void SendCompletedCallBack(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                MessageBox.Show(string.Format("{0} send canceled.", e.UserState), "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (e.Error != null)
+            {
+                MessageBox.Show(string.Format("{0} {1}", e.UserState, e.Error), "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("your message is sended", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        }
 
         public static void ClearListBoxItem(this ListBox ltbs)
         {
@@ -585,7 +821,7 @@ namespace AllCashUFormsApp
             btnRemove.Enabled = false;
             btnCopy.Enabled = true;
             btnPrint.Enabled = true;
-            btnExcel.Enabled = false;
+            btnExcel.Enabled = true; //last by sailom .k 12/01/2022
 
             btnSave.Enabled = false;
             btnCancel.Enabled = true;
@@ -601,7 +837,7 @@ namespace AllCashUFormsApp
             btnEdit.Enabled = true;
             btnRemove.Enabled = false;
             btnCopy.Enabled = true;
-            btnExcel.Enabled = false;
+            btnExcel.Enabled = true;//last by sailom .k 12/01/2022
 
             btnSave.Enabled = false;
             btnCancel.Enabled = true;
@@ -645,7 +881,7 @@ namespace AllCashUFormsApp
             btnEdit.Enabled = true;
             btnCopy.Enabled = true;
             btnPrint.Enabled = true;
-            btnExcel.Enabled = false;
+            btnExcel.Enabled = true;//last by sailom .k 12/01/2022
             btnCancel.Enabled = true;
 
             btnSave.Enabled = false;
@@ -659,7 +895,7 @@ namespace AllCashUFormsApp
             btnSearchDoc.Enabled = true;
             btnEdit.Enabled = true;
             btnCopy.Enabled = true;
-            btnExcel.Enabled = false;
+            btnExcel.Enabled = true;//last by sailom .k 12/01/2022
             btnCancel.Enabled = true;
 
             btnSave.Enabled = false;
@@ -736,10 +972,11 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenSupplierPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "SupplierCode", HeaderText = "รหัสผู้จำหน่าย", Name = "SupplierCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "SupplierCode", HeaderText = "รหัสผู้จำหน่าย", Name = "SupplierCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "SuppName", HeaderText = "ชื่อผู้จำหน่าย", Name = "SuppName", Width = 160, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "SupplierRefCode", HeaderText = "รหัสเดิม", Name = "SupplierRefCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "ApSupplierTypeName", HeaderText = "กลุ่มผู้จำหน่าย", Name = "ApSupplierTypeName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -756,6 +993,7 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenPromotionTempPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmPromotion _frm = new frmPromotion();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -773,6 +1011,7 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenPromotionPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmPromotion _frm = new frmPromotion();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -808,7 +1047,7 @@ namespace AllCashUFormsApp
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerCode", HeaderText = "รหัสลูกค้า", Name = "CustomerCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerID", HeaderText = "รหัสลูกค้า", Name = "CustomerID", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "CustName", HeaderText = "ชื่อลูกค้า", Name = "CustName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "CustomerRefCode", HeaderText = "รหัสเดิม", Name = "CustomerRefCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "ShopTypeName", HeaderText = "ประเภทร้านค้า", Name = "ShopTypeName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -819,7 +1058,10 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "CreditDay", HeaderText = "เครดิต(วัน)", Name = "CreditDay", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
 
             if (predicate != null)
+            {
                 _frm.PreparePopupFormWithPredicate("Customer", frm.Name, popupName, colList, null, _controls, predicate);
+                //_frm.PreparePopupForm("Customer", frm.Name, popupName, colList, null, null);
+            }
             else
                 _frm.PreparePopupForm("Customer", frm.Name, popupName, colList, null, _controls, null);
 
@@ -831,7 +1073,7 @@ namespace AllCashUFormsApp
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerCode", HeaderText = "รหัสลูกค้า", Name = "CustomerCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "CustomerID", HeaderText = "รหัสลูกค้า", Name = "CustomerID", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "CustName", HeaderText = "ชื่อลูกค้า", Name = "CustName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "CustomerRefCode", HeaderText = "รหัสเดิม", Name = "CustomerRefCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "ShopTypeName", HeaderText = "ประเภทร้านค้า", Name = "ShopTypeName", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -842,7 +1084,9 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "CreditDay", HeaderText = "เครดิต(วัน)", Name = "CreditDay", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleRight, Format = "N0" });
 
             if (predicate != null)
+            {
                 _frm.PreparePopupFormWithPredicate("CustomerPre", frm.Name, popupName, colList, null, _controls, predicate);
+            }
             else
                 _frm.PreparePopupForm("CustomerPre", frm.Name, popupName, colList, null, _controls, null);
 
@@ -858,6 +1102,7 @@ namespace AllCashUFormsApp
         /// <param name="predicate"></param>
         public static void OpenEmployeePopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_Employee, bool> predicate = null)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -880,6 +1125,7 @@ namespace AllCashUFormsApp
         /// <param name="predicate"></param>
         public static void OpenEmployeeNamePopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_Employee, bool> predicate)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -895,7 +1141,7 @@ namespace AllCashUFormsApp
         /// <param name="colList"></param>
         private static void AddEmployeeColumn(this List<DataGridColumn> colList)
         {
-            colList.Add(new DataGridColumn() { DataPropertyName = "EmpCode", HeaderText = "รหัสพนักงาน", Name = "EmpCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "EmpCode", HeaderText = "รหัสพนักงาน", Name = "EmpCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "EmpName", HeaderText = "ชื่อพนักงาน", Name = "EmpName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
         }
 
@@ -907,6 +1153,7 @@ namespace AllCashUFormsApp
         /// <param name="popupName"></param>
         public static void OpenBranchWarehousePopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -918,6 +1165,7 @@ namespace AllCashUFormsApp
 
         public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -933,9 +1181,10 @@ namespace AllCashUFormsApp
         /// <param name="_controls"></param>
         /// <param name="popupName"></param>
         /// <param name="consitionString"></param>
-        
+
         public static void OpenBranchWarehousePopup(this Form frm, List<Control> _controls, string popupName, string[] consitionString)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -944,9 +1193,10 @@ namespace AllCashUFormsApp
             _frm.PreparePopupForm("BranchWarehouse", frm.Name, popupName, colList, null, _controls, consitionString);
             _frm.ShowDialog();
         }
-        
+
         public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName, string[] consitionString)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -965,6 +1215,7 @@ namespace AllCashUFormsApp
         /// <param name="predicate"></param>
         public static void OpenBranchWarehousePopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_BranchWarehouse, bool> predicate)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -973,9 +1224,10 @@ namespace AllCashUFormsApp
             _frm.PreparePopupFormWithPredicate("BranchWarehouse", frm.Name, popupName, colList, null, _controls, predicate);
             _frm.ShowDialog();
         }
-        
+
         public static void OpenBranchWarehouseIDPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_BranchWarehouse, bool> predicate)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -984,17 +1236,27 @@ namespace AllCashUFormsApp
             _frm.PreparePopupFormWithPredicate("BranchWarehouseID", frm.Name, popupName, colList, null, _controls, predicate);
             _frm.ShowDialog();
         }
-        
+
         public static void OpenCrystalReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
-            frmCrystalReport _frm = new frmCrystalReport();
+
+            frmCrystalReportEx _frm = new frmCrystalReportEx();
 
             _frm.PrepareReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             _frm.ShowDialog();
         }
-        
+
+        public static void OpenTestCrystalReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+
+            Reporting _frm = new Reporting();
+            _frm.PrepareReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            _frm.ShowDialog();
+        }
+
         public static void OpenExcelReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
+
             //for support excel report
             frmWait wait = new frmWait();
             wait.Show();
@@ -1008,8 +1270,25 @@ namespace AllCashUFormsApp
             wait.Close();
         }
 
+        public static void OpenExcelReportsPopup(this Form frm, string popUPText, string reportName, DataTable dt, bool autoGenExcel = false)
+        {
+
+            //for support excel report
+            frmWait wait = new frmWait();
+            wait.Show();
+
+            frmCrystalReport _frm = new frmCrystalReport();
+
+            _frm.PrepareExcelReportWithDTPopup(popUPText, reportName, dt, autoGenExcel);
+            //_frm.ShowDialog();
+
+            wait.Dispose();
+            wait.Close();
+        }
+
         public static void OpenManualExcelReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
+
             //for support excel report
             frmWait wait = new frmWait();
             wait.Show();
@@ -1023,13 +1302,29 @@ namespace AllCashUFormsApp
             wait.Close();
         }
 
+        public static void OpenManualExcelCenterReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+
+            //for support excel report
+            frmWait wait = new frmWait();
+            wait.Show();
+
+            frmCrystalReport _frm = new frmCrystalReport();
+
+            _frm.PrepareManualExcelCenterReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            //_frm.ShowDialog();
+
+            wait.Dispose();
+            wait.Close();
+        }
+
         /// <summary>
         /// Pop up Branch Warehous Column form creater
         /// </summary>
         /// <param name="colList"></param>
         private static void AddBranchWarehousColumn(this List<DataGridColumn> colList)
         {
-            colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
         }
         /// <summary>
@@ -1037,29 +1332,30 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="colList"></param>
         /// 
-        
+
         private static void AddBranchWarehouseColumnID(this List<DataGridColumn> colList)
         {
-            colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "รหัสคลังสินค้า", Name = "WHID", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "รหัสคลังสินค้า", Name = "WHID", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
         }
 
         private static void AddBranchWarehouseColumn(this List<DataGridColumn> colList)
         {
-            colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "WHCode", HeaderText = "รหัสคลังสินค้า", Name = "WHCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "WHName", HeaderText = "ชื่อคลังสินค้า", Name = "WHName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
         }
 
         private static void AddDistrictColumn(this List<DataGridColumn> colList)
         {
-            colList.Add(new DataGridColumn() { DataPropertyName = "DistrictCode", HeaderText = "รหัสตำบล", Name = "DistrictCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DistrictCode", HeaderText = "รหัสตำบล", Name = "DistrictCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "DistrictName", HeaderText = "ชื่อตำบล", Name = "DistrictName", Width = 30, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "DistrictID", HeaderText = "รหัสตำบล", Name = "DistrictID", Visibility = false });
 
         }
-        
+
         public static void OpenDistrictPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_MstDistrict, bool> predicate)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -1076,13 +1372,14 @@ namespace AllCashUFormsApp
         /// <param name="frm"></param>
         /// <param name="_controls"></param>
         /// <param name="popupName"></param>
-        
+
         public static void OpenFromBranchIDPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "BranchCode", HeaderText = "รหัส", Name = "BranchCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "BranchCode", HeaderText = "รหัส", Name = "BranchCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "BranchName", HeaderText = "ชื่อ", Name = "BranchName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
 
             _frm.PreparePopupForm("FromBranchID", frm.Name, popupName, colList, null, _controls);
@@ -1098,10 +1395,11 @@ namespace AllCashUFormsApp
         /// <param name="predicate"></param>
         public static void OpenSaleAreaDistrictPopup(this Form frm, List<Control> _controls, string popupName, Func<tbl_SalAreaDistrict, bool> predicate = null)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "ProvinceName", HeaderText = "จังหวัด", Name = "ProvinceName", Width = 180, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProvinceName", HeaderText = "จังหวัด", Name = "ProvinceName", Width = 180, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "AreaName", HeaderText = "อำเภอ", Name = "AreaName", Width = 180, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "DistrictCode", HeaderText = "รหัสตำบล", Name = "DistrictCode", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "DistrictName", HeaderText = "ชื่อตำบล", Name = "DistrictName", Width = 200, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
@@ -1123,14 +1421,15 @@ namespace AllCashUFormsApp
         /// <param name="docTypeCode"></param>
         public static void OpenDocPopup(this Form frm, string popupName, string docTypeCode)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            bool addSearchAd = false;
-            if (docTypeCode.Trim() == "RL")
-                addSearchAd = true;
+            //bool addSearchAd = false;
+            //if (docTypeCode.Trim() == "RL")
+            //    addSearchAd = true;
 
-            colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, AddNumberInFirstRow = true, AddSearchAddOn = addSearchAd });
+            colList.Add(new DataGridColumn() { DataPropertyName = "DocNo", HeaderText = "เลขที่เอกสาร", Name = "DocNo", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, AddNumberInFirstRow = true, AddSearchAddOn = true });
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatusImg", HeaderText = "", Name = "DocStatusImg", Width = 30, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, ColoumnType = new DataGridViewImageColumn() });
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatus", HeaderText = "สถานะ", Name = "DocStatus", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
 
@@ -1157,8 +1456,9 @@ namespace AllCashUFormsApp
         /// <param name="frm"></param>
         /// <param name="popupName"></param>
         /// <param name="docTypeCode"></param>
-        public static void OpenIVDocPopup(this Form frm, string popupName, string docTypeCode)
+        public static void OpenIVDocPopup(this Form frm, string popupName, string docTypeCode, bool isShowAll = false)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
@@ -1179,7 +1479,14 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "CrUser", HeaderText = "ผู้จัดทำ", Name = "CrUser", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "Remark", HeaderText = "หมายเหตุ", Name = "Remark", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
 
-            _frm.PreparePopupForm(docTypeCode, frm.Name, popupName, colList);
+            string[] _conditionString = null;
+            if (docTypeCode == "IV")
+                _conditionString = isShowAll ? new string[] { "19000101" } : null; //edit by sailom .k 14/12/2021
+            else
+                _conditionString = null;
+
+            _frm.PreparePopupForm(docTypeCode, frm.Name, popupName, colList, null, null, _conditionString);
+
             _frm.Width = 800;
             _frm.Height = 600;
             _frm.ShowDialog();
@@ -1187,10 +1494,11 @@ namespace AllCashUFormsApp
 
         public static void OpenCellProductPopup(this Form frm, string popupName, string docTypeCode, int rowIndex)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "ProductID", HeaderText = "รหัส", Name = "ProductCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProductID", HeaderText = "รหัส", Name = "ProductCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductRefCode", HeaderText = "รหัส SAP", Name = "ProductCod", Width = 90, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductName", HeaderText = "ชื่อ", Name = "ProductCod", Width = 160, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductGroupName", HeaderText = "กลุ่มสินค้า", Name = "ProductCod", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -1202,10 +1510,11 @@ namespace AllCashUFormsApp
 
         public static void OpenProductPopup(this Form frm, List<Control> _controls, string popupName)
         {
+
             frmSearchSupp _frm = new frmSearchSupp();
 
             List<DataGridColumn> colList = new List<DataGridColumn>();
-            colList.Add(new DataGridColumn() { DataPropertyName = "ProductID", HeaderText = "รหัส", Name = "ProductCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProductID", HeaderText = "รหัส", Name = "ProductCode", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, AddNumberInFirstRow = true, AddSearchAddOn = false });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductRefCode", HeaderText = "รหัส SAP", Name = "ProductCod", Width = 90, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductName", HeaderText = "ชื่อ", Name = "ProductCod", Width = 160, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
             colList.Add(new DataGridColumn() { DataPropertyName = "ProductGroupName", HeaderText = "กลุ่มสินค้า", Name = "ProductCod", Width = 100, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
@@ -1245,7 +1554,7 @@ namespace AllCashUFormsApp
             {
                 _objType = ObjectType.Employee;
             }
-            else if (_controls[0].Name.Contains("CustomerCode"))
+            else if (_controls[0].Name.Contains("CustomerID"))
             {
                 _objType = ObjectType.Customer;
             }
@@ -1274,6 +1583,7 @@ namespace AllCashUFormsApp
                 case "EmployeeName": { _objType = ObjectType.EmployeeName; empControlList = _controls; } break;
                 case "Customer": { _objType = ObjectType.Customer; custControlList = _controls; } break;
                 case "TRProduct": { _objType = ObjectType.TRProduct; prdControlList = _controls; } break;
+                case "CCProduct": { _objType = ObjectType.CCProduct; prdControlList = _controls; } break;
                 default:
                     break;
             }
@@ -1298,7 +1608,7 @@ namespace AllCashUFormsApp
             {
                 controlList = empControlList;
             }
-            else if (_controls[0].Name.Contains("CustomerCode"))
+            else if (_controls[0].Name.Contains("CustomerID"))
             {
                 controlList = custControlList;
             }
@@ -1386,21 +1696,32 @@ namespace AllCashUFormsApp
 
                     break;
                 case ObjectType.Customer:
-                    var cust = objectFactory.Get(_objType, null) as Customer;
-                    var custData = cust.GetAllData(x => x.CustomerCode.ToLower() == code.ToLower());
-                    if (custData.Count > 0)
-                        SetControlValue(custData[0], code);
-                    else
                     {
-                        ShowWarningMessage("ไม่พบข้อมูลร้านค้านี้ในระบบ!!!");
-                        return;
+                        var cust = objectFactory.Get(_objType, null) as Customer;
+                        var custData = cust.GetAllData(x => x.CustomerID.ToLower() == code.ToLower());
+                        if (custData.Count > 0)
+                            SetControlValue(custData[0], code);
+                        else
+                        {
+                            SetControlValue(custData, code);
+                            if (!string.IsNullOrEmpty(code))
+                            {
+                                ShowWarningMessage("ไม่พบข้อมูลร้านค้านี้ในระบบ!!!");
+                                return;
+                            }
+                        }
                     }
-
                     break;
                 case ObjectType.TRProduct:
                     var prd = objectFactory.Get(_objType, null) as Product;
                     var prdData = prd.GetAllData().FirstOrDefault(x => x.ProductCode.ToLower() == code.ToLower());
                     SetControlValue(prdData, code);
+
+                    break;
+                case ObjectType.CCProduct:
+                    var ccprd = objectFactory.Get(_objType, null) as Product;
+                    var ccprdData = ccprd.GetAllData().FirstOrDefault(x => x.ProductCode.ToLower() == code.ToLower());
+                    SetControlValue(ccprdData, code);
 
                     break;
                 default:
@@ -2102,7 +2423,7 @@ namespace AllCashUFormsApp
                         docTypeCode = documentType.DocTypeCode;
                         int runDigit = 0;
 
-                        runDigit = (documentType.DocFormat.Length - documentType.RunLength.Value) - 1;
+                        runDigit = (documentType.DocFormat.Length - documentType.RunLength.Value);// - 1; //edit by sailom .k 10/12/2021
 
                         for (int i = 0; i < runDigit; i++)
                         {
@@ -2127,11 +2448,12 @@ namespace AllCashUFormsApp
 
                 if (docTypeCode == "IM")
                 {
-                    item.Mask = digitStr + "M" + digitStr2;
+                    item.Mask = digitStr.Substring(0, 11) + "M" + digitStr2;
                 }
                 else if (docTypeCode == "V")
                 {
-                    item.Mask = "V" + digitStr2;
+                    //item.Mask = "V" + digitStr2;
+                    //item.Mask = "##" + digitStr2; //edit by sailom .k 10/12/2021
                 }
                 else
                 {
@@ -2323,6 +2645,12 @@ namespace AllCashUFormsApp
                 item.Image = null;
             }
 
+            //var _btn = GetAll(ctrls, typeof(Button));
+            //foreach (Button item in _btn)
+            //{
+                
+            //}
+
             //var grds = GetAll(ctrls, typeof(DataGridView));
             //foreach (DataGridView item in grds)
             //{
@@ -2397,6 +2725,20 @@ namespace AllCashUFormsApp
 
             btnCopy.Enabled = false;
             btnPrint.Enabled = false;
+        }
+
+        public static void EnableButton(this Form frm, EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
+            AddButton btnAdd, CopyButton btnCopy, PrintButton btnPrint, PrintButton btnPrintCrys, string conditionText)
+        {
+            btnEdit.Enabled = !string.IsNullOrEmpty(conditionText);
+            btnRemove.Enabled = !string.IsNullOrEmpty(conditionText);
+            btnSave.Enabled = !btnEdit.Enabled && !btnAdd.Enabled;
+            btnCancel.Enabled = !btnAdd.Enabled;
+            btnAdd.Enabled = !btnSave.Enabled && !btnEdit.Enabled;
+
+            btnCopy.Enabled = false;
+            btnPrint.Enabled = false;
+            btnPrintCrys.Enabled = btnPrint.Enabled;
         }
 
         public static void EnableButton(this Form frm, EditButton btnEdit, RemoveButton btnRemove, SaveButton btnSave, CancelButton btnCancel,
@@ -2515,6 +2857,28 @@ namespace AllCashUFormsApp
 
             if (grdList.RowCount > 0)
             {
+                //edit by sailom .k 13/12/2021----------------------------------------------------------
+                //if (invWhItems.Count == 0 || isRJ)
+                {
+                    List<string> prdList = new List<string>();
+                    for (int i = 0; i < grdList.RowCount; i++)
+                    {
+                        var prdCodeCell1 = grdList.Rows[i].Cells[_prdCodeCell];
+                        var qtyCell1 = grdList.Rows[i].Cells[_qtyCell];
+                        if (prdCodeCell1.IsNotNullOrEmptyCell() && qtyCell1.IsNotNullOrEmptyCell()) //check over recieve
+                        {
+                            var productID1 = prdCodeCell1.EditedFormattedValue.ToString();
+                            prdList.Add(productID1);
+                        }
+                    }
+
+                    if (prdList.Count > 0)
+                    {
+                        invWhItems = bu.GetTotalStockMovement(prdList, whid); //  edit by sailom 13/12/2021
+                    }
+                }
+                //edit by sailom .k 13/12/2021----------------------------------------------------------
+
                 for (int i = 0; i < grdList.RowCount; i++)
                 {
                     var prdCodeCell = grdList.Rows[i].Cells[_prdCodeCell];
@@ -2558,6 +2922,7 @@ namespace AllCashUFormsApp
                                 if (qtyValue > 0)
                                 {
                                     var productID = prdCodeCell.EditedFormattedValue.ToString();
+
                                     var productUomName = uomCell.EditedFormattedValue.ToString();
                                     Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => x.ProductUomName == productUomName);
                                     var prdUOMs = bu.GetUOM(tbl_ProductUomPre);
@@ -2576,11 +2941,17 @@ namespace AllCashUFormsApp
                                         else
                                             unitQty = qtyValue;
 
-                                        var invWhItem = bu.GetStockMovement(productID, whid); //  bu.GetInvWarehouse(productID, whid);
-                                        decimal whQty = 0;
+                                        //var invWhItem = bu.GetStockMovement(productID, whid); //  bu.GetInvWarehouse(productID, whid);
 
-                                        if (invWhItem != null && invWhItem.Count > 0)
-                                            whQty = invWhItem.Sum(x => x.TrnQty);  //invWhItem[0].QtyOnHand;
+                                        //edit by sailom .k 13/12/2021----------------------------------------------------------
+                                        decimal whQty = 0;
+                                        if (invWhItems.Count > 0)
+                                        {
+                                            var invWhItem = invWhItems.FirstOrDefault(x => x.ProductID == productID);
+                                            if (invWhItem != null)
+                                                whQty = invWhItem.TrnQty; //edit by sailom .k 13/12/2021//.Sum(x => x.TrnQty);  //invWhItem[0].QtyOnHand;
+                                        }
+                                        //edit by sailom .k 13/12/2021----------------------------------------------------------
 
                                         if (unitQty > whQty)
                                         {
@@ -2699,7 +3070,7 @@ namespace AllCashUFormsApp
 
             return discount;
         }
-        
+
         public static List<DataTable> ReadExcelToDataTable(this List<DataTable> dtList, string fileName, List<string> SheetName)
         {
             List<DataTable> DataList = new List<DataTable>();
@@ -2731,7 +3102,6 @@ namespace AllCashUFormsApp
 
             return DataList;
         }
-
 
         public static List<DataTable> ReadExxel(this List<DataTable> dtList, string fileName, List<string> SheetName)
         {

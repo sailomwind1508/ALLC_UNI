@@ -28,5 +28,6 @@ namespace AllCashUFormsApp.Model
         public string Longitude { get; set; }
         public Nullable<System.DateTime> CrDate { get; set; }
         public Nullable<System.DateTime> EdDate { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

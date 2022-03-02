@@ -67,6 +67,81 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static List<tbl_PRMaster> SelectRefMaxAutoID(this tbl_PRMaster tbl_PRMaster, string docTypeCode = "")
+        {
+            List<tbl_PRMaster> list = new List<tbl_PRMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_PRMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_PRMaster ";
+                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND DocRef Like '%" + docTypeCode.Trim() + "%' ) ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PRMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_PRMaster>().ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            return list;
+        }
+
+        public static List<tbl_PRMaster> SelectVMaxAutoID(this tbl_PRMaster tbl_PRMaster, string docTypeCode = "")
+        {
+            List<tbl_PRMaster> list = new List<tbl_PRMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_PRMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_PRMaster ";
+                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND DocNo NOT Like '%V%' ) ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PRMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_PRMaster>().ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            return list;
+        }
+
+        public static List<tbl_PRMaster> SelectMaxAutoID(this tbl_PRMaster tbl_PRMaster, string docTypeCode = "")
+        {
+            List<tbl_PRMaster> list = new List<tbl_PRMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_PRMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_PRMaster ";
+                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PRMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_PRMaster>().ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -152,6 +227,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_PRMaster tbl_PRMaster, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_PRMaster.Attach(tbl_PRMaster);
@@ -161,10 +239,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PRMaster.GetType());
             }
+
+            msg = "end PRMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_PRMaster> tbl_PRMasters, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRMasterDao=>InsertListWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 foreach (var tbl_PRMaster in tbl_PRMasters)
@@ -177,10 +261,61 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end PRMasterDao=>InsertListWithDB";
+            msg.WriteLog(null);
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_PRMaster"></param>
+        /// <returns></returns>
+        public static int Insert(this tbl_PRMaster tbl_PRMaster)
+        {
+            string msg = "start PRMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_PRMaster.Attach(tbl_PRMaster);
+                    db.tbl_PRMaster.Add(tbl_PRMaster);
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            msg = "end PRMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int UpdateEntity(this tbl_PRMaster tbl_PRMaster, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -219,11 +354,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end PRMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_PRMaster> tbl_PRMasters)
         {
+            string msg = "start PRMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -268,68 +409,17 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_PRMaster);
             }
 
+            msg = "end PRMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_PRMaster"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_PRMaster tbl_PRMaster, DB_ALL_CASH_UNIEntities db)
+        public static int UpdateSQL(this tbl_PRMaster tbl_PRMaster, string sqlCmd)
         {
-            try
-            {
-                db.Entry(tbl_PRMaster).State = EntityState.Deleted;
-                db.tbl_PRMaster.Remove(tbl_PRMaster);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PRMaster.GetType());
-            }
-        }
+            string msg = "start PRMasterDao=>UpdateSQL";
+            msg.WriteLog(null);
 
-        /// <summary>
-        /// add new data
-        /// </summary>
-        /// <param name="tbl_PRMaster"></param>
-        /// <returns></returns>
-        public static int Insert(this tbl_PRMaster tbl_PRMaster)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_PRMaster.Attach(tbl_PRMaster);
-                    db.tbl_PRMaster.Add(tbl_PRMaster);
-                    ret = db.SaveChanges();
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                throw;
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PRMaster.GetType());
-            }
-
-            return ret;
-        }
-
-        public static int UpdateSQL(this tbl_PRMaster tbl_POMaster, string sqlCmd)
-        {
             int ret = 0;
             try
             {
@@ -337,8 +427,11 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-                ex.WriteLog(tbl_POMaster.GetType());
+                ex.WriteLog(tbl_PRMaster.GetType());
             }
+
+            msg = "end PRMasterDao=>UpdateSQL";
+            msg.WriteLog(null);
 
             return ret;
         }
@@ -350,6 +443,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_PRMaster tbl_PRMaster)
         {
+            string msg = "start PRMasterDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -388,6 +484,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PRMaster.GetType());
             }
 
+            msg = "end PRMasterDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -398,6 +497,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_PRMaster tbl_PRMaster)
         {
+            string msg = "start PRMasterDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -413,7 +515,34 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PRMaster.GetType());
             }
 
+            msg = "end PRMasterDao=>Delete";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_PRMaster"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_PRMaster tbl_PRMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PRMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_PRMaster).State = EntityState.Deleted;
+                db.tbl_PRMaster.Remove(tbl_PRMaster);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            msg = "end PRMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
     }
 }

@@ -1,193 +1,110 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using AllCashUFormsApp.Controller;
-using System.IO;
 
 namespace AllCashUFormsApp.View.UControl
 {
     public partial class frmProductSubGroup : Form
     {
         ProductGroup bu = new ProductGroup();
-        static DataTable dt = new DataTable();
+        static DataTable dtPrdGroup = new DataTable();
         Dictionary<Control, Label> validateCtrls = new Dictionary<Control, Label>(); // Validate Save
+        List<string> pnlPrdGroup_Controls = new List<string>();
+        List<string> pnlPrdSubGroup_Controls = new List<string>();
         public frmProductSubGroup()
         {
             InitializeComponent();
-            validateCtrls.Add(txtProductGroupCode, lblGroup_ProCode);
-            validateCtrls.Add(txtProductGroupName, lbl_GroupPrdName);
-            validateCtrls.Add(txtProductSubGroupCode, lbl_PrdSubGroupCode);
-            validateCtrls.Add(txtProductSubGroupName, lbl_PrdSubGroupName);
+
+
+            pnlPrdGroup_Controls = new string[] { txtProductGroupCode.Name }.ToList();
+            pnlPrdSubGroup_Controls = new string[] { txtProductSubGroupCode.Name }.ToList();
         }
-        private void BindProductSubGroup()
-        {
-           
-            dt = bu.GetPrdGroupTable(); // NewMethod
 
-            treeView1.Nodes.Clear();
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow r in dt.Rows)
-                {
-                    string prdGrpName = r["ProductGroupCode"].ToString() + " : " + r["ProductGroupName"].ToString();
-                    string prdSubGrpName = r["ProductSubGroupCode"].ToString() + " : " + r["ProductSubGroupName"].ToString();
-
-                    if (treeView1.Nodes.Count == 0)
-                    {
-                        treeView1.Nodes.Add(prdGrpName);
-                        treeView1.Nodes[0].Nodes.Add(prdSubGrpName);
-
-                    }
-
-                    else
-                    {
-                        bool ret = false;
-
-                        for (int i = 0; i < treeView1.Nodes.Count; i++)
-                        {
-                            if (treeView1.Nodes[i].Text == prdGrpName)
-                            {
-                                treeView1.Nodes[i].Nodes.Add(prdSubGrpName);
-                                ret = true;
-                                break;
-                            }
-                        }
-                        if (ret == false)
-                        {
-                            treeView1.Nodes.Add(prdGrpName);
-                            int maxTV = treeView1.Nodes.Count - 1;
-                            treeView1.Nodes[maxTV].Nodes.Add(prdSubGrpName);
-                        }
-                    }
-
-                }
-            }
-            
-        }
-        private void ReadOnlyPanel(bool flagEdit = false)
-        {
-            pnlEdit.Enabled = flagEdit;
-
-            picProSubGroup.Enabled = flagEdit;
-
-            chkFlagProGroup.Enabled = flagEdit;
-           
-            chkIsFulfill.Enabled = flagEdit;
-         
-            chkFlagProSubGroup.Enabled = flagEdit;
-        }
-        private void InitialData()
-        {
-            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
-            btnAdd.Enabled = true;
-            btnSave.Enabled = false;
-            btnCancel.Enabled = false;
-
-            btnBrowse.Enabled = false; //Picture
-
-            BindProductSubGroup();
-            ReadOnlyPanel();
-        }
+        #region #Event_Method
         private void frmProductSubGroup_Load(object sender, EventArgs e)
         {
-            InitialData();
             BindProductSubGroup();
         }
+
         private void btnSearch_Click(object sender, EventArgs e)
         {
             BindProductSubGroup();
         }
+
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            btnEdit.Enabled = true;
-            btnRemove.Enabled = true;
-
-            var prd = dt.AsEnumerable().ToList();
-            
-            List<string> TempCode = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
-            string prosubgroupcode = "";
-
-            var chkList = e.Node.Text.ToCharArray().ToList();
-
-            for (int i = 0; i < chkList.Count; i++)
+            try
             {
-                if (TempCode.Contains(chkList[i].ToString()))
+                txtProductGroupCode.Text = "";
+                txtProductGroupName.Text = "";
+                txtProductSubGroupCode.Text = "";
+                txtProductSubGroupName.Text = "";
+
+                List<string> TempCode = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                string _NodeName = "";
+
+                var nodeList = e.Node.Text.ToCharArray().ToList();
+                for (int i = 0; i < nodeList.Count; i++)
                 {
-                    prosubgroupcode += chkList[i].ToString();
-                    if (prosubgroupcode.Length == 4)
-                    {
+                    string _name = nodeList[i].ToString();
+
+                    if (_name == ":")
                         break;
+                    else if (TempCode.Contains(_name))
+                        _NodeName += _name;
+                }
+
+                string FieldName = "";
+
+                if (_NodeName.Length == 2)
+                    FieldName = "ProductGroupCode";
+                else if (_NodeName.Length == 4)
+                    FieldName = "ProductSubGroupCode";
+
+                DataRow dr = dtPrdGroup.AsEnumerable().FirstOrDefault(x => x.Field<string>(FieldName) == _NodeName);
+                if (dr != null)
+                {
+                    txtProductGroupCode.Text = dr["ProductGroupCode"].ToString();
+                    txtProductGroupName.Text = dr["ProductGroupName"].ToString();
+                    txtProductSubGroupCode.Text = dr["ProductSubGroupCode"].ToString();
+                    txtProductSubGroupName.Text = dr["ProductSubGroupName"].ToString();
+
+                    rdoN.Checked = true;
+                    if (Convert.ToBoolean(dr["FlagDel"]) == true)
+                        rdoC.Checked = true;
+
+                    rdoN_2.Checked = true;
+                    if (!string.IsNullOrEmpty(dr["FlagDel2"].ToString()))
+                    {
+                        if (Convert.ToBoolean(dr["FlagDel2"]) == true)
+                            rdoC_2.Checked = true;
                     }
+
+                    chkIsFulfill.Checked = false;
+                    if (!string.IsNullOrEmpty(dr["IsFulfill"].ToString()))
+                        chkIsFulfill.Checked = Convert.ToBoolean(dr["IsFulfill"]) ? true : false;
                 }
-            }
 
-          
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                btnAdd.Enabled = true;
 
-            DataRow item = prd.FirstOrDefault(x => x.Field<string>("ProductSubGroupCode") == prosubgroupcode);
-            if (item != null)
-            {
-                txtProductGroupCode.Text = item["ProductGroupCode"].ToString();
-                txtProductGroupName.Text = item["ProductGroupName"].ToString();
-                txtProductSubGroupCode.Text = item["ProductSubGroupCode"].ToString();
-                txtProductSubGroupName.Text = item["ProductSubGroupName"].ToString();
-
-                bool flag = Convert.ToBoolean(item["FlagDel"]);
-                chkFlagProGroup.Checked = flag ? true : false;
-
-                bool flagProSubGroup = Convert.ToBoolean(item["FlagDel2"]);
-                chkFlagProSubGroup.Checked = flagProSubGroup ? true : false;
-
-                bool flagIsFulfill = Convert.ToBoolean(item["IsFulfill"]);
-                chkIsFulfill.Checked = flagIsFulfill ? true : false;
-                
-
-                //if (!string.IsNullOrEmpty(item["ProductSubGroupImg"].ToString()))
-                //{
-                //    var bArr = ((Byte[])item["ProductSubGroupImg"]);
-                //    picProSubGroup.Image = bArr.byteArrayToImage();
-                //    picProSubGroup.SizeMode = PictureBoxSizeMode.StretchImage;
-                //}
-                //else
-                //{
-                //    picProSubGroup.Image = null;
-                //}
-
-            }
-            else if (item == null)
-            {
-                string progroup = prosubgroupcode.Substring(0, 2);
-
-                DataRow item2 = prd.FirstOrDefault(x => x.Field<string>("ProductGroupCode") == progroup);
-                if (item2 != null)
-                {
-                    txtProductGroupCode.Text = item2["ProductGroupCode"].ToString();
-                    txtProductGroupName.Text = item2["ProductGroupName"].ToString();
-                    txtProductSubGroupCode.Text = item2["ProductSubGroupCode"].ToString();
-                    txtProductSubGroupName.Text = item2["ProductSubGroupName"].ToString();
-
-                    bool flag = Convert.ToBoolean(item2["FlagDel"]);
-                    chkFlagProGroup.Checked = flag ? true : false;
-
-                    bool flagProSubGroup = Convert.ToBoolean(item2["FlagDel2"]);
-                    chkFlagProSubGroup.Checked = flagProSubGroup ? true : false;
-
-                    bool flagIsFulfill = Convert.ToBoolean(item2["IsFulfill"]);
-                    chkIsFulfill.Checked = flagIsFulfill ? true : false;
-                }
+                if (!string.IsNullOrEmpty(txtProductSubGroupCode.Text))
+                    btnEdit.Enabled = true;
                 else
-                {
-                    panel8.ClearControl();
-                    panel11.ClearControl();
-                }
+                    btnEdit.Enabled = false;
+
+                btnSave.Enabled = false;
+                btnCancel.Enabled = false;
+
             }
-           
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void btnZoom_Click(object sender, EventArgs e)
@@ -199,92 +116,217 @@ namespace AllCashUFormsApp.View.UControl
         {
             treeView1.CollapseAll();
         }
-        private void SetCheckBox(bool flagEdit = false)
-        {
-            chkFlagProGroup.Checked = flagEdit;
-            chkIsFulfill.Checked = flagEdit;
-            chkFlagProSubGroup.Checked = flagEdit;
-        }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-            btnAdd.Enabled = false;
 
-            pnlEdit.ClearControl();
-            ReadOnlyPanel(true);
-            txtProductGroupCode.DisableTextBox(false);
+            pnlProductGroup.OpenControl(false, pnlPrdGroup_Controls.ToArray());
+            pnlProductSubGroup.OpenControl(true, pnlPrdSubGroup_Controls.ToArray());
+
             txtProductSubGroupCode.DisableTextBox(false);
+            txtProductSubGroupName.DisableTextBox(false);
+
+            txtProductSubGroupCode.Text = "";
+            txtProductSubGroupName.Text = "";
+
+            txtProductSubGroupCode.Focus();
+            chkIsFulfill.Checked = false;
+
+            pnlSearch.Enabled = false;
             treeView1.Enabled = false;
-            SetCheckBox();
         }
-        private void Remove()
+
+        private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (txtProductGroupCode.Text != "")
+            //Remove();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            Save_ProductSubGroup();
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnSave.Enabled = true;
+            btnEdit.Enabled = false;
+
+            pnlProductGroup.OpenControl(false, pnlPrdGroup_Controls.ToArray());
+            pnlProductSubGroup.OpenControl(true, pnlPrdSubGroup_Controls.ToArray());
+            txtProductSubGroupCode.DisableTextBox(true);
+            txtProductSubGroupName.DisableTextBox(false);
+
+            txtProductSubGroupName.Focus();
+
+            pnlSearch.Enabled = false;
+            treeView1.Enabled = false;
+        }
+
+        private void txtProductGroupCode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetKeyPress(e);
+        }
+
+        private void txtProductSubGroupCode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetKeyPress(e);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
+
+            treeView1.Enabled = true;
+            pnlSearch.Enabled = true;
+
+            txtProductGroupCode.Text = "";
+            txtProductGroupName.Text = "";
+            txtProductSubGroupCode.Text = "";
+            txtProductSubGroupName.Text = "";
+
+            pnlProductGroup.OpenControl(false, pnlPrdGroup_Controls.ToArray());
+            pnlProductSubGroup.OpenControl(false, pnlPrdSubGroup_Controls.ToArray());
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region #Private_Method
+        private void BindProductSubGroup()
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
+
+            pnlProductGroup.OpenControl(false, pnlPrdGroup_Controls.ToArray());
+            pnlProductSubGroup.OpenControl(false, pnlPrdSubGroup_Controls.ToArray());
+
+            dtPrdGroup = bu.GetPrdGroupTable();
+            treeView1.Nodes.Clear();
+
+            if (dtPrdGroup.Rows.Count > 0)
             {
-                try
+                bool ret = false;
+
+                foreach (DataRow r in dtPrdGroup.Rows)
                 {
-                    string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
-                    string title = "ทำการยืนยัน!!";
+                    string prdGrpName = r["ProductGroupCode"].ToString() + " : " + r["ProductGroupName"].ToString();
+                    string prdSubGrpName = r["ProductSubGroupCode"].ToString() + " : " + r["ProductSubGroupName"].ToString();
 
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
-
-                    int ret = 0;
-                    tbl_ProductGroup tbl_ProductGroups = new tbl_ProductGroup();
-                    var dtTemp = dt.AsEnumerable().ToList();
-                    DataRow item = dtTemp.FirstOrDefault(x => x.Field<string>("ProductGroupCode") == txtProductGroupCode.Text);
-                    if (item != null)
+                    if (!string.IsNullOrEmpty(prdGrpName)) //เช็คใน ProductGroup มี ProductSubGroup หรือไม่ ??
                     {
-                        tbl_ProductGroups.ProductGroupID = item.Field<int>("ProductGroupID");
-                        tbl_ProductGroups.ProductGroupCode = item.Field<string>("ProductGroupCode");
-                        tbl_ProductGroups.ProductGroupName = item.Field<string>("ProductGroupName");
-
-                        tbl_ProductGroups.CrDate = item.Field<DateTime>("CrDate");
-                        tbl_ProductGroups.CrUser = item.Field<string>("CrUser");
-
-                        tbl_ProductGroups.EdDate = DateTime.Now;
-                        tbl_ProductGroups.EdUser = Helper.tbl_Users.Username;
-
-                        tbl_ProductGroups.FlagDel = true;
-                        tbl_ProductGroups.FlagSend = item.Field<bool>("FlagSend");//
-
-                        tbl_ProductGroups.BranchID = item.Field<string>("BranchID");//
-                        tbl_ProductGroups.ProductTypeID = item.Field<int>("ProductTypeID");//
-
-                        tbl_ProductGroups.ProductGroupImg = item.Field<byte[]>("ProductGroupImg");
-
-
-                        ret = bu.UpdateData(tbl_ProductGroups);
-                        if (ret == 1)
+                        if (treeView1.Nodes.Count == 0)
                         {
-                            string msg = "ลบข้อมูลเรียบร้อยแล้ว";
-                            msg.ShowInfoMessage();
-                            btnSearch.PerformClick();
+                            treeView1.Nodes.Add(prdGrpName);
+                            if (prdSubGrpName != " : ")
+                                treeView1.Nodes[0].Nodes.Add(prdSubGrpName);
                         }
+
                         else
                         {
-                            this.ShowProcessErr();
-                            return;
+                            ret = false;
+
+                            for (int i = 0; i < treeView1.Nodes.Count; i++)
+                            {
+                                if (treeView1.Nodes[i].Text == prdGrpName)//ถ้าสินค้าในกลุ่มเดียวกัน 
+                                {
+                                    if (prdSubGrpName != " : ")
+                                    {
+                                        treeView1.Nodes[i].Nodes.Add(prdSubGrpName);
+                                        ret = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (ret == false)
+                            {
+                                treeView1.Nodes.Add(prdGrpName);
+                                int maxTV = treeView1.Nodes.Count - 1;
+                                if (prdSubGrpName != " : ")
+                                    treeView1.Nodes[maxTV].Nodes.Add(prdSubGrpName);
+                            }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    string msg = ex.Message.ToString();
-                    msg.ShowErrorMessage();
-                }
-            }
-            else
-            {
-                string msg = "ไม่พบข้อมูลกลุ่มสินค้า !!";
-                msg.ShowWarningMessage();
-                return;
             }
         }
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            Remove();
-        }
+
+        //private void Remove()
+        //{
+        //    if (!string.IsNullOrEmpty(txtProductGroupCode.Text))
+        //    {
+        //        try
+        //        {
+        //            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+        //            string title = "ทำการยืนยัน!!";
+
+        //            if (!cfMsg.ConfirmMessageBox(title))
+        //                return;
+
+        //            int ret = 0;
+
+        //            var _PrdGroups = new tbl_ProductGroup();
+
+        //            DataRow r = dtPrdGroup.AsEnumerable().FirstOrDefault(x => x.Field<string>("ProductGroupCode") == txtProductGroupCode.Text);
+
+        //            if (r != null)
+        //            {
+        //                _PrdGroups.ProductGroupID = r.Field<int>("ProductGroupID");
+        //                _PrdGroups.ProductGroupCode = r.Field<string>("ProductGroupCode");
+        //                _PrdGroups.ProductGroupName = r.Field<string>("ProductGroupName");
+
+        //                _PrdGroups.CrDate = r.Field<DateTime>("CrDate");
+        //                _PrdGroups.CrUser = r.Field<string>("CrUser");
+
+        //                _PrdGroups.EdDate = DateTime.Now;
+        //                _PrdGroups.EdUser = Helper.tbl_Users.Username;
+
+        //                _PrdGroups.FlagDel = true;
+        //                _PrdGroups.FlagSend = r.Field<bool>("FlagSend");
+
+        //                _PrdGroups.BranchID = r.Field<string>("BranchID");
+        //                _PrdGroups.ProductTypeID = r.Field<int>("ProductTypeID");
+        //                _PrdGroups.ProductGroupImg = r.Field<byte[]>("ProductGroupImg");
+
+        //                ret = bu.UpdateData(_PrdGroups);
+
+        //                if (ret == 1)
+        //                {
+        //                    string msg = "ลบข้อมูลเรียบร้อยแล้ว";
+        //                    msg.ShowInfoMessage();
+        //                    btnSearch.PerformClick();
+        //                }
+        //                else
+        //                {
+        //                    this.ShowProcessErr();
+        //                    return;
+        //                }
+        //            }
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            string msg = ex.Message.ToString();
+        //            msg.ShowErrorMessage();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        string msg = "ไม่พบข้อมูลกลุ่มสินค้า !!";
+        //        msg.ShowWarningMessage();
+        //        return;
+        //    }
+        //}
+
         private bool ValidateSave()
         {
             bool ret = true;
@@ -292,6 +334,17 @@ namespace AllCashUFormsApp.View.UControl
 
             if (ret) //true
             {
+                if (txtProductGroupCode.ReadOnly == false)
+                {
+                    validateCtrls.Add(txtProductGroupCode, lblGroup_ProCode);
+                    validateCtrls.Add(txtProductGroupName, lbl_GroupPrdName);
+                }
+                if (txtProductSubGroupCode.ReadOnly == false)
+                {
+                    validateCtrls.Add(txtProductSubGroupCode, lbl_PrdSubGroupCode);
+                    validateCtrls.Add(txtProductSubGroupName, lbl_PrdSubGroupName);
+                }
+
                 errList.SetErrMessage(validateCtrls);
             }
             if (errList.Count > 0)
@@ -302,211 +355,241 @@ namespace AllCashUFormsApp.View.UControl
             }
             return ret;
         }
-        private void Save()
+
+        private void Save_ProductSubGroup()
         {
-            string msgError = "";
-            if (txtProductGroupCode.TextLength < 2 || txtProductGroupCode.TextLength > 2)
-            {
-                msgError += "--> กรอก รหัสกลุ่มสินค้า 2 ตัวเลขเท่านั้น \n";
-            }
+            if (!ValidateSave())
+                return;
+
+            string msg = "";
+
             if (txtProductSubGroupCode.TextLength < 4 || txtProductSubGroupCode.TextLength > 4)
             {
-                msgError += "--> กรอก รหัสกลุ่มย่อยสินค้า 4 ตัวเลขเท่านั้น \n";
+                txtProductSubGroupCode.ErrorTextBox();
+                msg += "รหัสกลุ่มย่อยสินค้า 4ตัวเลขเท่านั้น\n";
             }
-            if (msgError != "")
+
+
+            if (!string.IsNullOrEmpty(msg))
             {
-                FlexibleMessageBox.Show(msgError, "คำเตือน",MessageBoxButtons.OK,MessageBoxIcon.Stop);
+                msg.ShowWarningMessage();
                 return;
             }
-            if (!ValidateSave())
+
+            try
             {
-                return;
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                int ret = 0;
+
+                var PrdSubGroup = bu.GetProductSubGroup(x => x.ProductSubGroupCode == txtProductSubGroupCode.Text);
+                var MaxID = bu.GetProductSubGroup().OrderByDescending(x => x.ProductSubGroupID);
+
+                int _PrdSubGroupID = 1;
+
+                if (MaxID != null)
+                    _PrdSubGroupID = MaxID.First().ProductSubGroupID + 1;
+
+                var _PrdSubGroup = new tbl_ProductSubGroup();
+
+                if (PrdSubGroup.Count > 0)
+                {
+                    _PrdSubGroup = PrdSubGroup[0];
+                    _PrdSubGroup.EdDate = DateTime.Now;
+                    _PrdSubGroup.EdUser = Helper.tbl_Users.Username;
+                }
+                else if (PrdSubGroup.Count == 0) //Insert
+                {
+                    _PrdSubGroup.ProductSubGroupID = _PrdSubGroupID;
+
+                    var prdGroup = bu.GetProductGroupNonFlag(x => x.ProductGroupCode == txtProductGroupCode.Text);
+                    _PrdSubGroup.ProductGroupID = prdGroup[0].ProductGroupID;
+
+                    _PrdSubGroup.ProductSubGroupImg = null;
+                    _PrdSubGroup.CrDate = DateTime.Now;
+                    _PrdSubGroup.CrUser = Helper.tbl_Users.Username;
+                    _PrdSubGroup.FlagSend = false;
+                }
+
+                _PrdSubGroup.ProductSubGroupCode = txtProductSubGroupCode.Text;
+                _PrdSubGroup.ProductSubGroupName = txtProductSubGroupName.Text;
+                _PrdSubGroup.IsFulfill = chkIsFulfill.Checked ? true : false;
+                _PrdSubGroup.FlagDel = rdoN_2.Checked ? false : true;
+
+                ret = bu.UpdateData(_PrdSubGroup);
+
+                if (ret == 1)
+                {
+                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    chkIsFulfill.Checked = false;
+
+                    txtProductGroupCode.Text = "";
+                    txtProductGroupName.Text = "";
+
+                    txtProductSubGroupCode.Text = "";
+                    txtProductSubGroupName.Text = "";
+
+                    pnlSearch.Enabled = true;
+                    treeView1.Enabled = true;
+
+                    BindProductSubGroup();
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
             }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        //private void Save()
+        //{
+        //    if (!ValidateSave())
+        //        return;
+
+        //    string msg = "";
+        //    var PrdGroup = new List<tbl_ProductGroup>();
+        //    PrdGroup = bu.GetProductGroupNonFlag(x => x.ProductGroupCode == txtProductGroupCode.Text);
            
-            else
-            {
-                try
-                {
-                    string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                    string title = "ยืนยันการบันทึก!!";
 
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
+        //    if (txtProductSubGroupCode.ReadOnly == false)
+        //    {
+        //        if (txtProductSubGroupCode.TextLength < 4 || txtProductSubGroupCode.TextLength > 4)
+        //        {
+        //            txtProductSubGroupCode.ErrorTextBox();
+        //            msg += "รหัสกลุ่มย่อยสินค้า 4ตัวเลขเท่านั้น\n";
+        //        }
+        //    }
 
-                    int ret = 0;
-                    var protype = bu.GetProductType().First();
-                    var branch = bu.GetBranch().First();
+        //    if (!string.IsNullOrEmpty(msg))
+        //    {
+        //        msg.ShowWarningMessage();
+        //        return;
+        //    }
 
-                    var allprdgroup = bu.GetProductGroupNonFlag(x=>x.ProductGroupCode == txtProductGroupCode.Text); //new dal selectnonflag ใน basecontrol
-                    var allprdsubgroup = bu.GetProductSubGroup(x=>x.ProductSubGroupCode == txtProductSubGroupCode.Text);//new dal selectnonflag ใน basecontrol
+        //    try
+        //    {
+        //        string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+        //        string title = "ยืนยันการบันทึก!!";
 
-                    var MaxProductGroupID = bu.GetProductGroupNonFlag().OrderByDescending(x => x.ProductGroupID).First();
+        //        if (!cfMsg.ConfirmMessageBox(title))
+        //            return;
 
-                    int _maxprdGroupID = MaxProductGroupID.ProductGroupID + 1;
+        //        List<int> ret = new List<int>();
+                
+        //        var _PrdGroup = new tbl_ProductGroup();
 
-                    tbl_ProductGroup tbl_ProductGroups = new tbl_ProductGroup();  // save
+        //        if (PrdGroup.Count > 0)
+        //        {
+        //            _PrdGroup = PrdGroup[0];
 
-                    if (allprdgroup.Count > 0)
-                    {
-                        tbl_ProductGroups = allprdgroup[0];
+        //            _PrdGroup.EdDate = DateTime.Now;
+        //            _PrdGroup.EdUser = Helper.tbl_Users.Username;
+        //        }
+        //        else if (PrdGroup.Count == 0)
+        //        {
+        //            var MaxProductGroupID = bu.GetProductGroupNonFlag().OrderByDescending(x => x.ProductGroupID).First();
+        //            _PrdGroup.ProductGroupID = MaxProductGroupID.ProductGroupID + 1;
 
-                        tbl_ProductGroups.EdDate = DateTime.Now;
-                        tbl_ProductGroups.EdUser = Helper.tbl_Users.Username;
-                    }
-                    else if (allprdgroup.Count == 0)
-                    {
-                        tbl_ProductGroups.ProductGroupID = _maxprdGroupID;
+        //            _PrdGroup.CrDate = DateTime.Now;
+        //            _PrdGroup.CrUser = Helper.tbl_Users.Username;
+        //            _PrdGroup.FlagSend = false;
+        //            _PrdGroup.ProductGroupImg = null;
 
-                        tbl_ProductGroups.CrDate = DateTime.Now;
-                        tbl_ProductGroups.CrUser = Helper.tbl_Users.Username;
-                        tbl_ProductGroups.FlagSend = false;
-                        tbl_ProductGroups.ProductGroupImg = null;
+        //            var _ProductType = bu.GetProductType();
+        //            _PrdGroup.ProductTypeID = _ProductType[0].ProductTypeID;
+        //        }
 
-                        tbl_ProductGroups.BranchID = branch.BranchID;
-                        tbl_ProductGroups.ProductTypeID = protype.ProductTypeID;
-                    }
+        //        var branch = bu.GetBranch();
+        //        _PrdGroup.BranchID = branch[0].BranchID;
 
-                    tbl_ProductGroups.ProductGroupCode = txtProductGroupCode.Text;
-                    tbl_ProductGroups.ProductGroupName = txtProductGroupName.Text;
-                   
-                    tbl_ProductGroups.FlagDel = chkFlagProGroup.Checked ? true : false;
-                    
-                    ret = bu.UpdateData(tbl_ProductGroups);  // save
+        //        _PrdGroup.ProductGroupCode = txtProductGroupCode.Text;
+        //        _PrdGroup.ProductGroupName = txtProductGroupName.Text;
 
-                    if (ret == 1)
-                    {
-                        var maxProductSubGroupID = bu.GetProductSubGroup().OrderByDescending(x => x.ProductSubGroupID).First();
+        //        _PrdGroup.FlagDel = rdoN.Checked ? false : true;
 
-                        int prdsubgroupID = maxProductSubGroupID.ProductSubGroupID + 1;
+        //        ret.Add(bu.UpdateData(_PrdGroup));
 
-                        tbl_ProductSubGroup tbl_ProductSubGroup = new tbl_ProductSubGroup(); // save
+        //        if (txtProductSubGroupName.ReadOnly == false)
+        //            ret.Add(Save_ProductSubGroup(_PrdGroup));
 
-                        if (allprdsubgroup.Count > 0)
-                        {
-                            tbl_ProductSubGroup = allprdsubgroup[0];
-                            tbl_ProductSubGroup.EdDate = DateTime.Now;
-                            tbl_ProductSubGroup.EdUser = Helper.tbl_Users.Username;
-                        }
-                        else if (allprdsubgroup.Count == 0)
-                        {
+        //        int ret1 = ret.All(x => x == 1) ? 1 : 0;
 
-                            tbl_ProductSubGroup.ProductSubGroupID = prdsubgroupID;
+        //        if (ret1 == 1)
+        //        {
+        //            msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+        //            msg.ShowInfoMessage();
 
-                            if (allprdgroup.Count == 0)
-                            {
-                                tbl_ProductSubGroup.ProductGroupID = _maxprdGroupID;
-                            }
-                            else if (allprdgroup.Count > 0)
-                            {
-                                tbl_ProductSubGroup.ProductGroupID = allprdgroup[0].ProductGroupID;
-                            }
+        //            treeView1.Enabled = true;
+        //            BindProductSubGroup();
+        //        }
+        //        else
+        //        {
+        //            this.ShowProcessErr();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.Message.ShowErrorMessage();
+        //    }
+        //}
 
-                            tbl_ProductSubGroup.ProductSubGroupImg = null;
+        //private int Save_ProductSubGroup(tbl_ProductGroup _PrdGroup)
+        //{
+        //    var PrdSubGroup = bu.GetProductSubGroup(x => x.ProductSubGroupCode == txtProductSubGroupCode.Text);
 
-                            tbl_ProductSubGroup.CrDate = DateTime.Now;
-                            tbl_ProductSubGroup.CrUser = Helper.tbl_Users.Username;
-                            tbl_ProductSubGroup.FlagSend = false;
-                        }
-                       
-                        tbl_ProductSubGroup.ProductSubGroupCode = txtProductSubGroupCode.Text;
-                        tbl_ProductSubGroup.ProductSubGroupName = txtProductSubGroupName.Text;
-                        tbl_ProductSubGroup.IsFulfill = chkIsFulfill.Checked ? true : false;
-                     
-                        tbl_ProductSubGroup.FlagDel = chkFlagProSubGroup.Checked ? true : false;
-                      
-                        ret = bu.UpdateData(tbl_ProductSubGroup); //save
+        //    var MaxID = bu.GetProductSubGroup().OrderByDescending(x => x.ProductSubGroupID).First();
 
-                        if (ret == 1)
-                        {
-                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                            msg.ShowInfoMessage();
-                       
-                            treeView1.Enabled = true;
+        //    int _PrdSubGroupID = MaxID.ProductSubGroupID + 1;
 
-                            pnlEdit.ClearControl();
+        //    var _PrdSubGroup = new tbl_ProductSubGroup();
 
-                            SetCheckBox();
+        //    if (PrdSubGroup.Count > 0)
+        //    {
+        //        _PrdSubGroup = PrdSubGroup[0];
+        //        _PrdSubGroup.EdDate = DateTime.Now;
+        //        _PrdSubGroup.EdUser = Helper.tbl_Users.Username;
+        //    }
+        //    else if (PrdSubGroup.Count == 0) //Insert
+        //    {
+        //        _PrdSubGroup.ProductSubGroupID = _PrdSubGroupID;
+        //        _PrdSubGroup.ProductGroupID = _PrdGroup.ProductGroupID;
+        //        _PrdSubGroup.ProductSubGroupImg = null;
+        //        _PrdSubGroup.CrDate = DateTime.Now;
+        //        _PrdSubGroup.CrUser = Helper.tbl_Users.Username;
+        //        _PrdSubGroup.FlagSend = false;
+        //    }
 
-                            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
-                            btnAdd.Enabled = true;
-                            btnSave.Enabled = false;
-                            btnCancel.Enabled = false;
+        //    _PrdSubGroup.ProductSubGroupCode = txtProductSubGroupCode.Text;
+        //    _PrdSubGroup.ProductSubGroupName = txtProductSubGroupName.Text;
+        //    _PrdSubGroup.IsFulfill = chkIsFulfill.Checked ? true : false;
 
-                            pnlEdit.Enabled = false;
+        //    _PrdSubGroup.FlagDel = rdoN_2.Checked ? false : true;
 
-                            btnSearch.PerformClick();
-                        }
-                        else
-                        {
-                            this.ShowProcessErr();
-                            return;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string msg = ex.Message;
-                    msg.ShowErrorMessage();
-                }
-            }
-        }
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            Save();
-        }
+        //    int ret = 0;
+        //    ret = bu.UpdateData(_PrdSubGroup);
 
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            if (txtProductGroupCode.Text != "" && txtProductSubGroupCode.Text != "")
-            {
-                ReadOnlyPanel(true);
-                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-                btnSave.Enabled = true;
-                btnEdit.Enabled = false;
-                txtProductGroupCode.DisableTextBox(true);
-                txtProductSubGroupCode.DisableTextBox(true);
-            }
-        }
+        //    return ret; 
+        //}
 
-        private void keyPress(KeyPressEventArgs e)
+        private void SetKeyPress(KeyPressEventArgs e)
         {
             if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8))
-            {
                 e.Handled = true;
-            }
             else
-            {
                 return;
-            }
-        }
-        private void txtProductGroupCode_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            keyPress(e);
         }
 
-        private void txtProductSubGroupCode_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            keyPress(e);
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-            btnAdd.Enabled = true;
-            btnSave.Enabled = false;
-            btnCancel.Enabled = false;
-
-            pnlEdit.ClearControl();
-
-            treeView1.Enabled = true;
-            SetCheckBox();
-            pnlEdit.Enabled = false;
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #endregion
     }
 }
 

@@ -32,5 +32,6 @@ namespace AllCashUFormsApp.Model
         public int VanType { get; set; }
         public string HelperEmpID { get; set; }
         public string POSNo { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

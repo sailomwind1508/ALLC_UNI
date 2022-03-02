@@ -30,12 +30,12 @@ namespace AllCashUFormsApp
 
         public static void WriteLog(this Exception ex, Type type)
         {
-            ErrorLogsDao.Insert(new tbl_error_logs { user_code = Helper.user_name, form_name = type.Name, function_name = Helper.GetCurrentMethod(), err_desc = ex.Message });
+            ErrorLogsDao.Insert(new tbl_error_logs { user_code = Helper.user_name, form_name = (type != null ? type.Name : ""), function_name = Helper.GetCurrentMethod(), err_desc = ex.Message });
         }
 
         public static void WriteLog(this string msg, Type type)
         {
-            ErrorLogsDao.Insert(new tbl_error_logs { user_code = Helper.user_name, form_name = type.Name, function_name = Helper.GetCurrentMethod(), err_desc = msg });
+            ErrorLogsDao.Insert(new tbl_error_logs { user_code = Helper.user_name, form_name = (type != null ? type.Name : ""), function_name = Helper.GetCurrentMethod(), err_desc = msg }); //edit by sailom.k 11/11/2021
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

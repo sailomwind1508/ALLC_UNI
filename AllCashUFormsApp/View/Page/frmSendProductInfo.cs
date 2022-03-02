@@ -18,6 +18,8 @@ namespace AllCashUFormsApp.View.Page
         {
             InitializeComponent();
         }
+
+        #region #private_method
         private void InitPage()
         {
             var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
@@ -34,6 +36,7 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
+
         private void InitialData()
         {
             grdBranch.AutoGenerateColumns = false;
@@ -50,14 +53,17 @@ namespace AllCashUFormsApp.View.Page
             btnCancelSend.Enabled = false;
 
             BindBranchData();
-            btnSearch.PerformClick();
+            BindProductData();
 
             string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
             msg.ShowWarningMessage();
         }
+
         private void BindBranchData()
         {
             DataTable dtBranch = new DataTable();
+
+            bu.GetSendProductInfoPrepareData();
 
             dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
 
@@ -67,12 +73,12 @@ namespace AllCashUFormsApp.View.Page
             newTable.Columns.Add("BranchID", typeof(string));
             newTable.Columns.Add("BranchRefCode", typeof(string));
             newTable.Columns.Add("BranchName", typeof(string));
-            newTable.Columns.Add("Pic",typeof(Bitmap));
+            newTable.Columns.Add("Pic", typeof(Bitmap));
             newTable.Columns.Add("OnlineStatus", typeof(bool));
 
-            Bitmap wifi_Img = new Bitmap(Properties.Resources.addBtn); // new Resource Image
+            Bitmap wifi_Img = new Bitmap(Properties.Resources.wifi); // new Resource Image
             Bitmap power_off_lmg = new Bitmap(Properties.Resources.closeBtn);
- 
+
             foreach (DataRow r in dtBranch.Rows)
             {
                 Bitmap colPic = Convert.ToBoolean(r["OnlineStatus"]) == true ? wifi_Img : power_off_lmg;
@@ -80,7 +86,7 @@ namespace AllCashUFormsApp.View.Page
                     , r["BranchID"].ToString()
                     , r["BranchRefCode"].ToString()
                     , r["BranchName"].ToString()
-                    , colPic 
+                    , colPic
                     , r["OnlineStatus"]);
             }
 
@@ -98,11 +104,7 @@ namespace AllCashUFormsApp.View.Page
 
             lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
         }
-        private void frmSendProductInfo_Load(object sender, EventArgs e)
-        {
-            InitPage();
-            InitialData();
-        }
+
         private void PrePareDataTable_Product(DataTable newTable)
         {
             newTable.Columns.Add("ChkPro", typeof(bool));
@@ -123,12 +125,14 @@ namespace AllCashUFormsApp.View.Page
             newTable.Columns.Add("FlagDel", typeof(bool));
             newTable.Columns.Add("ProductTypeName", typeof(string));
         }
+
         private void BindProductData()
         {
             int flagDel = rdoN.Checked ? 0 : 1;
 
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@flagDel", flagDel);
+            _params.Add("@Search", txtSearch.Text);
 
             DataTable dt = new DataTable();
             dt = bu.GetSendData_Product(_params);
@@ -139,7 +143,7 @@ namespace AllCashUFormsApp.View.Page
 
             foreach (DataRow r in dt.Rows)
             {
-                newTable.Rows.Add(false,r["ProductID"], r["ProductName"], r["ProductRefCode"], r["ProductShortName"]
+                newTable.Rows.Add(false, r["ProductID"], r["ProductName"], r["ProductRefCode"], r["ProductShortName"]
                   , r["ProductGroupID"], r["ProductGroupName"], r["ProductSubGroupID"], r["ProductSubGroupName"]
                   , r["SaleUomID"], r["ProductUomName"], r["Seq"], r["FlagDel"], r["ProductTypeName"]);
             }
@@ -156,69 +160,7 @@ namespace AllCashUFormsApp.View.Page
                 btnCancelSend.Enabled = true;
             }
         }
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            BindProductData();
-        }
-        private void chkBoxSelectAll_Data_CheckedChanged(object sender, EventArgs e)
-        {
-            if (grdPro.Rows.Count > 0)
-            {
-                for (int i = 0; i < grdPro.Rows.Count; i++)
-                {
-                    if (Convert.ToBoolean(grdPro.Rows[i].Cells["colChkPro"].Value) == false)
-                    {
-                        grdPro.Rows[i].Cells["colChkPro"].Value = true;
-                    }
-                    else
-                    {
-                        grdPro.Rows[i].Cells["colChkPro"].Value = false;
-                    }
-                }
-            }
-            else
-            {
-                chkBoxSelectPro.Checked = false;
-            }
-        }
-        private void chkBoxSelectBranch_CheckedChanged(object sender, EventArgs e)
-        {
-            if (grdBranch.Rows.Count > 0)
-            {
-                for (int i = 0; i < grdBranch.Rows.Count; i++)
-                {
-                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-                    if (Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value) == false && OnlineStatus == true)
-                    {
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
-                    }
-                    else
-                    {
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
-                    }
-                }
-            }
-            else
-            {
-                chkBoxSelectBranch.Checked = false;
-            }
-        }
-        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdBranch.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void grdPro_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdPro.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void btnRefresh_Branch_Click(object sender, EventArgs e)
-        {
-            BindBranchData();
-        }
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+
         private void PrePare_BranchID(List<string> selectList_Branch)
         {
             for (int i = 0; i < grdBranch.Rows.Count; i++)
@@ -232,6 +174,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void PrePare_Product(List<string> selectList_Product)
         {
             for (int i = 0; i < grdPro.Rows.Count; i++)
@@ -242,6 +185,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         public bool ValidateBranchCheck()
         {
             bool ValidateBranch = false;
@@ -264,9 +208,10 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
-           
+
             return ValidateBranch;
         }
+
         public bool ValidatePro_Check()
         {
             bool ValidatePro = false;
@@ -282,26 +227,32 @@ namespace AllCashUFormsApp.View.Page
                     ValidatePro = true;
                 }
             }
-           
+
             return ValidatePro;
         }
+
+        #endregion
+
+        #region #event_method
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void btnSendData_Click(object sender, EventArgs e)
         {
-            string msgCheckError = string.Empty;
+            string msg = "";
 
             if (ValidateBranchCheck() == false)
-            {
-                msgCheckError += "เลือกศูนย์ที่ต้องการส่งข้อมูล !!\n";
-            }
+                msg += "เลือกศูนย์ที่ต้องการส่งข้อมูล !!\n";
 
             if (ValidatePro_Check() == false)
-            {
-                msgCheckError += "เลือกสินค้าที่ต้องการส่งข้อมูล !!\n";
-            }
+                msg += "เลือกสินค้าที่ต้องการส่งข้อมูล !!\n";
 
-            if (!string.IsNullOrEmpty(msgCheckError))
+            if (!string.IsNullOrEmpty(msg))
             {
-                msgCheckError.ShowWarningMessage();
+                msg.ShowWarningMessage();
                 return;
             }
 
@@ -331,36 +282,106 @@ namespace AllCashUFormsApp.View.Page
 
             ret = bu.CallSendDataProduct(_params);
 
-
             if (ret == true)
             {
-                string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
+                msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
                 msg.ShowInfoMessage();
 
-                btnRefresh_Branch.PerformClick();
-                btnSearch.PerformClick();
+                BindBranchData();
+                BindProductData();
             }
             else
             {
-                string msg = "ส่งข้อมูลล้มเหลว!!";
+                msg = "ส่งข้อมูลล้มเหลว!!";
                 msg.ShowErrorMessage();
-                return;
             }
-
         }
+
         private void btnCancelSend_Click(object sender, EventArgs e)
         {
             BindBranchData();
-
             BindProductData();
 
             chkBoxSelectBranch.Checked = false;
             chkBoxSelectPro.Checked = false;
         }
 
+        private void frmSendProductInfo_Load(object sender, EventArgs e)
+        {
+            InitPage();
+            InitialData();
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindProductData();
+        }
+
+        private void chkBoxSelectPro_Click(object sender, EventArgs e)
+        {
+            if (grdPro.Rows.Count > 0)
+            {
+                for (int i = 0; i < grdPro.Rows.Count; i++)
+                {
+                    if (Convert.ToBoolean(grdPro.Rows[i].Cells["colChkPro"].Value) == false)
+                        grdPro.Rows[i].Cells["colChkPro"].Value = true;
+                    else
+                        grdPro.Rows[i].Cells["colChkPro"].Value = false;
+                }
+            }
+            else
+            {
+                chkBoxSelectPro.Checked = false;
+            }
+        }
+
+        private void chkBoxSelectBranch_Click(object sender, EventArgs e)
+        {
+            if (grdBranch.Rows.Count > 0)
+            {
+                for (int i = 0; i < grdBranch.Rows.Count; i++)
+                {
+                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
+                    if (Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value) == false && OnlineStatus == true)
+                        grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
+                    else
+                        grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
+                }
+            }
+            else
+            {
+                chkBoxSelectBranch.Checked = false;
+            }
+        }
+
+        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdBranch.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdPro_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdPro.SetRowPostPaint(sender, e, this.Font);
+        }
+
         private void frmSendProductInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
         }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BindProductData();
+            }
+        }
+
+        private void btnSearchBranch_Click(object sender, EventArgs e)
+        {
+            BindBranchData();
+        }
+
+        #endregion
     }
 }

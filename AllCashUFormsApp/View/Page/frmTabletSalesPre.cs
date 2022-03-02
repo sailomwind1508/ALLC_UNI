@@ -59,7 +59,7 @@ namespace AllCashUFormsApp.View.Page
         {
             InitializeComponent();
 
-            searchCustControls = new List<Control> { txtCustomerCode, txtCustName, txtBillTo, txtContact, txtTelephone };
+            searchCustControls = new List<Control> { txtCustomerID, txtCustName, txtBillTo, txtContact, txtTelephone };
             searchBWHControls = new List<Control> { txtWHCode, txtWHName };
             searchEmpControls = new List<Control> { txtEmpCode };
             readOnlyControls = new List<string>() { txtCustName.Name, txtWHName.Name, txtEmpCode.Name, txtCrUser.Name };
@@ -69,7 +69,7 @@ namespace AllCashUFormsApp.View.Page
 
             txdDocNo.KeyDown += TxdDocNo_KeyDown;
             txtWHCode.KeyDown += TxtWHCode_KeyDown;
-            txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
+            txtCustomerID.KeyDown += TxtCustomerCode_KeyDown;
 
             dtpDocDate.ValueChanged += DtpDocDate_ValueChanged;
             nudCreditDay.ValueChanged += NudCreditDay_ValueChanged;
@@ -90,7 +90,7 @@ namespace AllCashUFormsApp.View.Page
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
-                runDigit = documentType.DocFormat.Length; // - 2; edit by sailom 03/10/2021 for support tablet docno 14 digit;  
+                runDigit = documentType.DocFormat.Length; // - 2; edit by sailom 03/10/2021 for support tablet docno 14 digit;
 
                 this.ClearControl(docTypeCode, runDigit);
                 txtComment.Text = documentType.DocRemark;
@@ -194,7 +194,7 @@ namespace AllCashUFormsApp.View.Page
 
             dtpDocDate.Value = po.DocDate.ToDateTimeFormat();
 
-            txtCustomerCode.Text = po.CustomerID;
+            txtCustomerID.Text = po.CustomerID;
             txtCustName.Text = po.CustName;
             txtContact.Text = po.ContactName;
             txtTelephone.Text = po.ContactTel;
@@ -207,7 +207,7 @@ namespace AllCashUFormsApp.View.Page
             if (employee != null)
             {
                 txtEmpCode.Text = employee.TitleName + " " + employee.FirstName;
-                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
             }
 
             //var employee = bu.GetEmployee(po.SaleEmpID);
@@ -226,7 +226,8 @@ namespace AllCashUFormsApp.View.Page
                 txtWHName.Text = wh.WHName;
             }
 
-            FilterSaleArea(po.CustomerID);
+            //FilterSaleArea(po.CustomerID);
+            FilterSaleArea(po.SalAreaID); //edit by sailom .k 13/12/2021
             ddlDocStatus.BindDropdown3DocStatus(bu, po.DocStatus);
 
             txtComment.Text = po.Comment;
@@ -251,6 +252,7 @@ namespace AllCashUFormsApp.View.Page
             List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
             disTypeList = bu.GetDiscountType();
 
+            prodUOMs = new List<tbl_ProductUom>();
             var listPrdID = allPODetails.Select(x => x.ProductID).ToList();
             prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
             //Last edit by sailom.k 14/09/2021 tunning performance--------------------
@@ -583,7 +585,7 @@ namespace AllCashUFormsApp.View.Page
 
                     var emp = bu.GetEmployee(cust[0].EmpID);
                     if (emp != null)
-                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == cust[0].WHID);
                     var wh = bu.GetBranchWarehouse(whFunc);
@@ -628,7 +630,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
 
             var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
 
             //txtCustomerCode.Focus();
         }
@@ -639,7 +641,7 @@ namespace AllCashUFormsApp.View.Page
 
             var comp = bu.GetCompany();
             var emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            var supp = bu.GetSupplier(txtCustomerCode.Text);
+            var supp = bu.GetSupplier(txtCustomerID.Text);
 
             Dictionary<string, string> allEmp = new Dictionary<string, string>();
 
@@ -673,15 +675,15 @@ namespace AllCashUFormsApp.View.Page
             po.Shipto = txtBillTo.Text;
 
             po.CreditDay = Convert.ToInt16(nudCreditDay.Value);
-            Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-            var cust = bu.GetCustomer(func);
+            //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+            var cust = bu.GetCustomer(txtCustomerID.Text);
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
                 po.CustType = cust[0].CustomerTypeID.Value.ToString();
             }
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
-            po.CustomerID = txtCustomerCode.Text;
+            po.CustomerID = txtCustomerID.Text;
             po.CustName = txtCustName.Text;
             po.CustInvNO = txtCustInvNO.Text;
             po.CustInvDate = null;
@@ -1240,6 +1242,19 @@ namespace AllCashUFormsApp.View.Page
 
                     bu = new TabletSales();
 
+                    //validate edit PO and not change status by sailom/k 07/10/2021
+                    var chkPO = bu.GetPOMaster(txdDocNo.Text);
+                    if (chkPO != null && chkPO.DocStatus == "4")
+                    {
+                        if (ddlDocStatus.SelectedValue.ToString() == chkPO.DocStatus)
+                        {
+                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                            msg.ShowInfoMessage();
+
+                            return;
+                        }
+                    }
+
                     docno = txdDocNo.Text;
                     editFlag = true;
                     bu.tbl_DocRunning = new List<tbl_DocRunning>();
@@ -1295,7 +1310,8 @@ namespace AllCashUFormsApp.View.Page
                         bu.tbl_InvWarehouses.Add(invWh);
                     }
 
-                    ret = bu.UpdateData();
+                    //ret = bu.UpdateData();
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
                 }
                 else
                 {
@@ -1316,7 +1332,8 @@ namespace AllCashUFormsApp.View.Page
                     PrepareInvTransaction();
                     PrepareInvWarehouse();
 
-                    ret = bu.UpdateData();
+                    //ret = bu.UpdateData();
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
                 }
 
                 if (ret == 1)
@@ -1373,6 +1390,9 @@ namespace AllCashUFormsApp.View.Page
                     if (!cfMsg.ConfirmMessageBox(title))
                         return;
 
+                    bu.tbl_POMaster = bu.GetPOMaster(txdDocNo.Text);
+                    bu.tbl_PODetails = bu.GetPODetails(txdDocNo.Text); //Last edit by sailom .k 07/01/2022
+
                     List<tbl_PODetail> temptbl_PODetails = new List<tbl_PODetail>();
                     temptbl_PODetails = SerializeHelper.CloneObject<List<tbl_PODetail>>(bu.tbl_PODetails);
 
@@ -1394,16 +1414,25 @@ namespace AllCashUFormsApp.View.Page
 
                     PrepareInvDetail(temptbl_PODetails);
 
-                    int ret = bu.UpdateData();
+                    //int ret = bu.UpdateData();
+                    int ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
 
                     if (ret == 1)
                     {
-                        bool result = bu.UpdateCustomerSAPCode(txtCustomerCode.Text); //update customer SAP code
-                        if (result)
+                        if (!string.IsNullOrEmpty(txtCustomerID.Text) && !string.IsNullOrEmpty(bu.tbl_POMaster.CustInvNO) && !string.IsNullOrEmpty(bu.tbl_POMaster.DocNo))
                         {
-                            string msg = "สร้างใบกำกับภาษีเรียบร้อยแล้ว";
-                            msg.ShowInfoMessage();
+                            bool result = bu.UpdateCustomerSAPCode(txtCustomerID.Text, bu.tbl_POMaster.CustInvNO, bu.tbl_POMaster.DocNo); //update customer SAP code
+                            if (result)
+                                ret = 1;
                         }
+                    }
+                    else
+                        ret = 0;
+
+                    if (ret == 1)
+                    {
+                        string msg = "สร้างใบกำกับภาษีเรียบร้อยแล้ว";
+                        msg.ShowInfoMessage();
                     }
                     else
                     {
@@ -1537,7 +1566,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                errList.SetErrMessageList(txtCustomerCode, lblCustomerCode);
+                errList.SetErrMessageList(txtCustomerID, lblCustomerCode);
                 errList.SetErrMessageList(txtBillTo, lblBillTo);
                 errList.SetErrMessageList(txtContact, lblContact);
                 errList.SetErrMessageList(txtEmpCode, lblEmpCode);
@@ -1545,13 +1574,13 @@ namespace AllCashUFormsApp.View.Page
 
                 if (errList.Count == 0)
                 {
-                    Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-                    var sup = bu.GetCustomer(func);
+                    //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+                    var sup = bu.GetCustomer(txtCustomerID.Text);
                     if (sup == null)
                     {
                         string t = lblCustomerCode.Text;
                         errList.Add(string.Format("--> {0}", t));
-                        txtCustomerCode.ErrorTextBox();
+                        txtCustomerID.ErrorTextBox();
                     }
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == txtWHCode.Text);
@@ -1610,7 +1639,7 @@ namespace AllCashUFormsApp.View.Page
             btnEdit.EnableButton(btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, txdDocNo.Text);
 
             txdDocNo.DisableTextBox(false);
-            txtCustomerCode.DisableTextBox(false);
+            txtCustomerID.DisableTextBox(false);
             txtCustPONo.DisableTextBox(false);
             btnSearchCust.Enabled = true;
             txtCustInvNO.DisableTextBox(false);
@@ -1687,9 +1716,13 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@DocNo", txdDocNo.Text);
-            this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+            //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+
+            this.OpenTestCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -1720,7 +1753,7 @@ namespace AllCashUFormsApp.View.Page
         {
             this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า");
 
-            FilterSaleArea(txtCustomerCode.Text);
+            FilterSaleArea(txtCustomerID.Text);
         }
 
         private void btnCustInfo_Click(object sender, EventArgs e)
@@ -1753,7 +1786,7 @@ namespace AllCashUFormsApp.View.Page
                     //bu.tbl_POMaster = bu.GetPOMaster(txdDocNo.Text);
                     //if (bu.tbl_POMaster != null)
                     {
-                        var cust = bu.GetCustomer(txtCustomerCode.Text);
+                        var cust = bu.GetCustomer(txtCustomerID.Text);
                         if (cust != null && cust.Count > 0)
                         {
                             txtBillTo.Text = cust[0].BillTo;

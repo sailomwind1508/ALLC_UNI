@@ -79,6 +79,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_DocRunning tbl_DocRunning, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start DocRunningDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_DocRunning.Attach(tbl_DocRunning);
@@ -88,10 +91,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_DocRunning.GetType());
             }
+
+            msg = "end DocRunningDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this List<tbl_DocRunning> tbl_DocRunnings, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start DocRunningDao=>UpdateEntity";
+           msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -134,11 +143,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end DocRunningDao=>UpdateEntity";
+           msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_DocRunning> tbl_DocRunnings)
         {
+            string msg = "start DocRunningDao=>UpdateList";
+           msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -184,6 +199,9 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_DocRunning);
             }
 
+            msg = "end DocRunningDao=>UpdateList";
+           msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
@@ -194,6 +212,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Delete(this tbl_DocRunning tbl_DocRunning, DB_ALL_CASH_UNIEntities db)
         {
+            string msg  = "start DocRunningDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.Entry(tbl_DocRunning).State = EntityState.Deleted;
@@ -203,6 +224,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_DocRunning.GetType());
             }
+
+            msg = "end DocRunningDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -212,6 +236,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_DocRunning tbl_DocRunning)
         {
+            string msg = "start DocRunningDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -227,6 +254,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_DocRunning.GetType());
             }
 
+            msg = "end DocRunningDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -237,6 +267,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_DocRunning tbl_DocRunning)
         {
+            string msg = "start DocRunningDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -275,6 +308,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_DocRunning.GetType());
             }
 
+            msg = "end DocRunningDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -285,6 +321,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_DocRunning tbl_DocRunning)
         {
+            string msg = "start DocRunningDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -299,6 +338,142 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_DocRunning.GetType());
             }
+
+            msg = "end DocRunningDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+
+        public static int BulkInsert(this List<tbl_DocRunning> tbl_DocRunnings)
+        {
+            string msg = "start tbl_DocRunning=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_DocRunnings.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_DocRunning";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end tbl_DocRunning=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_DocRunning> tbl_DocRunnings)
+        {
+            string msg = "start tbl_DocRunning=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+
+                string sql = " DELETE FROM tbl_DocRunning WHERE DocNum = '" + tbl_DocRunnings.FirstOrDefault().DocNum + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_DocRunnings.BulkInsert();
+
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_DocRunning=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_DocRunning> tbl_DocRunnings)
+        {
+            string msg = "start tbl_DocRunning=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_DocRunning WHERE DocNum = '" + tbl_DocRunnings.FirstOrDefault().DocNum + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_DocRunning=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_DocRunning> tbl_DocRunnings, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start tbl_DocRunning=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_DocRunning();
+                var docNo = tbl_DocRunnings.First().DocNum;
+                var docTypeCode = tbl_DocRunnings.First().DocTypeCode;
+                updateData = db.tbl_DocRunning.FirstOrDefault(x => x.DocNum == docNo && x.DocTypeCode == docTypeCode);
+
+                if (updateData != null)
+                {
+                    ret = tbl_DocRunnings.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_DocRunnings.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end tbl_DocRunning=>PerformUpdate";
+            msg.WriteLog(null);
 
             return ret;
         }

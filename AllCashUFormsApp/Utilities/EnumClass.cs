@@ -19,6 +19,7 @@ namespace AllCashUFormsApp
         RJProduct,
         RTProduct,
         TRProduct,
+        CCProduct,
         IVProduct,
         IMProduct,
         VEProduct,
@@ -42,11 +43,13 @@ namespace AllCashUFormsApp
         SaleAreaDistrict,
         IM,
         IV,
+        CCIV,
         V,
         IVPre,
         IMPre,
         PreOrder,
         CustomerPre,
-        IVPrePO
+        IVPrePO,
+        PromotionProduct
     }
 }

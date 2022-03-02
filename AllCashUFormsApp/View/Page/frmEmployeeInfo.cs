@@ -18,31 +18,9 @@ namespace AllCashUFormsApp.View.Page
     {
         MenuBU menuBU = new MenuBU();
         DistributionCenter bu = new DistributionCenter();
-        DataTable dt = new DataTable();
-        ObjectFactory objectFactory = new ObjectFactory();
-
-        List<Control> saleEmpList = new List<Control>();
-        List<Control> driverEmpList = new List<Control>();
-        List<Control> helperEmpList = new List<Control>();
-
-        List<tbl_SalArea> tbl_SalAreaList = new List<tbl_SalArea>();
-
-        private List<string> selectProdect = new List<string>();
-
-        Dictionary<Control, Label> validateDepoCtrls = new Dictionary<Control, Label>();
         List<string> readOnlyDepoControls = new List<string>();
-
         Dictionary<Control, Label> validateEmpCtrls = new Dictionary<Control, Label>();
         List<string> readOnlyEmpControls = new List<string>();
-
-        Dictionary<Control, Label> validateBWHCtrls = new Dictionary<Control, Label>();
-        List<string> readOnlyBWHControls = new List<string>();
-
-        Dictionary<Control, Label> validateVANCtrls = new Dictionary<Control, Label>();
-        List<string> readOnlyVANDTControls = new List<string>();
-
-        Dictionary<Control, Label> validateMKTCtrls = new Dictionary<Control, Label>();
-        List<string> readOnlyMKTControls = new List<string>();
 
         public frmEmployeeInfo()
         {
@@ -105,7 +83,6 @@ namespace AllCashUFormsApp.View.Page
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnCopy.Enabled = false;
 
-
             var titleList = new Dictionary<string, string>();
             titleList = bu.GetAllTitleName();
             ddlTitleName.BindDropdownList(titleList, "key", "value");
@@ -138,11 +115,12 @@ namespace AllCashUFormsApp.View.Page
             var branchList = bu.GetBranch();
             ddlDepo.BindDropdownList(branchList, "BranchName", "BranchID");
 
-            BindEmployeeData();
+            BindEmployeeData_V2();
+            //BindEmployeeData();
 
             grdEmpList.SetDataGridViewStyle();
 
-            pnlEmpDT.ClearControl();
+            pnlEmpDT.ClearControl();//Edit By Adisorn 20/12/2564
 
             pnlEmpDT.OpenControl(false, readOnlyDepoControls.ToArray());
 
@@ -154,22 +132,17 @@ namespace AllCashUFormsApp.View.Page
 
         private void PrepareEmpID()
         {
-            string _empID = "";
-
             var code = bu.GetCompany().BranchID;
 
-            Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
-            var tbl_EmployeeList = bu.GetEmployee(tbl_EmployeeFunc);
+            var tbl_EmployeeList = bu.GetEmployee(); //Adisorn 2/2/2565 รันรหัสพนักงานที่ไม่ใช่ SuperAdmin
             if (tbl_EmployeeList != null && tbl_EmployeeList.Count > 0)
             {
                 string _no = tbl_EmployeeList.Max(x => x.EmpID);
                 var no = Convert.ToInt32(_no.Substring(4, _no.Length - 4)) + 1;
-                _empID = code + no.ToString("000");
+                txtEmpID.Text = code + "E" + no.ToString("000");
             }
             else
-                _empID = code + "E001";
-
-            txtEmpID.Text = _empID;
+                txtEmpID.Text = code + "E001";
         }
 
         private void RemoveEmployee(string empID)
@@ -236,7 +209,7 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                int ret = 0;
+                List<int> ret = new List<int>();
                 tbl_Employee eData = new tbl_Employee();
 
                 bool isEditMode = eData.CheckExistsData(txtEmpID.Text);
@@ -246,51 +219,35 @@ namespace AllCashUFormsApp.View.Page
 
                 string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
                 string title = "ยืนยันการบันทึก!!";
+
                 if (!cfMsg.ConfirmMessageBox(title))
                     return;
 
-                //add employee
                 Employee e = new Employee();
 
                 pnlEmpDT.Controls.SetObjectFromControl(eData);
 
-                if (isEditMode)
-                {
-                    eData.EmpID = txtEmpID.Text;
-                }
-                else
-                {
-                    Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
-                    var allEmp = bu.GetEmployee(tbl_EmployeeFunc);
-                    if (allEmp != null && allEmp.Count > 0)
-                    {
-                        string _maxEmpID = allEmp.Max(x => x.EmpID);
-                        var maxEmpID = Convert.ToInt32(_maxEmpID.Substring(4, _maxEmpID.Length - 4)) + 1;
+                //eData.EmpID = txtEmpID.Text;
 
-                        string formateRunNo = "";
-                        for (int i = 0; i < 3; i++)
-                        {
-                            formateRunNo += "0";
-                        }
-                        string tempRunningNo = maxEmpID.ToString(formateRunNo);
-
-                        eData.EmpID = ddlDepo.SelectedValue + "E" + tempRunningNo;
-                    }
-                    else
-                        eData.EmpID = ddlDepo.SelectedValue + "E000";
-                }
-
-                eData.LastName = string.IsNullOrEmpty(txtLastName.Text) ? "" : txtLastName.Text;
+                //eData.TitleName = ddlTitleName.SelectedValue.ToString();
                 eData.NickName = "";
-                eData.EmpCode = eData.EmpID;
+                eData.EmpCode = txtEmpID.Text;
                 eData.EmpIDCard = txtEmp_ID_Card.Text;
-                eData.IDCard = txtIDCard.Text;
+
+                if (txtIDCard.MaskCompleted)
+                    eData.IDCard = txtIDCard.Text;
+                else
+                    eData.IDCard = "";
+
+                eData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue);
+                //eData.FirstName = txtFirstName.Text;
+                //eData.LastName = txtLastName.Text;
+                //eData.DepartmentID = Convert.ToInt32(ddlDepartmentID.SelectedValue);
+                //eData.PositionID = Convert.ToInt32(ddlPositionID.SelectedValue);
 
                 var currentDate = DateTime.Now;
                 eData.CrDate = currentDate;
                 eData.CrUser = Helper.tbl_Users.Username;
-                eData.EdDate = null;
-                eData.EdUser = null;
 
                 if (isEditMode)
                 {
@@ -299,61 +256,46 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 eData.FlagSend = false;
+                eData.FlagDel = rdoEmpStatusN.Checked ? false : true;
 
-                if (rdoEmpStatusN.Checked)
-                    eData.FlagDel = false;
-                else if (rdoEmpStatusC.Checked)
-                    eData.FlagDel = true;
+                ret.Add(e.UpdateData(eData));
 
-                ret = e.UpdateData(eData);
+                tbl_Users uData = new tbl_Users();
 
-                if (ret == 1) //add user
+                var userList = bu.GetUser(x=>x.EmpID == txtEmpID.Text && x.FlagDel == false);
+
+                if (userList.Count > 0)
                 {
-                    Users u = new Users();
-                    tbl_Users uData = new tbl_Users();
+                    uData = userList[0];
+                    uData.EdDate = DateTime.Now;
+                    uData.EdUser = Helper.tbl_Users.Username;
+                }
+                else
+                {
+                    gbUsers.Controls.SetObjectFromControl(uData);
 
-                    isEditMode = uData.CheckExistsData(txtUsername.Text);
+                    uData.FirstName = eData.FirstName;
+                    uData.LastName = eData.LastName;
+                    uData.Email = "";
+                    uData.EmpID = eData.EmpID;
 
-                    if (isEditMode)
-                    {
-                        Func<tbl_Users, bool> tbl_UsersFunc = (x => x.Username == txtUsername.Text);
-                        var userList = bu.GetUser(tbl_UsersFunc);
-                        if (userList != null && userList.Count > 0)
-                        {
-                            uData = userList[0];
-                            uData.FlagDel = rdoEmpStatusC.Checked;
-                            uData.Username = txtUsername.Text;
-                            uData.Password = txtPassword.Text;
-                            uData.EdDate = DateTime.Now;
-                            uData.EdUser = Helper.tbl_Users.Username;
-                        }
-                    }
-                    else
-                    {
-                        gbUsers.Controls.SetObjectFromControl(uData);
+                    uData.CrDate = currentDate;
+                    uData.CrUser = Helper.tbl_Users.Username;
 
-                        uData.FirstName = eData.FirstName;
-                        uData.LastName = eData.LastName;
-                        uData.Email = "";
-                        uData.EmpID = eData.EmpID;
-
-                        uData.CrDate = currentDate;
-                        uData.CrUser = Helper.tbl_Users.Username;
-                        uData.EdDate = null;
-                        uData.EdUser = null;
-
-                        uData.FlagSend = false;
-
-                        if (rdoEmpStatusN.Checked)
-                            uData.FlagDel = false;
-                        else if (rdoEmpStatusC.Checked)
-                            uData.FlagDel = true;
-                    }
-
-                    ret = u.UpdateData(uData);
+                    uData.FlagSend = false;
                 }
 
-                if (ret == 1)
+                uData.FlagDel = rdoEmpStatusN.Checked ? false : true;
+                //uData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue);
+
+                //เก็บ UserID และ Pass เมื่อเพิ่มหรือแก้ไข ข้อมูลพนักงาน
+                uData.Username = txtUsername.Text;
+                uData.Password = txtPassword.Text;
+
+                Users u = new Users();
+                ret.Add(u.UpdateData(uData));
+
+                if (ret.All(x=>x==1))
                 {
                     pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
 
@@ -374,10 +316,7 @@ namespace AllCashUFormsApp.View.Page
             }
             catch (Exception ex)
             {
-                ex.WriteLog(this.GetType());
-
-                string msg = ex.Message;
-                msg.ShowErrorMessage();
+                ex.Message.ShowErrorMessage();
             }
         }
 
@@ -435,40 +374,26 @@ namespace AllCashUFormsApp.View.Page
             return ret;
         }
 
-        private void BindEmployeeData()
+        private void BindEmployeeData_V2()
         {
-            string text = txtSearchEmp.Text;
+            int _DepartmentID = ddlDepartment.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlDepartment.SelectedValue);
+            int _PositionID = ddlPosition.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPosition.SelectedValue);
 
-            Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
-            if (ddlDepartment.SelectedValue != null && ddlDepartment.SelectedValue.ToString() == "-1")
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
-            else if (ddlPosition.SelectedValue != null && ddlPosition.SelectedValue.ToString() == "-1")
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
-            else
-            {
-                tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
-                x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
-                x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
-                (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
-            }
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@flagDel", rdoEmpN.Checked ? 0 : 1);
+            _params.Add("@DepartmentID", _DepartmentID);
+            _params.Add("@PositionID", _PositionID);
+            _params.Add("@Search", txtSearchEmp.Text);
 
-            var dt = bu.GetEmpTable(tbl_EmployeeFunc);
+            var dt = bu.proc_GetEmployee_Data(_params);
+
+            grdEmpList.DataSource = null;
+
+            var grd = grdEmpList;
+            grd.DataSource = dt;
 
             if (dt != null)
             {
-                grdEmpList.DataSource = null;
-
-                var grd = grdEmpList;
-                grd.DataSource = dt;
-
                 DataGridViewColumn col0 = grd.Columns[0];
                 DataGridViewColumn col1 = grd.Columns[1];
                 DataGridViewColumn col2 = grd.Columns[2];
@@ -482,7 +407,7 @@ namespace AllCashUFormsApp.View.Page
                 DataGridViewColumn col10 = grd.Columns[10];
 
                 col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col1.SetColumnStyle(140, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 140);
+                col1.SetColumnStyle(200, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
@@ -492,38 +417,174 @@ namespace AllCashUFormsApp.View.Page
                 col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
                 col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col10.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0, new DataGridViewCheckBoxColumn());
-
-                lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
             }
+
+            lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
+        }
+
+        private void BindEmployeeData()
+        {
+            //string text = txtSearchEmp.Text;
+
+            //Func<tbl_Employee, bool> tbl_EmployeeFunc = null;
+            //if (ddlDepartment.SelectedValue != null && ddlDepartment.SelectedValue.ToString() == "-1")
+            //{
+            //    tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+            //    x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
+            //    (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+            //}
+            //else if (ddlPosition.SelectedValue != null && ddlPosition.SelectedValue.ToString() == "-1")
+            //{
+            //    tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+            //    x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
+            //    (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+            //}
+            //else
+            //{
+            //    tbl_EmployeeFunc = (x => x.FlagDel == rdoEmpC.Checked &&
+            //    x.DepartmentID == (Convert.ToInt32(ddlDepartment.SelectedValue) != -1 ? Convert.ToInt32(ddlDepartment.SelectedValue) : x.DepartmentID) &&
+            //    x.PositionID == (Convert.ToInt32(ddlPosition.SelectedValue) != -1 ? Convert.ToInt32(ddlPosition.SelectedValue) : x.PositionID) &&
+            //    (x.EmpCode.Contains(text) || x.TitleName.Contains(text) || x.FirstName.Contains(text) || x.LastName.Contains(text)));
+            //}
+
+            //var dt = bu.GetEmpTable(tbl_EmployeeFunc);
+
+            //if (dt != null)
+            //{
+            //    grdEmpList.DataSource = null;
+
+            //    var grd = grdEmpList;
+            //    grd.DataSource = dt;
+
+            //    DataGridViewColumn col0 = grd.Columns[0];
+            //    DataGridViewColumn col1 = grd.Columns[1];
+            //    DataGridViewColumn col2 = grd.Columns[2];
+            //    DataGridViewColumn col3 = grd.Columns[3];
+            //    DataGridViewColumn col4 = grd.Columns[4];
+            //    DataGridViewColumn col5 = grd.Columns[5];
+            //    DataGridViewColumn col6 = grd.Columns[6];
+            //    DataGridViewColumn col7 = grd.Columns[7];
+            //    DataGridViewColumn col8 = grd.Columns[8];
+            //    DataGridViewColumn col9 = grd.Columns[9];
+            //    DataGridViewColumn col10 = grd.Columns[10];
+
+            //    col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col1.SetColumnStyle(200, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+            //    col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+            //    col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+            //    col10.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0, new DataGridViewCheckBoxColumn());
+
+            //    lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
+            //}
         }
 
         private void BindEmployeeDetail()
         {
-            if (grdEmpList.RowCount > 0 && grdEmpList.CurrentCell != null)
+            //if (grdEmpList.RowCount > 0 && grdEmpList.CurrentCell != null)
+            //{
+            //    int rowIndex = grdEmpList.CurrentCell.RowIndex;
+
+            //    if (rowIndex != -1)
+            //    {
+            //        var empCode = grdEmpList.Rows[rowIndex].Cells[0].Value.ToString();
+            //        Func<tbl_Employee, bool> tbl_EmployeeFunc = (x => x.EmpCode == empCode);
+            //        var empDT = bu.GetEmpDetails(tbl_EmployeeFunc);
+
+            //        if (empDT != null && empDT.Count > 0)
+            //        {
+            //            rdoEmpStatusN.Checked = empDT[0].FlagDel == false;
+            //            rdoEmpStatusC.Checked = empDT[0].FlagDel == true;
+
+            //            pnlEmpDT.Controls.SetTextBoxControlValue(empDT[0]);
+
+            //            ddlDepartmentID.SelectedValue = empDT[0].DepartmentID;
+            //            ddlPositionID.SelectedValue = empDT[0].PositionID;
+
+            //            if (ddlDepo.Items != null && ddlDepo.Items.Count > 0)
+            //                ddlDepo.SelectedIndex = 0;
+
+            //            ddlRoleID.SelectedValue = empDT[0].RoleID;
+            //            ddlTitleName.SelectedValue = empDT[0].TitleName;
+
+            //            pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
+
+            //            btnSearchEmp.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+            //            btnAdd.Enabled = true;
+            //            btnCopy.Enabled = false;
+            //            btnRemove.Enabled = true;
+
+            //            btnRemove.Enabled = !empDT[0].FlagDel;
+            //        }
+            //    }
+            //}
+        }
+
+        private void SelectEmployeeDetails(DataGridViewCellEventArgs e)
+        {
+            try
             {
-                int rowIndex = grdEmpList.CurrentCell.RowIndex;
+                DataGridViewRow grdRows = null;
 
-                if (rowIndex != -1)
+                if (e != null)
                 {
-                    var empCode = grdEmpList.Rows[rowIndex].Cells[0].Value.ToString();
-                    Func<tbl_Employee, bool> tbl_EmployeeFunc = (x => x.EmpCode == empCode);
-                    var empDT = bu.GetEmpDetails(tbl_EmployeeFunc);
+                    if (e.RowIndex == -1)
+                        return;
+                    else
+                        grdRows = grdEmpList.Rows[e.RowIndex];
+                }
+                else
+                {
+                    grdRows = grdEmpList.CurrentRow;
+                }
 
-                    if (empDT != null && empDT.Count > 0)
+                if (grdRows != null)
+                {
+                    string _EmpCode = grdRows.Cells[0].Value.ToString();
+
+                    int _DepartmentID = ddlDepartment.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlDepartment.SelectedValue);
+                    int _PositionID = ddlPosition.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPosition.SelectedValue);
+                    int _flagDel = rdoEmpN.Checked ? 0 : 1;
+
+                    Dictionary<string, object> _params = new Dictionary<string, object>();
+                    _params.Add("@flagDel", _flagDel);
+                    _params.Add("@DepartmentID", _DepartmentID);
+                    _params.Add("@PositionID", _PositionID);
+                    _params.Add("@Search", txtSearchEmp.Text);
+
+                    var dtEmployee = bu.proc_GetEmployee_Data(_params ,true);
+
+                    DataRow r = dtEmployee.AsEnumerable().FirstOrDefault(x => x.Field<string>("EmpCode") == _EmpCode);
+
+                    if (r != null)
                     {
-                        rdoEmpStatusN.Checked = empDT[0].FlagDel == false;
-                        rdoEmpStatusC.Checked = empDT[0].FlagDel == true;
+                        txtEmpID.Text = r["EmpCode"].ToString();
+                        txtEmp_ID_Card.Text = r["EmpIDCard"].ToString(); //รหัสบัญชี
+                        txtIDCard.Text = r["IDCard"].ToString();
+                        ddlTitleName.SelectedValue = r["TitleName"].ToString();
+                        txtFirstName.Text = r["FirstName"].ToString();
+                        txtLastName.Text = r["LastName"].ToString();
 
-                        pnlEmpDT.Controls.SetTextBoxControlValue(empDT[0]);
-
-                        ddlDepartmentID.SelectedValue = empDT[0].DepartmentID;
-                        ddlPositionID.SelectedValue = empDT[0].PositionID;
+                        ddlDepartmentID.SelectedValue = Convert.ToInt32(r["DepartmentID"]);
+                        ddlPositionID.SelectedValue = Convert.ToInt32(r["PositionID"]);
 
                         if (ddlDepo.Items != null && ddlDepo.Items.Count > 0)
                             ddlDepo.SelectedIndex = 0;
 
-                        ddlRoleID.SelectedValue = empDT[0].RoleID;
-                        ddlTitleName.SelectedValue = empDT[0].TitleName;
+                        txtUsername.Text = r["Username"].ToString();
+                        txtPassword.Text = r["Password"].ToString();
+
+                        bool flagDel = Convert.ToBoolean(r["FlagDel"]);
+
+                        rdoEmpStatusN.Checked = flagDel == false;
+                        rdoEmpStatusC.Checked = flagDel == true;
+
+                        ddlRoleID.SelectedValue = Convert.ToInt32(r["RoleID"]);
 
                         pnlEmpDT.OpenControl(false, readOnlyEmpControls.ToArray());
 
@@ -532,9 +593,13 @@ namespace AllCashUFormsApp.View.Page
                         btnCopy.Enabled = false;
                         btnRemove.Enabled = true;
 
-                        btnRemove.Enabled = !empDT[0].FlagDel;
+                        btnRemove.Enabled = !Convert.ToBoolean(r["FlagDel"]);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
             }
         }
 
@@ -564,6 +629,8 @@ namespace AllCashUFormsApp.View.Page
 
             rdoEmpStatusN.Enabled = false;
             rdoEmpStatusC.Enabled = false;
+
+            ddlRoleID.SelectedIndex = 0;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -628,12 +695,13 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdEmpList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            BindEmployeeDetail();
+            SelectEmployeeDetails(e);
+            //BindEmployeeDetail();
         }
 
         private void grdEmpList_SelectionChanged(object sender, EventArgs e)
         {
-            BindEmployeeDetail();
+            //BindEmployeeDetail();
         }
 
         private void grdEmpList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -643,33 +711,38 @@ namespace AllCashUFormsApp.View.Page
 
         private void rdoEmpN_CheckedChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2();
         }
 
         private void rdoEmpC_CheckedChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2();
         }
 
         private void ddlDepartment_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
         }
 
         private void ddlPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
         }
 
         private void btnSearchEmp_Click(object sender, EventArgs e)
         {
-            BindEmployeeData();
+            //BindEmployeeData();
+            BindEmployeeData_V2();
+            SelectEmployeeDetails(null);
         }
 
         private void txtSearchEmp_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                BindEmployeeData();
+                //BindEmployeeData();
+                BindEmployeeData_V2();
         }
 
 

@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSendProductInfo));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle56 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -55,7 +55,6 @@
             this.colBranchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colOnlineStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlRefresh = new System.Windows.Forms.Panel();
-            this.btnRefresh_Branch = new System.Windows.Forms.Button();
             this.chkBoxSelectBranch = new System.Windows.Forms.CheckBox();
             this.pnlSendData = new System.Windows.Forms.Panel();
             this.btnCancelSend = new System.Windows.Forms.Button();
@@ -79,8 +78,10 @@
             this.lbl_qty_Product = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.pnlSearch = new System.Windows.Forms.Panel();
-            this.chkBoxSelectPro = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.chkBoxSelectPro = new System.Windows.Forms.CheckBox();
             this.panel8 = new System.Windows.Forms.Panel();
             this.rdoC = new System.Windows.Forms.RadioButton();
             this.rdoN = new System.Windows.Forms.RadioButton();
@@ -102,6 +103,7 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.btnSearchBranch = new System.Windows.Forms.Button();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -174,14 +176,14 @@
             this.grdBranch.AllowUserToDeleteRows = false;
             this.grdBranch.AllowUserToResizeColumns = false;
             this.grdBranch.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdBranch.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle43.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdBranch.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle43;
             this.grdBranch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdBranch.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colChkBranch,
@@ -219,8 +221,8 @@
             // colBranchID
             // 
             this.colBranchID.DataPropertyName = "BranchID";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle44.Font = new System.Drawing.Font("Tahoma", 9F);
+            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle44;
             this.colBranchID.HeaderText = "รหัสสาขา";
             this.colBranchID.Name = "colBranchID";
             this.colBranchID.ReadOnly = true;
@@ -230,8 +232,8 @@
             // colBranchRefCode
             // 
             this.colBranchRefCode.DataPropertyName = "BranchRefCode";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.colBranchRefCode.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle45.Font = new System.Drawing.Font("Tahoma", 9F);
+            this.colBranchRefCode.DefaultCellStyle = dataGridViewCellStyle45;
             this.colBranchRefCode.HeaderText = "รหัสอ้างอิง";
             this.colBranchRefCode.MaxInputLength = 10;
             this.colBranchRefCode.Name = "colBranchRefCode";
@@ -242,8 +244,8 @@
             // colBranchName
             // 
             this.colBranchName.DataPropertyName = "BranchName";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.colBranchName.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle46.Font = new System.Drawing.Font("Tahoma", 9F);
+            this.colBranchName.DefaultCellStyle = dataGridViewCellStyle46;
             this.colBranchName.HeaderText = "ชื่อสาขา";
             this.colBranchName.MaxInputLength = 50;
             this.colBranchName.Name = "colBranchName";
@@ -264,32 +266,13 @@
             this.pnlRefresh.BackColor = System.Drawing.Color.Azure;
             this.pnlRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlRefresh.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pnlRefresh.Controls.Add(this.btnRefresh_Branch);
+            this.pnlRefresh.Controls.Add(this.btnSearchBranch);
             this.pnlRefresh.Controls.Add(this.chkBoxSelectBranch);
             this.pnlRefresh.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRefresh.Location = new System.Drawing.Point(0, 54);
             this.pnlRefresh.Name = "pnlRefresh";
             this.pnlRefresh.Size = new System.Drawing.Size(380, 40);
             this.pnlRefresh.TabIndex = 166;
-            // 
-            // btnRefresh_Branch
-            // 
-            this.btnRefresh_Branch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh_Branch.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnRefresh_Branch.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRefresh_Branch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh_Branch.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnRefresh_Branch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRefresh_Branch.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh_Branch.Image")));
-            this.btnRefresh_Branch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRefresh_Branch.Location = new System.Drawing.Point(289, 3);
-            this.btnRefresh_Branch.Name = "btnRefresh_Branch";
-            this.btnRefresh_Branch.Size = new System.Drawing.Size(83, 26);
-            this.btnRefresh_Branch.TabIndex = 223;
-            this.btnRefresh_Branch.Text = "Refresh";
-            this.btnRefresh_Branch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRefresh_Branch.UseVisualStyleBackColor = false;
-            this.btnRefresh_Branch.Click += new System.EventHandler(this.btnRefresh_Branch_Click);
             // 
             // chkBoxSelectBranch
             // 
@@ -301,7 +284,7 @@
             this.chkBoxSelectBranch.TabIndex = 202;
             this.chkBoxSelectBranch.Text = "เลือกศูนย์ทั้งหมด";
             this.chkBoxSelectBranch.UseVisualStyleBackColor = true;
-            this.chkBoxSelectBranch.CheckedChanged += new System.EventHandler(this.chkBoxSelectBranch_CheckedChanged);
+            this.chkBoxSelectBranch.Click += new System.EventHandler(this.chkBoxSelectBranch_Click);
             // 
             // pnlSendData
             // 
@@ -353,6 +336,7 @@
             // 
             // panel13
             // 
+            this.panel13.BackColor = System.Drawing.Color.Azure;
             this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel13.Controls.Add(this.lblgrdQty);
             this.panel13.Controls.Add(this.lblCountgrdList);
@@ -368,9 +352,9 @@
             this.lblgrdQty.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.lblgrdQty.Location = new System.Drawing.Point(94, 3);
             this.lblgrdQty.Name = "lblgrdQty";
-            this.lblgrdQty.Size = new System.Drawing.Size(12, 16);
+            this.lblgrdQty.Size = new System.Drawing.Size(15, 16);
             this.lblgrdQty.TabIndex = 3;
-            this.lblgrdQty.Text = ".";
+            this.lblgrdQty.Text = "0";
             // 
             // lblCountgrdList
             // 
@@ -399,9 +383,9 @@
             // 
             this.panel7.Controls.Add(this.grdPro);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(0, 82);
+            this.panel7.Location = new System.Drawing.Point(0, 70);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(870, 494);
+            this.panel7.Size = new System.Drawing.Size(870, 506);
             this.panel7.TabIndex = 219;
             // 
             // grdPro
@@ -409,14 +393,14 @@
             this.grdPro.AllowUserToAddRows = false;
             this.grdPro.AllowUserToDeleteRows = false;
             this.grdPro.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdPro.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle47.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle47.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle47.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle47.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle47.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdPro.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle47;
             this.grdPro.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdPro.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colChkPro,
@@ -428,20 +412,20 @@
             this.colProductUomName,
             this.colSeq,
             this.colProductTypeName});
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdPro.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle56.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle56.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle56.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle56.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle56.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle56.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdPro.DefaultCellStyle = dataGridViewCellStyle56;
             this.grdPro.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdPro.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdPro.Location = new System.Drawing.Point(0, 0);
             this.grdPro.MultiSelect = false;
             this.grdPro.Name = "grdPro";
-            this.grdPro.Size = new System.Drawing.Size(870, 494);
+            this.grdPro.Size = new System.Drawing.Size(870, 506);
             this.grdPro.TabIndex = 166;
             this.grdPro.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdPro_RowPostPaint);
             // 
@@ -456,8 +440,8 @@
             // colProductID
             // 
             this.colProductID.DataPropertyName = "ProductID";
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductID.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle48.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductID.DefaultCellStyle = dataGridViewCellStyle48;
             this.colProductID.HeaderText = "รหัสสินค้า";
             this.colProductID.Name = "colProductID";
             this.colProductID.ReadOnly = true;
@@ -467,21 +451,21 @@
             // 
             // colProductName
             // 
+            this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle49.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle49;
             this.colProductName.HeaderText = "ชื่อสินค้า";
             this.colProductName.MaxInputLength = 100;
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
             this.colProductName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colProductName.Width = 270;
             // 
             // colProductRefCode
             // 
             this.colProductRefCode.DataPropertyName = "ProductRefCode";
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductRefCode.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle50.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductRefCode.DefaultCellStyle = dataGridViewCellStyle50;
             this.colProductRefCode.HeaderText = "รหัส SAPCode";
             this.colProductRefCode.MaxInputLength = 20;
             this.colProductRefCode.Name = "colProductRefCode";
@@ -491,8 +475,8 @@
             // colProductShortName
             // 
             this.colProductShortName.DataPropertyName = "ProductShortName";
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductShortName.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle51.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductShortName.DefaultCellStyle = dataGridViewCellStyle51;
             this.colProductShortName.HeaderText = "ชื่อย่อ";
             this.colProductShortName.Name = "colProductShortName";
             this.colProductShortName.ReadOnly = true;
@@ -502,8 +486,8 @@
             // colProductSubGroupName
             // 
             this.colProductSubGroupName.DataPropertyName = "ProductSubGroupName";
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductSubGroupName.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle52.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductSubGroupName.DefaultCellStyle = dataGridViewCellStyle52;
             this.colProductSubGroupName.HeaderText = "กลุ่มย่อยสินค้า";
             this.colProductSubGroupName.MaxInputLength = 50;
             this.colProductSubGroupName.Name = "colProductSubGroupName";
@@ -514,8 +498,8 @@
             // colProductUomName
             // 
             this.colProductUomName.DataPropertyName = "ProductUomName";
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductUomName.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle53.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductUomName.DefaultCellStyle = dataGridViewCellStyle53;
             this.colProductUomName.HeaderText = "หน่วยเล็ก";
             this.colProductUomName.MaxInputLength = 50;
             this.colProductUomName.Name = "colProductUomName";
@@ -526,9 +510,9 @@
             // colSeq
             // 
             this.colSeq.DataPropertyName = "Seq";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSeq.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle54.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSeq.DefaultCellStyle = dataGridViewCellStyle54;
             this.colSeq.HeaderText = "ลำดับ";
             this.colSeq.MaxInputLength = 5;
             this.colSeq.Name = "colSeq";
@@ -539,8 +523,8 @@
             // colProductTypeName
             // 
             this.colProductTypeName.DataPropertyName = "ProductTypeName";
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle55.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle55;
             this.colProductTypeName.HeaderText = "ประเภทสินค้า";
             this.colProductTypeName.MaxInputLength = 50;
             this.colProductTypeName.Name = "colProductTypeName";
@@ -564,9 +548,9 @@
             this.lbl_qty_Product.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.lbl_qty_Product.Location = new System.Drawing.Point(101, 6);
             this.lbl_qty_Product.Name = "lbl_qty_Product";
-            this.lbl_qty_Product.Size = new System.Drawing.Size(12, 16);
+            this.lbl_qty_Product.Size = new System.Drawing.Size(15, 16);
             this.lbl_qty_Product.TabIndex = 5;
-            this.lbl_qty_Product.Text = ".";
+            this.lbl_qty_Product.Text = "0";
             // 
             // label7
             // 
@@ -582,27 +566,17 @@
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.Azure;
             this.pnlSearch.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pnlSearch.Controls.Add(this.chkBoxSelectPro);
             this.pnlSearch.Controls.Add(this.btnSearch);
+            this.pnlSearch.Controls.Add(this.txtSearch);
+            this.pnlSearch.Controls.Add(this.label27);
+            this.pnlSearch.Controls.Add(this.chkBoxSelectPro);
             this.pnlSearch.Controls.Add(this.panel8);
             this.pnlSearch.Controls.Add(this.label26);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSearch.Location = new System.Drawing.Point(0, 0);
             this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Size = new System.Drawing.Size(870, 82);
+            this.pnlSearch.Size = new System.Drawing.Size(870, 70);
             this.pnlSearch.TabIndex = 200;
-            // 
-            // chkBoxSelectPro
-            // 
-            this.chkBoxSelectPro.AutoSize = true;
-            this.chkBoxSelectPro.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.chkBoxSelectPro.Location = new System.Drawing.Point(13, 48);
-            this.chkBoxSelectPro.Name = "chkBoxSelectPro";
-            this.chkBoxSelectPro.Size = new System.Drawing.Size(140, 20);
-            this.chkBoxSelectPro.TabIndex = 224;
-            this.chkBoxSelectPro.Text = "เลือกส่งข้อมูลทั้งหมด";
-            this.chkBoxSelectPro.UseVisualStyleBackColor = true;
-            this.chkBoxSelectPro.CheckedChanged += new System.EventHandler(this.chkBoxSelectAll_Data_CheckedChanged);
             // 
             // btnSearch
             // 
@@ -611,16 +585,48 @@
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
+            this.btnSearch.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(223, 12);
+            this.btnSearch.Location = new System.Drawing.Point(617, 7);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(83, 26);
-            this.btnSearch.TabIndex = 222;
-            this.btnSearch.Text = "Refresh";
+            this.btnSearch.Size = new System.Drawing.Size(69, 26);
+            this.btnSearch.TabIndex = 2;
+            this.btnSearch.Text = "ค้นหา";
             this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.txtSearch.Location = new System.Drawing.Point(244, 9);
+            this.txtSearch.MaxLength = 100;
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(366, 23);
+            this.txtSearch.TabIndex = 1;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label27.Location = new System.Drawing.Point(174, 10);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(69, 16);
+            this.label27.TabIndex = 226;
+            this.label27.Text = "คำค้นหา  : ";
+            // 
+            // chkBoxSelectPro
+            // 
+            this.chkBoxSelectPro.AutoSize = true;
+            this.chkBoxSelectPro.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.chkBoxSelectPro.Location = new System.Drawing.Point(30, 39);
+            this.chkBoxSelectPro.Name = "chkBoxSelectPro";
+            this.chkBoxSelectPro.Size = new System.Drawing.Size(140, 20);
+            this.chkBoxSelectPro.TabIndex = 5;
+            this.chkBoxSelectPro.Text = "เลือกส่งข้อมูลทั้งหมด";
+            this.chkBoxSelectPro.UseVisualStyleBackColor = true;
+            this.chkBoxSelectPro.Click += new System.EventHandler(this.chkBoxSelectPro_Click);
             // 
             // panel8
             // 
@@ -628,9 +634,9 @@
             this.panel8.Controls.Add(this.rdoC);
             this.panel8.Controls.Add(this.rdoN);
             this.panel8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.panel8.Location = new System.Drawing.Point(83, 12);
+            this.panel8.Location = new System.Drawing.Point(477, 36);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(134, 25);
+            this.panel8.Size = new System.Drawing.Size(133, 25);
             this.panel8.TabIndex = 220;
             // 
             // rdoC
@@ -640,7 +646,7 @@
             this.rdoC.Location = new System.Drawing.Point(67, 3);
             this.rdoC.Name = "rdoC";
             this.rdoC.Size = new System.Drawing.Size(62, 20);
-            this.rdoC.TabIndex = 18;
+            this.rdoC.TabIndex = 4;
             this.rdoC.Text = "ยกเลิก";
             this.rdoC.UseVisualStyleBackColor = true;
             // 
@@ -653,7 +659,7 @@
             this.rdoN.Location = new System.Drawing.Point(4, 3);
             this.rdoN.Name = "rdoN";
             this.rdoN.Size = new System.Drawing.Size(50, 20);
-            this.rdoN.TabIndex = 17;
+            this.rdoN.TabIndex = 3;
             this.rdoN.TabStop = true;
             this.rdoN.Text = "ปกติ";
             this.rdoN.UseVisualStyleBackColor = false;
@@ -662,7 +668,7 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label26.Location = new System.Drawing.Point(16, 16);
+            this.label26.Location = new System.Drawing.Point(410, 40);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(61, 16);
             this.label26.TabIndex = 219;
@@ -932,6 +938,26 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
+            // btnSearchBranch
+            // 
+            this.btnSearchBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearchBranch.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchBranch.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchBranch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchBranch.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnSearchBranch.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearchBranch.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnSearchBranch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchBranch.Location = new System.Drawing.Point(298, 4);
+            this.btnSearchBranch.Name = "btnSearchBranch";
+            this.btnSearchBranch.Size = new System.Drawing.Size(69, 26);
+            this.btnSearchBranch.TabIndex = 2;
+            this.btnSearchBranch.Text = "ค้นหา";
+            this.btnSearchBranch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchBranch.UseVisualStyleBackColor = false;
+            this.btnSearchBranch.Click += new System.EventHandler(this.btnSearchBranch_Click);
+            // 
             // frmSendProductInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1010,22 +1036,23 @@
         private System.Windows.Forms.Label lbl_qty_Product;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Panel pnlSearch;
-        private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.RadioButton rdoC;
-        private System.Windows.Forms.RadioButton rdoN;
-        private System.Windows.Forms.Label label26;
         private System.Windows.Forms.DataGridView grdPro;
         private System.Windows.Forms.CheckBox chkBoxSelectPro;
         private System.Windows.Forms.Button btnCancelSend;
         private System.Windows.Forms.Button btnSendData;
-        private System.Windows.Forms.Button btnRefresh_Branch;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colChkBranch;
         private System.Windows.Forms.DataGridViewImageColumn colPic;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBranchID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBranchRefCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBranchName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOnlineStatus;
+        private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.RadioButton rdoC;
+        private System.Windows.Forms.RadioButton rdoN;
+        private System.Windows.Forms.Label label26;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colChkPro;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
@@ -1035,5 +1062,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductUomName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSeq;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductTypeName;
+        private System.Windows.Forms.Button btnSearchBranch;
     }
 }

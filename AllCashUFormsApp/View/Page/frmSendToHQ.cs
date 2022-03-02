@@ -15,6 +15,8 @@ namespace AllCashUFormsApp.View.Page
 {
     public partial class frmSendToHQ : Form
     {
+        CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
+
         MenuBU menuBU = new MenuBU();
         SendToHQ bu = new SendToHQ();
         DataTable dt = new DataTable();
@@ -101,6 +103,8 @@ namespace AllCashUFormsApp.View.Page
             if (!cfMsg.ConfirmMessageBox(title))
                 return;
 
+            isComplete = true;
+            isCancel = false;
             bool connectFlag = bu.VerifyHQConnection();
             if (!connectFlag)
             {
@@ -201,8 +205,7 @@ namespace AllCashUFormsApp.View.Page
                 //    cn.Close();
                 //}
 
-                if (!isCancel)
-                    isComplete = true;
+                isComplete = true;
             }
             catch (Exception ex)
             {
@@ -223,13 +226,21 @@ namespace AllCashUFormsApp.View.Page
             if (isComplete)
             {
                 msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
-            }    
+
+                //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+
+                var cdate = DateTime.Now.ToString("dd/MM/yyyy", cultures);
+
+                FormHelper.CreateAndSendMail("พบการ ส่งข้อมูลเข้า Data Center", bu.tbl_Branchs[0].BranchName, cdate);
+
+                //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+            }
             else
             {
-                msg = "เกิดข้อผิดพลาดในการ Migrate ข้อมูล กรุณาลองใหม่อีกครั้งหรือติดต่อ IT Support!!!";
+                msg = "เกิดข้อผิดพลาดในการ ส่งข้อมูล กรุณาลองใหม่อีกครั้งหรือติดต่อ IT Support!!!";
                 if (isCancel)
                 {
-                    msg = "ยกเลิก Migrate ข้อมูลแล้ว!!!";
+                    msg = "ยกเลิก ส่งข้อมูลเรียบร้อยแล้ว!!!";
                 }
             }
             

@@ -40,21 +40,14 @@ namespace AllCashUFormsApp.View.Page
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel4 = new System.Windows.Forms.Panel();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
-            this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
-            this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
-            this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
-            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
-            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
-            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
-            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
-            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlBackground = new System.Windows.Forms.Panel();
             this.tabPage = new System.Windows.Forms.TabControl();
@@ -104,6 +97,33 @@ namespace AllCashUFormsApp.View.Page
             this.pnlTransferEmp_Manage = new System.Windows.Forms.Panel();
             this.btnClearGrdData = new System.Windows.Forms.Button();
             this.btnSaveBranchWH = new System.Windows.Forms.Button();
+            this.tabVan = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.sprcEmployee = new System.Windows.Forms.SplitContainer();
+            this.grdSpecialVan = new System.Windows.Forms.DataGridView();
+            this.colWHIDFrom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colWHIDTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.lblgrdQty = new System.Windows.Forms.Label();
+            this.lblCountgrdList = new System.Windows.Forms.Label();
+            this.pnlEdit = new System.Windows.Forms.Panel();
+            this.txtToWHName = new System.Windows.Forms.TextBox();
+            this.txtToWHCode = new System.Windows.Forms.TextBox();
+            this.btnSearchToWHCode = new System.Windows.Forms.Button();
+            this.lblToWHCode = new System.Windows.Forms.Label();
+            this.txtFromWHName = new System.Windows.Forms.TextBox();
+            this.txtFromWHCode = new System.Windows.Forms.TextBox();
+            this.btnSearchFromWHCode = new System.Windows.Forms.Button();
+            this.lblFromWHCode = new System.Windows.Forms.Label();
+            this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
+            this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
+            this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
+            this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
+            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
+            this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
+            this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
+            this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
+            this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel2.SuspendLayout();
@@ -122,6 +142,15 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCenter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdSaleEmp)).BeginInit();
             this.pnlTransferEmp_Manage.SuspendLayout();
+            this.tabVan.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sprcEmployee)).BeginInit();
+            this.sprcEmployee.Panel1.SuspendLayout();
+            this.sprcEmployee.Panel2.SuspendLayout();
+            this.sprcEmployee.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdSpecialVan)).BeginInit();
+            this.panel13.SuspendLayout();
+            this.pnlEdit.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel4
@@ -194,183 +223,6 @@ namespace AllCashUFormsApp.View.Page
             this.panel6.Size = new System.Drawing.Size(1362, 42);
             this.panel6.TabIndex = 44;
             // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnClose.BackColor = System.Drawing.Color.Azure;
-            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.Color.Black;
-            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(596, 2);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(57, 23);
-            this.btnClose.TabIndex = 17;
-            this.btnClose.Text = "ออก";
-            this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAdd.BackColor = System.Drawing.Color.Azure;
-            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.FlatAppearance.BorderSize = 0;
-            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.ForeColor = System.Drawing.Color.Black;
-            this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
-            this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdd.Location = new System.Drawing.Point(3, 2);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(56, 23);
-            this.btnAdd.TabIndex = 23;
-            this.btnAdd.Text = "เพิ่ม";
-            this.btnAdd.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnAdd.UseVisualStyleBackColor = false;
-            // 
-            // btnExcel
-            // 
-            this.btnExcel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnExcel.BackColor = System.Drawing.Color.Azure;
-            this.btnExcel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnExcel.Enabled = false;
-            this.btnExcel.FlatAppearance.BorderSize = 0;
-            this.btnExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExcel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExcel.ForeColor = System.Drawing.Color.Black;
-            this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
-            this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(481, 2);
-            this.btnExcel.Name = "btnExcel";
-            this.btnExcel.Size = new System.Drawing.Size(109, 23);
-            this.btnExcel.TabIndex = 17;
-            this.btnExcel.Text = "Import Excel";
-            this.btnExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExcel.UseVisualStyleBackColor = false;
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnEdit.BackColor = System.Drawing.Color.Azure;
-            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEdit.FlatAppearance.BorderSize = 0;
-            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEdit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEdit.ForeColor = System.Drawing.Color.Black;
-            this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
-            this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEdit.Location = new System.Drawing.Point(65, 2);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(63, 23);
-            this.btnEdit.TabIndex = 25;
-            this.btnEdit.Text = "แก้ไข";
-            this.btnEdit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnEdit.UseVisualStyleBackColor = false;
-            // 
-            // btnPrint
-            // 
-            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrint.BackColor = System.Drawing.Color.Azure;
-            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPrint.Enabled = false;
-            this.btnPrint.FlatAppearance.BorderSize = 0;
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrint.ForeColor = System.Drawing.Color.Black;
-            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
-            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrint.Location = new System.Drawing.Point(414, 2);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(61, 23);
-            this.btnPrint.TabIndex = 17;
-            this.btnPrint.Text = "พิมพ์";
-            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPrint.UseVisualStyleBackColor = false;
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnRemove.BackColor = System.Drawing.Color.Azure;
-            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRemove.Enabled = false;
-            this.btnRemove.FlatAppearance.BorderSize = 0;
-            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.ForeColor = System.Drawing.Color.Black;
-            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
-            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemove.Location = new System.Drawing.Point(134, 2);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(49, 23);
-            this.btnRemove.TabIndex = 25;
-            this.btnRemove.Text = "ลบ";
-            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRemove.UseVisualStyleBackColor = false;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCancel.BackColor = System.Drawing.Color.Azure;
-            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.ForeColor = System.Drawing.Color.Black;
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(340, 2);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(68, 23);
-            this.btnCancel.TabIndex = 17;
-            this.btnCancel.Text = "ยกเลิก";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            // 
-            // btnCopy
-            // 
-            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCopy.BackColor = System.Drawing.Color.Azure;
-            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCopy.Enabled = false;
-            this.btnCopy.FlatAppearance.BorderSize = 0;
-            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCopy.ForeColor = System.Drawing.Color.Black;
-            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCopy.Location = new System.Drawing.Point(189, 2);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(75, 23);
-            this.btnCopy.TabIndex = 25;
-            this.btnCopy.Text = "คัดลอก";
-            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCopy.UseVisualStyleBackColor = false;
-            // 
-            // btnSave
-            // 
-            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSave.BackColor = System.Drawing.Color.Azure;
-            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSave.FlatAppearance.BorderSize = 0;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.ForeColor = System.Drawing.Color.Black;
-            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
-            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(270, 2);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(64, 23);
-            this.btnSave.TabIndex = 24;
-            this.btnSave.Text = "บันทึก";
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnSave.UseVisualStyleBackColor = false;
-            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -401,6 +253,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.tabPage.Controls.Add(this.tabTransferSalArea);
             this.tabPage.Controls.Add(this.tabTransferEmp);
+            this.tabPage.Controls.Add(this.tabVan);
             this.tabPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabPage.Location = new System.Drawing.Point(0, 0);
             this.tabPage.Name = "tabPage";
@@ -808,7 +661,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlBackgroundTransferEmp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBackgroundTransferEmp.Location = new System.Drawing.Point(3, 3);
             this.pnlBackgroundTransferEmp.Name = "pnlBackgroundTransferEmp";
-            this.pnlBackgroundTransferEmp.Size = new System.Drawing.Size(1264, 631);
+            this.pnlBackgroundTransferEmp.Size = new System.Drawing.Size(1264, 634);
             this.pnlBackgroundTransferEmp.TabIndex = 1;
             // 
             // pnlCenter
@@ -818,7 +671,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCenter.Location = new System.Drawing.Point(0, 48);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(1264, 583);
+            this.pnlCenter.Size = new System.Drawing.Size(1264, 586);
             this.pnlCenter.TabIndex = 3;
             // 
             // grdSaleEmp
@@ -840,7 +693,7 @@ namespace AllCashUFormsApp.View.Page
             this.grdSaleEmp.Location = new System.Drawing.Point(0, 0);
             this.grdSaleEmp.Name = "grdSaleEmp";
             this.grdSaleEmp.ReadOnly = true;
-            this.grdSaleEmp.Size = new System.Drawing.Size(1264, 583);
+            this.grdSaleEmp.Size = new System.Drawing.Size(1264, 586);
             this.grdSaleEmp.TabIndex = 0;
             this.grdSaleEmp.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSaleEmp_CellContentClick);
             this.grdSaleEmp.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSaleEmp_RowPostPaint);
@@ -1004,6 +857,411 @@ namespace AllCashUFormsApp.View.Page
             this.btnSaveBranchWH.UseVisualStyleBackColor = false;
             this.btnSaveBranchWH.Click += new System.EventHandler(this.btnSaveBranchWH_Click);
             // 
+            // tabVan
+            // 
+            this.tabVan.Controls.Add(this.panel3);
+            this.tabVan.Location = new System.Drawing.Point(4, 25);
+            this.tabVan.Name = "tabVan";
+            this.tabVan.Padding = new System.Windows.Forms.Padding(3);
+            this.tabVan.Size = new System.Drawing.Size(1270, 637);
+            this.tabVan.TabIndex = 2;
+            this.tabVan.Text = "ผ่าแวน";
+            this.tabVan.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Azure;
+            this.panel3.Controls.Add(this.sprcEmployee);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1264, 631);
+            this.panel3.TabIndex = 2;
+            // 
+            // sprcEmployee
+            // 
+            this.sprcEmployee.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sprcEmployee.Location = new System.Drawing.Point(0, 0);
+            this.sprcEmployee.Name = "sprcEmployee";
+            // 
+            // sprcEmployee.Panel1
+            // 
+            this.sprcEmployee.Panel1.Controls.Add(this.grdSpecialVan);
+            this.sprcEmployee.Panel1.Controls.Add(this.panel13);
+            // 
+            // sprcEmployee.Panel2
+            // 
+            this.sprcEmployee.Panel2.Controls.Add(this.pnlEdit);
+            this.sprcEmployee.Panel2MinSize = 550;
+            this.sprcEmployee.Size = new System.Drawing.Size(1264, 631);
+            this.sprcEmployee.SplitterDistance = 628;
+            this.sprcEmployee.TabIndex = 1;
+            // 
+            // grdSpecialVan
+            // 
+            this.grdSpecialVan.AllowUserToAddRows = false;
+            this.grdSpecialVan.AllowUserToDeleteRows = false;
+            this.grdSpecialVan.AllowUserToResizeRows = false;
+            this.grdSpecialVan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.grdSpecialVan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colWHIDFrom,
+            this.colWHIDTo});
+            this.grdSpecialVan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdSpecialVan.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.grdSpecialVan.Location = new System.Drawing.Point(0, 0);
+            this.grdSpecialVan.MultiSelect = false;
+            this.grdSpecialVan.Name = "grdSpecialVan";
+            this.grdSpecialVan.ReadOnly = true;
+            this.grdSpecialVan.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdSpecialVan.Size = new System.Drawing.Size(628, 602);
+            this.grdSpecialVan.TabIndex = 165;
+            this.grdSpecialVan.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSpecialVan_CellClick);
+            this.grdSpecialVan.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSpecialVan_RowPostPaint);
+            this.grdSpecialVan.SelectionChanged += new System.EventHandler(this.grdSpecialVan_SelectionChanged);
+            // 
+            // colWHIDFrom
+            // 
+            this.colWHIDFrom.DataPropertyName = "WHIDFrom";
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHIDFrom.DefaultCellStyle = dataGridViewCellStyle10;
+            this.colWHIDFrom.HeaderText = "VAN (ต้นทาง)";
+            this.colWHIDFrom.MaxInputLength = 10;
+            this.colWHIDFrom.Name = "colWHIDFrom";
+            this.colWHIDFrom.ReadOnly = true;
+            this.colWHIDFrom.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colWHIDFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colWHIDFrom.Width = 293;
+            // 
+            // colWHIDTo
+            // 
+            this.colWHIDTo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colWHIDTo.DataPropertyName = "WHIDTo";
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHIDTo.DefaultCellStyle = dataGridViewCellStyle11;
+            this.colWHIDTo.HeaderText = "VAN (ปลายทาง)";
+            this.colWHIDTo.MaxInputLength = 10;
+            this.colWHIDTo.Name = "colWHIDTo";
+            this.colWHIDTo.ReadOnly = true;
+            this.colWHIDTo.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colWHIDTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // panel13
+            // 
+            this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel13.Controls.Add(this.lblgrdQty);
+            this.panel13.Controls.Add(this.lblCountgrdList);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel13.Location = new System.Drawing.Point(0, 602);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(628, 29);
+            this.panel13.TabIndex = 164;
+            // 
+            // lblgrdQty
+            // 
+            this.lblgrdQty.AutoSize = true;
+            this.lblgrdQty.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.lblgrdQty.Location = new System.Drawing.Point(94, 3);
+            this.lblgrdQty.Name = "lblgrdQty";
+            this.lblgrdQty.Size = new System.Drawing.Size(15, 16);
+            this.lblgrdQty.TabIndex = 3;
+            this.lblgrdQty.Text = "0";
+            // 
+            // lblCountgrdList
+            // 
+            this.lblCountgrdList.AutoSize = true;
+            this.lblCountgrdList.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.lblCountgrdList.Location = new System.Drawing.Point(5, 3);
+            this.lblCountgrdList.Name = "lblCountgrdList";
+            this.lblCountgrdList.Size = new System.Drawing.Size(83, 16);
+            this.lblCountgrdList.TabIndex = 2;
+            this.lblCountgrdList.Text = "จำนวนรายการ";
+            // 
+            // pnlEdit
+            // 
+            this.pnlEdit.BackColor = System.Drawing.Color.Azure;
+            this.pnlEdit.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlEdit.Controls.Add(this.txtToWHName);
+            this.pnlEdit.Controls.Add(this.txtToWHCode);
+            this.pnlEdit.Controls.Add(this.btnSearchToWHCode);
+            this.pnlEdit.Controls.Add(this.lblToWHCode);
+            this.pnlEdit.Controls.Add(this.txtFromWHName);
+            this.pnlEdit.Controls.Add(this.txtFromWHCode);
+            this.pnlEdit.Controls.Add(this.btnSearchFromWHCode);
+            this.pnlEdit.Controls.Add(this.lblFromWHCode);
+            this.pnlEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlEdit.Location = new System.Drawing.Point(0, 0);
+            this.pnlEdit.Name = "pnlEdit";
+            this.pnlEdit.Size = new System.Drawing.Size(632, 631);
+            this.pnlEdit.TabIndex = 153;
+            // 
+            // txtToWHName
+            // 
+            this.txtToWHName.Location = new System.Drawing.Point(288, 39);
+            this.txtToWHName.MaxLength = 200;
+            this.txtToWHName.Name = "txtToWHName";
+            this.txtToWHName.ReadOnly = true;
+            this.txtToWHName.Size = new System.Drawing.Size(285, 23);
+            this.txtToWHName.TabIndex = 217;
+            // 
+            // txtToWHCode
+            // 
+            this.txtToWHCode.Location = new System.Drawing.Point(123, 39);
+            this.txtToWHCode.MaxLength = 6;
+            this.txtToWHCode.Name = "txtToWHCode";
+            this.txtToWHCode.Size = new System.Drawing.Size(123, 23);
+            this.txtToWHCode.TabIndex = 2;
+            this.txtToWHCode.TextChanged += new System.EventHandler(this.txtToWHCode_TextChanged);
+            // 
+            // btnSearchToWHCode
+            // 
+            this.btnSearchToWHCode.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchToWHCode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchToWHCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchToWHCode.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnSearchToWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchToWHCode.Image")));
+            this.btnSearchToWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchToWHCode.Location = new System.Drawing.Point(248, 39);
+            this.btnSearchToWHCode.Name = "btnSearchToWHCode";
+            this.btnSearchToWHCode.Size = new System.Drawing.Size(35, 23);
+            this.btnSearchToWHCode.TabIndex = 216;
+            this.btnSearchToWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchToWHCode.UseVisualStyleBackColor = false;
+            this.btnSearchToWHCode.Click += new System.EventHandler(this.btnSearchToWHCode_Click);
+            // 
+            // lblToWHCode
+            // 
+            this.lblToWHCode.AutoSize = true;
+            this.lblToWHCode.Location = new System.Drawing.Point(29, 42);
+            this.lblToWHCode.Name = "lblToWHCode";
+            this.lblToWHCode.Size = new System.Drawing.Size(94, 16);
+            this.lblToWHCode.TabIndex = 219;
+            this.lblToWHCode.Text = "คลังปลายทาง : ";
+            // 
+            // txtFromWHName
+            // 
+            this.txtFromWHName.Location = new System.Drawing.Point(288, 13);
+            this.txtFromWHName.MaxLength = 200;
+            this.txtFromWHName.Name = "txtFromWHName";
+            this.txtFromWHName.ReadOnly = true;
+            this.txtFromWHName.Size = new System.Drawing.Size(285, 23);
+            this.txtFromWHName.TabIndex = 214;
+            // 
+            // txtFromWHCode
+            // 
+            this.txtFromWHCode.Location = new System.Drawing.Point(123, 13);
+            this.txtFromWHCode.MaxLength = 6;
+            this.txtFromWHCode.Name = "txtFromWHCode";
+            this.txtFromWHCode.Size = new System.Drawing.Size(123, 23);
+            this.txtFromWHCode.TabIndex = 1;
+            this.txtFromWHCode.TextChanged += new System.EventHandler(this.txtFromWHCode_TextChanged);
+            // 
+            // btnSearchFromWHCode
+            // 
+            this.btnSearchFromWHCode.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearchFromWHCode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearchFromWHCode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchFromWHCode.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnSearchFromWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchFromWHCode.Image")));
+            this.btnSearchFromWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchFromWHCode.Location = new System.Drawing.Point(248, 13);
+            this.btnSearchFromWHCode.Name = "btnSearchFromWHCode";
+            this.btnSearchFromWHCode.Size = new System.Drawing.Size(35, 23);
+            this.btnSearchFromWHCode.TabIndex = 213;
+            this.btnSearchFromWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearchFromWHCode.UseVisualStyleBackColor = false;
+            this.btnSearchFromWHCode.Click += new System.EventHandler(this.btnSearchFromWHCode_Click);
+            // 
+            // lblFromWHCode
+            // 
+            this.lblFromWHCode.AutoSize = true;
+            this.lblFromWHCode.Location = new System.Drawing.Point(43, 16);
+            this.lblFromWHCode.Name = "lblFromWHCode";
+            this.lblFromWHCode.Size = new System.Drawing.Size(80, 16);
+            this.lblFromWHCode.TabIndex = 218;
+            this.lblFromWHCode.Text = "คลังต้นทาง : ";
+            // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnClose.BackColor = System.Drawing.Color.Azure;
+            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Black;
+            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnClose.Location = new System.Drawing.Point(596, 2);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(57, 23);
+            this.btnClose.TabIndex = 17;
+            this.btnClose.Text = "ออก";
+            this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnAdd.BackColor = System.Drawing.Color.Azure;
+            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAdd.FlatAppearance.BorderSize = 0;
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.ForeColor = System.Drawing.Color.Black;
+            this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
+            this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdd.Location = new System.Drawing.Point(3, 2);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(56, 23);
+            this.btnAdd.TabIndex = 23;
+            this.btnAdd.Text = "เพิ่ม";
+            this.btnAdd.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // btnExcel
+            // 
+            this.btnExcel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnExcel.BackColor = System.Drawing.Color.Azure;
+            this.btnExcel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExcel.Enabled = false;
+            this.btnExcel.FlatAppearance.BorderSize = 0;
+            this.btnExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExcel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExcel.ForeColor = System.Drawing.Color.Black;
+            this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
+            this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExcel.Location = new System.Drawing.Point(481, 2);
+            this.btnExcel.Name = "btnExcel";
+            this.btnExcel.Size = new System.Drawing.Size(109, 23);
+            this.btnExcel.TabIndex = 17;
+            this.btnExcel.Text = "Import Excel";
+            this.btnExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnExcel.UseVisualStyleBackColor = false;
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnEdit.BackColor = System.Drawing.Color.Azure;
+            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEdit.FlatAppearance.BorderSize = 0;
+            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEdit.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.ForeColor = System.Drawing.Color.Black;
+            this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
+            this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEdit.Location = new System.Drawing.Point(65, 2);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(63, 23);
+            this.btnEdit.TabIndex = 25;
+            this.btnEdit.Text = "แก้ไข";
+            this.btnEdit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnEdit.UseVisualStyleBackColor = false;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrint.BackColor = System.Drawing.Color.Azure;
+            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrint.Enabled = false;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrint.ForeColor = System.Drawing.Color.Black;
+            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
+            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrint.Location = new System.Drawing.Point(414, 2);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(61, 23);
+            this.btnPrint.TabIndex = 17;
+            this.btnPrint.Text = "พิมพ์";
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnRemove.BackColor = System.Drawing.Color.Azure;
+            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRemove.Enabled = false;
+            this.btnRemove.FlatAppearance.BorderSize = 0;
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemove.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemove.ForeColor = System.Drawing.Color.Black;
+            this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
+            this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRemove.Location = new System.Drawing.Point(134, 2);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(49, 23);
+            this.btnRemove.TabIndex = 25;
+            this.btnRemove.Text = "ลบ";
+            this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCancel.BackColor = System.Drawing.Color.Azure;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(340, 2);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(68, 23);
+            this.btnCancel.TabIndex = 17;
+            this.btnCancel.Text = "ยกเลิก";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCopy.BackColor = System.Drawing.Color.Azure;
+            this.btnCopy.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCopy.Enabled = false;
+            this.btnCopy.FlatAppearance.BorderSize = 0;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCopy.ForeColor = System.Drawing.Color.Black;
+            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
+            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCopy.Location = new System.Drawing.Point(189, 2);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(75, 23);
+            this.btnCopy.TabIndex = 25;
+            this.btnCopy.Text = "คัดลอก";
+            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCopy.UseVisualStyleBackColor = false;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSave.BackColor = System.Drawing.Color.Azure;
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.FlatAppearance.BorderSize = 0;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.ForeColor = System.Drawing.Color.Black;
+            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
+            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSave.Location = new System.Drawing.Point(270, 2);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(64, 23);
+            this.btnSave.TabIndex = 24;
+            this.btnSave.Text = "บันทึก";
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // frmSalesTransfer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1041,6 +1299,17 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCenter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdSaleEmp)).EndInit();
             this.pnlTransferEmp_Manage.ResumeLayout(false);
+            this.tabVan.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.sprcEmployee.Panel1.ResumeLayout(false);
+            this.sprcEmployee.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.sprcEmployee)).EndInit();
+            this.sprcEmployee.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdSpecialVan)).EndInit();
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            this.pnlEdit.ResumeLayout(false);
+            this.pnlEdit.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1111,5 +1380,23 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.DataGridViewTextBoxColumn colEmployeeName;
         private System.Windows.Forms.DataGridViewButtonColumn colSearch;
         private System.Windows.Forms.DataGridViewButtonColumn colClearData;
+        private System.Windows.Forms.TabPage tabVan;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.SplitContainer sprcEmployee;
+        private System.Windows.Forms.DataGridView grdSpecialVan;
+        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Label lblgrdQty;
+        private System.Windows.Forms.Label lblCountgrdList;
+        private System.Windows.Forms.Panel pnlEdit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colWHIDFrom;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colWHIDTo;
+        private System.Windows.Forms.TextBox txtToWHName;
+        private System.Windows.Forms.TextBox txtToWHCode;
+        private System.Windows.Forms.Button btnSearchToWHCode;
+        private System.Windows.Forms.Label lblToWHCode;
+        private System.Windows.Forms.TextBox txtFromWHName;
+        private System.Windows.Forms.TextBox txtFromWHCode;
+        private System.Windows.Forms.Button btnSearchFromWHCode;
+        private System.Windows.Forms.Label lblFromWHCode;
     }
 }

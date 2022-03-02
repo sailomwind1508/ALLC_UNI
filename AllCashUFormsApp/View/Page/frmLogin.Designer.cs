@@ -36,14 +36,15 @@ namespace AllCashUFormsApp.View.Page
             this.Login_Logo = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.cbDepo = new System.Windows.Forms.ComboBox();
             this.lblVersion = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblcopyR2 = new System.Windows.Forms.Label();
             this.lblcopyR1 = new System.Windows.Forms.Label();
             this.lblDepo = new System.Windows.Forms.Label();
-            this.cbDepo = new System.Windows.Forms.ComboBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
@@ -52,6 +53,8 @@ namespace AllCashUFormsApp.View.Page
             ((System.ComponentModel.ISupportInitialize)(this.Login_Logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -87,14 +90,15 @@ namespace AllCashUFormsApp.View.Page
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Azure;
-            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.pictureBox2);
+            this.panel2.Controls.Add(this.pictureBox3);
+            this.panel2.Controls.Add(this.cbDepo);
             this.panel2.Controls.Add(this.lblVersion);
             this.panel2.Controls.Add(this.btnClose);
             this.panel2.Controls.Add(this.btnLogin);
             this.panel2.Controls.Add(this.lblcopyR2);
             this.panel2.Controls.Add(this.lblcopyR1);
             this.panel2.Controls.Add(this.lblDepo);
-            this.panel2.Controls.Add(this.cbDepo);
             this.panel2.Controls.Add(this.txtPassword);
             this.panel2.Controls.Add(this.txtUserName);
             this.panel2.Controls.Add(this.lblPassword);
@@ -105,27 +109,48 @@ namespace AllCashUFormsApp.View.Page
             this.panel2.Size = new System.Drawing.Size(346, 274);
             this.panel2.TabIndex = 99;
             // 
-            // label1
+            // pictureBox2
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(48, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(255, 29);
-            this.label1.TabIndex = 106;
-            this.label1.Text = "U-FORCE BACK-END";
+            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox2.Location = new System.Drawing.Point(66, 9);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(249, 44);
+            this.pictureBox2.TabIndex = 106;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox3.Location = new System.Drawing.Point(29, 9);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(90, 44);
+            this.pictureBox3.TabIndex = 107;
+            this.pictureBox3.TabStop = false;
+            // 
+            // cbDepo
+            // 
+            this.cbDepo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbDepo.FormattingEnabled = true;
+            this.cbDepo.Location = new System.Drawing.Point(98, 126);
+            this.cbDepo.Name = "cbDepo";
+            this.cbDepo.Size = new System.Drawing.Size(222, 28);
+            this.cbDepo.TabIndex = 3;
+            this.cbDepo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbDepo_KeyDown);
             // 
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblVersion.Location = new System.Drawing.Point(95, 205);
+            this.lblVersion.Location = new System.Drawing.Point(98, 204);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(189, 16);
+            this.lblVersion.Size = new System.Drawing.Size(152, 16);
             this.lblVersion.TabIndex = 105;
-            this.lblVersion.Text = "All Cash Back End Version 1.0.0";
+            this.lblVersion.Text = "U-Force Back End 2.2.3.1";
             // 
             // btnClose
             // 
@@ -137,7 +162,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnClose.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(211, 159);
+            this.btnClose.Location = new System.Drawing.Point(177, 159);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(109, 38);
             this.btnClose.TabIndex = 104;
@@ -156,7 +181,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnLogin.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnLogin.Image = ((System.Drawing.Image)(resources.GetObject("btnLogin.Image")));
             this.btnLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLogin.Location = new System.Drawing.Point(98, 159);
+            this.btnLogin.Location = new System.Drawing.Point(66, 159);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(107, 38);
             this.btnLogin.TabIndex = 103;
@@ -169,42 +194,31 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblcopyR2.AutoSize = true;
             this.lblcopyR2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblcopyR2.Location = new System.Drawing.Point(95, 245);
+            this.lblcopyR2.Location = new System.Drawing.Point(32, 243);
             this.lblcopyR2.Name = "lblcopyR2";
-            this.lblcopyR2.Size = new System.Drawing.Size(203, 16);
+            this.lblcopyR2.Size = new System.Drawing.Size(283, 16);
             this.lblcopyR2.TabIndex = 11;
-            this.lblcopyR2.Text = "Power by IT United Foods Co., Ltd";
+            this.lblcopyR2.Text = "Power by U-Force Team (United Foods Co., Ltd)";
             // 
             // lblcopyR1
             // 
             this.lblcopyR1.AutoSize = true;
             this.lblcopyR1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblcopyR1.Location = new System.Drawing.Point(95, 225);
+            this.lblcopyR1.Location = new System.Drawing.Point(50, 224);
             this.lblcopyR1.Name = "lblcopyR1";
-            this.lblcopyR1.Size = new System.Drawing.Size(212, 16);
+            this.lblcopyR1.Size = new System.Drawing.Size(245, 16);
             this.lblcopyR1.TabIndex = 10;
-            this.lblcopyR1.Text = "Copyright @ 2020 All right reversed";
+            this.lblcopyR1.Text = "Copyright @ 2020-2021 All right reversed";
             // 
             // lblDepo
             // 
             this.lblDepo.AutoSize = true;
             this.lblDepo.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDepo.Location = new System.Drawing.Point(50, 129);
+            this.lblDepo.Location = new System.Drawing.Point(47, 129);
             this.lblDepo.Name = "lblDepo";
-            this.lblDepo.Size = new System.Drawing.Size(42, 19);
+            this.lblDepo.Size = new System.Drawing.Size(53, 19);
             this.lblDepo.TabIndex = 9;
-            this.lblDepo.Text = "เดโป้";
-            // 
-            // cbDepo
-            // 
-            this.cbDepo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDepo.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbDepo.FormattingEnabled = true;
-            this.cbDepo.Location = new System.Drawing.Point(98, 126);
-            this.cbDepo.Name = "cbDepo";
-            this.cbDepo.Size = new System.Drawing.Size(222, 28);
-            this.cbDepo.TabIndex = 3;
-            this.cbDepo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbDepo_KeyDown);
+            this.lblDepo.Text = "เดโป้ :";
             // 
             // txtPassword
             // 
@@ -237,21 +251,21 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPassword.Location = new System.Drawing.Point(28, 98);
+            this.lblPassword.Location = new System.Drawing.Point(25, 98);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(64, 19);
+            this.lblPassword.Size = new System.Drawing.Size(75, 19);
             this.lblPassword.TabIndex = 7;
-            this.lblPassword.Text = "รหัสผ่าน";
+            this.lblPassword.Text = "รหัสผ่าน :";
             // 
             // lblUserName
             // 
             this.lblUserName.AutoSize = true;
             this.lblUserName.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserName.Location = new System.Drawing.Point(10, 66);
+            this.lblUserName.Location = new System.Drawing.Point(7, 66);
             this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(82, 19);
+            this.lblUserName.Size = new System.Drawing.Size(93, 19);
             this.lblUserName.TabIndex = 6;
-            this.lblUserName.Text = "ชื่อผู้ใช้งาน";
+            this.lblUserName.Text = "ชื่อผู้ใช้งาน :";
             // 
             // frmLogin
             // 
@@ -279,6 +293,8 @@ namespace AllCashUFormsApp.View.Page
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -300,6 +316,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblVersion;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }

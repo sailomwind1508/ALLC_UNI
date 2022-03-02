@@ -177,11 +177,14 @@ namespace AllCashUFormsApp
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             grd.DefaultCellStyle = dataGridViewCellStyle2;
+
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
 
         public static void AddDataTableRow(this DataTable _dt, ref DataRow[] filteredRows)
         {
-            foreach (var row in filteredRows)
+            foreach (var row in filteredRows.Distinct())
             {
                 List<object> data = new List<object>();
                 for (int i = 0; i < row.ItemArray.Count(); i++)
@@ -607,11 +610,24 @@ namespace AllCashUFormsApp
             DataGridViewComboBoxCell cboUOM = (DataGridViewComboBoxCell)(cboCell);
             if (prodUOMs != null && prodUOMs.Count > 0)
             {
-                cboUOM.DataSource = prodUOMs;
-                cboUOM.DisplayMember = "ProductUomName";
-                cboUOM.ValueMember = "ProductUomID";
-
                 string prodID = row.Cells[prdCellIndex].EditedFormattedValue.ToString();
+
+                if (prodUOMs.Count > 2)
+                {
+                    var prdUOMs = bu.GetProductUOM(prodID);
+                    if (prdUOMs.Count > 0)
+                    {
+                        cboUOM.DataSource = prdUOMs;
+                        cboUOM.DisplayMember = "ProductUomName";
+                        cboUOM.ValueMember = "ProductUomID";
+                    }
+                }
+                else
+                {
+                    cboUOM.DataSource = prodUOMs;
+                    cboUOM.DisplayMember = "ProductUomName";
+                    cboUOM.ValueMember = "ProductUomID";
+                }
 
                 if (isMinUOM)
                 {
@@ -766,20 +782,28 @@ namespace AllCashUFormsApp
 
         public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex)
         {
-            foreach (var item in dataGridList)
+            try
             {
-                if (item.Key == idIndex)
+                foreach (var item in dataGridList)
                 {
-                    grd.Rows[rowIndex].Cells[item.Key].Value = id;
-                }
-                else
-                {
-                    if (item.Value.ToString() == "combobox")
-                        grd.BindComboBoxCell(allProducts, grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
+                    if (item.Key == idIndex)
+                    {
+                        grd.Rows[rowIndex].Cells[item.Key].Value = id;
+                    }
                     else
-                        grd.Rows[rowIndex].Cells[item.Key].Value = item.Value;
+                    {
+                        if (item.Value.ToString() == "combobox")
+                            grd.BindComboBoxCell(allProducts, grd.Rows[rowIndex], rowIndex, true, item.Key, prodUOMs, frm, bu, prdCellIndex);
+                        else
+                            grd.Rows[rowIndex].Cells[item.Key].Value = item.Value;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                ex.WriteLog(null);
+            }
+            
         }
 
         public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex)
@@ -873,6 +897,23 @@ namespace AllCashUFormsApp
 
             var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
             e.Graphics.DrawString(rowIdx, font, SystemBrushes.ControlText, headerBounds, centerFormat);
+
+            SetDefaultGridViewEvent(grid);
+        }
+
+        public static void SetRowPostPaintUControl(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
+        {
+            var grid = sender as DataGridView;
+            SetDefaultGridViewEvent(grid);
+        }
+
+        private static void SetDefaultGridViewEvent(DataGridView grd)
+        {
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+
+            grd.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(69, 171, 213);
+            grd.EnableHeadersVisualStyles = false;
         }
 
         public static void SetRowPostPaintImage(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
@@ -1090,11 +1131,12 @@ namespace AllCashUFormsApp
         public static bool ValidateEndDay(this DateTimePicker docDate, BaseControl bu)
         {
             bool ret = false;
-            var comp = bu.GetCompany();
+            var comp = bu.tbl_Companies.First(); // bu.GetCompany(); //Last edit by sailom .k 07/02/2022
             DateTime cDate = docDate.Value.ToDateTimeFormat();
 
-            Func<tbl_SaleBranchSummary, bool> predicate = (x => x.BranchID == comp.CompanyCode && x.SaleDate == cDate && x.FlagDel == false);
-            var tbl_SaleBranchSummary = bu.GetSaleBranchSummary(predicate);
+            //Func<tbl_SaleBranchSummary, bool> predicate = (x => x.BranchID == comp.CompanyCode && x.SaleDate == cDate && x.FlagDel == false);
+            //var tbl_SaleBranchSummary = bu.GetSaleBranchSummary(predicate);
+            var tbl_SaleBranchSummary = bu.ValidateCheckEndDay(comp.CompanyCode, cDate); //Last edit by sailom .k 07/02/2022
             if (tbl_SaleBranchSummary != null) // is end day
             {
                 ret = false;

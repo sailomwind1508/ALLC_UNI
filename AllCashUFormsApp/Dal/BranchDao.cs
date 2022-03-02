@@ -196,5 +196,22 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+        public static DataTable GetSendProductInfoPrepareData(this tbl_Branch tbl_Branch)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_SendProductInfo_PrepareData";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }

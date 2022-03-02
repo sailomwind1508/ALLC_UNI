@@ -130,6 +130,8 @@ namespace AllCashUFormsApp.View.Page
             this.txtSearchHQ_Promotion = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.pnlEdit_HQPromotion = new System.Windows.Forms.Panel();
+            this.cbbSaleType = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
             this.mtbRewardID = new System.Windows.Forms.MaskedTextBox();
             this.mtbPruductGroupRewardID2 = new System.Windows.Forms.MaskedTextBox();
             this.mtbPruductGroupRewardID = new System.Windows.Forms.MaskedTextBox();
@@ -711,7 +713,6 @@ namespace AllCashUFormsApp.View.Page
             this.grdHQ_Promotion.TabIndex = 221;
             this.grdHQ_Promotion.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdHQ_Promotion_CellClick);
             this.grdHQ_Promotion.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdHQ_Promotion_RowPostPaint);
-            this.grdHQ_Promotion.SelectionChanged += new System.EventHandler(this.grdHQ_Promotion_SelectionChanged);
             // 
             // colPromotionID_HQPro
             // 
@@ -1086,6 +1087,8 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.pnlEdit_HQPromotion.BackColor = System.Drawing.Color.Azure;
             this.pnlEdit_HQPromotion.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlEdit_HQPromotion.Controls.Add(this.cbbSaleType);
+            this.pnlEdit_HQPromotion.Controls.Add(this.label24);
             this.pnlEdit_HQPromotion.Controls.Add(this.mtbRewardID);
             this.pnlEdit_HQPromotion.Controls.Add(this.mtbPruductGroupRewardID2);
             this.pnlEdit_HQPromotion.Controls.Add(this.mtbPruductGroupRewardID);
@@ -1144,6 +1147,25 @@ namespace AllCashUFormsApp.View.Page
             this.pnlEdit_HQPromotion.Size = new System.Drawing.Size(656, 606);
             this.pnlEdit_HQPromotion.TabIndex = 153;
             // 
+            // cbbSaleType
+            // 
+            this.cbbSaleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbSaleType.FormattingEnabled = true;
+            this.cbbSaleType.Location = new System.Drawing.Point(500, 162);
+            this.cbbSaleType.Name = "cbbSaleType";
+            this.cbbSaleType.Size = new System.Drawing.Size(138, 24);
+            this.cbbSaleType.TabIndex = 26;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label24.Location = new System.Drawing.Point(427, 166);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(70, 16);
+            this.label24.TabIndex = 200;
+            this.label24.Text = "SaleType :";
+            // 
             // mtbRewardID
             // 
             this.mtbRewardID.Location = new System.Drawing.Point(181, 387);
@@ -1182,7 +1204,7 @@ namespace AllCashUFormsApp.View.Page
             // dtpExpireDate
             // 
             this.dtpExpireDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpExpireDate.Location = new System.Drawing.Point(500, 117);
+            this.dtpExpireDate.Location = new System.Drawing.Point(500, 113);
             this.dtpExpireDate.Name = "dtpExpireDate";
             this.dtpExpireDate.Size = new System.Drawing.Size(138, 23);
             this.dtpExpireDate.TabIndex = 24;
@@ -1273,7 +1295,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtPlusSaleFrom
             // 
-            this.txtPlusSaleFrom.Location = new System.Drawing.Point(500, 142);
+            this.txtPlusSaleFrom.Location = new System.Drawing.Point(500, 138);
             this.txtPlusSaleFrom.MaxLength = 50;
             this.txtPlusSaleFrom.Name = "txtPlusSaleFrom";
             this.txtPlusSaleFrom.Size = new System.Drawing.Size(138, 23);
@@ -1431,7 +1453,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_ExpireDate.AutoSize = true;
             this.lbl_ExpireDate.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_ExpireDate.Location = new System.Drawing.Point(418, 118);
+            this.lbl_ExpireDate.Location = new System.Drawing.Point(418, 114);
             this.lbl_ExpireDate.Name = "lbl_ExpireDate";
             this.lbl_ExpireDate.Size = new System.Drawing.Size(82, 16);
             this.lbl_ExpireDate.TabIndex = 168;
@@ -1501,7 +1523,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_PlusSaleFrom.AutoSize = true;
             this.lbl_PlusSaleFrom.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_PlusSaleFrom.Location = new System.Drawing.Point(401, 141);
+            this.lbl_PlusSaleFrom.Location = new System.Drawing.Point(401, 137);
             this.lbl_PlusSaleFrom.Name = "lbl_PlusSaleFrom";
             this.lbl_PlusSaleFrom.Size = new System.Drawing.Size(99, 16);
             this.lbl_PlusSaleFrom.TabIndex = 168;
@@ -1715,7 +1737,6 @@ namespace AllCashUFormsApp.View.Page
             this.grdHQPromotionMaster.TabIndex = 4;
             this.grdHQPromotionMaster.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdHQPromotionMaster_CellClick);
             this.grdHQPromotionMaster.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdHQPromotionMaster_RowPostPaint);
-            this.grdHQPromotionMaster.SelectionChanged += new System.EventHandler(this.grdHQPromotionMaster_SelectionChanged);
             // 
             // colPromotionID
             // 
@@ -1967,7 +1988,6 @@ namespace AllCashUFormsApp.View.Page
             this.grdHQ_Reward.TabIndex = 4;
             this.grdHQ_Reward.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdHQ_Reward_CellClick);
             this.grdHQ_Reward.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdHQ_Reward_RowPostPaint);
-            this.grdHQ_Reward.SelectionChanged += new System.EventHandler(this.grdHQ_Reward_SelectionChanged);
             // 
             // colRewardID
             // 
@@ -2174,9 +2194,9 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.tabSkuGroup.Controls.Add(this.splitSkuGroup);
             this.tabSkuGroup.Controls.Add(this.pnlNameShowHQ_SKUGroup);
-            this.tabSkuGroup.Location = new System.Drawing.Point(4, 22);
+            this.tabSkuGroup.Location = new System.Drawing.Point(4, 25);
             this.tabSkuGroup.Name = "tabSkuGroup";
-            this.tabSkuGroup.Size = new System.Drawing.Size(1015, 643);
+            this.tabSkuGroup.Size = new System.Drawing.Size(1015, 640);
             this.tabSkuGroup.TabIndex = 2;
             this.tabSkuGroup.Text = "SKU-GROUP";
             this.tabSkuGroup.UseVisualStyleBackColor = true;
@@ -2197,7 +2217,7 @@ namespace AllCashUFormsApp.View.Page
             // splitSkuGroup.Panel2
             // 
             this.splitSkuGroup.Panel2.Controls.Add(this.panel12);
-            this.splitSkuGroup.Size = new System.Drawing.Size(1015, 615);
+            this.splitSkuGroup.Size = new System.Drawing.Size(1015, 612);
             this.splitSkuGroup.SplitterDistance = 578;
             this.splitSkuGroup.TabIndex = 167;
             // 
@@ -2214,11 +2234,10 @@ namespace AllCashUFormsApp.View.Page
             this.grdSkuGroup.Name = "grdSkuGroup";
             this.grdSkuGroup.ReadOnly = true;
             this.grdSkuGroup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdSkuGroup.Size = new System.Drawing.Size(578, 546);
+            this.grdSkuGroup.Size = new System.Drawing.Size(578, 543);
             this.grdSkuGroup.TabIndex = 4;
             this.grdSkuGroup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSkuGroup_CellClick);
             this.grdSkuGroup.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSkuGroup_RowPostPaint);
-            this.grdSkuGroup.SelectionChanged += new System.EventHandler(this.grdSkuGroup_SelectionChanged);
             // 
             // colSKUGroupID
             // 
@@ -2249,7 +2268,7 @@ namespace AllCashUFormsApp.View.Page
             this.panel3.Controls.Add(this.lbl_Qty_grdSkuGroup);
             this.panel3.Controls.Add(this.label10);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 588);
+            this.panel3.Location = new System.Drawing.Point(0, 585);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(578, 27);
             this.panel3.TabIndex = 219;
@@ -2339,7 +2358,7 @@ namespace AllCashUFormsApp.View.Page
             this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(433, 615);
+            this.panel12.Size = new System.Drawing.Size(433, 612);
             this.panel12.TabIndex = 152;
             // 
             // mtbHQ_SKUGroupID
@@ -2540,7 +2559,6 @@ namespace AllCashUFormsApp.View.Page
             this.grdSKUGroup_EXC.TabIndex = 4;
             this.grdSKUGroup_EXC.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSKUGroup_EXC_CellClick);
             this.grdSKUGroup_EXC.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSKUGroup_EXC_RowPostPaint);
-            this.grdSKUGroup_EXC.SelectionChanged += new System.EventHandler(this.grdSKUGroup_EXC_SelectionChanged);
             // 
             // colSKU_ID_EXC
             // 
@@ -2886,6 +2904,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnRemove.Text = "ลบ";
             this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // btnCancel
             // 
@@ -3271,5 +3290,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.DataGridViewTextBoxColumn colUpdateDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCreateBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUpdateBy;
+        private System.Windows.Forms.ComboBox cbbSaleType;
+        private System.Windows.Forms.Label label24;
     }
 }

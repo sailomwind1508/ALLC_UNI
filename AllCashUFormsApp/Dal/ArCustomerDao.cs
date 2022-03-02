@@ -60,26 +60,22 @@ namespace AllCashUFormsApp
 
         public static List<tbl_ArCustomer> SelectSingle(this tbl_ArCustomer tbl_ArCustomer, string customerID)
         {
-            List<tbl_ArCustomer> list = new List<tbl_ArCustomer>();
+            var list = new List<tbl_ArCustomer>();
             try
             {
-                //if (tbl_ArCustomers.Count == 0)
-                //{
-                DataTable dt = new DataTable();
-                string sql = "";
-                sql += "SELECT * FROM tbl_ArCustomer WHERE CustomerID = '" + customerID + "'";
+                string sql = "SELECT * FROM tbl_ArCustomer";
+
+                if (customerID.Length == 8)
+                {
+                    sql += " WHERE CustomerID = '" + customerID + "'";
+                }
+                else
+                {
+                    sql += " WHERE CustomerID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + customerID + "', ',')) ";
+                }
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
                 list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
-
-                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
-                //da.Fill(dt);
-
-                //list = ConvertHelper.ConvertDataTable<tbl_ArCustomer>(dt);
-
-                //}
-                //else
-                //    list.AddRange(tbl_ArCustomers.Where(x => x.CustomerID == customerID));
             }
             catch (Exception ex)
             {
@@ -149,6 +145,25 @@ namespace AllCashUFormsApp
 
                 string sql = "SELECT * FROM tbl_ArCustomer WHERE CustomerID = '" + CustomerID + "'";
                 sql += " AND flagDel = " + flagDel + "";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
+                list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return list;
+        }
+
+        public static List<tbl_ArCustomer> SelectCustomerID(this tbl_ArCustomer tbl_ArCustomer, string CustomerID)
+        {
+            List<tbl_ArCustomer> list = new List<tbl_ArCustomer>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ArCustomer WHERE CustomerID = '" + CustomerID + "'";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
                 list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
@@ -248,7 +263,8 @@ namespace AllCashUFormsApp
                 {
                     dt = new DataTable();
                     sql = "";
-                    sql += " SELECT * FROM tbl_ArCustomer WHERE FlagDel = 0 ";
+                    sql += CreateSelectCmd();
+                    sql += " FROM tbl_ArCustomer WHERE FlagDel = 0 ";
 
                     List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
                     var list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
@@ -260,7 +276,7 @@ namespace AllCashUFormsApp
 
                     tbl_ArCustomers = list;
                 }
-            }
+             }
             catch (Exception ex)
             {
                 ex.WriteLog(null);
@@ -279,7 +295,7 @@ namespace AllCashUFormsApp
             sql += " ,SalAreaID ";
             sql += " ,WHID ";
             sql += " ,CustomerRefCode ";
-            sql += " ,CustomerImg ";
+            //sql += " ,CustomerImg "; //edti sailom .k 15/12/2021
             sql += " ,CustShortName ";
             sql += " ,Latitude ";
             sql += " ,Longitude ";
@@ -312,9 +328,11 @@ namespace AllCashUFormsApp
 
         public static void Insert(this tbl_ArCustomer tbl_ArCustomer, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ArCustomerDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
-
                 db.tbl_ArCustomer.Attach(tbl_ArCustomer);
                 db.tbl_ArCustomer.Add(tbl_ArCustomer);
 
@@ -324,10 +342,15 @@ namespace AllCashUFormsApp
                 ex.WriteLog(db.GetType());
             }
 
+            msg = "end ArCustomerDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static int Insert(this tbl_ArCustomer tbl_ArCustomer)
         {
+            string msg = "start ArCustomerDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -343,11 +366,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ArCustomer.GetType());
             }
 
+            msg = "end ArCustomerDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int UpdateEntity(this tbl_ArCustomer tbl_ArCustomer, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start ArCustomerDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -386,11 +415,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end ArCustomerDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this tbl_ArCustomer tbl_ArCustomer)
         {
+            string msg = "start ArCustomerDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -429,11 +464,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ArCustomer.GetType());
             }
 
+            msg = "end ArCustomerDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Delete(this tbl_ArCustomer tbl_ArCustomer)
         {
+            string msg = "start ArCustomerDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -449,7 +490,26 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_ArCustomer.GetType());
             }
 
+            msg = "end ArCustomerDao=>Delete";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        public static DataTable GetCustomerImage(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_GetCustomerData_Image";
+
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public static DataTable GetCustomerData(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)//
@@ -482,5 +542,62 @@ namespace AllCashUFormsApp
             }
         }
 
+        public static DataTable VerifyFlagBill(this tbl_ArCustomer tbl_ArCustomer, string docDate)
+        {
+            var dt = new DataTable();
+            try
+            {
+                //string sql = " SELECT t1.* FROM tbl_ArCustomer t1 ";
+                //sql += " INNER JOIN dbo.tbl_POMaster t2 ON t2.DocStatus = '4' AND t2.DocTypeCode = 'IV' AND t1.CustomerID = t2.CustomerID ";
+                //sql += " WHERE (FlagBill = 1 OR FlagMember = 1) AND ISNULL(CustomerSAPCode,'') = '' ";
+                //sql += " AND ISNULL(t2.CustInvNO, '') = '' ";
+                //sql += " AND CAST(t1.GPSDate AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE) ";
+                //sql += " ORDER BY t1.WHID,t1.SalAreaID ";
+
+                string sql = "";
+                sql += @" SELECT t2.*, t1.TotalDue, t1.DocNo, t1.DocTypeCode  
+                FROM dbo.tbl_POMaster t1 
+                INNER JOIN tbl_ArCustomer t2 ON t1.CustomerID = t2.CustomerID 
+                WHERE ISNULL(CustInvNO, '') = '' ";
+                sql += @" AND CAST(DocDate AS DATE) = '" + docDate + "' AND t1.DocStatus = '4' AND t1.DocTypeCode = 'IV' AND (FlagBill = 1 OR FlagMember = 1) ORDER BY t1.WHID, t1.CustName ";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return dt;
+        }
+
+        public static List<tbl_ArCustomer> SelectMaxCustomerID(this tbl_ArCustomer tbl_ArCustomer,string formatCustomerID)
+        {
+            List<tbl_ArCustomer> list = new List<tbl_ArCustomer>();
+            try
+            {
+                string sql = "SELECT CustomerID FROM tbl_ArCustomer";
+                sql += " WHERE CustomerID LIKE '%" + formatCustomerID + "%'";
+                sql += " AND LEN(CustomerID) > 12";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
+                list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
+
+                if (list.Count == 0)
+                {
+                    sql = "SELECT CustomerID FROM tbl_ArCustomer";
+                    sql += " WHERE CustomerID LIKE '%" + formatCustomerID + "%'";
+
+                    dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
+                    list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return list;
+        }
     }
 }

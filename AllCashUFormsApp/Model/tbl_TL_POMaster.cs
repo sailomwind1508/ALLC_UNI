@@ -41,5 +41,6 @@ namespace AllCashUFormsApp.Model
         public string Remark { get; set; }
         public string Comment { get; set; }
         public Nullable<decimal> DiscountRate { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

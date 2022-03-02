@@ -15,6 +15,27 @@ namespace AllCashUFormsApp
 {
     public static class IVMasterDao
     {
+        public static List<tbl_IVMaster> SelectWithDocNo(this tbl_IVMaster tbl_IVMaster, string docNo)
+        {
+            List<tbl_IVMaster> list = new List<tbl_IVMaster>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_IVMaster] ";
+                sql += " WHERE DocNo = '" + docNo + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
+                list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(null);
+            }
+
+            return list;
+        }
+
         public static List<tbl_IVMaster> Select(this tbl_IVMaster tbl_IVMaster, DateTime docDate)
         {
             List<tbl_IVMaster> list = new List<tbl_IVMaster>();
@@ -57,6 +78,31 @@ namespace AllCashUFormsApp
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
                 list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+
+            return list;
+        }
+
+        public static List<tbl_IVMaster> SelectMaxAutoID(this tbl_IVMaster tbl_IVMaster, string docTypeCode = "")
+        {
+            List<tbl_IVMaster> list = new List<tbl_IVMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_IVMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_IVMaster ";
+                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
+
+                }
             }
             catch (Exception ex)
             {
@@ -135,6 +181,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start IVMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_IVMaster.Attach(tbl_IVMaster);
@@ -144,10 +193,61 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_IVMaster.GetType());
             }
+
+            msg = "end IVMasterDao=>InsertWithDB";
+            msg.WriteLog(null);
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_IVMaster"></param>
+        /// <returns></returns>
+        public static int Insert(this tbl_IVMaster tbl_IVMaster)
+        {
+            string msg = "start IVMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_IVMaster.Attach(tbl_IVMaster);
+                    db.tbl_IVMaster.Add(tbl_IVMaster);
+                    ret = db.SaveChanges();
+                }
+            }
+            //catch (DbEntityValidationException e)
+            //{
+            //    foreach (var eve in e.EntityValidationErrors)
+            //    {
+            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+            //        foreach (var ve in eve.ValidationErrors)
+            //        {
+            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+            //                ve.PropertyName, ve.ErrorMessage);
+            //        }
+            //    }
+            //    throw;
+            //}
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+
+            msg = "end IVMasterDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int UpdateEntity(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start IVMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -186,11 +286,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end IVMasterDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_IVMaster> tbl_IVMasters)
         {
+            string msg = "start IVMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -235,64 +341,10 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_IVMaster);
             }
 
+            msg = "end IVMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
-        }
-
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_IVMaster"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
-        {
-            try
-            {
-                db.Entry(tbl_IVMaster).State = EntityState.Deleted;
-                db.tbl_IVMaster.Remove(tbl_IVMaster);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_IVMaster.GetType());
-            }
-        }
-
-        /// <summary>
-        /// add new data
-        /// </summary>
-        /// <param name="tbl_IVMaster"></param>
-        /// <returns></returns>
-        public static int Insert(this tbl_IVMaster tbl_IVMaster)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_IVMaster.Attach(tbl_IVMaster);
-                    db.tbl_IVMaster.Add(tbl_IVMaster);
-                    ret = db.SaveChanges();
-                }
-            }
-            //catch (DbEntityValidationException e)
-            //{
-            //    foreach (var eve in e.EntityValidationErrors)
-            //    {
-            //        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-            //            eve.Entry.Entity.GetType().Name, eve.Entry.State);
-            //        foreach (var ve in eve.ValidationErrors)
-            //        {
-            //            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-            //                ve.PropertyName, ve.ErrorMessage);
-            //        }
-            //    }
-            //    throw;
-            //}
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_IVMaster.GetType());
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -302,6 +354,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_IVMaster tbl_IVMaster)
         {
+            string msg = "start IVMasterDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -340,7 +395,34 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_IVMaster.GetType());
             }
 
+            msg = "end IVMasterDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_IVMaster"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start IVMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_IVMaster).State = EntityState.Deleted;
+                db.tbl_IVMaster.Remove(tbl_IVMaster);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_IVMaster.GetType());
+            }
+
+            msg = "end IVMasterDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -350,6 +432,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_IVMaster tbl_IVMaster)
         {
+            string msg = "start IVMasterDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -364,6 +449,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_IVMaster.GetType());
             }
+
+            msg = "end IVMasterDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

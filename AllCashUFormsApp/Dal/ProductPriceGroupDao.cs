@@ -12,45 +12,22 @@ namespace AllCashUFormsApp
 {
     public static class ProductPriceGroupDao
     {
-        /// <summary>
-        /// select data
-        /// </summary>
-        /// <param name="tbl_ProductPriceGroup"></param>
-        /// <returns></returns>
-        public static List<tbl_ProductPriceGroup> Select(this tbl_ProductPriceGroup tbl_ProductPriceGroup, Func<tbl_ProductPriceGroup, bool> predicate)
-        {
-            List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
-            try
-            {
-                list = tbl_ProductPriceGroup.SelectAll().Where(predicate).ToList();
-
-                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                //{
-                //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
-                //}
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_ProductPriceGroup.GetType());
-            }
-
-            return list;
-        }
+        private static List<tbl_ProductPriceGroup> tbl_ProductPriceGroups = new List<tbl_ProductPriceGroup>();
 
         /// <summary>
         /// select all data
         /// </summary>
         /// <param name="tbl_ProductPriceGroup"></param>
         /// <returns></returns>
-        public static List<tbl_ProductPriceGroup> SelectAll(this tbl_ProductPriceGroup tbl_ProductPriceGroup)
+        public static List<tbl_ProductPriceGroup> Select(this tbl_ProductPriceGroup tbl_ProductPriceGroup, string prodId)
         {
             List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
             try
             {
                 DataTable dt = new DataTable();
                 string sql = "";
-                sql += " SELECT * ";
-                sql += "  FROM [dbo].[tbl_ProductPriceGroup] WHERE FlagDel = 0 ";
+                sql += " SELECT [ProductID], [ProductUomID] ";
+                sql += " FROM [dbo].[tbl_ProductPriceGroup] WHERE FlagDel = 0 AND [ProductID] = '" + prodId + "' ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductPriceGroup), sql);
                 list = dynamicListReturned.Cast<tbl_ProductPriceGroup>().ToList();
@@ -72,6 +49,121 @@ namespace AllCashUFormsApp
             }
 
             return list;
+        }
+
+        public static List<tbl_ProductPriceGroup> Select(this tbl_ProductPriceGroup tbl_ProductPriceGroup, Func<tbl_ProductPriceGroup, bool> predicate)
+        {
+            List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
+            try
+            {
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).Where(predicate).OrderBy(x => x.ProductUomID).AsQueryable().ToList();
+                //}
+
+                list = tbl_ProductPriceGroups.Where(x => x.FlagDel == false).Where(predicate).AsQueryable().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+
+            return list;
+        }
+        
+        /// <summary>
+        /// select all data
+        /// </summary>
+        /// <param name="tbl_ProductPriceGroup"></param>
+        /// <returns></returns>
+        public static List<tbl_ProductPriceGroup> SelectAll(this tbl_ProductPriceGroup tbl_ProductPriceGroup)
+        {
+            List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
+            try
+            {
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).OrderBy(x => x.ProductUomID).ToList();
+                //}
+
+                VerifyNewData();
+
+                if (tbl_ProductPriceGroups.Count == 0)
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * ";
+                    sql += "  FROM [dbo].[tbl_ProductPriceGroup] ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductPriceGroup), sql);
+                    list = dynamicListReturned.Cast<tbl_ProductPriceGroup>().ToList();
+
+                    //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                    //da.Fill(dt);
+
+                    //list = ConvertHelper.ConvertDataTable<tbl_ProductPriceGroup>(dt);
+
+                    tbl_ProductPriceGroups = list;
+
+                    //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                    //{
+                    //    list = db.tbl_ProductPriceGroup.Where(x => x.FlagDel == false).OrderBy(x => x.ProductUomID).ToList();
+                    //    tbl_ProductPriceGroups = list;
+                    //}
+                }
+                else
+                {
+                    list = tbl_ProductPriceGroups;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+
+            return list;
+        }
+
+        private static void VerifyNewData()
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += "SELECT COUNT(*) AS countPrdUOM FROM tbl_ProductPriceGroup WHERE FlagDel = 0";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                //da.Fill(dt);
+
+                int count = Convert.ToInt32(dt.Rows[0][0]);
+
+                if (count != tbl_ProductPriceGroups.Count)
+                {
+                    dt = new DataTable();
+                    sql = "";
+                    sql += " SELECT * ";
+                    sql += " FROM tbl_ProductPriceGroup WHERE FlagDel = 0";
+
+                    //da = new SqlDataAdapter(sql, Connection.ConnectionString);
+                    //da.Fill(dt);
+
+                    //var list = ConvertHelper.ConvertDataTable<tbl_ProductPriceGroup>(dt);
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductPriceGroup), sql);
+                    var list = dynamicListReturned.Cast<tbl_ProductPriceGroup>().ToList();
+
+
+                    tbl_ProductPriceGroups = list;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(null);
+            }
         }
 
         /// <summary>

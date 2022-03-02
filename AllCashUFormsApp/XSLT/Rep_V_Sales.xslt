@@ -206,13 +206,13 @@
 								<xsl:value-of select="BranchName"/>
 							</TD>
 							<TD class="SearchResultItem">
-								<xsl:value-of select="format-number((Amount - VatAmt),'#,##0.00')"/>
+								<xsl:value-of select="format-number(Amount,'#,##0.00')"/>
 							</TD>
 							<TD class="SearchResultItem">
 								<xsl:value-of select="format-number(VatAmt,'#,##0.00')"/>
 							</TD>
 							<TD class="SearchResultItem">
-								<xsl:value-of select="format-number(Amount,'#,##0.00')"/>
+								<xsl:value-of select="format-number(TotalDue,'#,##0.00')"/>
 							</TD>
 							<TD class="SearchResultItem">
 								<xsl:value-of select="DocType"/>
@@ -226,13 +226,13 @@
 					<TR Class="GroupFooter">
 						<TD ColSpan="6">รวมทั้งสิ้น</TD>
 						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_V_Sales_XSLT/Amount) - sum(/NewDataSet/Rep_V_Sales_XSLT/VatAmt),"#,##0.00")'/>
+							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_V_Sales_XSLT/Amount),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_V_Sales_XSLT/VatAmt),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_V_Sales_XSLT/Amount),"#,##0.00")'/>
+							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_V_Sales_XSLT/TotalDue),"#,##0.00")'/>
 						</TD>
 
 					</TR >

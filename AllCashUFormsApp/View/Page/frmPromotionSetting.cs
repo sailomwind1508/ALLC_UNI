@@ -28,7 +28,6 @@ namespace AllCashUFormsApp.View.Page
         int EditFlag = 0;
         public static string skuID;
         CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
-        CultureInfo culturesUS = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
         public frmPromotionSetting()
         {
             InitializeComponent();
@@ -46,6 +45,7 @@ namespace AllCashUFormsApp.View.Page
 
             Validate_HQ_SKUGroup_Exc.Add(mtbSKU_ID_Exc, lblSKU_ID_Exc);
         }
+
         private void ValidateHQ_PromotionList()
         {
             if (Validate_HQ_Promotion.Count > 0)
@@ -75,6 +75,7 @@ namespace AllCashUFormsApp.View.Page
             Validate_HQ_Promotion.Add(mtbRewardID, lbl_RewardID_HQPro);
             Validate_HQ_Promotion.Add(txtPromotionPriority, lbl_PromotionPriority);
         }
+
         private void InitPage()
         {
             var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
@@ -91,21 +92,22 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
+
         private void InitialData()
         {
             grdBranch.AutoGenerateColumns = false;
-            grdBranch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
             grdHQPromotionMaster.AutoGenerateColumns = false;
-            grdHQPromotionMaster.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
             grdHQ_Reward.AutoGenerateColumns = false;
             grdSkuGroup.AutoGenerateColumns = false;
             grdSKUGroup_EXC.AutoGenerateColumns = false;
 
+            grdBranch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grdHQPromotionMaster.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
+            btnExportExcel.Enabled = false;
 
             BindBranchData();
 
@@ -124,17 +126,31 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_Reward();
                 BindHQ_SKUGroup();
                 BindHQ_SKUGroup_Exc();
+                BindSaleType();
+
+                int colNo = grdHQ_Promotion.Rows.Count;
+                SetButtonAfterBindGrid(colNo);
+
+                dtpEffectiveDate.SetDateTimePickerFormat();
+                dtpExpireDate.SetDateTimePickerFormat();
+
+                grdHQ_Promotion.Columns["colEffectiveDate"].DefaultCellStyle.Format = "dd/MM/yyyy h:mm:ss.fff";
+                grdHQ_Promotion.Columns["colExpireDate"].DefaultCellStyle.Format = "dd/MM/yyyy h:mm:ss.fff";
             }
-            
-            dtpEffectiveDate.SetDateTimePickerFormat();
-            dtpExpireDate.SetDateTimePickerFormat();
 
-            grdHQ_Promotion.Columns["colEffectiveDate"].DefaultCellStyle.Format = "dd/MM/yyyy h:mm:ss.fff";
-            grdHQ_Promotion.Columns["colExpireDate"].DefaultCellStyle.Format = "dd/MM/yyyy h:mm:ss.fff";
+            else
+            {
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                btnSave.Enabled = false;
+                btnCancel.Enabled = false;
+                btnExcel.Enabled = false;
+                btnExportExcel.Enabled = false;
 
-            string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
-            msg.ShowWarningMessage();
+                string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
+                msg.ShowWarningMessage();
+            }
         }
+
         private void BindBranchData()
         {
             DataTable dtBranch = new DataTable();
@@ -178,13 +194,14 @@ namespace AllCashUFormsApp.View.Page
 
             lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
         }
+
         private void BindHQ_Promotion_Master()
         {
+            mtbPromotionID_Master.Text = "";
+            txtPromotionName.Text = "";
+
             if (grdBranch.Rows.Count > 0)
             {
-                mtbPromotionID_Master.Text = "";
-                txtPromotionName.Text = "";
-
                 DataTable HQ_ProMaster = new DataTable();
 
                 HQ_ProMaster = bu.GetHQ_Promotion_MasterData(txtSearch.Text); // new
@@ -194,51 +211,72 @@ namespace AllCashUFormsApp.View.Page
 
                 int colNo = HQ_ProMaster.Rows.Count;
                 SetButtonAfterBindGrid(colNo);
+
+                Select_HQPromotion_Master(null);
             }
         }
+
+        private void BindSaleType()
+        {
+            cbbSaleType.DataSource = null;
+            var saleType = bu.GetSaleTypeData();
+            cbbSaleType.BindDropdownList(saleType, "SaleTypeName", "SaleTypeID");
+        }
+
         private void SetButtonAfterBindGrid(int colNo)
         {
+            pnlEdit_HQPromotion.OpenControl(false, PanelEdit_HQPromotion_Controls.ToArray());
+
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
             btnAdd.Enabled = true;
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
 
+            btnExcel.Enabled = true;
+
             if (colNo > 0)
             {
                 btnEdit.Enabled = true;
+                //btnRemove.Enabled = true;
             }
-            else
+
+            if (grdHQ_Promotion.RowCount > 0
+                    || grdHQPromotionMaster.RowCount > 0
+                    || grdHQ_Reward.RowCount > 0
+                    || grdSkuGroup.RowCount > 0
+                    || grdSKUGroup_EXC.RowCount > 0)
             {
-                btnEdit.Enabled = false;
+                btnExportExcel.Enabled = true;
             }
-            btnExcel.Enabled = true;
-
-            btnExportExcel.Enabled = true;
-
         }
+
         private void frmPromotionSetting_Load(object sender, EventArgs e)
         {
             InitPage();
             InitialData();
         }
+
         private void BindPromotionType()
         {
             cbbPromotionType.Items.Add("mmc");
             cbbPromotionType.Items.Add("mmch");
             cbbPromotionType.SelectedIndex = 0;
         }
+
         private void BindPromotionPattern()
         {
             cbbPromotionPattern.Items.Add("prd");
             cbbPromotionPattern.Items.Add("txn");
             cbbPromotionPattern.SelectedIndex = 0;
         }
+
         private void BindStepCondition1()
         {
             cbbStepCondition1.Items.Add("qty");
             cbbStepCondition1.Items.Add("amt");
             cbbStepCondition1.SelectedIndex = 0;
         }
+
         private void BindDisCountPattern()
         {
             cbbDisCountPattern.Items.Add("free=free");
@@ -247,21 +285,25 @@ namespace AllCashUFormsApp.View.Page
             cbbDisCountPattern.Items.Add("fix_baht_qty");
             cbbDisCountPattern.SelectedIndex = 0;
         }
+
         private void BindStepCondition2()
         {
             cbbStepCondition2.Items.Add("qty");
             cbbStepCondition2.Items.Add("amt");
             cbbStepCondition2.SelectedIndex = 0;
         }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             dtHQPromotion = new DataTable();
             this.Close();
         }
+
         private void grdHQPromotionMaster_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQPromotionMaster.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void tabControl1_Click(object sender, EventArgs e)
         {
             string tabName = tabControl1.SelectedTab.Text.ToString();
@@ -287,9 +329,12 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_Promotion();
             }
         }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             EditFlag = 1;
+
+            pnlEdit_HQPromotion.OpenControl(true, PanelEdit_HQPromotion_Controls.ToArray());
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
 
@@ -376,6 +421,7 @@ namespace AllCashUFormsApp.View.Page
                
             }
         }
+
         private void SetDefaultPanelEdit_HQPromotion()
         {
             cbbPromotionType.SelectedIndex = 0;
@@ -389,6 +435,7 @@ namespace AllCashUFormsApp.View.Page
             chkboxsIgnoreApplied.Checked = false;
             chkboxsIsUseCoupon.Checked = false;
         }
+
         private void RunningPromotionID()
         {
             string dateNow = DateTime.Now.ToString("yyMMdd",cultures);
@@ -407,15 +454,16 @@ namespace AllCashUFormsApp.View.Page
                 txtPromotionID_HQPro.Text = dateNow + "0001";
             }
         }
+
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            EditFlag = 2;
+
             pnlEdit_HQPromotion.OpenControl(true, PanelEdit_HQPromotion_Controls.ToArray());
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
 
             string tabName = tabControl1.SelectedTab.Text.ToString();
-
-            EditFlag = 2;
 
             if (tabName == "HQ_Promotion_Master")
             {
@@ -455,8 +503,11 @@ namespace AllCashUFormsApp.View.Page
             else if (tabName == "HQ_Promotion")
             {
                 SetOpenEditPromotionControl();
+
+                Select_HQPromotion(null);
             }
         }
+
         private void SetOpenEditPromotionControl()
         {
             cbbPromotionType.Enabled = true;
@@ -541,6 +592,7 @@ namespace AllCashUFormsApp.View.Page
             txtSKUGroupID2.Enabled = false;
 
         }
+
         private bool ValidateSave(string tabName)
         {
             bool ret = true;
@@ -575,6 +627,7 @@ namespace AllCashUFormsApp.View.Page
             }
             return ret;
         }
+
         private void SaveHQ_PromotionMaster()
         {
             try
@@ -635,6 +688,7 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void SaveHQ_Reward()
         {
             try
@@ -695,63 +749,65 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void SaveHQ_SKUGroup()
         {
+            int ret = 0;
+
+            string msg = "";
+
             try
             {
-                string msg = "";
-
-                int ret = 0;
-
                 var HQ_SKUGroup = bu.GetHQ_SKUGroup(x=>x.SKUGroupID == mtbHQ_SKUGroupID.Text);
-
-                if (HQ_SKUGroup.Count > 0)
-                {
-                    for (int i = 0; i < lsbSKU_ID.Items.Count; i++)
-                    {
-                        string SKU = lsbSKU_ID.Items[i].ToString();
-
-                        var SKUGroup = HQ_SKUGroup.FirstOrDefault(x => x.SKUGroupID == mtbHQ_SKUGroupID.Text
-                        && x.SKU_ID == SKU);
-
-                        if (EditFlag == 1)
-                        {
-                            if (SKUGroup != null)
-                            {
-                                msg = "SKUGroupID และ SKU_ID มีแล้วในระบบ กรุณาเปลี่ยนใหม่ !!";
-                                msg.ShowWarningMessage();
-                                return;
-                            }
-                        }
-                    }
-                }
-               
-                var SKUGroupList = new List<tbl_HQ_SKUGroup>();
 
                 for (int i = 0; i < lsbSKU_ID.Items.Count; i++)
                 {
                     string SKU = lsbSKU_ID.Items[i].ToString();
 
-                    var SkuGroup = new tbl_HQ_SKUGroup();
+                    var SKUGroup = HQ_SKUGroup.FirstOrDefault(x => x.SKUGroupID == mtbHQ_SKUGroupID.Text && x.SKU_ID == SKU);
 
-                    SkuGroup.SKUGroupID = mtbHQ_SKUGroupID.Text;
-                    SkuGroup.SKU_ID = SKU;
-
-                    SKUGroupList.Add(SkuGroup);
+                    if (SKUGroup != null)
+                    {
+                        msg = "SKUGroupID และ SKU_ID มีแล้วในระบบ กรุณาเปลี่ยนใหม่ !!";
+                        msg.ShowWarningMessage();
+                        return;
+                    }
                 }
 
-
-                foreach (var SKU in SKUGroupList)
+                if (EditFlag == 1) //Insert
                 {
-                    ret = bu.UpdateHQ_SKUGroupData(SKU);//
+                    var SKUGroupList = new List<tbl_HQ_SKUGroup>();
+
+                    for (int i = 0; i < lsbSKU_ID.Items.Count; i++)
+                    {
+                        string SKU = lsbSKU_ID.Items[i].ToString();
+
+                        var SkuGroup = new tbl_HQ_SKUGroup();
+
+                        SkuGroup.SKUGroupID = mtbHQ_SKUGroupID.Text;
+                        SkuGroup.SKU_ID = SKU;
+
+                        SKUGroupList.Add(SkuGroup);
+                    }
+
+                    foreach (var data in SKUGroupList)
+                    {
+                        ret = bu.UpdateHQ_SKUGroupData(data);
+                    }
+                }
+                else //Update
+                {
+                    string oldSKU_ID = grdSkuGroup.CurrentRow.Cells["colSKU_ID"].Value.ToString();
+
+                    var tbl_HQ_SKUGroups = new tbl_HQ_SKUGroup();
+                    tbl_HQ_SKUGroups.SKUGroupID = mtbHQ_SKUGroupID.Text;
+                    tbl_HQ_SKUGroups.SKU_ID = lsbSKU_ID.Items[0].ToString();
+
+                    ret = bu.UpdateSKUGroup(tbl_HQ_SKUGroups, oldSKU_ID);
                 }
 
                 if (ret == 1)
                 {
-                    mtbHQ_SKUGroupID.Text = "";
-
-                    lsbSKU_ID.Items.Clear();
-
                     mtbHQ_SKUGroupID.DisableTextBox(true);
                     mtbHQ_SKUGroupID.BackColor = ColorTranslator.FromHtml("#DCDCDC");
 
@@ -777,30 +833,38 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
-        private void SaveHQ_SKUGroupExc()
+
+        private void Save_SKUGroupExc()
         {
+            int ret = 0;
+            string msg = "";
+            string oldSKU_ID = "";
             try
             {
-                int ret = 0;
-
-                string oldSKU_ID = "";
+                var SKUGroupExcList = bu.GetHQ_SKUGroupExc(x => x.SKU_ID == mtbSKU_ID_Exc.Text);
 
                 if (EditFlag == 2) // update
                 {
-                    if (grdSKUGroup_EXC.RowCount > 0)
+                    if (SKUGroupExcList.Count > 0)
                     {
-                        oldSKU_ID = grdSKUGroup_EXC.CurrentRow.Cells["colSKU_ID_EXC"].Value.ToString();
+                        msg = "SKU_ID ซ้ำกับในระบบ กรุณาเปลี่ยนใหม่ !!";
+                        msg.ShowWarningMessage();
+                        return;
                     }
-
+                    else
+                    {
+                        if (grdSKUGroup_EXC.RowCount > 0)
+                        {
+                            oldSKU_ID = grdSKUGroup_EXC.CurrentRow.Cells["colSKU_ID_EXC"].Value.ToString();
+                        }
+                    }
                 }
-
-                var SKUGroupExcList = bu.GetHQ_SKUGroupExc(x => x.SKU_ID == mtbSKU_ID_Exc.Text); //new
 
                 if (EditFlag == 1) // Insert
                 {
                     if (SKUGroupExcList.Count > 0)
                     {
-                        string msg = "SKU_ID ซ้ำกับในระบบ กรุณาเปลี่ยนใหม่ !!";
+                        msg = "SKU_ID ซ้ำกับในระบบ กรุณาเปลี่ยนใหม่ !!";
                         msg.ShowWarningMessage();
                         return;
                     }
@@ -823,7 +887,7 @@ namespace AllCashUFormsApp.View.Page
 
                     btnSearchSKUGroup_EXC.PerformClick();
 
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
                 }
                 else
@@ -837,6 +901,7 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void SaveHQ_Promotion()
         {
             try
@@ -904,6 +969,7 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void PrePareSaveHQPromotion(tbl_HQ_Promotion HQPro_Data)
         {
             HQPro_Data.PromotionType = cbbPromotionType.Text;
@@ -997,7 +1063,10 @@ namespace AllCashUFormsApp.View.Page
             HQPro_Data.PruductGroupRewardAmt2 = null; //ปิดไว้ก่อนยังไม่ใช้
             HQPro_Data.StepCondition2 = null;//ปิดไว้ก่อนยังไม่ใช้
             HQPro_Data.SKUGroupID2 = null;//ปิดไว้ก่อนยังไม่ใช้
+
+            HQPro_Data.SaleTypeID = Convert.ToInt32(cbbSaleType.SelectedValue);
         }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             string tabName = tabControl1.SelectedTab.Text.ToString();
@@ -1027,13 +1096,14 @@ namespace AllCashUFormsApp.View.Page
             }
             else if (tabName == "SKU-GROUP-EXC")
             {
-                SaveHQ_SKUGroupExc();
+                Save_SKUGroupExc();
             }
             else if (tabName == "HQ_Promotion")
             {
                 SaveHQ_Promotion();
             }
         }
+
         private void Select_HQPromotion_Master(DataGridViewCellEventArgs e)
         {
             try
@@ -1067,18 +1137,17 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void grdHQPromotionMaster_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Select_HQPromotion_Master(e);
         }
-        private void grdHQPromotionMaster_SelectionChanged(object sender, EventArgs e)
-        {
-            Select_HQPromotion_Master(null);
-        }
+
         private void btnSearchHQ_Promotion_Master_Click(object sender, EventArgs e)
         {
             BindHQ_Promotion_Master();
         }
+
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1086,28 +1155,33 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_Promotion_Master();
             }
         }
+
         private void BindHQ_Reward()
         {
+            mtb_RewardID.Text = "";
+            txtRewardName.Text = "";
+
             if (grdBranch.Rows.Count > 0)
             {
-                mtb_RewardID.Text = "";
-                txtRewardName.Text = "";
-
                 DataTable HQ_Reward = new DataTable();
 
-                HQ_Reward = bu.GetHQ_RewardData(txtSearchReward.Text); // new
+                HQ_Reward = bu.GetHQ_RewardData(txtSearchReward.Text);
 
                 grdHQ_Reward.DataSource = HQ_Reward;
                 lbl_Qty_Reward.Text = HQ_Reward.Rows.Count.ToNumberFormat();
 
                 int colNo = HQ_Reward.Rows.Count;
                 SetButtonAfterBindGrid(colNo);
+
+                Select_HQ_Reward(null);
             }
         }
+
         private void btnSearchReward_Click(object sender, EventArgs e)
         {
             BindHQ_Reward();
         }
+
         private void txtSearchReward_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1115,6 +1189,7 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_Reward();
             }
         }
+
         private void Select_HQ_Reward(DataGridViewCellEventArgs e)
         {
             try
@@ -1148,18 +1223,17 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void grdHQ_Reward_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Select_HQ_Reward(e);
         }
-        private void grdHQ_Reward_SelectionChanged(object sender, EventArgs e)
-        {
-            Select_HQ_Reward(null);
-        }
+
         private void grdHQ_Reward_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQ_Reward.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             string tabName = tabControl1.SelectedTab.Text.ToString();
@@ -1205,30 +1279,21 @@ namespace AllCashUFormsApp.View.Page
             }
             else if (tabName == "HQ_Promotion")
             {
-                EditFlag = 0;
                 pnlEdit_HQPromotion.OpenControl(false, PanelEdit_HQPromotion_Controls.ToArray());
 
                 pnlSearch_HQPro.Enabled = true;
                 grdHQ_Promotion.Enabled = true;
-
                 btnSearchHQ_Promotion.PerformClick();
-
-                if (grdHQ_Promotion.Rows.Count > 0)
-                {
-                    grdHQ_Promotion[0, 0].Selected = true;
-                }
-
-                int colNo = grdHQ_Promotion.Rows.Count;
-                SetButtonAfterBindGrid(colNo);
             }
         }
+
         private void BindHQ_SKUGroup()
         {
+            btnAddSKU_ID.Enabled = false;
+            btnRemoveSKU.Enabled = false;
+
             if (grdBranch.Rows.Count > 0)
             {
-                btnAddSKU_ID.Enabled = false;
-                btnRemoveSKU.Enabled = false;
-
                 mtbHQ_SKUGroupID.Text = "";
 
                 if (lsbSKU_ID.Items.Count > 0)
@@ -1247,12 +1312,16 @@ namespace AllCashUFormsApp.View.Page
                 int colNo = dt.Rows.Count;
 
                 SetButtonAfterBindGrid(colNo);
+
+                Select_SkuGroup(null);
             }
-        }//
+        }
+
         private void btnSearchSkuGroup_Click(object sender, EventArgs e)
         {
             BindHQ_SKUGroup();
         }
+
         private void txtSearch_SKUGroup_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1260,6 +1329,7 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_SKUGroup();
             }
         }
+
         private void Select_SkuGroup(DataGridViewCellEventArgs e)
         {
             try
@@ -1269,18 +1339,12 @@ namespace AllCashUFormsApp.View.Page
                 if (e != null)
                 {
                     if (e.RowIndex == -1)
-                    {
                         return;
-                    }
                     else
-                    {
                         grdRows = grdSkuGroup.Rows[e.RowIndex];
-                    }
                 }
                 else
-                {
                     grdRows = grdSkuGroup.CurrentRow;
-                }
 
                 if (grdRows != null)
                 {
@@ -1321,26 +1385,24 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void grdSkuGroup_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Select_SkuGroup(e);
         }
-        private void grdSkuGroup_SelectionChanged(object sender, EventArgs e)
-        {
-            Select_SkuGroup(null);
-        }
+
         private void grdSkuGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdSkuGroup.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void BindHQ_SKUGroup_Exc()
         {
+            mtbSKU_ID_Exc.Text = "";
+
             if (grdBranch.Rows.Count > 0)
             {
-                mtbSKU_ID_Exc.Text = "";
-
                 DataTable dt = new DataTable();
-
                 dt = bu.GetHQ_SKUGroup_ExcData(txtSearchSKUGroup_EXC.Text); // new
 
                 grdSKUGroup_EXC.DataSource = dt;
@@ -1348,12 +1410,16 @@ namespace AllCashUFormsApp.View.Page
 
                 int colNo = dt.Rows.Count;
                 SetButtonAfterBindGrid(colNo);
+
+                Select_SKUGroupExc(null);
             }
-        }//
+        }
+
         private void btnSearchSKUGroup_EXC_Click(object sender, EventArgs e)
         {
             BindHQ_SKUGroup_Exc();
         }
+
         private void txtSearchSKUGroup_EXC_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1361,6 +1427,7 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_SKUGroup_Exc();
             }
         }
+
         private void Select_SKUGroupExc(DataGridViewCellEventArgs e)
         {
             try
@@ -1370,46 +1437,39 @@ namespace AllCashUFormsApp.View.Page
                 if (e != null)
                 {
                     if (e.RowIndex == -1)
-                    {
                         return;
-                    }
                     else
-                    {
                         grdRows = grdSKUGroup_EXC.Rows[e.RowIndex];
-                    }
                 }
                 else
-                {
                     grdRows = grdSKUGroup_EXC.CurrentRow;
-                }
 
                 if (grdRows != null)
-                {
                     mtbSKU_ID_Exc.Text = grdRows.Cells["colSKU_ID_EXC"].Value.ToString();
-                }
+
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void grdSKUGroup_EXC_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Select_SKUGroupExc(e);
         }
-        private void grdSKUGroup_EXC_SelectionChanged(object sender, EventArgs e)
-        {
-            Select_SKUGroupExc(null);
-        }
+
         private void grdSKUGroup_EXC_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdSKUGroup_EXC.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void btnExcel_Click(object sender, EventArgs e)
         {
             frmExcel frm = new frmExcel();
             frm.ShowDialog();
         }
+
         private void BindHQ_Promotion()
         {
             if (grdBranch.Rows.Count > 0)
@@ -1418,23 +1478,28 @@ namespace AllCashUFormsApp.View.Page
                 pnlEdit_HQPromotion.OpenControl(false, PanelEdit_HQPromotion_Controls.ToArray());
 
                 dtHQPromotion = new DataTable();
-                dtHQPromotion = bu.GetHQ_PromotionData(txtSearchHQ_Promotion.Text); // new
+                dtHQPromotion = bu.GetHQ_PromotionData(txtSearchHQ_Promotion.Text);
 
                 grdHQ_Promotion.DataSource = dtHQPromotion;
                 lbl_Qty_Promotion.Text = dtHQPromotion.Rows.Count.ToNumberFormat();
 
                 int colNo = dtHQPromotion.Rows.Count;
                 SetButtonAfterBindGrid(colNo);
+
+                Select_HQPromotion(null);
             }
-        }//
+        }
+
         private void btnSearchHQ_Promotion_Click(object sender, EventArgs e)
         {
             BindHQ_Promotion();
         }
+
         private void grdHQ_Promotion_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQ_Promotion.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void Select_HQPromotion(DataGridViewCellEventArgs e)
         {
             try
@@ -1524,18 +1589,21 @@ namespace AllCashUFormsApp.View.Page
                         txtPromotionPriority.Text = r["PromotionPriority"].ToString();
                         txtHitLimit.Text = r["HitLimit"].ToString();
 
-
                         CheckBoxSelect(r["Recomputable"].ToString(), chkboxsRecomputable);
 
                         CheckBoxSelect(r["IgnoreApplied"].ToString(), chkboxsIgnoreApplied);
 
                         CheckBoxSelect(r["IsUseCoupon"].ToString(), chkboxsIsUseCoupon);
 
-
-
                         dtpEffectiveDate.Value = Convert.ToDateTime(r["EffectiveDate"]);
                         dtpExpireDate.Value = Convert.ToDateTime(r["ExpireDate"]);
                         txtPlusSaleFrom.Text = r["PlusSaleFrom"].ToString();
+
+                        string SaleTypeID = r["SaleTypeID"].ToString();
+                        if (!string.IsNullOrEmpty(SaleTypeID))
+                        {
+                            cbbSaleType.SelectedValue = Convert.ToInt32(SaleTypeID);
+                        }
                     }
                 }
             }
@@ -1544,6 +1612,7 @@ namespace AllCashUFormsApp.View.Page
                 ex.Message.ShowErrorMessage();
             }
         }
+
         private void PrePareDiscountPattern(string DisCountPattern)
         {
             if (DisCountPattern == "free=free")
@@ -1563,6 +1632,7 @@ namespace AllCashUFormsApp.View.Page
                 cbbDisCountPattern.SelectedIndex = 3;
             }
         }
+
         private void CheckBoxSelect(string text,CheckBox chkBox)
         {
             if (!string.IsNullOrEmpty(text))
@@ -1579,10 +1649,12 @@ namespace AllCashUFormsApp.View.Page
                 chkBox.Checked = false;
             }
         }
+
         private void grdHQ_Promotion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Select_HQPromotion(e);
         }
+
         private void txtSearchHQ_Promotion_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1590,6 +1662,7 @@ namespace AllCashUFormsApp.View.Page
                 BindHQ_Promotion();
             }
         }
+
         private void cbbPromotionPattern_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EditFlag > 0)
@@ -1622,10 +1695,12 @@ namespace AllCashUFormsApp.View.Page
                 mtbSKUGroupID1.DisableTextBox(true);
             }
         }
+
         private void txtConditionStart_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtConditionStart.SetTextBoxNumberOnly(e);
         }
+
         private void txtConditionStart_TextChanged(object sender, EventArgs e)
         {
             if (EditFlag > 0)
@@ -1641,10 +1716,12 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void txtConditionEnd_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtConditionEnd.SetTextBoxNumberOnly(e);
         }
+
         private void cbbDisCountPattern_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EditFlag > 0)
@@ -1688,34 +1765,37 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void txtPruductGroupRewardAmt_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtPruductGroupRewardAmt.SetTextBoxNumberOnly(e);
         }
+
         private void txtPruductGroupRewardAmt2_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtPruductGroupRewardAmt2.SetTextBoxNumberOnly(e);
         }
+
         private void txtPromotionPriority_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtPromotionPriority.SetTextBoxNumberOnly(e);
         }
+
         private void txtHitLimit_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtHitLimit.SetTextBoxNumberOnly(e);
         }
+
         private void txtPlusSaleFrom_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtPlusSaleFrom.SetTextBoxNumberOnly(e);
         }
+
         private void txtDisCountAmt_KeyPress(object sender, KeyPressEventArgs e)
         {
             txtDisCountAmt.SetTextBoxNumberOnly(e);
         }
-        private void grdHQ_Promotion_SelectionChanged(object sender, EventArgs e)
-        {
-            Select_HQPromotion(null);
-        }
+
         private void mtbPruductGroupRewardID_TextChanged(object sender, EventArgs e)
         {
             if (EditFlag > 0)
@@ -1738,6 +1818,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void mtbPruductGroupRewardID2_TextChanged(object sender, EventArgs e)
         {
             if (EditFlag > 0)
@@ -1759,10 +1840,12 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void btnRefresh_Branch_Click(object sender, EventArgs e)
         {
             BindBranchData();
         }
+
         private void chkBoxSelectBranch_CheckedChanged(object sender, EventArgs e)
         {
             if (grdBranch.Rows.Count > 0)
@@ -1785,6 +1868,7 @@ namespace AllCashUFormsApp.View.Page
                 chkBoxSelectBranch.Checked = false;
             }
         }
+
         private void btnAddSKU_ID_Click(object sender, EventArgs e)
         {
             frmSKU frm = new frmSKU();
@@ -1812,10 +1896,16 @@ namespace AllCashUFormsApp.View.Page
 
                 if (dupplicate == false)
                 {
+                    if (EditFlag == 2)//Update
+                    {
+                        lsbSKU_ID.Items.Clear();
+                    }
+
                     lsbSKU_ID.Items.Add(skuID);
                 }
             }
         }
+
         private void mtbSKUGroupID1_TextChanged(object sender, EventArgs e)
         {
             if (mtbSKUGroupID1.Text.Length < 7)
@@ -1824,6 +1914,7 @@ namespace AllCashUFormsApp.View.Page
                 mtbSKUGroupID1.Text = date;
             }
         }
+
         private void btnRemoveSKU_Click(object sender, EventArgs e)
         {
             if (lsbSKU_ID.SelectedIndex != -1)
@@ -1837,10 +1928,12 @@ namespace AllCashUFormsApp.View.Page
                 return;
             }
         }
+
         private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdBranch.SetRowPostPaint(sender, e, this.Font);
         }
+
         private void PrePareDataTable(DataTable dt)
         {
             if (dt.Columns.Count > 0)
@@ -1883,7 +1976,10 @@ namespace AllCashUFormsApp.View.Page
 
             dt.Columns.Add("CreateBy", typeof(string));
             dt.Columns.Add("UpdateBy", typeof(string));
+
+            dt.Columns.Add("SaleTypeID", typeof(int));
         }
+
         private DateTime PrePareNewDatetimeFormat2(DateTime TempDateTime)
         {
             int year = 0;
@@ -1909,6 +2005,7 @@ namespace AllCashUFormsApp.View.Page
 
             return newDate;
         }
+
         private void PreParePromotionData(DataTable dt)
         {
             DataTable newTable = (DataTable)grdHQ_Promotion.DataSource;
@@ -1924,6 +2021,12 @@ namespace AllCashUFormsApp.View.Page
                 string EffectiveDate = _EffectiveDate.ToString("dd/MM/yyyy h:mm:ss.fff");
                 string ExpireDate = _ExpireDate.ToString("dd/MM/yyyy h:mm:ss.fff");
 
+                DateTime _CreatedDate = Convert.ToDateTime(r["CreatedDate"]);
+                _CreatedDate = PrePareNewDatetimeFormat2(_CreatedDate);
+
+                DateTime _UpdateDate = Convert.ToDateTime(r["UpdateDate"]);
+                _UpdateDate = PrePareNewDatetimeFormat2(_UpdateDate);
+
                 Nullable<decimal> ConditionEnd = null;
 
                 if (r["ConditionEnd"].ToString() != "NULL" && !string.IsNullOrEmpty(r["ConditionEnd"].ToString()))
@@ -1936,7 +2039,6 @@ namespace AllCashUFormsApp.View.Page
                 {
                     DisCountAmt = Convert.ToDecimal(r["DisCountAmt"]);
                 }
-
 
                 Nullable<int> PruductGroupRewardAmt = null;
                 if (r["PruductGroupRewardAmt"].ToString() != "NULL" && !string.IsNullOrEmpty(r["PruductGroupRewardAmt"].ToString()))
@@ -1999,6 +2101,11 @@ namespace AllCashUFormsApp.View.Page
                     PlusSaleFrom = Convert.ToInt32(r["PlusSaleFrom"]);
                 }
 
+                Nullable<int> SaleTypeID = null;
+                if (r["SaleTypeID"].ToString() != "NULL" && !string.IsNullOrEmpty(r["SaleTypeID"].ToString()))
+                {
+                    SaleTypeID = Convert.ToInt32(r["SaleTypeID"]);
+                }
 
                 dt.Rows.Add(r["PromotionID"].ToString(), r["PromotionType"].ToString()
                     , r["PromotionPattern"].ToString(), r["StepCondition1"].ToString()
@@ -2021,10 +2128,12 @@ namespace AllCashUFormsApp.View.Page
                 , IsUseCoupon == null ? null : IsUseCoupon
                 , EffectiveDate, ExpireDate
                 , PlusSaleFrom == null ? null : PlusSaleFrom
-                , DateTime.Now, null
-                , Helper.tbl_Users.Username, null);
+                , _CreatedDate, _UpdateDate
+                , r["CreateBy"].ToString(), r["UpdateBy"].ToString()
+                , SaleTypeID);
             }
         }
+
         private void btnExportExcel_Click(object sender, EventArgs e)
         {
             int Promotion = grdHQ_Promotion.Rows.Count;
@@ -2100,6 +2209,7 @@ namespace AllCashUFormsApp.View.Page
 
            
         }
+
         public bool ValidateBranchCheck()
         {
             bool ValidateBranch = false;
@@ -2125,6 +2235,7 @@ namespace AllCashUFormsApp.View.Page
 
             return ValidateBranch;
         }
+
         private void SelectBranchList(List<string> selectList_Branch)
         {
             for (int i = 0; i < grdBranch.Rows.Count; i++)
@@ -2138,6 +2249,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectPromotionID_List(List<string> PromotionListID)
         {
             if (grdHQ_Promotion.RowCount > 0)
@@ -2149,6 +2261,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectPromotion_Master_List(List<string> PromotionMasterList)
         {
             if (grdHQPromotionMaster.RowCount > 0)
@@ -2160,6 +2273,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectReward_List(List<string> RewardList)
         {
             if (grdHQ_Reward.RowCount > 0)
@@ -2171,6 +2285,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectSKUGroup_List(List<string> SKUGroupID_List,List<string> SKU_ID_List)
         {
             if (grdSkuGroup.RowCount > 0)
@@ -2184,6 +2299,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectSKUGroupEXC_List(List<string> SKUList)
         {
             if (grdSKUGroup_EXC.RowCount > 0)
@@ -2195,6 +2311,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void btnSendData_Click(object sender, EventArgs e)
         {
             string msgCheckError = "";
@@ -2272,6 +2389,7 @@ namespace AllCashUFormsApp.View.Page
                 return;
             }
         }
+
         private void btnCancelSend_Click(object sender, EventArgs e)
         {
             chkBoxSelectBranch.Checked = false;
@@ -2280,6 +2398,74 @@ namespace AllCashUFormsApp.View.Page
         private void frmPromotionSetting_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        //private void Remove()
+        //{
+        //    string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+        //    string title = "ทำการยืนยัน!!";
+
+        //    if (!cfMsg.ConfirmMessageBox(title))
+        //        return;
+
+        //    string tabName = tabControl1.SelectedTab.Text.ToString();
+
+        //    if (tabName == "HQ_Promotion")
+        //    {
+                
+        //    }
+        //    if (tabName == "HQ_Promotion_Master")
+        //    {
+                
+        //    }
+        //    else if (tabName == "HQ-Reward")
+        //    {
+                
+        //    }
+        //    else if (tabName == "SKU-GROUP")
+        //    {
+                
+        //    }
+        //    else if (tabName == "SKU-GROUP-EXC")
+        //    {
+        //        //Remove_SKUGroupExc();
+        //    }
+        //}
+
+        //private void Remove_SKUGroupExc()
+        //{
+        //    int ret = 0;
+
+        //    try
+        //    {
+        //        var new_HQ_SKUGroupExc = new tbl_HQ_SKUGroup_EXC();
+
+        //        new_HQ_SKUGroupExc.SKU_ID = mtbSKU_ID_Exc.Text;
+
+        //        ret = bu.Remove_SKUGroupEXC(new_HQ_SKUGroupExc);
+
+        //        if (ret == 1)
+        //        {
+        //            btnSearchSKUGroup_EXC.PerformClick();
+
+        //            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+        //            msg.ShowInfoMessage();
+        //        }
+        //        else
+        //        {
+        //            this.ShowProcessErr();
+        //            return;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.Message.ShowErrorMessage();
+        //    }
+        //}
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            //Remove();
         }
     }
 }

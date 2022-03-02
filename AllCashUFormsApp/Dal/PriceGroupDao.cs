@@ -41,6 +41,7 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+
         /// <summary>
         /// select data
         /// </summary>
@@ -65,6 +66,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         /// <summary>
         /// select all data
         /// </summary>
@@ -101,6 +103,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_PriceGroup tbl_PriceGroup)
         {
+            string msg = "start PriceGroupDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -116,11 +121,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PriceGroup.GetType());
             }
 
+            msg = "end PriceGroupDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static void Insert(this tbl_PriceGroup tbl_PriceGroup, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PriceGroupDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_PriceGroup.Attach(tbl_PriceGroup);
@@ -131,10 +142,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end PriceGroupDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this tbl_PriceGroup tbl_PriceGroup, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PriceGroupDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -172,6 +189,9 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end PriceGroupDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -182,6 +202,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_PriceGroup tbl_PriceGroup)
         {
+            string msg = "start PriceGroupDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -220,6 +243,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PriceGroup.GetType());
             }
 
+            msg = "end PriceGroupDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -230,6 +256,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_PriceGroup tbl_PriceGroup)
         {
+            string msg = "start PriceGroupDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -244,6 +273,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PriceGroup.GetType());
             }
+
+            msg = "end PriceGroupDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

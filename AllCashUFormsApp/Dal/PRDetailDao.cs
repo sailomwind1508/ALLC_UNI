@@ -179,6 +179,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_PRDetail tbl_PRDetail, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRDetailDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_PRDetail.Attach(tbl_PRDetail);
@@ -188,10 +191,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PRDetail.GetType());
             }
+
+            msg = "end PRDetailDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_PRDetail> tbl_PRDetails, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRDetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 foreach (var tbl_PRDetail in tbl_PRDetails)
@@ -204,10 +213,47 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end PRDetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_PRDetail"></param>
+        /// <returns></returns>
+        public static int Insert(this tbl_PRDetail tbl_PRDetail)
+        {
+            string msg = "start PRDetailDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_PRDetail.Attach(tbl_PRDetail);
+                    db.tbl_PRDetail.Add(tbl_PRDetail);
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRDetail.GetType());
+            }
+
+            msg = "end PRDetailDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int UpdateEntity(this List<tbl_PRDetail> tbl_PRDetails, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PRDetailDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -238,6 +284,7 @@ namespace AllCashUFormsApp
                                 }
                             }
 
+                            //db.up (tbl_PRDetails);
                             db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
                         }
                         else
@@ -261,11 +308,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end PRDetailDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_PRDetail> tbl_PRDetails)
         {
+            string msg = "start PRDetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -311,50 +364,10 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_PRDetail);
             }
 
+            msg = "end PRDetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
-        }
-
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_PRDetail"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_PRDetail tbl_PRDetail, DB_ALL_CASH_UNIEntities db)
-        {
-            try
-            {
-                db.Entry(tbl_PRDetail).State = EntityState.Deleted;
-                db.tbl_PRDetail.Remove(tbl_PRDetail);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PRDetail.GetType());
-            }
-        }
-
-        /// <summary>
-        /// add new data
-        /// </summary>
-        /// <param name="tbl_PRDetail"></param>
-        /// <returns></returns>
-        public static int Insert(this tbl_PRDetail tbl_PRDetail)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_PRDetail.Attach(tbl_PRDetail);
-                    db.tbl_PRDetail.Add(tbl_PRDetail);
-                    ret = db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PRDetail.GetType());
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -364,6 +377,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_PRDetail tbl_PRDetail)
         {
+            string msg = "start PRDetailDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -402,7 +418,34 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PRDetail.GetType());
             }
 
+            msg = "end PRDetailDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_PRDetail"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_PRDetail tbl_PRDetail, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PRDetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_PRDetail).State = EntityState.Deleted;
+                db.tbl_PRDetail.Remove(tbl_PRDetail);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRDetail.GetType());
+            }
+
+            msg = "end PRDetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -412,6 +455,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_PRDetail tbl_PRDetail)
         {
+            string msg = "start PRDetailDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -426,6 +472,159 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PRDetail.GetType());
             }
+
+            msg = "end PRDetailDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+
+        public static int BulkInsert(this List<tbl_PRDetail> tbl_PRDetails)
+        {
+            string msg = "start PRDetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_PRDetails.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_PRDetail";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end PRDetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_PRDetail> tbl_PRDetails)
+        {
+            string msg = "start PRDetailDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                //var table = tbl_PRDetails.ToDataTable();
+                //if (table != null && table.Rows.Count > 0)
+                //{
+                //    using (var conn = new SqlConnection(Connection.ConnectionString))
+                //    {
+                //        if (conn.State == ConnectionState.Closed)
+                //        {
+                //            conn.Open();
+                //        }
+
+                //        string sql = " SELECT * FROM tbl_PRDetail ";
+                //        var cmd = new SqlCommand(sql, conn);
+                //        var ad = new SqlDataAdapter(cmd);
+                //        SqlCommandBuilder cmdb = new SqlCommandBuilder(ad);
+                //        ad.Update(table);
+                //        table.AcceptChanges();
+
+                //        ret = 1;
+                //    }
+                //}
+
+                string sql = " DELETE FROM tbl_PRDetail WHERE DocNo = '" + tbl_PRDetails.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_PRDetails.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PRDetailDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_PRDetail> tbl_PRDetails)
+        {
+            string msg = "start tbl_PRDetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_PRDetail WHERE DocNo = '" + tbl_PRDetails.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_PRDetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_PRDetail> tbl_PRDetails, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PRDetailDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_PRDetail();
+                var docNo = tbl_PRDetails.First().DocNo;
+                updateData = db.tbl_PRDetail.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_PRDetails.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_PRDetails.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PRDetailDao=>PerformUpdate";
+            msg.WriteLog(null);
 
             return ret;
         }

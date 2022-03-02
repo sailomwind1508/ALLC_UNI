@@ -249,6 +249,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_POMaster_PRE tbl_POMaster_PRE, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start POMaster_PREDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_POMaster_PRE.Attach(tbl_POMaster_PRE);
@@ -258,10 +261,47 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_POMaster_PRE.GetType());
             }
+
+            msg = "end POMaster_PREDao=>InsertWithDB";
+            msg.WriteLog(null);
+        }
+
+        /// <summary>
+        /// add new data
+        /// </summary>
+        /// <param name="tbl_POMaster_PRE"></param>
+        /// <returns></returns>
+        public static int Insert(this tbl_POMaster_PRE tbl_POMaster_PRE)
+        {
+            string msg = "start POMaster_PREDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_POMaster_PRE.Attach(tbl_POMaster_PRE);
+                    db.tbl_POMaster_PRE.Add(tbl_POMaster_PRE);
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster_PRE.GetType());
+            }
+
+            msg = "end POMaster_PREDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int UpdateEntity(this tbl_POMaster_PRE tbl_POMaster_PRE, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
+            string msg = "start POMaster_PREDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -300,11 +340,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end POMaster_PREDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_POMaster_PRE> tbl_POMaster_PREs)
         {
+            string msg = "start POMaster_PREDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -349,50 +395,10 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_POMaster_PRE);
             }
 
+            msg = "end POMaster_PREDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
-        }
-
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_POMaster_PRE"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_POMaster_PRE tbl_POMaster_PRE, DB_ALL_CASH_UNIEntities db)
-        {
-            try
-            {
-                db.Entry(tbl_POMaster_PRE).State = EntityState.Deleted;
-                db.tbl_POMaster_PRE.Remove(tbl_POMaster_PRE);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_POMaster_PRE.GetType());
-            }
-        }
-
-        /// <summary>
-        /// add new data
-        /// </summary>
-        /// <param name="tbl_POMaster_PRE"></param>
-        /// <returns></returns>
-        public static int Insert(this tbl_POMaster_PRE tbl_POMaster_PRE)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_POMaster_PRE.Attach(tbl_POMaster_PRE);
-                    db.tbl_POMaster_PRE.Add(tbl_POMaster_PRE);
-                    ret = db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_POMaster_PRE.GetType());
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -402,6 +408,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_POMaster_PRE tbl_POMaster_PRE)
         {
+            string msg = "start POMaster_PREDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -440,7 +449,34 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_POMaster_PRE.GetType());
             }
 
+            msg = "end POMaster_PREDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_POMaster_PRE"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_POMaster_PRE tbl_POMaster_PRE, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start POMaster_PREDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_POMaster_PRE).State = EntityState.Deleted;
+                db.tbl_POMaster_PRE.Remove(tbl_POMaster_PRE);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster_PRE.GetType());
+            }
+
+            msg = "end POMaster_PREDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -450,6 +486,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_POMaster_PRE tbl_POMaster_PRE)
         {
+            string msg = "start POMaster_PREDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -464,6 +503,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_POMaster_PRE.GetType());
             }
+
+            msg = "end POMaster_PREDao=>Delete";
+            msg.WriteLog(null);
 
             return ret;
         }

@@ -16,18 +16,29 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchSalArea()
         {
             InitializeComponent();
+
+            this.Load += frmSearchSalArea_Load;
+
+            btnCancel.Click += btnCancel_Click;
+            btnAccept.Click += btnAccept_Click;
+
+            txtSearch.KeyDown += txtSearch_KeyDown;
+
+            grdList.RowPostPaint += grdList_RowPostPaint;
+            this.FormClosed += frmSearchSalArea_FormClosed;
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void frmSearchSalArea_Load(object sender, EventArgs e)
         {
             grdList.AutoGenerateColumns = false;
-
             BindData();
-            lbl_RowCount.Text = grdList.RowCount.ToString();
         }
+
         private void BindData()
         {
             DataTable newDT = new DataTable();
@@ -43,12 +54,15 @@ namespace AllCashUFormsApp.View.UControl
             {
                 grdList.DataSource = null;
             }
-                
+
+            lbl_RowCount.Text = grdList.RowCount.ToString();
         }
+
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender,e,this.Font);
         }
+
         private void btnAccept_Click(object sender, EventArgs e)
         {
             List<string> selectList = new List<string>();
@@ -62,6 +76,19 @@ namespace AllCashUFormsApp.View.UControl
             var joinString = string.Join(",", selectList);
             frmReport._SalArea = joinString;
             this.Close();
+        }
+
+        private void frmSearchSalArea_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode== Keys.Enter)
+            {
+                BindData();
+            }
         }
     }
 }

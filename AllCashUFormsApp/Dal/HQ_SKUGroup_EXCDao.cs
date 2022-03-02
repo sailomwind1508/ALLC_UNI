@@ -17,6 +17,32 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="tbl_HQ_SKUGroup_EXC"></param>
         /// <returns></returns>
+        public static IEnumerable<tbl_HQ_SKUGroup_EXC> SelectListSKU(this tbl_HQ_SKUGroup_EXC obj, object condition)
+        {
+            List<tbl_HQ_SKUGroup_EXC> list = new List<tbl_HQ_SKUGroup_EXC>();
+            try
+            {
+                List<string> con = (List<string>)condition;
+                string skus = string.Join("','", con);
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_SKUGroup_EXC] WHERE SKU_ID IN ('" + skus + "')";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_SKUGroup_EXC), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_SKUGroup_EXC>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(obj.GetType());
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_HQ_SKUGroup_EXC"></param>
+        /// <returns></returns>
         public static IEnumerable<tbl_HQ_SKUGroup_EXC> Select(this tbl_HQ_SKUGroup_EXC obj, object condition)
         {
             return obj.Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
@@ -173,7 +199,8 @@ namespace AllCashUFormsApp
 
             return ret;
         }
-        public static DataTable GetHQ_SKUGroup_ExcData(this tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC, string search)//
+
+        public static DataTable GetHQ_SKUGroup_ExcData(this tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC, string search)
 
         {
             try
@@ -194,20 +221,19 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+
         public static int UpdateSKUGroupExc(this tbl_HQ_SKUGroup_EXC tbl_HQ_SKUGroup_EXC ,string SKU_ID_Old)
         {
             int ret = 0;
+
+            DataTable dt = new DataTable();
+            SqlConnection con = new SqlConnection(Connection.ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+
             try
             {
-                string query = "SELECT * FROM tbl_HQ_SKUGroup_EXC WHERE SKU_ID = '" + SKU_ID_Old + "'";
-                DataTable dt = new DataTable();
-                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(query);
-
-                SqlConnection con = new SqlConnection(Connection.ConnectionString);
-
-                string sql = "";
-
-                SqlCommand cmd = new SqlCommand();
+                string sql = "SELECT * FROM tbl_HQ_SKUGroup_EXC WHERE SKU_ID = '" + SKU_ID_Old + "'";
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
 
                 if (dt.Rows.Count > 0)
                 {
@@ -225,17 +251,14 @@ namespace AllCashUFormsApp
                     cmd = new SqlCommand(sql, con);
                     con.Open();
                     cmd.Parameters.AddWithValue("@SKU_ID", tbl_HQ_SKUGroup_EXC.SKU_ID);
-                   
                 }
 
                 ret = cmd.ExecuteNonQuery();
-
                 con.Close();
-
             }
             catch (Exception ex)
             {
-                
+                ex.WriteLog(tbl_HQ_SKUGroup_EXC.GetType());
             }
 
             return ret;

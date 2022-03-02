@@ -32,14 +32,17 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_MstDistrict.Insert();
         }
+
         public int UpdateData(tbl_MstArea tbl_MstArea)
         {
             return tbl_MstArea.Update();
         }
+
         public int UpdateData(tbl_MstProvince tbl_MstProvince)
         {
             return tbl_MstProvince.Update();
         }
+
         public int UpdateData(tbl_MstDistrict tbl_MstDistrict)
         {
             return tbl_MstDistrict.Update();
@@ -131,47 +134,25 @@ namespace AllCashUFormsApp.Controller
             return dt;
         }
 
-        public DataTable GetProvinceTable(int flagDel, string searchText)
+        public DataTable GetProvinceTable(int flagDel, string Text)
         {
-            DataTable dt = new DataTable();
-            string sql = "SELECT * FROM tbl_MstProvince WHERE FlagDel = " + flagDel + "";
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                sql += " AND (ProvinceCode like '%" + searchText + "%'" + " OR ProvinceName like '%" + searchText + "%' )";
-            }
-            sql += " ORDER BY ProvinceCode ";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
-            da.Fill(dt);
-            return dt;
+            return new tbl_MstProvince().GetProvinceTable(flagDel, Text);
         }
-        public DataTable GetAreaTable(int flagDel, int provinceID, string searchText)
-        {
-            DataTable dt = new DataTable();
-            string sql = "SELECT * FROM tbl_MstArea WHERE FlagDel = " + flagDel + "";
-            sql += " AND " + provinceID + " = CASE WHEN " + provinceID + " <> 0 THEN ProvinceID ELSE 0 END";
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                sql += " AND (AreaCode like '%" + searchText + "%'" + " OR AreaName like '%" + searchText + "%' )";
-            }
-            sql += " ORDER BY ProvinceID,AreaCode ";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
-            da.Fill(dt);
-            return dt;
-        }
-        public DataTable GetDistrictTable(int flagDel, int AreaID, string searchText)
-        {
-            DataTable dt = new DataTable();
-            string sql = "SELECT * FROM tbl_MstDistrict WHERE FlagDel = " + flagDel + "";
-            sql += " AND " + AreaID + " = CASE WHEN " + AreaID + " <> 0 THEN AreaID ELSE 0 END";
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                sql += " AND (DistrictCode like '%" + searchText + "%'" + " OR DistrictName like '%" + searchText + "%')";
-            }
-            sql += " ORDER By AreaID,DistrictCode ";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
-            da.Fill(dt);
 
-            return dt;
+        public DataTable GetAreaTable(int flagDel, int provinceID, string Text)
+        {
+            return new tbl_MstArea().GetAreaTable(flagDel, provinceID, Text);
         }
+
+        public DataTable GetDistrictTable(int flagDel, int AreaID, string Text)
+        {
+            return new tbl_MstDistrict().GetDistrictTable(flagDel, AreaID, Text);
+        }
+
+        public DataTable GetProvinceFromSalAreaDistrict()
+        {
+            return new tbl_MstProvince().GetProvinceFromSalAreaDistrict();
+        }
+
     }
 }

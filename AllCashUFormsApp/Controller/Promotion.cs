@@ -35,7 +35,7 @@ namespace AllCashUFormsApp.Controller
             return hitProList;
         }
 
-        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail> productList, string customerID = "")
+        public List<PromotionRuleModel> CalculatePromotion(List<tbl_PODetail> productList, string customerID = "", string whid = "")
         {
             List<PromotionRuleModel> hitProList = new List<PromotionRuleModel>();
 
@@ -45,10 +45,10 @@ namespace AllCashUFormsApp.Controller
                 var cDate = DateTime.Now;
 
                 PRDPromotion prdPro = new PRDPromotion();
-                prdPro.PreCalcPromotion(this, productList, hitProList, customerID);
+                prdPro.PreCalcPromotion(this, productList, hitProList, customerID, whid);
 
                 TXNPromotion txnPro = new TXNPromotion();
-                txnPro.PreCalcPromotion(this, productList, hitProList, customerID);
+                txnPro.PreCalcPromotion(this, productList, hitProList, customerID, whid);
 
             }
             catch (Exception ex)

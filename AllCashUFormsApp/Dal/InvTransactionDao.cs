@@ -119,6 +119,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_InvTransaction tbl_InvTransaction, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvTransactionDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_InvTransaction.Attach(tbl_InvTransaction);
@@ -128,10 +131,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_InvTransaction.GetType());
             }
+
+            msg = "end InvTransactionDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_InvTransaction> tbl_InvTransactions, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvTransactionDao=>InsertListWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 foreach (var tbl_InvTransaction in tbl_InvTransactions)
@@ -144,10 +153,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end InvTransactionDao=>InsertListWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this List<tbl_InvTransaction> tbl_InvTransactions, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
+            string msg = "start InvTransactionDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -198,11 +213,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end InvTransactionDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_InvTransaction> tbl_InvTransactions)
         {
+            string msg = "start InvTransactionDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -247,6 +268,9 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_InvTransaction);
             }
 
+            msg = "end InvTransactionDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
@@ -257,6 +281,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Delete(this tbl_InvTransaction tbl_InvTransaction, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvTransactionDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.Entry(tbl_InvTransaction).State = EntityState.Deleted;
@@ -266,6 +293,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_InvTransaction.GetType());
             }
+
+            msg = "end InvTransactionDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -275,6 +305,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_InvTransaction tbl_InvTransaction)
         {
+            string msg = "start InvTransactionDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -290,6 +323,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvTransaction.GetType());
             }
 
+            msg = "end InvTransactionDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -300,6 +336,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_InvTransaction tbl_InvTransaction)
         {
+            string msg = "start InvTransactionDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -338,9 +377,11 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvTransaction.GetType());
             }
 
+            msg = "end InvTransactionDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
-
 
         /// <summary>
         /// remove data
@@ -349,6 +390,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_InvTransaction tbl_InvTransaction)
         {
+            string msg = "start InvTransactionDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -364,6 +408,159 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_InvTransaction.GetType());
             }
+
+            msg = "end InvTransactionDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkInsert(this List<tbl_InvTransaction> tbl_InvTransactions)
+        {
+            string msg = "start tbl_InvTransaction=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_InvTransactions.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_InvTransaction";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end tbl_InvTransaction=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_InvTransaction> tbl_InvTransactions)
+        {
+            string msg = "start tbl_InvTransaction=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                //var table = tbl_InvTransactions.ToDataTable();
+                //if (table != null && table.Rows.Count > 0)
+                //{
+                //    using (var conn = new SqlConnection(Connection.ConnectionString))
+                //    {
+                //        if (conn.State == ConnectionState.Closed)
+                //        {
+                //            conn.Open();
+                //        }
+
+                //        string sql = " SELECT * FROM tbl_InvTransaction ";
+                //        var cmd = new SqlCommand(sql, conn);
+                //        var ad = new SqlDataAdapter(cmd);
+                //        SqlCommandBuilder cmdb = new SqlCommandBuilder(ad);
+                //        ad.Update(table);
+                //        table.AcceptChanges();
+
+                //        ret = 1;
+                //    }
+                //}
+
+                string sql = " DELETE FROM tbl_InvTransaction WHERE RefDocNo = '" + tbl_InvTransactions.FirstOrDefault().RefDocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_InvTransactions.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_InvTransaction=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_InvTransaction> tbl_InvTransactions)
+        {
+            string msg = "start tbl_InvTransaction=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_InvTransaction WHERE RefDocNo = '" + tbl_InvTransactions.FirstOrDefault().RefDocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_InvTransaction=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_InvTransaction> tbl_InvTransactions, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start tbl_InvTransaction=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_InvTransaction();
+                var docNo = tbl_InvTransactions.First().RefDocNo;
+                updateData = db.tbl_InvTransaction.FirstOrDefault(x => x.RefDocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_InvTransactions.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_InvTransactions.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end tbl_InvTransaction=>PerformUpdate";
+            msg.WriteLog(null);
 
             return ret;
         }

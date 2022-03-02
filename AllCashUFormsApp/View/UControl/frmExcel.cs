@@ -22,6 +22,7 @@ namespace AllCashUFormsApp.View.UControl
         {
             InitializeComponent();
         }
+
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             try
@@ -40,6 +41,80 @@ namespace AllCashUFormsApp.View.UControl
                 return;
             }
         }
+
+        private void PreParePromotion(DataTable oldData,DataTable newData)
+        {
+            foreach (DataRow r in oldData.Rows)
+            {
+                string _PromotionID = r["PromotionID"].ToString();
+                string _RewardID = r["RewardID"].ToString();
+
+                if (!string.IsNullOrEmpty(_PromotionID) && !string.IsNullOrEmpty(_RewardID))
+                {
+                    newData.Rows.Add(r[0], r[1], r[2], r[3], r[4], r[5]
+                    , r[6], r[7], r[8], r[9], r[10]
+                    , r[11], r[12], r[13], r[14], r[15]
+                    , r[16], r[17], r[18], r[19], r[20]
+                    , r[21], r[22], r[23], r[24], r[25]
+                    , r[26], r[27], r[28], r[29]);
+                }
+            }
+        }
+
+        private void PreParePromotionMaster(DataTable oldData, DataTable newData)
+        {
+            foreach (DataRow r in oldData.Rows)
+            {
+                string _PromotionID = r["PromotionID"].ToString();
+                string _PromotionName = r["PromotionName"].ToString();
+
+                if (!string.IsNullOrEmpty(_PromotionID) && !string.IsNullOrEmpty(_PromotionName))
+                {
+                    newData.Rows.Add(_PromotionID, _PromotionName);
+                }
+            }
+        }
+
+        private void PrePareReward(DataTable oldData, DataTable newData)
+        {
+            foreach (DataRow r in oldData.Rows)
+            {
+                string _RewardID = r["RewardID"].ToString();
+                string _RewardName = r["RewardName"].ToString();
+
+                if (!string.IsNullOrEmpty(_RewardID) && !string.IsNullOrEmpty(_RewardName))
+                {
+                    newData.Rows.Add(_RewardID, _RewardName);
+                }
+            }
+        }
+
+        private void PrePareSKUGroup(DataTable oldData, DataTable newData)
+        {
+            foreach (DataRow r in oldData.Rows)
+            {
+                string _SKUGroupID = r["SKUGroupID"].ToString();
+                string _SKU_ID = r["SKU_ID"].ToString();
+
+                if (!string.IsNullOrEmpty(_SKUGroupID) && !string.IsNullOrEmpty(_SKU_ID))
+                {
+                    newData.Rows.Add(_SKUGroupID, _SKU_ID);
+                }
+            }
+        }
+
+        private void PrePareSKUGroupEXC(DataTable oldData, DataTable newData)
+        {
+            foreach (DataRow r in oldData.Rows)
+            {
+                string _SKU_ID = r["SKU_ID"].ToString();
+                if (!string.IsNullOrEmpty(_SKU_ID))
+                {
+                    newData.Rows.Add(_SKU_ID);
+                }
+            }
+        }
+
         private void btnUpLoad_Click(object sender, EventArgs e)
         {
             try
@@ -63,11 +138,26 @@ namespace AllCashUFormsApp.View.UControl
                 List<DataTable> newTable = new List<DataTable>();
                 newTable = newTable.ReadExxel(txtPathExcel.Text, SheetName);//new
 
-                grdHQPromotion.DataSource = newTable[0];
-                grdHQPromotionMaster.DataSource = newTable[1];
-                grdHQReward.DataSource = newTable[2];
-                grdHQSKUGroup.DataSource = newTable[3];
-                grdHQSKUGroupExc.DataSource = newTable[4];
+                var dtHqPro = newTable[0].Clone();
+                PreParePromotion(newTable[0], dtHqPro);
+
+                var dtHqProMaster = newTable[1].Clone();
+                PreParePromotionMaster(newTable[1], dtHqProMaster);
+
+                var dtReward = newTable[2].Clone();
+                PrePareReward(newTable[2], dtReward);
+
+                var dtSKUGroup = newTable[3].Clone();
+                PrePareSKUGroup(newTable[3], dtSKUGroup);
+
+                var dtSKUGroupExc = newTable[4].Clone();
+                PrePareSKUGroupEXC(newTable[4], dtSKUGroupExc);
+
+                grdHQPromotion.DataSource = dtHqPro;
+                grdHQPromotionMaster.DataSource = dtHqProMaster;
+                grdHQReward.DataSource = dtReward;
+                grdHQSKUGroup.DataSource = dtSKUGroup;
+                grdHQSKUGroupExc.DataSource = dtSKUGroupExc;
             }
             catch (Exception ex)
             {
@@ -75,30 +165,37 @@ namespace AllCashUFormsApp.View.UControl
                 return;
             }
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void grdHQPromotion_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQPromotion.SetRowPostPaint(sender, e, Font);
         }
+
         private void grdHQPromotionMaster_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQPromotionMaster.SetRowPostPaint(sender, e, Font);
         }
+
         private void grdHQReward_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQReward.SetRowPostPaint(sender, e, Font);
         }
+
         private void grdHQSKUGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQSKUGroup.SetRowPostPaint(sender, e, Font);
         }
+
         private void grdHQSKUGroupExc_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdHQSKUGroupExc.SetRowPostPaint(sender, e, Font);
         }
+
         private void Save()
         {
             string cfMsg = "ต้องการส่งข้อมูลใช่หรือไม่?";
@@ -129,11 +226,11 @@ namespace AllCashUFormsApp.View.UControl
                 int retHQSKUGroup = 0;
                 int retHQSKUGroup_EXC = 0;
 
-                retHQPromotion = Save_HQPromotion();
-                retHQPromotion_Master = Save_HQPromotionMaster();
-                retHQReward = Save_HQReward();
-                retHQSKUGroup = Save_HQSKUGroup();
-                retHQSKUGroup_EXC = Save_HQSKUGroup_EXC();
+                retHQPromotion = Save_Promotion();
+                retHQPromotion_Master = Save_PromotionMaster();
+                retHQReward = Save_Reward();
+                retHQSKUGroup = Save_SKUGroup();
+                retHQSKUGroup_EXC = Save_SKUGroup_EXC();
 
                 if (retHQPromotion == 0)
                 {
@@ -174,6 +271,7 @@ namespace AllCashUFormsApp.View.UControl
 
            
         }
+
         private void PrePareSave_HQPromotion(tbl_HQ_Promotion HQ_Promotion,DataRow r)
         {
             HQ_Promotion.PromotionType = r["PromotionType"].ToString();
@@ -276,7 +374,14 @@ namespace AllCashUFormsApp.View.UControl
             {
                 HQ_Promotion.PlusSaleFrom = Convert.ToInt32(r["PlusSaleFrom"]);
             }
+
+            string _SaleTypeID = r["SaleTypeID"].ToString();
+            if (!string.IsNullOrEmpty(_SaleTypeID))
+            {
+                HQ_Promotion.SaleTypeID = Convert.ToInt32(r["SaleTypeID"]);
+            }
         }
+
         private DateTime PrePareNewDatetimeFormat2(DateTime TempDateTime)
         {
             int year = 0;
@@ -302,22 +407,18 @@ namespace AllCashUFormsApp.View.UControl
 
             return newDate;
         }
-        private int Save_HQPromotion()
+
+        private int Save_Promotion()
         {
-            int ret = 0;
+            List<int> ret = new List<int>();
 
             var HQ_PromotionList = new List<tbl_HQ_Promotion>();
          
-
             var Promotion = bu.GetSelectHQPromotion();
 
-            DataTable dt = new DataTable();
+            var dt = (DataTable)grdHQPromotion.DataSource;
 
-            dt = (DataTable)grdHQPromotion.DataSource;
-
-            DateTime dtpDate = DateTime.Now;
-
-            if (dt.Rows.Count > 0)
+            if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow r in dt.Rows)
                 {
@@ -349,31 +450,31 @@ namespace AllCashUFormsApp.View.UControl
                             HQ_Promotion.UpdateDate = null;
                             HQ_Promotion.UpdateBy = null;
                         }
+
                         HQ_PromotionList.Add(HQ_Promotion);
                     }
                 }
 
-                foreach (var item in HQ_PromotionList)
+                foreach (var data in HQ_PromotionList)
                 {
-                    ret = bu.UpdateHQPromotionData(item);
+                    ret.Add(bu.UpdateHQPromotionData(data));
                 }
-               
             }
 
-            return ret;
+            return ret.All(x => x == 1) ? 1 : 0;
         }
-        private int Save_HQPromotionMaster()
+
+        private int Save_PromotionMaster()
         {
-            int ret = 0;
+            List<int> ret = new List<int>();
+
             try
             {
-                
                 var PromotionMasterList = new List<tbl_HQ_Promotion_Master>();
 
-                DataTable dt = new DataTable();
-                dt = (DataTable)grdHQPromotionMaster.DataSource;
+                var dt = (DataTable)grdHQPromotionMaster.DataSource;
 
-                if (dt.Rows.Count > 0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow r in dt.Rows)
                     {
@@ -390,9 +491,9 @@ namespace AllCashUFormsApp.View.UControl
                     }
                 }
 
-                foreach (var item in PromotionMasterList)
+                foreach (var data in PromotionMasterList)
                 {
-                    ret = bu.UpdateHQ_Promotion_MasterData(item);
+                    ret.Add(bu.UpdateHQ_Promotion_MasterData(data));
                 }
 
             }
@@ -400,14 +501,16 @@ namespace AllCashUFormsApp.View.UControl
             {
                 ex.Message.ShowErrorMessage();
             }
-            return ret;
+
+            return ret.All(x => x == 1) ? 1 : 0;
         }
-        private int Save_HQReward()
+
+        private int Save_Reward()
         {
-            int ret = 0;
+            List<int> ret = new List<int>();
+
             try
             {
-               
                 var tbl_HQ_RewardList = new List<tbl_HQ_Reward>();
 
                 DataTable dt = new DataTable();
@@ -428,20 +531,23 @@ namespace AllCashUFormsApp.View.UControl
                         }
                     }
                 }
-                foreach (var item in tbl_HQ_RewardList)
+                foreach (var data in tbl_HQ_RewardList)
                 {
-                    ret = bu.UpdateHQ_RewardData(item);
+                    ret.Add(bu.UpdateHQ_RewardData(data));
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
             }
-            return ret;
+
+            return ret.All(x => x == 1) ? 1 : 0;
         }
-        private int Save_HQSKUGroup()
+
+        private int Save_SKUGroup()
         {
-            int ret = 0;
+            List<int> ret = new List<int>();
+
             try
             {
                 var tbl_HQ_SKUGroupList = new List<tbl_HQ_SKUGroup>();
@@ -463,20 +569,22 @@ namespace AllCashUFormsApp.View.UControl
                     }
                 }
 
-                foreach (var item in tbl_HQ_SKUGroupList)
+                foreach (var data in tbl_HQ_SKUGroupList)
                 {
-                    ret = bu.UpdateHQ_SKUGroupData(item);
+                    ret.Add(bu.UpdateHQ_SKUGroupData(data));
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
             }
-            return ret;
+
+            return ret.All(x => x == 1) ? 1 : 0;
         }
-        private int Save_HQSKUGroup_EXC()
+
+        private int Save_SKUGroup_EXC()
         {
-            int ret = 0;
+            List<int> ret = new List<int>();
             try
             {
                 var SKUGroupEXC_List = new List<tbl_HQ_SKUGroup_EXC>();
@@ -499,9 +607,9 @@ namespace AllCashUFormsApp.View.UControl
                         }
                     }
 
-                    foreach (var item in SKUGroupEXC_List)
+                    foreach (var data in SKUGroupEXC_List)
                     {
-                        ret = bu.UpdateSKUGroup_ExcData(item);
+                        ret.Add(bu.UpdateSKUGroup_ExcData(data));
                     }
                 }
             }
@@ -509,11 +617,22 @@ namespace AllCashUFormsApp.View.UControl
             {
                 ex.Message.ShowErrorMessage();
             }
-            return ret;
+
+            return ret.All(x => x == 1) ? 1 : 0;
         }
+
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             Save();
+        }
+
+        private void frmExcel_Load(object sender, EventArgs e)
+        {
+            grdHQPromotion.AutoGenerateColumns = false;
+            grdHQPromotionMaster.AutoGenerateColumns = false;
+            grdHQReward.AutoGenerateColumns = false;
+            grdHQSKUGroup.AutoGenerateColumns = false;
+            grdHQSKUGroupExc.AutoGenerateColumns = false;
         }
     }
 }

@@ -32,6 +32,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ProductType().SelectAll();
         }
+
         public List<tbl_ProductGroup> GetProductGroupNonFlag(Func<tbl_ProductGroup, bool> condition = null)
         {
             if (condition != null)
@@ -39,6 +40,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ProductGroup().SelectAllOrderByProductGroupCode();
         }
+
         public List<tbl_ProductSubGroup> GetProductSubGroup(Func<tbl_ProductSubGroup, bool> condition = null)
         {
             if (condition != null)
@@ -46,18 +48,22 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ProductSubGroup().SelectAllNonFlag();
         }
-        public  DataTable GetProductGroupTable()
+
+        public DataTable GetProductGroupTable(int flagDel)
         {
-            return new tbl_ProductGroup().GetProductGroupTable();
+            return new tbl_ProductGroup().GetProductGroupTable(flagDel);
         }
+
         public DataTable GetPrdGroupTable()
         {
             return new tbl_ProductGroup().GetPrdGroupTable();
         }
+
         public int UpdateData(tbl_ProductGroup tbl_ProductGroup)
         {
             return tbl_ProductGroup.Update();
         }
+
         public int UpdateData(tbl_ProductSubGroup tbl_ProductSubGroup)
         {
             return tbl_ProductSubGroup.Update();

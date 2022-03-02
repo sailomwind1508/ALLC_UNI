@@ -29,8 +29,9 @@ namespace AllCashUFormsApp.View.UControl
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchEmployee));
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -134,8 +135,8 @@ namespace AllCashUFormsApp.View.UControl
             // colEmpID
             // 
             this.colEmpID.DataPropertyName = "EmpID";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colEmpID.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colEmpID.DefaultCellStyle = dataGridViewCellStyle1;
             this.colEmpID.HeaderText = "รหัสพนักงาน";
             this.colEmpID.Name = "colEmpID";
             this.colEmpID.ReadOnly = true;
@@ -146,14 +147,14 @@ namespace AllCashUFormsApp.View.UControl
             // 
             this.colFullName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colFullName.DataPropertyName = "FullName";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colFullName.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colFullName.DefaultCellStyle = dataGridViewCellStyle2;
             this.colFullName.HeaderText = "ชื่อพนักงาน";
             this.colFullName.Name = "colFullName";
             this.colFullName.ReadOnly = true;
             this.colFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // frmSearchEmp
+            // frmSearchEmployee
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -163,8 +164,9 @@ namespace AllCashUFormsApp.View.UControl
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnlSearch);
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "frmSearchEmp";
+            this.Name = "frmSearchEmployee";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "เลือกพนักงาน";
             this.Load += new System.EventHandler(this.frmSearchEmp_Load);

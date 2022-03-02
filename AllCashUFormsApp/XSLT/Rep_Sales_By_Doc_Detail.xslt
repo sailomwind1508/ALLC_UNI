@@ -4,16 +4,25 @@
 	<xsl:output encoding="utf-8" />
 
 	<xsl:output omit-xml-declaration="yes" indent="yes"/>
-	<xsl:key name="kCols" match="ProductID" use="."/>
+	<xsl:key name="kCols1" match="ProductID" use="."/>
+	<xsl:key name="kCols2" match="ProductName" use="."/>
 	<xsl:key name="kRows" match="Rep_Sales_By_Doc_Detail_XSLT" use="DocNo"/>
 
-	<xsl:variable name="colIds" select=
+	<xsl:variable name="prdIds" select=
       "//ProductID
       [generate-id()
       =
-      generate-id(key('kCols', .)[1])
+      generate-id(key('kCols1', .)[1])
       ]
-      " />
+      "/>
+
+	<xsl:variable name="prdNms" select=
+      "//ProductName
+      [generate-id()
+      =
+      generate-id(key('kCols2', .)[1])
+      ]
+      "/>
 
 	<xsl:decimal-format name="foo"
 grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
@@ -169,15 +178,22 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						</TD>
 					</TR>
 					<TR>
-						<TD Colspan="17"></TD>
+						<TD Colspan="5"></TD>
+					</TR>
+					<TR>
+						<thead>
+							<TH Colspan="5"></TH>
+							<xsl:apply-templates select="$prdIds"/>
+
+						</thead>
 					</TR>
 					<thead>
-						<th class="SearchResultItem"></th>
-						<th class="SearchResultItem"></th>
-						<th class="SearchResultItem"></th>
-						<th class="SearchResultItem"></th>
-						<th class="SearchResultItem"></th>
-						<xsl:apply-templates select="$colIds"/>
+						<th class="SearchResultItem">วันที่รับ</th>
+						<th class="SearchResultItem">เลขใบกำกับภาษี</th>
+						<th class="SearchResultItem">เลขที่เอกสาร</th>
+						<th class="SearchResultItem">รหัสลูกค้า</th>
+						<th class="SearchResultItem">ชื่อลูกค้า</th>
+						<xsl:apply-templates select="$prdNms"/>
 						<th class="SearchResultItem">มูลค่า(บาท)</th>
 						<th class="SearchResultItem">สถานะเอกสาร</th>
 					</thead>
@@ -196,10 +212,15 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 	</xsl:template>
 
 	<xsl:template match="ProductID">
-		<th class="ResultItem">
+		<th class="SearchResultItem">
 			<xsl:value-of select="."/>
 		</th>
-		
+	</xsl:template>
+
+	<xsl:template match="ProductName">
+		<th class="SearchResultItem">
+			<xsl:value-of select="."/>
+		</th>
 	</xsl:template>
 
 	<xsl:template match="Rep_Sales_By_Doc_Detail_XSLT">
@@ -218,10 +239,6 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					<xsl:when test='DocNo = "รวม"'>
 
 					</xsl:when>
-					<xsl:when test='DocNo = "0000000000000"'>
-						เลขที่เอกสาร
-					</xsl:when>
-					
 					<xsl:otherwise>
 						<xsl:value-of select='DocNo'/>
 					</xsl:otherwise>
@@ -236,7 +253,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="CustName"/>
 			</td>
-			<xsl:apply-templates select="$colIds" mode="row">
+			<xsl:apply-templates select="$prdIds" mode="row">
 				<xsl:with-param name="nRows" select="key('kRows', DocNo)"/>
 				
 			</xsl:apply-templates>

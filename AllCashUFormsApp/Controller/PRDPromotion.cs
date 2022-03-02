@@ -115,22 +115,24 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
-        public void PreCalcPromotion(Promotion bu, List<tbl_PODetail> productList, List<PromotionRuleModel> hitProList, string customerID = "")
+        public void PreCalcPromotion(Promotion bu, List<tbl_PODetail> productList, List<PromotionRuleModel> hitProList, string customerID = "", string whid = "")
         {
             try
             {
                 List<tbl_HQ_SKUGroup> allPrdGroup = new List<tbl_HQ_SKUGroup>();
                 //List<tbl_HQ_SKUGroup_EXC> allExcPrdGroup = new List<tbl_HQ_SKUGroup_EXC>();
 
-                foreach (tbl_PODetail prd in productList)
-                {
-                    allPrdGroup.AddRange(GetPromotion_ProductGroup(prd.ProductID)); //get match product
-                    //allExcPrdGroup.AddRange(GetPromotion_ProductGroupEXC(prd.ProductID)); //get not match product
-                }
+                allPrdGroup.AddRange(GetPromotionListProductGroup(productList.Select(x => x.ProductID).ToList()));
+                //foreach (tbl_PODetail prd in productList)
+                //{
+                //    allPrdGroup.AddRange(GetPromotion_ProductGroup(prd.ProductID)); //get match product
+                //    //allExcPrdGroup.AddRange(GetPromotion_ProductGroupEXC(prd.ProductID)); //get not match product
+                //}
 
                 var matchGroupItems = allPrdGroup.Select(y => new { SKUGroupID = y.SKUGroupID, ProductID = y.SKU_ID }).Distinct().ToList();
                 //var notMatchGroupItems = allExcPrdGroup.Select(y => new { SKUGroupID = y.SKUGroupID, ProductID = y.SKU_ID }).Distinct().ToList();
                 //listProductGroup = listProductGroup.Distinct().ToList();
+                var allprdUOMSets = bu.GetUOMSet();
 
                 var listOfSKUGroupID = matchGroupItems.Select(x => x.SKUGroupID).Distinct().ToList();
                 foreach (string skuGroupID in listOfSKUGroupID)
@@ -142,6 +144,7 @@ namespace AllCashUFormsApp.Controller
                     decimal totalQty = 0;
                     decimal skuAmt = 0;
 
+                    Dictionary<string, decimal> prdQty = new Dictionary<string, decimal>(); //pro a+b
                     foreach (tbl_PODetail prd in productList)
                     {
                         if (matchGroupItems.Any(x => x.SKUGroupID == skuGroupID && x.ProductID == prd.ProductID)) //sum product
@@ -149,11 +152,15 @@ namespace AllCashUFormsApp.Controller
                             //unitPrice = prd.UnitPrice.Value;
 
                             totalPrice += prd.LineTotal.Value;
-                            totalQty += bu.GetOrderQty(bu, prd); //prd.OrderQty.Value;
-                            unitPrice = bu.GetSellPriceVat(bu, prd); //calc unit price
+                            totalQty += bu.GetOrderQty(bu, prd, allprdUOMSets); //prd.OrderQty.Value;
+                            unitPrice = bu.GetSellPriceVat(bu, prd, allprdUOMSets); //calc unit price
 
                             if (listSku.All(x => x != prd.ProductID))
+                            {
                                 listSku.Add(prd.ProductID);
+
+                                prdQty.Add(prd.ProductID, bu.GetOrderQty(bu, prd, allprdUOMSets)); //pro a+b
+                            }
                         }
 
                         //foreach (var itemExc in notMatchGroupItems)
@@ -172,7 +179,7 @@ namespace AllCashUFormsApp.Controller
                     if (listSku != null && listSku.Count > 0) //count sku
                         skuAmt = Convert.ToDecimal(listSku.Distinct().ToList().Count);
 
-                    var proList = GetPRDPromotion(skuGroupID); //get prd promotion
+                    var proList = GetPRDPromotion(skuGroupID, whid); //get prd promotion
 
                     if (proList != null && proList.Count > 0)  //prd
                     {
@@ -204,15 +211,65 @@ namespace AllCashUFormsApp.Controller
                             if (verifyCalPro)
                             {
                                 bool isCalPro = false;
-                                //for support u-online last edit by sailom .k 18-06-2021=====================
-                                if (pro.ShopTypeID != null)
+                                ////for support u-online last edit by sailom .k 18-06-2021=====================
+                                //if (pro.ShopTypeID != null)
+                                //{
+                                //    isCalPro = CheckPromotionShopType(bu, pro, customerID);
+                                //} //===========================================================================
+                                //else
+                                //isCalPro = true;
+                                if (!string.IsNullOrEmpty(pro.StepCondition2)) //pro a+b last edit by sailom .k 11/11/2021
                                 {
-                                    isCalPro = CheckPromotionShopType(bu, pro, customerID);
-                                } //===========================================================================
-                                else
-                                {
-                                    isCalPro = true;
+                                    var skus = bu.GetHQ_SKUGroup(x => x.SKUGroupID == pro.SKUGroupID1);
+                                    if (skus.Count > 0)
+                                    {
+                                        var csku = skus.Select(x => x.SKU_ID).Distinct().ToList();
+                                        if (csku.Count > 1)
+                                        {
+                                            List<string> verifySKU = new List<string>(); ;
+                                            foreach (var _skuitem in skus)
+                                            {
+                                                if (listSku.Any(x => x == _skuitem.SKU_ID))
+                                                {
+                                                    if (verifySKU.Count(x => x == _skuitem.SKU_ID) == 0)
+                                                        verifySKU.Add(_skuitem.SKU_ID);
+                                                }
+                                            }
+
+                                            if (verifySKU.Count == 2)
+                                            {
+                                                isCalPro = true;
+
+                                                Dictionary<string, int> chkQty = new Dictionary<string, int>();
+                                                var a = prdQty.FirstOrDefault(x => x.Key == verifySKU[0]);
+                                                var b = prdQty.FirstOrDefault(x => x.Key == verifySKU[1]);
+                                                if (!string.IsNullOrEmpty(a.Key) && !string.IsNullOrEmpty(b.Key))
+                                                {
+                                                    if (a.Value != b.Value) //a qty != b qty
+                                                    {
+                                                        if (a.Value > b.Value) //a > b get b qty
+                                                        {
+                                                            pp.TotalQty = b.Value;
+                                                        }
+                                                        else //a < b get a qty
+                                                        {
+                                                            pp.TotalQty = a.Value;
+                                                        }
+                                                    }
+                                                    else //a qty = b qty
+                                                    {
+                                                        pp.TotalQty = a.Value;
+                                                    }
+                                                }
+
+
+                                            }
+                                        }
+
+                                    }
                                 }
+                                else//normal prd pro
+                                    isCalPro = true;
 
                                 if (isCalPro)
                                 {
@@ -254,9 +311,19 @@ namespace AllCashUFormsApp.Controller
                 if (!string.IsNullOrEmpty(pro.ConditionStart.ToString()) &&
                     (pro.ConditionEnd == null || string.IsNullOrEmpty(pro.ConditionEnd.ToString()))) //normal
                 {
-                    if (total >= pro.ConditionStart)
+                    //if (!string.IsNullOrEmpty(pro.StepCondition2)) //pro a+b
+                    //{
+                    //    if (total >= pro.SKUGroupID2)
+                    //    {
+                    //        reward = VerifyRecomputable(_promotionList, pro, total, false, pp);
+                    //    }
+                    //}
+                    //else
                     {
-                        reward = VerifyRecomputable(_promotionList, pro, total, false, pp);
+                        if (total >= pro.ConditionStart)
+                        {
+                            reward = VerifyRecomputable(_promotionList, pro, total, false, pp);
+                        }
                     }
                 }
                 else //period amount

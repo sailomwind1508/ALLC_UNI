@@ -81,7 +81,9 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -91,7 +93,6 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
             this.pnlTop.SuspendLayout();
             this.pnlTR.SuspendLayout();
             this.pnlTL.SuspendLayout();
@@ -102,8 +103,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -577,6 +578,7 @@
             this.txtBaseQty.Size = new System.Drawing.Size(85, 23);
             this.txtBaseQty.TabIndex = 146;
             this.txtBaseQty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtBaseQty.Visible = false;
             // 
             // chkFixBaseQty
             // 
@@ -587,6 +589,7 @@
             this.chkFixBaseQty.TabIndex = 145;
             this.chkFixBaseQty.Text = "หน่วยคูณ(เล็ก)";
             this.chkFixBaseQty.UseVisualStyleBackColor = true;
+            this.chkFixBaseQty.Visible = false;
             this.chkFixBaseQty.CheckedChanged += new System.EventHandler(this.chkFixBaseQty_CheckedChanged);
             // 
             // txtRemark
@@ -676,8 +679,23 @@
             this.panel1.Size = new System.Drawing.Size(1008, 28);
             this.panel1.TabIndex = 26;
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
+            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.panel2.Controls.Add(this.panel4);
+            this.panel2.Controls.Add(this.panel3);
+            this.panel2.Location = new System.Drawing.Point(0, 29);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1008, 512);
+            this.panel2.TabIndex = 27;
+            // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.btnPrintCrys);
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Controls.Add(this.btnAdd);
             this.panel5.Controls.Add(this.btnExcel);
@@ -691,7 +709,27 @@
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 28);
-            this.panel5.TabIndex = 17;
+            this.panel5.TabIndex = 26;
+            // 
+            // btnPrintCrys
+            // 
+            this.btnPrintCrys.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrintCrys.BackColor = System.Drawing.Color.Azure;
+            this.btnPrintCrys.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrintCrys.FlatAppearance.BorderSize = 0;
+            this.btnPrintCrys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintCrys.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintCrys.ForeColor = System.Drawing.Color.Black;
+            this.btnPrintCrys.Image = ((System.Drawing.Image)(resources.GetObject("btnPrintCrys.Image")));
+            this.btnPrintCrys.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrintCrys.Location = new System.Drawing.Point(484, 3);
+            this.btnPrintCrys.Name = "btnPrintCrys";
+            this.btnPrintCrys.Size = new System.Drawing.Size(61, 23);
+            this.btnPrintCrys.TabIndex = 26;
+            this.btnPrintCrys.Text = "พิมพ์";
+            this.btnPrintCrys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrintCrys.UseVisualStyleBackColor = false;
+            this.btnPrintCrys.Click += new System.EventHandler(this.btnPrintCrys_Click);
             // 
             // btnClose
             // 
@@ -704,7 +742,7 @@
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(600, 3);
+            this.btnClose.Location = new System.Drawing.Point(666, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(57, 23);
             this.btnClose.TabIndex = 17;
@@ -720,7 +758,7 @@
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F);
             this.btnAdd.ForeColor = System.Drawing.Color.Black;
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -745,7 +783,7 @@
             this.btnExcel.ForeColor = System.Drawing.Color.Black;
             this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(485, 3);
+            this.btnExcel.Location = new System.Drawing.Point(551, 3);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(109, 23);
             this.btnExcel.TabIndex = 17;
@@ -878,20 +916,6 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // panel2
-            // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
-            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.panel2.Controls.Add(this.panel4);
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Location = new System.Drawing.Point(0, 29);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1008, 512);
-            this.panel2.TabIndex = 27;
-            // 
             // frmTR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -921,8 +945,8 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -949,16 +973,6 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel5;
-        private UControl.CloseButton btnClose;
-        private UControl.AddButton btnAdd;
-        private UControl.ExcelButton btnExcel;
-        private UControl.EditButton btnEdit;
-        private UControl.PrintButton btnPrint;
-        private UControl.RemoveButton btnRemove;
-        private UControl.CancelButton btnCancel;
-        private UControl.CopyButton btnCopy;
-        private UControl.SaveButton btnSave;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox txtToWHName;
         private System.Windows.Forms.TextBox txtToWHCode;
@@ -991,5 +1005,16 @@
         private System.Windows.Forms.GroupBox grdDetails;
         private System.Windows.Forms.TextBox txtBaseQty;
         private System.Windows.Forms.CheckBox chkFixBaseQty;
+        private System.Windows.Forms.Panel panel5;
+        private UControl.PrintButton btnPrintCrys;
+        private UControl.CloseButton btnClose;
+        private UControl.AddButton btnAdd;
+        private UControl.ExcelButton btnExcel;
+        private UControl.EditButton btnEdit;
+        private UControl.PrintButton btnPrint;
+        private UControl.RemoveButton btnRemove;
+        private UControl.CancelButton btnCancel;
+        private UControl.CopyButton btnCopy;
+        private UControl.SaveButton btnSave;
     }
 }

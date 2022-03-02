@@ -17,6 +17,58 @@ namespace AllCashUFormsApp
         /// </summary>
         /// <param name="tbl_HQ_SKUGroup"></param>
         /// <returns></returns>
+        public static IEnumerable<tbl_HQ_SKUGroup> SelectListSKUGroup(this tbl_HQ_SKUGroup obj, object condition)
+        {
+            List<tbl_HQ_SKUGroup> list = new List<tbl_HQ_SKUGroup>();
+            try
+            {
+                List<string> con = (List<string>)condition;
+                string skugList = string.Join("','", con);
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_SKUGroup] WHERE SKUGroupID IN ('" + skugList + "')";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_SKUGroup), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_SKUGroup>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(obj.GetType());
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_HQ_SKUGroup"></param>
+        /// <returns></returns>
+        public static IEnumerable<tbl_HQ_SKUGroup> SelectListSKU(this tbl_HQ_SKUGroup obj, object condition)
+        {
+            List<tbl_HQ_SKUGroup> list = new List<tbl_HQ_SKUGroup>();
+            try
+            {
+                List<string> con = (List<string>)condition;
+                string skus = string.Join("','", con);
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_HQ_SKUGroup] WHERE SKU_ID IN ('" + skus + "')";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_HQ_SKUGroup), sql);
+                list = dynamicListReturned.Cast<tbl_HQ_SKUGroup>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(obj.GetType());
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_HQ_SKUGroup"></param>
+        /// <returns></returns>
         public static IEnumerable<tbl_HQ_SKUGroup> Select(this tbl_HQ_SKUGroup obj, object condition)
         {
             return obj.Select(x => x.SKU_ID.Trim() == condition.ToString().Trim()).AsEnumerable();
@@ -173,6 +225,7 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
         public static DataTable GetHQ_SKUGroupData(this tbl_HQ_SKUGroup tbl_HQ_SKUGroup, string search)//
         {
             try
@@ -193,6 +246,45 @@ namespace AllCashUFormsApp
             {
                 return null;
             }
+        }
+
+        public static int UpdateSKUGroup(this tbl_HQ_SKUGroup tbl_HQ_SKUGroup, string oldSKU_ID)
+        {
+            int ret = 0;
+
+            DataTable dt = new DataTable();
+            SqlConnection con = new SqlConnection(Connection.ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+
+            try
+            {
+                string sql = "SELECT * FROM tbl_HQ_SKUGroup WHERE SKUGroupID = '" + tbl_HQ_SKUGroup.SKUGroupID + "'";
+                sql += " AND SKU_ID = '" + oldSKU_ID + "'";
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                if (dt.Rows.Count > 0)
+                {
+                    sql = "UPDATE tbl_HQ_SKUGroup SET SKU_ID = @SKU_ID WHERE SKUGroupID = @SKUGroupID AND SKU_ID = '" + oldSKU_ID + "'";
+                }
+                else
+                {
+                    sql = "INSERT INTO tbl_HQ_SKUGroup (SKUGroupID, SKU_ID) VALUES (@SKUGroupID, @SKU_ID)";
+                }
+
+                cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("@SKUGroupID", tbl_HQ_SKUGroup.SKUGroupID);
+                cmd.Parameters.AddWithValue("@SKU_ID", tbl_HQ_SKUGroup.SKU_ID);
+
+                ret = cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_HQ_SKUGroup.GetType());
+            }
+
+            return ret;
         }
 
     }

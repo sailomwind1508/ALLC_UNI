@@ -45,11 +45,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
+            this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
             this.btnEdit = new AllCashUFormsApp.View.UControl.EditButton(this.components);
+            this.btnPrint = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnRemove = new AllCashUFormsApp.View.UControl.RemoveButton(this.components);
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
@@ -123,7 +124,7 @@
             this.txtBillTo = new System.Windows.Forms.TextBox();
             this.lblBillTo = new System.Windows.Forms.Label();
             this.txtCustName = new System.Windows.Forms.TextBox();
-            this.txtCustomerCode = new System.Windows.Forms.TextBox();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
             this.btnSearchCust = new System.Windows.Forms.Button();
             this.lblCustomerCode = new System.Windows.Forms.Label();
             this.pnlCen = new System.Windows.Forms.Panel();
@@ -171,11 +172,12 @@
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.btnPrint);
+            this.panel5.Controls.Add(this.btnPrintCrys);
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Controls.Add(this.btnAdd);
             this.panel5.Controls.Add(this.btnExcel);
             this.panel5.Controls.Add(this.btnEdit);
+            this.panel5.Controls.Add(this.btnPrint);
             this.panel5.Controls.Add(this.btnRemove);
             this.panel5.Controls.Add(this.btnCancel);
             this.panel5.Controls.Add(this.btnCopy);
@@ -183,29 +185,28 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(790, 28);
-            this.panel5.TabIndex = 17;
+            this.panel5.Size = new System.Drawing.Size(782, 28);
+            this.panel5.TabIndex = 21;
             // 
-            // btnPrint
+            // btnPrintCrys
             // 
-            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrint.BackColor = System.Drawing.Color.Azure;
-            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPrint.Enabled = false;
-            this.btnPrint.FlatAppearance.BorderSize = 0;
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrint.ForeColor = System.Drawing.Color.Black;
-            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
-            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrint.Location = new System.Drawing.Point(422, 2);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(61, 23);
-            this.btnPrint.TabIndex = 27;
-            this.btnPrint.Text = "พิมพ์";
-            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            this.btnPrintCrys.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrintCrys.BackColor = System.Drawing.Color.Azure;
+            this.btnPrintCrys.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrintCrys.FlatAppearance.BorderSize = 0;
+            this.btnPrintCrys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintCrys.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintCrys.ForeColor = System.Drawing.Color.Black;
+            this.btnPrintCrys.Image = ((System.Drawing.Image)(resources.GetObject("btnPrintCrys.Image")));
+            this.btnPrintCrys.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrintCrys.Location = new System.Drawing.Point(484, 3);
+            this.btnPrintCrys.Name = "btnPrintCrys";
+            this.btnPrintCrys.Size = new System.Drawing.Size(61, 23);
+            this.btnPrintCrys.TabIndex = 26;
+            this.btnPrintCrys.Text = "พิมพ์";
+            this.btnPrintCrys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrintCrys.UseVisualStyleBackColor = false;
+            this.btnPrintCrys.Click += new System.EventHandler(this.btnPrintCrys_Click);
             // 
             // btnClose
             // 
@@ -218,7 +219,7 @@
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(604, 3);
+            this.btnClose.Location = new System.Drawing.Point(666, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(57, 23);
             this.btnClose.TabIndex = 17;
@@ -234,11 +235,11 @@
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F);
             this.btnAdd.ForeColor = System.Drawing.Color.Black;
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdd.Location = new System.Drawing.Point(11, 3);
+            this.btnAdd.Location = new System.Drawing.Point(7, 3);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(56, 23);
             this.btnAdd.TabIndex = 23;
@@ -259,7 +260,7 @@
             this.btnExcel.ForeColor = System.Drawing.Color.Black;
             this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(489, 3);
+            this.btnExcel.Location = new System.Drawing.Point(551, 3);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(109, 23);
             this.btnExcel.TabIndex = 17;
@@ -279,7 +280,7 @@
             this.btnEdit.ForeColor = System.Drawing.Color.Black;
             this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
             this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEdit.Location = new System.Drawing.Point(73, 3);
+            this.btnEdit.Location = new System.Drawing.Point(69, 3);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(63, 23);
             this.btnEdit.TabIndex = 25;
@@ -287,6 +288,27 @@
             this.btnEdit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnEdit.UseVisualStyleBackColor = false;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrint.BackColor = System.Drawing.Color.Azure;
+            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrint.Enabled = false;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrint.ForeColor = System.Drawing.Color.Black;
+            this.btnPrint.Image = ((System.Drawing.Image)(resources.GetObject("btnPrint.Image")));
+            this.btnPrint.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrint.Location = new System.Drawing.Point(418, 3);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(61, 23);
+            this.btnPrint.TabIndex = 17;
+            this.btnPrint.Text = "พิมพ์";
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // btnRemove
             // 
@@ -300,7 +322,7 @@
             this.btnRemove.ForeColor = System.Drawing.Color.Black;
             this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
             this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemove.Location = new System.Drawing.Point(142, 3);
+            this.btnRemove.Location = new System.Drawing.Point(138, 3);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(49, 23);
             this.btnRemove.TabIndex = 25;
@@ -321,7 +343,7 @@
             this.btnCancel.ForeColor = System.Drawing.Color.Black;
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(348, 3);
+            this.btnCancel.Location = new System.Drawing.Point(344, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(68, 23);
             this.btnCancel.TabIndex = 17;
@@ -342,7 +364,7 @@
             this.btnCopy.ForeColor = System.Drawing.Color.Black;
             this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
             this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCopy.Location = new System.Drawing.Point(197, 3);
+            this.btnCopy.Location = new System.Drawing.Point(193, 3);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
             this.btnCopy.TabIndex = 25;
@@ -362,7 +384,7 @@
             this.btnSave.ForeColor = System.Drawing.Color.Black;
             this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
             this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(278, 3);
+            this.btnSave.Location = new System.Drawing.Point(274, 3);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(64, 23);
             this.btnSave.TabIndex = 24;
@@ -929,7 +951,7 @@
             this.pnlTL.Controls.Add(this.txtBillTo);
             this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.txtCustName);
-            this.pnlTL.Controls.Add(this.txtCustomerCode);
+            this.pnlTL.Controls.Add(this.txtCustomerID);
             this.pnlTL.Controls.Add(this.btnSearchCust);
             this.pnlTL.Controls.Add(this.lblCustomerCode);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
@@ -1162,13 +1184,13 @@
             this.txtCustName.Size = new System.Drawing.Size(235, 23);
             this.txtCustName.TabIndex = 120;
             // 
-            // txtCustomerCode
+            // txtCustomerID
             // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(81, 5);
-            this.txtCustomerCode.MaxLength = 5;
-            this.txtCustomerCode.Name = "txtCustomerCode";
-            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
-            this.txtCustomerCode.TabIndex = 118;
+            this.txtCustomerID.Location = new System.Drawing.Point(81, 5);
+            this.txtCustomerID.MaxLength = 5;
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.Size = new System.Drawing.Size(153, 23);
+            this.txtCustomerID.TabIndex = 118;
             // 
             // btnSearchCust
             // 
@@ -1454,15 +1476,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel pnlCen;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel5;
-        private UControl.CloseButton btnClose;
-        private UControl.AddButton btnAdd;
-        private UControl.ExcelButton btnExcel;
-        private UControl.EditButton btnEdit;
-        private UControl.RemoveButton btnRemove;
-        private UControl.CancelButton btnCancel;
-        private UControl.CopyButton btnCopy;
-        private UControl.SaveButton btnSave;
         private System.Windows.Forms.Button btnUpdateAddress;
         private System.Windows.Forms.TextBox txtRemark;
         private System.Windows.Forms.NumericUpDown nudCreditDay;
@@ -1531,11 +1544,10 @@
         private System.Windows.Forms.TextBox txtBillTo;
         private System.Windows.Forms.Label lblBillTo;
         private System.Windows.Forms.TextBox txtCustName;
-        private System.Windows.Forms.TextBox txtCustomerCode;
+        private System.Windows.Forms.TextBox txtCustomerID;
         private System.Windows.Forms.Button btnSearchCust;
         private System.Windows.Forms.Label lblCustomerCode;
         private System.Windows.Forms.DataGridView grdList;
-        private UControl.PrintButton btnPrint;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductCode;
         private System.Windows.Forms.DataGridViewButtonColumn colSearchProduct;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
@@ -1549,5 +1561,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCommittionAmt;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUomSetID;
+        private System.Windows.Forms.Panel panel5;
+        private UControl.PrintButton btnPrintCrys;
+        private UControl.CloseButton btnClose;
+        private UControl.AddButton btnAdd;
+        private UControl.ExcelButton btnExcel;
+        private UControl.EditButton btnEdit;
+        private UControl.PrintButton btnPrint;
+        private UControl.RemoveButton btnRemove;
+        private UControl.CancelButton btnCancel;
+        private UControl.CopyButton btnCopy;
+        private UControl.SaveButton btnSave;
     }
 }

@@ -73,13 +73,14 @@
             this.txtBillTo = new System.Windows.Forms.TextBox();
             this.lblBillTo = new System.Windows.Forms.Label();
             this.txtCustName = new System.Windows.Forms.TextBox();
-            this.txtCustomerCode = new System.Windows.Forms.TextBox();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
             this.btnSearchCust = new System.Windows.Forms.Button();
             this.lblCustomerCode = new System.Windows.Forms.Label();
             this.txtComment = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -109,6 +110,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.chkShowAll = new System.Windows.Forms.CheckBox();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -275,7 +277,7 @@
             this.pnlTL.Controls.Add(this.txtBillTo);
             this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.txtCustName);
-            this.pnlTL.Controls.Add(this.txtCustomerCode);
+            this.pnlTL.Controls.Add(this.txtCustomerID);
             this.pnlTL.Controls.Add(this.btnSearchCust);
             this.pnlTL.Controls.Add(this.lblCustomerCode);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
@@ -508,13 +510,13 @@
             this.txtCustName.Size = new System.Drawing.Size(235, 23);
             this.txtCustName.TabIndex = 120;
             // 
-            // txtCustomerCode
+            // txtCustomerID
             // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(81, 5);
-            this.txtCustomerCode.MaxLength = 13;
-            this.txtCustomerCode.Name = "txtCustomerCode";
-            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
-            this.txtCustomerCode.TabIndex = 118;
+            this.txtCustomerID.Location = new System.Drawing.Point(81, 5);
+            this.txtCustomerID.MaxLength = 13;
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.Size = new System.Drawing.Size(153, 23);
+            this.txtCustomerID.TabIndex = 118;
             // 
             // btnSearchCust
             // 
@@ -567,6 +569,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.btnPrintCrys);
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Controls.Add(this.btnAdd);
             this.panel5.Controls.Add(this.btnExcel);
@@ -582,6 +585,26 @@
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
             // 
+            // btnPrintCrys
+            // 
+            this.btnPrintCrys.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrintCrys.BackColor = System.Drawing.Color.Azure;
+            this.btnPrintCrys.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrintCrys.FlatAppearance.BorderSize = 0;
+            this.btnPrintCrys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintCrys.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintCrys.ForeColor = System.Drawing.Color.Black;
+            this.btnPrintCrys.Image = ((System.Drawing.Image)(resources.GetObject("btnPrintCrys.Image")));
+            this.btnPrintCrys.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrintCrys.Location = new System.Drawing.Point(484, 3);
+            this.btnPrintCrys.Name = "btnPrintCrys";
+            this.btnPrintCrys.Size = new System.Drawing.Size(61, 23);
+            this.btnPrintCrys.TabIndex = 26;
+            this.btnPrintCrys.Text = "พิมพ์";
+            this.btnPrintCrys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrintCrys.UseVisualStyleBackColor = false;
+            this.btnPrintCrys.Click += new System.EventHandler(this.btnPrintCrys_Click);
+            // 
             // btnClose
             // 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -593,7 +616,7 @@
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(600, 3);
+            this.btnClose.Location = new System.Drawing.Point(666, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(57, 23);
             this.btnClose.TabIndex = 17;
@@ -634,7 +657,7 @@
             this.btnExcel.ForeColor = System.Drawing.Color.Black;
             this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(485, 3);
+            this.btnExcel.Location = new System.Drawing.Point(551, 3);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(109, 23);
             this.btnExcel.TabIndex = 17;
@@ -996,12 +1019,28 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.BackColor = System.Drawing.SystemColors.Control;
             this.panel4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel4.BackgroundImage")));
+            this.panel4.Controls.Add(this.chkShowAll);
             this.panel4.Controls.Add(this.FormPic);
             this.panel4.Controls.Add(this.FormHeader);
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1008, 35);
             this.panel4.TabIndex = 18;
+            // 
+            // chkShowAll
+            // 
+            this.chkShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkShowAll.AutoSize = true;
+            this.chkShowAll.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.chkShowAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.chkShowAll.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.chkShowAll.ForeColor = System.Drawing.Color.Red;
+            this.chkShowAll.Location = new System.Drawing.Point(863, 7);
+            this.chkShowAll.Name = "chkShowAll";
+            this.chkShowAll.Size = new System.Drawing.Size(136, 20);
+            this.chkShowAll.TabIndex = 153;
+            this.chkShowAll.Text = "แสดงเอกสารทั้งหมด";
+            this.chkShowAll.UseVisualStyleBackColor = false;
             // 
             // FormPic
             // 
@@ -1542,7 +1581,7 @@
         private System.Windows.Forms.TextBox txtBillTo;
         private System.Windows.Forms.Label lblBillTo;
         private System.Windows.Forms.TextBox txtCustName;
-        private System.Windows.Forms.TextBox txtCustomerCode;
+        private System.Windows.Forms.TextBox txtCustomerID;
         private System.Windows.Forms.Button btnSearchCust;
         private System.Windows.Forms.Label lblCustomerCode;
         private System.Windows.Forms.Label label3;
@@ -1583,5 +1622,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUomSetID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSellPrice;
+        private System.Windows.Forms.CheckBox chkShowAll;
+        private UControl.PrintButton btnPrintCrys;
     }
 }

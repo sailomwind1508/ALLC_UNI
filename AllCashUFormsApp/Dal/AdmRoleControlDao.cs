@@ -76,6 +76,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_AdmRoleControl tbl_AdmRoleControl)
         {
+            string msg = "start AdmRoleControlDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -90,6 +93,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_AdmRoleControl.GetType());
             }
+
+            msg = "end AdmRoleControlDao=>Insert";
+            msg.WriteLog(null);
 
             return ret;
         }

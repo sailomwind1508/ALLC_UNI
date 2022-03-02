@@ -41,6 +41,7 @@ namespace AllCashUFormsApp.View.UControl
 
                 case "Promotion": { _objType = ObjectType.Promotion; } break;
                 case "PromotionTemp": { _objType = ObjectType.PromotionTemp; } break;
+                case "PromotionProduct": { _objType = ObjectType.PromotionProduct; } break;
 
                 default:
                     break;
@@ -275,7 +276,18 @@ namespace AllCashUFormsApp.View.UControl
                         ret = pro.AddTempData();
                     }
                 }
-                
+
+                if (mmchPro.Count > 0) //have mmch choose //16/11/2021 by sailom .k
+                {
+                    frmPromotionProduct _frm = new frmPromotionProduct();
+
+                    List<DataGridColumn> colList = new List<DataGridColumn>();
+                    AddPromotionPopupCols(_frm, colList);
+
+                    _frm.PreparePopupForm("PromotionProduct", _frm.Name, "เลือกของแถม", colList, null, null, null);
+                    _frm.ShowDialog();
+                }
+
             }
             catch (Exception ex)
             {
@@ -285,6 +297,14 @@ namespace AllCashUFormsApp.View.UControl
                 string msg = ex.Message;
                 msg.ShowErrorMessage();
             }
+        }
+
+        public static void AddPromotionPopupCols(frmPromotionProduct _frm, List<DataGridColumn> colList)
+        {
+            colList.Add(new DataGridColumn() { DataPropertyName = "Choose", HeaderText = "เลือก", Name = "Choose", Width = 50, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, ColoumnType = new DataGridViewCheckBoxColumn() });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProductName", HeaderText = "ชื่อโปรโมชั่น", Name = "ProductName", Width = 150, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.Fill });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProductQty", HeaderText = "รหัสโปรโมชั่น", Name = "ProductQty", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
+            colList.Add(new DataGridColumn() { DataPropertyName = "ProductID", HeaderText = "ProductID", Name = "PromotionID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Visibility = false });
         }
 
         private void frmPromotion_FormClosed(object sender, FormClosedEventArgs e)

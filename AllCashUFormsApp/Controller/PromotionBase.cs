@@ -36,43 +36,60 @@ namespace AllCashUFormsApp.Controller
                 _tbl_HQ_Promotion_Hit_Temps = value;
             }
         }
+        private Dictionary<string, int> _mMCHProList = null;
+        public virtual Dictionary<string, int> mMCHProList
+        {
+            get { return _mMCHProList; }
+            set
+            {
+                _mMCHProList = value;
+            }
+        }
 
         public PromotionBase() : base("Promotion")
         {
             _predicate = null;
         }
 
-        /// <summary>
-        /// for support u-online last edit by sailom .k 18-06-2021
-        /// </summary>
-        /// <param name="pro"></param>
-        /// <param name="customerID"></param>
-        /// <returns></returns>
-        public bool CheckPromotionShopType(Promotion bu, tbl_HQ_Promotion pro, string customerID)
-        {
-            bool result = false;
-            try
-            {
-                //for support u-online last edit by sailom .k 18-06-2021=====================
-                if (pro.ShopTypeID != null)
-                {
-                    var cust = bu.GetCustomer(customerID);
-                    if (cust != null && cust.Count > 0)
-                    {
-                        if (cust.FirstOrDefault() != null && pro.ShopTypeID.Value == cust.FirstOrDefault().ShopTypeID)
-                        {
-                            result = true;
-                        }
-                    }
-                } //===========================================================================
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                throw ex;
-            }
+        ///// <summary>
+        ///// for support u-online last edit by sailom .k 18-06-2021
+        ///// </summary>
+        ///// <param name="pro"></param>
+        ///// <param name="customerID"></param>
+        ///// <returns></returns>
+        //public bool CheckPromotionShopType(Promotion bu, tbl_HQ_Promotion pro, string customerID)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        //for support u-online last edit by sailom .k 18-06-2021=====================
+        //        if (pro.ShopTypeID != null)
+        //        {
+        //            var cust = bu.GetCustomer(customerID);
+        //            if (cust != null && cust.Count > 0)
+        //            {
+        //                if (cust.FirstOrDefault() != null && pro.ShopTypeID.Value == cust.FirstOrDefault().ShopTypeID)
+        //                {
+        //                    result = true;
+        //                }
+        //            }
+        //        } //===========================================================================
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        throw ex;
+        //    }
 
-            return result;
+        //    return result;
+        //}
+
+        public List<tbl_HQ_SKUGroup> GetListHQSKUGroup(object list)
+        {
+            List<tbl_HQ_SKUGroup> tbl_HQ_SKUGroups = new List<tbl_HQ_SKUGroup>();
+            tbl_HQ_SKUGroups = new tbl_HQ_SKUGroup().SelectListSKUGroup(list).ToList();
+
+            return tbl_HQ_SKUGroups;
         }
 
         public List<tbl_HQ_SKUGroup> GetHQSKUGroup(Func<tbl_HQ_SKUGroup, bool> condition = null)
@@ -127,10 +144,10 @@ namespace AllCashUFormsApp.Controller
             return tbl_HQ_Rewards;
         }
 
-        public decimal GetOrderQty(Promotion bu, tbl_PODetail prd)
+        public decimal GetOrderQty(Promotion bu, tbl_PODetail prd, List<tbl_ProductUomSet> allprdUOMSets)
         {
             decimal unitQty = 0;
-            var allprdUOMSets = bu.GetUOMSet();
+           
             var prdUOMSets = bu.GetProductUOMSet(allprdUOMSets, prd.ProductID);
 
             if (prdUOMSets != null && prdUOMSets.Count > 0)
@@ -173,7 +190,7 @@ namespace AllCashUFormsApp.Controller
             return unitQty;
         }
 
-        public decimal GetSellPriceVat(Promotion bu, tbl_PODetail prd)
+        public decimal GetSellPriceVat(Promotion bu, tbl_PODetail prd, List<tbl_ProductUomSet> allUomSet)
         {
             decimal sellPriceVat = 0;
 
@@ -181,7 +198,7 @@ namespace AllCashUFormsApp.Controller
             var productPriceGroups = bu.GetProductPriceGroup(func);
             if (productPriceGroups != null && productPriceGroups.Count > 0)
             {
-                var allUomSet = GetUOMSet();
+                //var allUomSet = GetUOMSet();
                 //if (poDt.OrderUom != 2) //06042021 by sailom.k
                 var minUomID = 2;
                 minUomID = allUomSet.GetMinUOM(prd);
@@ -244,7 +261,13 @@ namespace AllCashUFormsApp.Controller
                 }
                 else
                 {
+                    //if (!string.IsNullOrEmpty(pro.StepCondition2)) //pro a+b
+                    //{
+                    //    roundHitTmp = total / pro.SKUGroupID2.Value;
+                    //}
+                    //else
                     roundHitTmp = total / pro.ConditionStart.Value;
+
                     conditionAmt = pro.ConditionStart.Value;
                 }
 
@@ -347,7 +370,7 @@ namespace AllCashUFormsApp.Controller
             return ret;
         }
 
-        public List<T> GetData<T>(List<T> obj, object condition)
+        public List<T> GetData<T>(List<T> obj, object condition, string whid = "")
         {
             obj = new List<T>();
             try
@@ -358,12 +381,12 @@ namespace AllCashUFormsApp.Controller
                 {
                     case "AllCashUFormsApp.Model.tbl_HQ_SKUGroup": 
                         {
-                            foreach (var item in new tbl_HQ_SKUGroup().Select(condition))
+                            foreach (var item in new tbl_HQ_SKUGroup().SelectListSKU(condition))
                                 obj.Add((T)ObjectHelper.ChangeType(item, typeof(T)));
                         } break;
                     case "AllCashUFormsApp.Model.tbl_HQ_SKUGroup_EXC":
                         {
-                            foreach (var item in new tbl_HQ_SKUGroup_EXC().Select(condition))
+                            foreach (var item in new tbl_HQ_SKUGroup_EXC().SelectListSKU(condition))
                                 obj.Add((T)ObjectHelper.ChangeType(item, typeof(T)));
                         }
                         break;
@@ -381,7 +404,7 @@ namespace AllCashUFormsApp.Controller
                         break;
                     case "AllCashUFormsApp.Model.tbl_HQ_Promotion":
                         {
-                            foreach (var item in new tbl_HQ_Promotion().Select(condition))
+                            foreach (var item in new tbl_HQ_Promotion().SelectPRD(condition, whid))
                                 obj.Add((T)ObjectHelper.ChangeType(item, typeof(T)));
                         }
                         break;
@@ -401,7 +424,16 @@ namespace AllCashUFormsApp.Controller
             return obj;
         }
 
-        public List<tbl_HQ_SKUGroup> GetPromotion_ProductGroup(string sku_id)
+        public List<tbl_HQ_SKUGroup> GetPromotion_ProductGroup(string sku_id, string whid = "")
+        {
+            List<tbl_HQ_SKUGroup> ret = new List<tbl_HQ_SKUGroup>();
+            //Func<tbl_HQ_ProductGroup, bool> func = (x => x.SKU_ID.Trim() == sku_id.Trim());
+            ret = GetData(ret, sku_id);
+
+            return ret;
+        }
+
+        public List<tbl_HQ_SKUGroup> GetPromotionListProductGroup(List<string> sku_id, string whid = "")
         {
             List<tbl_HQ_SKUGroup> ret = new List<tbl_HQ_SKUGroup>();
             //Func<tbl_HQ_ProductGroup, bool> func = (x => x.SKU_ID.Trim() == sku_id.Trim());
@@ -419,19 +451,31 @@ namespace AllCashUFormsApp.Controller
             return ret;
         }
 
-        public List<tbl_HQ_Promotion> GetPRDPromotion(string productGroupID)
+        public List<tbl_HQ_SKUGroup_EXC> GetPromotionListProductGroupEXC(List<string> sku_id)
         {
-            List<tbl_HQ_Promotion> ret = new List<tbl_HQ_Promotion>();
-            //Func<tbl_HQ_Promotion, bool> func = (x => x.ProductGroupID.Trim() == productGroupID.Trim());
-            ret = GetData(ret, productGroupID);
+            List<tbl_HQ_SKUGroup_EXC> ret = new List<tbl_HQ_SKUGroup_EXC>();
+            //Func<tbl_HQ_ProductGroup_EXC, bool> func = (x => x.SKU_ID.Trim() == sku_id.Trim());
+            ret = GetData(ret, sku_id);
 
             return ret;
         }
 
-        public List<tbl_HQ_Promotion> GetTXNPromotion()
+        public List<tbl_HQ_Promotion> GetPRDPromotion(string productGroupID, string whid = "")
         {
             List<tbl_HQ_Promotion> ret = new List<tbl_HQ_Promotion>();
-            ret = new tbl_HQ_Promotion().SelectAll().Where(x => x.PromotionPattern.ToLower() == "txn").ToList();
+            //Func<tbl_HQ_Promotion, bool> func = (x => x.ProductGroupID.Trim() == productGroupID.Trim());
+            ret = GetData(ret, productGroupID, whid);
+
+            return ret;
+        }
+
+        public List<tbl_HQ_Promotion> GetTXNPromotion(string whid = "")
+        {
+            Func<tbl_BranchWarehouse, bool> predicate = x => x.WHID == whid;
+            int? saleTypeID = (new tbl_BranchWarehouse()).Select(predicate).First().SaleTypeID;
+
+            List<tbl_HQ_Promotion> ret = new List<tbl_HQ_Promotion>();
+            ret = new tbl_HQ_Promotion().SelectTXN(saleTypeID.Value);
 
             return ret;
         }

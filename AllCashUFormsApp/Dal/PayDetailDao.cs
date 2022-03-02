@@ -69,6 +69,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_PayDetail tbl_PayDetail, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start IVDetailDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_PayDetail.Attach(tbl_PayDetail);
@@ -78,10 +81,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PayDetail.GetType());
             }
+
+            msg = "end IVDetailDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_PayDetail> tbl_PayDetails, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start IVDetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 foreach (var tbl_PayDetail in tbl_PayDetails)
@@ -95,10 +104,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end IVDetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this List<tbl_PayDetail> tbl_PayDetails, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PayDetailDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -151,11 +166,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end PayDetailDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this List<tbl_PayDetail> tbl_PayDetails)
         {
+            string msg = "start PayDetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -201,6 +222,9 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_PayDetail);
             }
 
+            msg = "end PayDetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
@@ -211,6 +235,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Delete(this tbl_PayDetail tbl_PayDetail, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PayDetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.Entry(tbl_PayDetail).State = EntityState.Deleted;
@@ -220,10 +247,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PayDetail.GetType());
             }
+
+            msg = "end PayDetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         public static int Insert(this tbl_PayDetail tbl_PayDetail)
         {
+            string msg = "start PayDetailDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -239,11 +272,17 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PayDetail.GetType());
             }
 
+            msg = "end PayDetailDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Update(this tbl_PayDetail tbl_PayDetail)
         {
+            string msg = "start PayDetailDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -283,11 +322,17 @@ namespace AllCashUFormsApp
                 ex.ToString();
             }
 
+            msg = "end PayDetailDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
         public static int Delete(this tbl_PayDetail tbl_PayDetail)
         {
+            string msg = "start PayDetailDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -302,6 +347,150 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PayDetail.GetType());
             }
+
+            msg = "end PayDetailDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkInsert(this List<tbl_PayDetail> tbl_PayDetails)
+        {
+            string msg = "start PayDetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_PayDetails.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_PayDetail";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end PayDetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_PayDetail> tbl_PayDetails)
+        {
+            string msg = "start PayDetailDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string whIds = "";
+                int j = 0;
+                foreach (var whid in tbl_PayDetails.Select(a => a.WHID).Distinct().ToList())
+                {
+                    if (j == tbl_PayDetails.Select(a => a.WHID).Distinct().ToList().Count - 1)
+                        whIds += "'" + whid + "' ";
+                    else
+                        whIds += "'" + whid + "', ";
+
+                    j++;
+                }
+
+                //x.DocNo == tbl_PayDetail.DocNo && x.WHID == tbl_PayDetail.WHID && x.AutoID == tbl_PayDetail.AutoID
+                string sql = " DELETE FROM tbl_PayDetail WHERE WHID IN (" + whIds + ") AND DocNo = '" + tbl_PayDetails.FirstOrDefault().DocNo + "' AND AutoID = '" + tbl_PayDetails.FirstOrDefault().AutoID + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_PayDetails.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PayDetailDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_PayDetail> tbl_PayDetails)
+        {
+            string msg = "start tbl_PayDetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_PayDetail WHERE DocNo = '" + tbl_PayDetails.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_PayDetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_PayDetail> tbl_PayDetails, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PayDetailDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_PayDetail();
+                var docNo = tbl_PayDetails.First().DocNo;
+                updateData = db.tbl_PayDetail.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_PayDetails.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_PayDetails.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PayDetailDao=>PerformUpdate";
+            msg.WriteLog(null);
 
             return ret;
         }

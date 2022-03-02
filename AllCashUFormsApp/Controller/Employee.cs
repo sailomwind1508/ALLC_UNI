@@ -152,5 +152,21 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_Employee()).GetEmployeePopup();
         }
+
+        public DataTable GetBranchWarehouseMappingDT()
+        {
+            return (new tbl_BranchWarehouseMapping()).GetBranchWarehouseMappingDT();
+        }
+
+        public int SaveWithStore(List<tbl_BranchWarehouseMapping> tbl_BranchWarehouseMapping)
+        {
+            return tbl_BranchWarehouseMapping.SaveWithStore();
+        }
+
+        public int DeleteWithStore(tbl_BranchWarehouseMapping tbl_BranchWarehouseMapping)
+        {
+            return tbl_BranchWarehouseMapping.DeleteWithStore();
+        }
+
     }
 }

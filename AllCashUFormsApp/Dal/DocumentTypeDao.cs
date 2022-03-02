@@ -14,6 +14,35 @@ namespace AllCashUFormsApp
     public static class DocumentTypeDao
     {
         /// <summary>
+        /// select all data
+        /// </summary>
+        /// <param name="tbl_DocumentType"></param>
+        /// <returns></returns>
+        public static tbl_DocumentType Select(this tbl_DocumentType tbl_DocumentType, string docTypeCode)
+        {
+            List<tbl_DocumentType> list = new List<tbl_DocumentType>();
+            try
+            {
+                string sql = "";
+                sql += " SELECT [DocTypeCode], [DocTypeName], [DocFormat], [RunLength], [DocHeader], [DocRemark] ";
+                sql += " FROM [dbo].[tbl_DocumentType] WHERE FlagDel = 0 AND [DocTypeCode] = '" + docTypeCode + "' ";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DocumentType), sql);
+                list = dynamicListReturned.Cast<tbl_DocumentType>().ToList();
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_DocumentType.Where(x => x.FlagDel == false).OrderBy(x => x.DocTypeCode.Trim()).ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_DocumentType.GetType());
+            }
+
+            return list.FirstOrDefault();
+        }
+
+        /// <summary>
         /// select data
         /// </summary>
         /// <param name="tbl_DocumentType"></param>

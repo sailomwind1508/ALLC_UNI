@@ -47,7 +47,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.pnlTL = new System.Windows.Forms.Panel();
-            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,6 +66,9 @@
             this.lblBranchCode = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.chkAllMM = new System.Windows.Forms.CheckBox();
+            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -76,7 +78,6 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -276,6 +277,7 @@
             // pnlTL
             // 
             this.pnlTL.BackColor = System.Drawing.Color.Azure;
+            this.pnlTL.Controls.Add(this.chkAllMM);
             this.pnlTL.Controls.Add(this.ccbProductCode);
             this.pnlTL.Controls.Add(this.btnClear);
             this.pnlTL.Controls.Add(this.btnSearch);
@@ -300,20 +302,6 @@
             this.pnlTL.Name = "pnlTL";
             this.pnlTL.Size = new System.Drawing.Size(722, 109);
             this.pnlTL.TabIndex = 20;
-            // 
-            // ccbProductCode
-            // 
-            this.ccbProductCode.CheckOnClick = true;
-            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.ccbProductCode.DropDownHeight = 1;
-            this.ccbProductCode.FormattingEnabled = true;
-            this.ccbProductCode.IntegralHeight = false;
-            this.ccbProductCode.Location = new System.Drawing.Point(89, 83);
-            this.ccbProductCode.Name = "ccbProductCode";
-            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
-            this.ccbProductCode.TabIndex = 108;
-            this.ccbProductCode.ValueSeparator = ", ";
-            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
             // 
             // btnClear
             // 
@@ -532,6 +520,37 @@
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // chkAllMM
+            // 
+            this.chkAllMM.AutoSize = true;
+            this.chkAllMM.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.chkAllMM.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.chkAllMM.Location = new System.Drawing.Point(535, 30);
+            this.chkAllMM.Name = "chkAllMM";
+            this.chkAllMM.Size = new System.Drawing.Size(112, 20);
+            this.chkAllMM.TabIndex = 127;
+            this.chkAllMM.Text = "ดึงข้อมูลทุกคลัง";
+            this.chkAllMM.UseVisualStyleBackColor = false;
+            this.chkAllMM.CheckedChanged += new System.EventHandler(this.chkAllMM_CheckedChanged);
+            // 
+            // ccbProductCode
+            // 
+            this.ccbProductCode.CheckOnClick = true;
+            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.ccbProductCode.DropDownHeight = 1;
+            this.ccbProductCode.FormattingEnabled = true;
+            this.ccbProductCode.IntegralHeight = false;
+            this.ccbProductCode.Location = new System.Drawing.Point(89, 83);
+            this.ccbProductCode.Name = "ccbProductCode";
+            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
+            this.ccbProductCode.TabIndex = 108;
+            this.ccbProductCode.ValueSeparator = ", ";
+            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
+            // 
             // btnClose
             // 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -710,10 +729,6 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // frmProductMovement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -796,5 +811,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.DataGridView grdList;
         private CheckComboBoxTest.CheckedComboBox ccbProductCode;
+        private System.Windows.Forms.CheckBox chkAllMM;
     }
 }

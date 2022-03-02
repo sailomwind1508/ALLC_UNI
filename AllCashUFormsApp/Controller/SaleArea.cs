@@ -18,17 +18,20 @@ namespace AllCashUFormsApp.Controller
                 _docTypePredicate = value;
             }
         }
+
+        public SaleArea() : base("") //
+        {
+            _docTypePredicate = (x => x.DocTypeCode == "");
+        }
+
         //public DataTable GetCustomerTypeGridData(int flagDel, string searchtext)
         //{
         //    return (new tbl_ArCustomerType()).GetCustomerTypeGirdData(flagDel, searchtext);
         //}
+
         public DataTable GetSalAreaData(int flagDel, string searchtext)
         {
             return (new tbl_SalArea()).GetSalAreaData(flagDel, searchtext);
-        }
-        public SaleArea() : base("") //
-        {
-            _docTypePredicate = (x => x.DocTypeCode == "");
         }
 
         public List<tbl_SalArea> GetAllData()
@@ -82,6 +85,21 @@ namespace AllCashUFormsApp.Controller
             }
 
             return dt;
+        }
+
+        //public DataTable VanTypeList()
+        //{
+        //    return new tbl_VanType().VanTypeList();
+        //}
+
+        public DataTable proc_GetMarketData(Dictionary<string, object> _params)
+        {
+            return new tbl_SalArea().proc_GetMarketData(_params);
+        }
+
+        public List<tbl_SalArea> GetSalAreaByWHID(string _WHID)
+        {
+            return new tbl_SalArea().GetSalAreaByWHID(_WHID);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace AllCashUFormsApp.Controller
     public class Customer : BaseControl, IObject
     {
         private Func<tbl_PRMaster, bool> _docTypePredicate = null;
+
         public virtual Func<tbl_PRMaster, bool> docTypePredicate
         {
             get { return _docTypePredicate; }
@@ -19,10 +20,12 @@ namespace AllCashUFormsApp.Controller
                 _docTypePredicate = value;
             }
         }
+
         public Customer() : base("")
         {
             _docTypePredicate = (x => x.DocTypeCode == "");
         }
+
         public string GenCustSAPCode(string branch = "")
         {
             string ret = string.Empty;
@@ -66,6 +69,7 @@ namespace AllCashUFormsApp.Controller
                 return string.Empty;
             }
         }
+
         public List<tbl_ArCustomer> GetCustomerInfo(Func<tbl_ArCustomer, bool> condition = null)
         {
             if (condition != null)
@@ -73,10 +77,12 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ArCustomer().SelectAllEntity();
         }
+
         public List<tbl_ArCustomer> GetSelectCustomerID(string CustomerID,int flagDel)
         {
             return new tbl_ArCustomer().SelectCustomerID(CustomerID,flagDel);
         }
+
         public DataTable GetCustDetails(Func<tbl_ArCustomer, bool> func)
         {
             try
@@ -107,6 +113,7 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
+
         public DataTable GetCustTable(Func<tbl_ArCustomer, bool> func)
         {
             DataTable dtcust = GetCustDetails(func);
@@ -123,6 +130,7 @@ namespace AllCashUFormsApp.Controller
             }
             return _dt;
         }
+
         public List<tbl_ArCustomer> GetAllData(Func<tbl_ArCustomer, bool> func = null)
         {
             if (func != null)
@@ -134,18 +142,22 @@ namespace AllCashUFormsApp.Controller
                 return (new tbl_ArCustomer()).SelectAll().OrderBy(x => x.WHID).ThenBy(x => x.SalAreaID).ThenBy(x => x.Seq).ToList();
             }
         }
+
         public virtual int AddData(tbl_ArCustomer tbl_ArCustomer)
         {
             return tbl_ArCustomer.Insert();
         }
+
         public int UpdateData(tbl_ArCustomer tbl_ArCustomer)
         {
             return tbl_ArCustomer.Update();
         }
+
         public int RemoveData(tbl_ArCustomer tbl_ArCustomer)
         {
             return tbl_ArCustomer.Delete();
         }
+
         public virtual DataTable GetDataTable(bool isPopup = true)
         {
             try
@@ -165,6 +177,7 @@ namespace AllCashUFormsApp.Controller
                             join sa in tbl_SalAreas on c.SalAreaID equals sa.SalAreaID
                             select new
                             {
+                                CustomerID = c.CustomerID,
                                 CustomerCode = c.CustomerCode,
                                 CustName = c.CustName,
                                 CustomerRefCode = c.CustomerRefCode,
@@ -185,7 +198,7 @@ namespace AllCashUFormsApp.Controller
 
                 foreach (var rowInfo in query.OrderBy(x => x.WHID).ThenBy(x => x.SalAreaID).ThenBy(x => x.Seq).ToList())
                 {
-                    newTable.Rows.Add(rowInfo.CustomerCode, rowInfo.CustName, rowInfo.CustomerRefCode, rowInfo.ShopTypeName, rowInfo.SalAreaName,
+                    newTable.Rows.Add(rowInfo.CustomerID, rowInfo.CustomerCode, rowInfo.CustName, rowInfo.CustomerRefCode, rowInfo.ShopTypeName, rowInfo.SalAreaName,
                         rowInfo.SalAreaID, rowInfo.WHID, rowInfo.Seq, rowInfo.FlagMember, rowInfo.CreditDay, rowInfo.BillTo, rowInfo.Contact);
                 }
 
@@ -197,10 +210,12 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
+
         public DataTable GetCustomerPre()
         {
             return new tbl_ArCustomer().GetCustomerPre();
         }
+
         public DataTable GetDataTable(Func<tbl_ArCustomer, bool> predicate)
         {
             try
@@ -219,6 +234,7 @@ namespace AllCashUFormsApp.Controller
                             join sa in tbl_SalAreas on c.SalAreaID equals sa.SalAreaID
                             select new
                             {
+                                CustomerID = c.CustomerID,
                                 CustomerCode = c.CustomerCode,
                                 CustName = c.CustName,
                                 CustomerRefCode = c.CustomerRefCode,
@@ -239,7 +255,7 @@ namespace AllCashUFormsApp.Controller
 
                 foreach (var rowInfo in query.OrderBy(x => x.WHID).ThenBy(x => x.SalAreaID).ThenBy(x => x.Seq).ToList())
                 {
-                    newTable.Rows.Add(rowInfo.CustomerCode, rowInfo.CustName, rowInfo.CustomerRefCode, rowInfo.ShopTypeName, rowInfo.SalAreaName,
+                    newTable.Rows.Add(rowInfo.CustomerID, rowInfo.CustomerCode, rowInfo.CustName, rowInfo.CustomerRefCode, rowInfo.ShopTypeName, rowInfo.SalAreaName,
                         rowInfo.SalAreaID, rowInfo.WHID, rowInfo.Seq, rowInfo.FlagMember, rowInfo.CreditDay, rowInfo.BillTo, rowInfo.Contact);
                 }
 
@@ -251,6 +267,7 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
+
         public DataTable GetDataTableByCondition(Func<tbl_ArCustomer, bool> predicate)
         {
             DataTable dt = new DataTable();
@@ -266,6 +283,7 @@ namespace AllCashUFormsApp.Controller
 
             return dt;
         }
+
         public virtual DataTable GetDataTableByCondition(string[] filters)
         {
             DataTable dt = new DataTable();
@@ -282,14 +300,31 @@ namespace AllCashUFormsApp.Controller
 
             return dt;
         }
+
         public DataTable GetCustomerData(Dictionary<string, object> _params)
         {
             return (new tbl_ArCustomer()).GetCustomerData(_params);
+        }
+
+        public DataTable GetCustomerImage(Dictionary<string, object> _params)
+        {
+            return (new tbl_ArCustomer()).GetCustomerImage (_params);
         }
 
         public DataTable GetTransferCustomerData(Dictionary<string, object> _params)
         {
             return (new tbl_ArCustomer()).GetTransferCustomerData(_params);
         }
+
+        public List<tbl_ArCustomer> SelectCustomerList(string CustomerID)
+        {
+            return (new tbl_ArCustomer()).SelectSingle(CustomerID);
+        }
+
+        public List<tbl_ArCustomer> SelectMaxCustomerID(string FormatCustomerID)
+        {
+            return new tbl_ArCustomer().SelectMaxCustomerID(FormatCustomerID);
+        }
+
     }
 }

@@ -20,8 +20,11 @@ namespace AllCashUFormsApp.View.UControl
         {
             this.Close();
         }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            string msg = "";
+
             if (mtbAddSKU.MaskCompleted == true)
             {
                 frmPromotionSetting.skuID = mtbAddSKU.Text;
@@ -29,7 +32,7 @@ namespace AllCashUFormsApp.View.UControl
             }
             else
             {
-                string msg = "กรุณากรอก SKU_ID ให้ครบ 8 หลัก !!";
+                msg = "กรุณากรอก SKU_ID ให้ครบ 8 หลัก !!";
                 msg.ShowWarningMessage();
             }
         }

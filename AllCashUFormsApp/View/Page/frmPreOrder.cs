@@ -989,11 +989,11 @@ namespace AllCashUFormsApp.View.Page
 
             var employee = bu.GetEmployee(po.SaleEmpID);
             if (employee != null)
-                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+                txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
 
             var emp = bu.GetEmployee().FirstOrDefault(x => x.EmpID == po.SaleEmpID);
             if (emp != null)
-                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
 
             txtWHCode.Text = po.WHID;
             Func<tbl_BranchWarehouse, bool> func = (x => x.WHID == po.WHID);
@@ -1599,7 +1599,7 @@ namespace AllCashUFormsApp.View.Page
 
                     var emp = bu.GetEmployee(cust[0].EmpID);
                     if (emp != null)
-                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == cust[0].WHID);
                     var wh = bu.GetBranchWarehouse(whFunc);
@@ -1626,7 +1626,7 @@ namespace AllCashUFormsApp.View.Page
                         var bwh = bu.GetBranchWarehouse(x => x.WHID == text);
                         var emp = bu.GetEmployee(bwh.SaleEmpID);
                         if (emp != null)
-                            txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                            txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
                     }
                 }
             }
@@ -1666,7 +1666,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
 
             var employee = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName);
+            txtCrUser.Text = string.Join(" ", employee.TitleName, employee.FirstName, employee.LastName);
             //btnShowPromotion.Enabled = true;
             btnReCalc.Enabled = true;
             btnAdd.Enabled = false;
@@ -1723,8 +1723,8 @@ namespace AllCashUFormsApp.View.Page
             po.Shipto = txtBillTo.Text;
 
             po.CreditDay = Convert.ToInt16(nudCreditDay.Value);
-            Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-            var cust = bu.GetCustomer(func);
+            //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+            var cust = bu.GetCustomer(txtCustomerCode.Text);
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
@@ -3115,8 +3115,8 @@ namespace AllCashUFormsApp.View.Page
 
                 if (errList.Count == 0)
                 {
-                    Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-                    var sup = bu.GetCustomer(func);
+                    //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+                    var sup = bu.GetCustomer(txtCustomerCode.Text);
                     if (sup == null)
                     {
                         string t = lblCustomerCode.Text;

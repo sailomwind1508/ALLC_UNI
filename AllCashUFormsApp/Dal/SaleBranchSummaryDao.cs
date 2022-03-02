@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -11,6 +12,39 @@ namespace AllCashUFormsApp
 {
     public static class SaleBranchSummaryDao
     {
+
+        /// <summary>
+        /// select all data
+        /// </summary>
+        /// <param name="tbl_SaleBranchSummary"></param>
+        /// <returns></returns>
+        public static tbl_SaleBranchSummary Select(this tbl_SaleBranchSummary tbl_SaleBranchSummary, string branchID, DateTime saleDate)
+        {
+            List<tbl_SaleBranchSummary> list = new List<tbl_SaleBranchSummary>();
+            tbl_SaleBranchSummary ret = null;
+
+            try
+            {
+                DataTable dt = new DataTable();
+                string _saleDate = saleDate.ToString("yyyyMMdd", new CultureInfo("en-US"));
+
+                string sql = @" SELECT * FROM [dbo].[tbl_SaleBranchSummary] 
+                WHERE FlagDel = 0 AND BranchID = '" + branchID + "' AND CAST(SaleDate AS DATE) = '" + _saleDate + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SaleBranchSummary), sql);
+                list = dynamicListReturned.Cast<tbl_SaleBranchSummary>().ToList();
+
+                if (list.Count > 0)
+                    ret = list.First();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SaleBranchSummary.GetType());
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// select data
         /// </summary>

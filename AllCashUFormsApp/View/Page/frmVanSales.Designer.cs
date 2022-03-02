@@ -110,7 +110,7 @@
             this.txtBillTo = new System.Windows.Forms.TextBox();
             this.lblBillTo = new System.Windows.Forms.Label();
             this.txtCustName = new System.Windows.Forms.TextBox();
-            this.txtCustomerCode = new System.Windows.Forms.TextBox();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
             this.btnSearchCust = new System.Windows.Forms.Button();
             this.lblCustomerCode = new System.Windows.Forms.Label();
             this.pnlCen = new System.Windows.Forms.Panel();
@@ -131,7 +131,9 @@
             this.FormHeader = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -141,7 +143,6 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel6.SuspendLayout();
             this.pnlBL.SuspendLayout();
@@ -157,8 +158,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // label12
@@ -725,7 +726,7 @@
             this.pnlTL.Controls.Add(this.txtBillTo);
             this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.txtCustName);
-            this.pnlTL.Controls.Add(this.txtCustomerCode);
+            this.pnlTL.Controls.Add(this.txtCustomerID);
             this.pnlTL.Controls.Add(this.btnSearchCust);
             this.pnlTL.Controls.Add(this.lblCustomerCode);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
@@ -958,13 +959,13 @@
             this.txtCustName.Size = new System.Drawing.Size(235, 23);
             this.txtCustName.TabIndex = 120;
             // 
-            // txtCustomerCode
+            // txtCustomerID
             // 
-            this.txtCustomerCode.Location = new System.Drawing.Point(81, 5);
-            this.txtCustomerCode.MaxLength = 13;
-            this.txtCustomerCode.Name = "txtCustomerCode";
-            this.txtCustomerCode.Size = new System.Drawing.Size(153, 23);
-            this.txtCustomerCode.TabIndex = 118;
+            this.txtCustomerID.Location = new System.Drawing.Point(81, 5);
+            this.txtCustomerID.MaxLength = 13;
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.Size = new System.Drawing.Size(153, 23);
+            this.txtCustomerID.TabIndex = 118;
             // 
             // btnSearchCust
             // 
@@ -1232,8 +1233,19 @@
             this.panel2.Size = new System.Drawing.Size(1008, 580);
             this.panel2.TabIndex = 29;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Azure;
+            this.panel1.Controls.Add(this.panel5);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1008, 28);
+            this.panel1.TabIndex = 28;
+            // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.btnPrintCrys);
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Controls.Add(this.btnAdd);
             this.panel5.Controls.Add(this.btnExcel);
@@ -1247,7 +1259,27 @@
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 28);
-            this.panel5.TabIndex = 17;
+            this.panel5.TabIndex = 20;
+            // 
+            // btnPrintCrys
+            // 
+            this.btnPrintCrys.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrintCrys.BackColor = System.Drawing.Color.Azure;
+            this.btnPrintCrys.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrintCrys.FlatAppearance.BorderSize = 0;
+            this.btnPrintCrys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintCrys.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintCrys.ForeColor = System.Drawing.Color.Black;
+            this.btnPrintCrys.Image = ((System.Drawing.Image)(resources.GetObject("btnPrintCrys.Image")));
+            this.btnPrintCrys.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrintCrys.Location = new System.Drawing.Point(484, 3);
+            this.btnPrintCrys.Name = "btnPrintCrys";
+            this.btnPrintCrys.Size = new System.Drawing.Size(61, 23);
+            this.btnPrintCrys.TabIndex = 26;
+            this.btnPrintCrys.Text = "พิมพ์";
+            this.btnPrintCrys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrintCrys.UseVisualStyleBackColor = false;
+            this.btnPrintCrys.Click += new System.EventHandler(this.btnPrintCrys_Click);
             // 
             // btnClose
             // 
@@ -1260,7 +1292,7 @@
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(600, 3);
+            this.btnClose.Location = new System.Drawing.Point(666, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(57, 23);
             this.btnClose.TabIndex = 17;
@@ -1276,7 +1308,7 @@
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F);
             this.btnAdd.ForeColor = System.Drawing.Color.Black;
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1301,7 +1333,7 @@
             this.btnExcel.ForeColor = System.Drawing.Color.Black;
             this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(485, 3);
+            this.btnExcel.Location = new System.Drawing.Point(551, 3);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(109, 23);
             this.btnExcel.TabIndex = 17;
@@ -1434,16 +1466,6 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Azure;
-            this.panel1.Controls.Add(this.panel5);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1008, 28);
-            this.panel1.TabIndex = 28;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -1481,15 +1503,13 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private UControl.CancelButton btnCancel;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.RadioButton rdoAccCode;
         private System.Windows.Forms.RadioButton rdoProdCode;
@@ -1555,7 +1575,7 @@
         private System.Windows.Forms.TextBox txtBillTo;
         private System.Windows.Forms.Label lblBillTo;
         private System.Windows.Forms.TextBox txtCustName;
-        private System.Windows.Forms.TextBox txtCustomerCode;
+        private System.Windows.Forms.TextBox txtCustomerID;
         private System.Windows.Forms.Button btnSearchCust;
         private System.Windows.Forms.Label lblCustomerCode;
         private System.Windows.Forms.Panel pnlCen;
@@ -1564,15 +1584,6 @@
         private System.Windows.Forms.Label FormHeader;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel2;
-        private UControl.CopyButton btnCopy;
-        private UControl.SaveButton btnSave;
-        private UControl.RemoveButton btnRemove;
-        private UControl.PrintButton btnPrint;
-        private System.Windows.Forms.Panel panel5;
-        private UControl.CloseButton btnClose;
-        private UControl.AddButton btnAdd;
-        private UControl.ExcelButton btnExcel;
-        private UControl.EditButton btnEdit;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button btnShowPromotion;
@@ -1590,5 +1601,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUomSetID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSellPrice;
+        private System.Windows.Forms.Panel panel5;
+        private UControl.PrintButton btnPrintCrys;
+        private UControl.CloseButton btnClose;
+        private UControl.AddButton btnAdd;
+        private UControl.ExcelButton btnExcel;
+        private UControl.EditButton btnEdit;
+        private UControl.PrintButton btnPrint;
+        private UControl.RemoveButton btnRemove;
+        private UControl.CancelButton btnCancel;
+        private UControl.CopyButton btnCopy;
+        private UControl.SaveButton btnSave;
     }
 }

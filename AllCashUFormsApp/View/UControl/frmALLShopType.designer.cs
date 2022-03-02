@@ -29,15 +29,13 @@ namespace AllCashUFormsApp.View.UControl
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmALLShopType));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmALLShopType));
             this.pnlCenter = new System.Windows.Forms.Panel();
             this.grdList = new System.Windows.Forms.DataGridView();
             this.pnlBottomPage = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnAccept = new System.Windows.Forms.Button();
             this.lbl_RowCount = new System.Windows.Forms.Label();
             this.lblQtyList = new System.Windows.Forms.Label();
             this.pnlTopPage = new System.Windows.Forms.Panel();
@@ -47,6 +45,8 @@ namespace AllCashUFormsApp.View.UControl
             this.colShopTypeCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colShopTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colShopTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnAccept = new System.Windows.Forms.Button();
             this.pnlCenter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             this.pnlBottomPage.SuspendLayout();
@@ -60,7 +60,7 @@ namespace AllCashUFormsApp.View.UControl
             this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCenter.Location = new System.Drawing.Point(0, 45);
             this.pnlCenter.Name = "pnlCenter";
-            this.pnlCenter.Size = new System.Drawing.Size(553, 459);
+            this.pnlCenter.Size = new System.Drawing.Size(559, 459);
             this.pnlCenter.TabIndex = 5;
             // 
             // grdList
@@ -77,7 +77,7 @@ namespace AllCashUFormsApp.View.UControl
             this.grdList.Location = new System.Drawing.Point(0, 0);
             this.grdList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grdList.Name = "grdList";
-            this.grdList.Size = new System.Drawing.Size(553, 459);
+            this.grdList.Size = new System.Drawing.Size(559, 459);
             this.grdList.TabIndex = 2;
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
@@ -91,44 +91,8 @@ namespace AllCashUFormsApp.View.UControl
             this.pnlBottomPage.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlBottomPage.Location = new System.Drawing.Point(0, 504);
             this.pnlBottomPage.Name = "pnlBottomPage";
-            this.pnlBottomPage.Size = new System.Drawing.Size(553, 37);
+            this.pnlBottomPage.Size = new System.Drawing.Size(559, 37);
             this.pnlBottomPage.TabIndex = 4;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(475, 3);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(74, 28);
-            this.btnCancel.TabIndex = 15;
-            this.btnCancel.Text = "ยกเลิก";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnAccept
-            // 
-            this.btnAccept.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnAccept.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAccept.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAccept.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnAccept.Image = ((System.Drawing.Image)(resources.GetObject("btnAccept.Image")));
-            this.btnAccept.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAccept.Location = new System.Drawing.Point(395, 3);
-            this.btnAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnAccept.Name = "btnAccept";
-            this.btnAccept.Size = new System.Drawing.Size(74, 28);
-            this.btnAccept.TabIndex = 16;
-            this.btnAccept.Text = "ตกลง";
-            this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnAccept.UseVisualStyleBackColor = false;
-            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // lbl_RowCount
             // 
@@ -158,16 +122,18 @@ namespace AllCashUFormsApp.View.UControl
             this.pnlTopPage.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTopPage.Location = new System.Drawing.Point(0, 0);
             this.pnlTopPage.Name = "pnlTopPage";
-            this.pnlTopPage.Size = new System.Drawing.Size(553, 45);
+            this.pnlTopPage.Size = new System.Drawing.Size(559, 45);
             this.pnlTopPage.TabIndex = 3;
             // 
             // txtSearch
             // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearch.Location = new System.Drawing.Point(83, 11);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSearch.MaxLength = 50;
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(456, 23);
+            this.txtSearch.Size = new System.Drawing.Size(464, 23);
             this.txtSearch.TabIndex = 1;
             // 
             // label1
@@ -198,8 +164,7 @@ namespace AllCashUFormsApp.View.UControl
             this.colShopTypeCode.MaxInputLength = 2;
             this.colShopTypeCode.Name = "colShopTypeCode";
             this.colShopTypeCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colShopTypeCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colShopTypeCode.Width = 120;
+            this.colShopTypeCode.Width = 135;
             // 
             // colShopTypeName
             // 
@@ -210,7 +175,6 @@ namespace AllCashUFormsApp.View.UControl
             this.colShopTypeName.HeaderText = "ชื่อประเภทร้านค้า";
             this.colShopTypeName.MaxInputLength = 50;
             this.colShopTypeName.Name = "colShopTypeName";
-            this.colShopTypeName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // colShopTypeID
             // 
@@ -220,18 +184,56 @@ namespace AllCashUFormsApp.View.UControl
             this.colShopTypeID.HeaderText = "ShopTypeID";
             this.colShopTypeID.MaxInputLength = 20;
             this.colShopTypeID.Name = "colShopTypeID";
-            this.colShopTypeID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colShopTypeID.Visible = false;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(481, 3);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(74, 28);
+            this.btnCancel.TabIndex = 15;
+            this.btnCancel.Text = "ยกเลิก";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnAccept
+            // 
+            this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAccept.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnAccept.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAccept.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAccept.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnAccept.Image = ((System.Drawing.Image)(resources.GetObject("btnAccept.Image")));
+            this.btnAccept.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAccept.Location = new System.Drawing.Point(401, 3);
+            this.btnAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnAccept.Name = "btnAccept";
+            this.btnAccept.Size = new System.Drawing.Size(74, 28);
+            this.btnAccept.TabIndex = 16;
+            this.btnAccept.Text = "ตกลง";
+            this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAccept.UseVisualStyleBackColor = false;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // frmALLShopType
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(553, 541);
+            this.ClientSize = new System.Drawing.Size(559, 541);
             this.Controls.Add(this.pnlCenter);
             this.Controls.Add(this.pnlBottomPage);
             this.Controls.Add(this.pnlTopPage);
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmALLShopType";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

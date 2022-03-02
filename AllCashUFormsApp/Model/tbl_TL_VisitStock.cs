@@ -24,5 +24,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<System.DateTime> VisitDate { get; set; }
         public string ProductID { get; set; }
         public Nullable<decimal> StockQty { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

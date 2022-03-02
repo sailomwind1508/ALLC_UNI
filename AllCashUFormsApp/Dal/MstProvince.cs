@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -160,6 +161,51 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+
+        public static DataTable GetProvinceTable(this tbl_MstProvince tbl_MstProvince, int flagDel, string Text)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                string sql = "SELECT * FROM tbl_MstProvince WHERE FlagDel = " + flagDel + "";
+
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    sql += " AND (ProvinceCode like '%" + Text + "%'" + " OR ProvinceName like '%" + Text + "%')";
+                }
+
+                sql += " ORDER BY ProvinceCode";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_MstProvince.GetType());
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetProvinceFromSalAreaDistrict(this tbl_MstProvince tbl_MstProvince)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                string sql = @"SELECT TOP 1 t2.*  
+                           FROM tbl_SalAreaDistrict t1
+                           INNER JOIN tbl_MstProvince t2 ON t1.ProvinceName = t2.ProvinceName";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_MstProvince.GetType());
+            }
+
+            return dt;
         }
     }
 }

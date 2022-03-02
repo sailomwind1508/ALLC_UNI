@@ -56,6 +56,42 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AxShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
     <Reference Include="ClosedXML">
@@ -74,16 +110,27 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.WinForms.v12.12.0.0.1\lib\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -93,14 +140,19 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="Theraot.Core, Version=3.2.9.0, Culture=neutral, PublicKeyToken=b1460dff8a28f7a7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Theraot.Core.3.2.9\lib\net40\Theraot.Core.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\AppVersion.cs" />
     <Compile Include="Controller\ArCustomerType.cs" />
     <Compile Include="Controller\BankNote.cs" />
     <Compile Include="Controller\BaseControl.cs" />
     <Compile Include="Controller\Branch.cs" />
     <Compile Include="Controller\BranchWarehouse.cs" />
+    <Compile Include="Controller\CancelPOItem.cs" />
     <Compile Include="Controller\Company.cs" />
     <Compile Include="Controller\Customer.cs" />
     <Compile Include="Controller\CustomerShelf.cs" />
@@ -132,6 +184,7 @@
     <Compile Include="Controller\ProductMovement.cs" />
     <Compile Include="Controller\ProductSubGroup.cs" />
     <Compile Include="Controller\ProductType.cs" />
+    <Compile Include="Controller\PromotionProduct.cs" />
     <Compile Include="Controller\PromotionTemp.cs" />
     <Compile Include="Controller\Promotion.cs" />
     <Compile Include="Controller\PromotionBase.cs" />
@@ -171,6 +224,7 @@
     <Compile Include="Dal\BranchDao.cs" />
     <Compile Include="Dal\BranchGroupDao.cs" />
     <Compile Include="Dal\BranchWarehouseDao.cs" />
+    <Compile Include="Dal\BranchWarehouseMappingDao.cs" />
     <Compile Include="Dal\CauseDao.cs" />
     <Compile Include="Dal\CfgSettingDao.cs" />
     <Compile Include="Dal\CompanyDao.cs" />
@@ -192,6 +246,7 @@
     <Compile Include="Dal\InvMovementDao.cs" />
     <Compile Include="Dal\InvTransactionDao.cs" />
     <Compile Include="Dal\InvWarehouseDao.cs" />
+    <Compile Include="Dal\IPRDetailDao.cs" />
     <Compile Include="Dal\IVDetailDao.cs" />
     <Compile Include="Dal\IVMasterDao.cs" />
     <Compile Include="Dal\MenuDao.cs" />
@@ -224,15 +279,13 @@
     <Compile Include="Dal\SalAreaDao.cs" />
     <Compile Include="Dal\SalAreaDistrictDao.cs" />
     <Compile Include="Dal\SaleBranchSummaryDao.cs" />
+    <Compile Include="Dal\SaleTypeDao.cs" />
     <Compile Include="Dal\SendDataDao.cs" />
     <Compile Include="Dal\ShopTypeDao.cs" />
     <Compile Include="Dal\ShopTypeGroupDao.cs" />
     <Compile Include="Dal\UserDao.cs" />
     <Compile Include="Dal\VanTypeDao.cs" />
     <Compile Include="Dal\ZoneDao.cs" />
-    <Compile Include="Model\ArCustomerView.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\BranchEmployeeModel.cs" />
     <Compile Include="Model\CustomerInfo.cs" />
     <Compile Include="Model\DBModel.Context.cs">
@@ -251,57 +304,15 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model\EndDayPOInfoModel.cs" />
-    <Compile Include="Model\GetBranchWarehouse.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetCust_Routing.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetProduct.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetPromotion.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetProvinceAndDistrict.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetSetting.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetStock.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetTwoBill.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\GetTwoStock.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\ProductMovementModel.cs" />
     <Compile Include="Model\ProductPromotionModel.cs" />
-    <Compile Include="Model\ProductView.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\PromotionHitTempModel.cs" />
     <Compile Include="Model\PromotionRuleModel.cs" />
     <Compile Include="Model\PromotionUseModel.cs" />
-    <Compile Include="Model\ReceiveTabletDataView.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\ReceiveTabletDataView_Lastest.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\RPTStock.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Rpt_DSR.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Rpt_DSR_KPI.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\SearchAddressModel.cs" />
+    <Compile Include="Model\tblStMoveReport.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_AdmAuthorize.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -363,6 +374,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_BranchWarehouseData.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchWarehouseMapping.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Cause.cs">
@@ -650,6 +664,9 @@
     <Compile Include="Model\tbl_PromotionVanProduct.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_RemainingStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_ReportGroup.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -684,6 +701,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_SalesTrace.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_SaleType.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_SaleYearTarget.cs">
@@ -725,16 +745,34 @@
     <Compile Include="Model\tbl_TL_ArCustomerShelf.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_TL_ArCustomerShelf_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_ArCustomer_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_TL_CustomerCode.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_CustomerCode_HIS.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_PODetail.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_TL_PODetail_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_TL_POMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_TL_POMaster_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_TL_SalesTrace.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_SalesTrace_HIS.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_Visit.cs">
@@ -743,7 +781,16 @@
     <Compile Include="Model\tbl_TL_VisitShopImage.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_TL_VisitShopImage_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_TL_VisitStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_VisitStock_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_Visit_HIS.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TmpPRDetail.cs">
@@ -759,6 +806,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Users.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_VANStock.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_VanType.cs">
@@ -789,40 +839,7 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ValidateRL.cs" />
-    <Compile Include="Model\V_Acutal_Sales_By_VAN.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\V_BankNote.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_CountVisit_UBON.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_CUSTOMERDT.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_CUSTOMERHD.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_INVDT.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_INVHD.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_StockMovement.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_SummaryRL.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_SummaryRL_Get.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_SummaryRL_Stock.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\V_UBNDashboard.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -831,12 +848,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\ActualSales_By_Day.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ActualSales_By_Day.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Form_IV.cs">
       <AutoGen>True</AutoGen>
@@ -860,12 +871,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Form_RL.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Form_RL_Summary.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Form_RL_Summary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Form_TR.cs">
@@ -892,96 +897,7 @@
       <DependentUpon>From_RE.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Rep_IV_Sales.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_IV_Sales.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rep_Sales_By_Customer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_Sales_By_Customer.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rep_Sales_By_Doc.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_Sales_By_Doc.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rep_Sales_By_Doc_Detail.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_Sales_By_Doc_Detail.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rep_Sales_Per_Emp.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_Sales_Per_Emp.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rep_Sum_Shelf.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rep_Sum_Shelf.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rev_V_Sales.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rev_V_Sales.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\RPT-DSR-KPI.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RPT-DSR-KPI.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\RPT-DSR.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RPT-DSR.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\RPT-DSR2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RPT-DSR2.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\RptStock.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RptStock.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\RptStock_R2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RptStock_R2.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rpt_ActualSalesByBill.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rpt_ActualSalesByBill.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Rpt_ActualSalesByVan.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rpt_ActualSalesByVan.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\V_Bank_Note.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>V_Bank_Note.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Utilities\AnimatedCurs.cs" />
     <Compile Include="Utilities\CCBoxItem.cs" />
     <Compile Include="Utilities\Connection.cs" />
@@ -1122,6 +1038,12 @@
     <Compile Include="View\Page\frmRLSummary.Designer.cs">
       <DependentUpon>frmRLSummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmSalesUnit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSalesUnit.designer.cs">
+      <DependentUpon>frmSalesUnit.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmSalesTransfer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1134,11 +1056,23 @@
     <Compile Include="View\Page\frmSendProductInfo.designer.cs">
       <DependentUpon>frmSendProductInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmCancelPOItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCancelPOItem.Designer.cs">
+      <DependentUpon>frmCancelPOItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmSendToHQ.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmSendToHQ.Designer.cs">
       <DependentUpon>frmSendToHQ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSendUserData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSendUserData.designer.cs">
+      <DependentUpon>frmSendUserData.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmTabletSalesPre.cs">
       <SubType>Form</SubType>
@@ -1158,11 +1092,11 @@
     <Compile Include="View\Page\frmUser.Designer.cs">
       <DependentUpon>frmUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Page\Test_AddImage.cs">
+    <Compile Include="View\Page\frmCyCle.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Page\Test_AddImage.Designer.cs">
-      <DependentUpon>Test_AddImage.cs</DependentUpon>
+    <Compile Include="View\Page\frmCyCle.Designer.cs">
+      <DependentUpon>frmCyCle.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\AddButton.cs">
       <SubType>Component</SubType>
@@ -1215,11 +1149,35 @@
     <Compile Include="View\UControl\frmALLShopType.designer.cs">
       <DependentUpon>frmALLShopType.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\frmAppVersion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmAppVersion.Designer.cs">
+      <DependentUpon>frmAppVersion.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\frmConfirmSendData.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\UControl\frmConfirmSendData.Designer.cs">
       <DependentUpon>frmConfirmSendData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmCrystalReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmCrystalReport.Designer.cs">
+      <DependentUpon>frmCrystalReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmCrystalReportEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmCrystalReportEx.Designer.cs">
+      <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmCustomerPicture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmCustomerPicture.designer.cs">
+      <DependentUpon>frmCustomerPicture.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmExcel.cs">
       <SubType>Form</SubType>
@@ -1233,6 +1191,12 @@
     <Compile Include="View\UControl\frmPriceGroup.Designer.cs">
       <DependentUpon>frmPriceGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\frmProductGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmProductGroup.designer.cs">
+      <DependentUpon>frmProductGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\frmProductSubGroup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1244,6 +1208,12 @@
     </Compile>
     <Compile Include="View\UControl\frmPromotion.Designer.cs">
       <DependentUpon>frmPromotion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmPromotionProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmPromotionProduct.Designer.cs">
+      <DependentUpon>frmPromotionProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmSearchBranchWareHouseList.cs">
       <SubType>Form</SubType>
@@ -1420,12 +1390,6 @@
       <DependentUpon>ButtonCtrl.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\CCBoxItem.cs" />
-    <Compile Include="View\UControl\frmCrystalReport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\UControl\frmCrystalReport.Designer.cs">
-      <DependentUpon>frmCrystalReport.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\UControl\frmSearchAddress.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1468,6 +1432,12 @@
     <Compile Include="View\UControl\frmSupplierType.Designer.cs">
       <DependentUpon>frmSupplierType.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\frmVerifyCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmVerifyCustomer.Designer.cs">
+      <DependentUpon>frmVerifyCustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\frmWait.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1492,6 +1462,12 @@
     <Compile Include="View\UControl\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="View\UControl\Reporting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\Reporting.Designer.cs">
+      <DependentUpon>Reporting.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\ToolStripMenu.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1501,10 +1477,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\ActualSales_By_Day.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>ActualSales_By_Day.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Form_IV.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -1522,10 +1494,15 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_RL.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Form_RL_Summary.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Form_RL_Summary.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_RT.rdlc" />
+    <EmbeddedResource Include="Reports\Form_IV.rdlc" />
+    <EmbeddedResource Include="Reports\Form_OD.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RJ.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RB.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RE.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RL.rdlc" />
+    <EmbeddedResource Include="Reports\Form_TR.rdlc" />
+    <None Include="Reports\Form_IV.-OLDrdlc" />
     <EmbeddedResource Include="Reports\Form_TR.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_TR.cs</LastGenOutput>
@@ -1542,66 +1519,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>From_RE.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_IV_Sales.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_IV_Sales.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_Sales_By_Customer.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_Sales_By_Customer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_Sales_By_Doc.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_Sales_By_Doc.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_Sales_By_Doc_Detail.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_Sales_By_Doc_Detail.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_Sales_Per_Emp.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_Sales_Per_Emp.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rep_Sum_Shelf.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rep_Sum_Shelf.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rev_V_Sales.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rev_V_Sales.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RPT-DSR-KPI.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>RPT-DSR-KPI.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RPT-DSR.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>RPT-DSR.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RPT-DSR2.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>RPT-DSR2.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RptStock.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>RptStock.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RptStock_R2.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>RptStock_R2.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rpt_ActualSalesByBill.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rpt_ActualSalesByBill.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Rpt_ActualSalesByVan.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Rpt_ActualSalesByVan.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\V_Bank_Note.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>V_Bank_Note.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\From_V.rdlc" />
     <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1705,14 +1623,23 @@
     <EmbeddedResource Include="View\Page\frmRT.resx">
       <DependentUpon>frmRT.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSalesUnit.resx">
+      <DependentUpon>frmSalesUnit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSalesTransfer.resx">
       <DependentUpon>frmSalesTransfer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSendProductInfo.resx">
       <DependentUpon>frmSendProductInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCancelPOItem.resx">
+      <DependentUpon>frmCancelPOItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSendToHQ.resx">
       <DependentUpon>frmSendToHQ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSendUserData.resx">
+      <DependentUpon>frmSendUserData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmShelfPopup.resx">
       <DependentUpon>frmShelfPopup.cs</DependentUpon>
@@ -1744,8 +1671,8 @@
     <EmbeddedResource Include="View\Page\frmVE.resx">
       <DependentUpon>frmVE.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Page\Test_AddImage.resx">
-      <DependentUpon>Test_AddImage.cs</DependentUpon>
+    <EmbeddedResource Include="View\Page\frmCyCle.resx">
+      <DependentUpon>frmCyCle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\BunttonCtrlBC.resx">
       <DependentUpon>BunttonCtrlBC.cs</DependentUpon>
@@ -1759,11 +1686,20 @@
     <EmbeddedResource Include="View\UControl\frmALLShopType.resx">
       <DependentUpon>frmALLShopType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmAppVersion.resx">
+      <DependentUpon>frmAppVersion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmConfirmSendData.resx">
       <DependentUpon>frmConfirmSendData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCrystalReport.resx">
       <DependentUpon>frmCrystalReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmCrystalReportEx.resx">
+      <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmCustomerPicture.resx">
+      <DependentUpon>frmCustomerPicture.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmExcel.resx">
       <DependentUpon>frmExcel.cs</DependentUpon>
@@ -1771,8 +1707,14 @@
     <EmbeddedResource Include="View\UControl\frmPriceGroup.resx">
       <DependentUpon>frmPriceGroup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmProductGroup.resx">
+      <DependentUpon>frmProductGroup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmProductSubGroup.resx">
       <DependentUpon>frmProductSubGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmPromotionProduct.resx">
+      <DependentUpon>frmPromotionProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmSearchAddress.resx">
       <DependentUpon>frmSearchAddress.cs</DependentUpon>
@@ -1816,15 +1758,19 @@
     <EmbeddedResource Include="View\UControl\frmSupplierType.resx">
       <DependentUpon>frmSupplierType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmVerifyCustomer.resx">
+      <DependentUpon>frmVerifyCustomer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmWait.resx">
       <DependentUpon>frmWait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\Reporting.resx">
+      <DependentUpon>Reporting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\ToolStripMenu.resx">
       <DependentUpon>ToolStripMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <EntityDeploy Include="Model\DBModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>DBModel.Designer.cs</LastGenOutput>
@@ -1852,13 +1798,52 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="facebook_post_940x788_px__1__12T_icon.ico" />
+    <Content Include="Images\back-endLogo.png" />
     <Content Include="Images\Hourglass.gif" />
+    <Content Include="Model\DBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\DBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="UNI_LOGO1_ICON-1.ico" />
     <Content Include="UNI_LOGO1_ICON.ico" />
     <Content Include="UNI_LOGO7_ICON.ico" />
+    <Content Include="XSLT\Form_IV.xslt" />
+    <Content Include="XSLT\Form_OD.xslt" />
+    <Content Include="XSLT\Form_RE_XSLT.xslt" />
+    <Content Include="XSLT\Form_V.xslt" />
+    <Content Include="XSLT\Form_V_Copy.xslt" />
     <Content Include="XSLT\proc_ActualSalesByBill.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\proc_GetProductDataToExcel.xslt" />
+    <Content Include="XSLT\proc_RPTStock_Morning.xslt" />
+    <Content Include="XSLT\ProductMovement_Details.xslt" />
+    <Content Include="XSLT\ProductMovement_Summary.xslt" />
+    <Content Include="XSLT\Rep_BankNote_TotalSalePerMonth.xslt" />
+    <Content Include="XSLT\Rep_Bank_Note.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_Bakn_Note.xslt" />
+    <Content Include="XSLT\Rep_Cust_Sale_By_Root.xslt" />
     <Content Include="XSLT\Rep_Distribution.xslt" />
     <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI.xslt">
       <SubType>Designer</SubType>
@@ -1869,7 +1854,9 @@
     <Content Include="XSLT\proc_DSR_Sales_Summary_By_Sku.xslt">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="XSLT\proc_RPTStock.xslt" />
+    <Content Include="XSLT\proc_RPTStock.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\proc_StockMovement_ByWH.xslt">
       <SubType>Designer</SubType>
     </Content>
@@ -1901,6 +1888,9 @@
     <Content Include="XSLT\Rep_Rec_By_Doc.xslt" />
     <Content Include="XSLT\Rep_Rec_By_Subb.xslt" />
     <Content Include="XSLT\Rep_Sales_By_Customer.xslt" />
+    <Content Include="XSLT\Rep_RJ_By_Doc_Detail.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Rep_Sales_By_Doc_Detail.xslt">
       <SubType>Designer</SubType>
     </Content>
@@ -1990,16 +1980,6 @@
     <None Include="Images\power_off.ico" />
     <None Include="Images\wifi.ico" />
     <None Include="Images\stockBalance-icon.ico" />
-    <Content Include="Model\DBModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DBModel.edmx</DependentUpon>
-      <LastGenOutput>DBModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Model\DBModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DBModel.edmx</DependentUpon>
-      <LastGenOutput>DBModel.cs</LastGenOutput>
-    </Content>
     <None Include="Resources\wifi.ico" />
     <None Include="Images\account.png" />
     <None Include="Images\advance.png" />
@@ -2106,4 +2086,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
 </Project>

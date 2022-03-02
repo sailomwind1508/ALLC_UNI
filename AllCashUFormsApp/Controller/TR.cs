@@ -44,52 +44,57 @@ namespace AllCashUFormsApp.Controller
         {
             try
             {
-                List<tbl_PRMaster> tbl_PRMaster = new List<tbl_PRMaster>();
-                tbl_PRMaster = (new tbl_PRMaster()).Select(trDocTypePredicate);
+                //List<tbl_PRMaster> tbl_PRMaster = new List<tbl_PRMaster>();
+                //tbl_PRMaster = (new tbl_PRMaster()).Select(trDocTypePredicate);
 
-                var docStatus = GetDocStatus();
-                var allEmp = GetEmployee();
-                var allBranch = GetBranch();
+                //var docStatus = GetDocStatus();
+                //var allEmp = GetEmployee();
+                //var allBranch = GetBranch();
+
+                //DataTable newTable = new DataTable();
+                //newTable.Columns.Add("DocNo", typeof(string));
+                //newTable.Columns.Add("DocStatusImg", typeof(Bitmap));
+                //newTable.Columns.Add("DocStatus", typeof(string));
+                //newTable.Columns.Add("DocRef", typeof(string));
+                //newTable.Columns.Add("DocDate", typeof(DateTime));
+                //newTable.Columns.Add("SuppName", typeof(string));
+                //newTable.Columns.Add("CreditDay", typeof(short));
+                //newTable.Columns.Add("DueDate", typeof(DateTime));
+                //newTable.Columns.Add("TotalDue", typeof(decimal));
+                //newTable.Columns.Add("CrUser", typeof(string));
+                //newTable.Columns.Add("Remark", typeof(string));
+
+                //foreach (var r in tbl_PRMaster)
+                //{
+                //    Bitmap closeImg = new Bitmap(Properties.Resources.power_off);
+                //    Bitmap cancelmg = new Bitmap(Properties.Resources.closeBtn);
+                //    Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
+
+                //    string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
+                //    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
+                //    string crUser = "";
+                //    if (emp != null)
+                //        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
+
+                //    string SuppName = "";
+                //    short CreditDay = 0;
+                //    DateTime DueDate = DateTime.MinValue;
+                //    decimal TotalDue = 0;
+
+                //    var branch = allBranch;
+                //    if (branch != null && branch.Count > 0)
+                //    {
+                //        SuppName = branch.FirstOrDefault(x => x.BranchCode == r.FromBranchID).BranchName;
+                //    }
+
+                //    newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
+                //        SuppName, CreditDay, DueDate, TotalDue, crUser, r.Remark);
+                //}
 
                 DataTable newTable = new DataTable();
-                newTable.Columns.Add("DocNo", typeof(string));
-                newTable.Columns.Add("DocStatusImg", typeof(Bitmap));
-                newTable.Columns.Add("DocStatus", typeof(string));
-                newTable.Columns.Add("DocRef", typeof(string));
-                newTable.Columns.Add("DocDate", typeof(DateTime));
-                newTable.Columns.Add("SuppName", typeof(string));
-                newTable.Columns.Add("CreditDay", typeof(short));
-                newTable.Columns.Add("DueDate", typeof(DateTime));
-                newTable.Columns.Add("TotalDue", typeof(decimal));
-                newTable.Columns.Add("CrUser", typeof(string));
-                newTable.Columns.Add("Remark", typeof(string));
 
-                foreach (var r in tbl_PRMaster)
-                {
-                    Bitmap closeImg = new Bitmap(Properties.Resources.power_off);
-                    Bitmap cancelmg = new Bitmap(Properties.Resources.closeBtn);
-                    Bitmap statusImg = r.DocStatus == "4" ? closeImg : cancelmg;
-
-                    string docStatusName = docStatus.First(x => x.DocStatusCode == r.DocStatus).DocStatusName;
-                    tbl_Employee emp = allEmp.FirstOrDefault(x => x.EmpID == r.EmpID);
-                    string crUser = "";
-                    if (emp != null)
-                        crUser = string.Join(" ", emp.TitleName, emp.FirstName);
-
-                    string SuppName = "";
-                    short CreditDay = 0;
-                    DateTime DueDate = DateTime.MinValue;
-                    decimal TotalDue = 0;
-
-                    var branch = allBranch;
-                    if (branch != null && branch.Count > 0)
-                    {
-                        SuppName = branch.FirstOrDefault(x => x.BranchCode == r.FromBranchID).BranchName;
-                    }
-
-                    newTable.Rows.Add(r.DocNo, statusImg, docStatusName, r.DocRef, r.DocDate,
-                        SuppName, CreditDay, DueDate, TotalDue, crUser, r.Remark);
-                }
+                string sql = "proc_TR_GetDataTable";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
 
                 return newTable;
             }

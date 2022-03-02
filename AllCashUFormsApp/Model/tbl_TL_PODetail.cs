@@ -36,5 +36,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<byte> FreeUom { get; set; }
         public Nullable<int> FreeUnit { get; set; }
         public string WHID { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

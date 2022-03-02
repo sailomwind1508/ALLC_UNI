@@ -14,6 +14,51 @@ namespace AllCashUFormsApp
 {
     public static class InvWarehouseDao
     {
+        public static int ReCalc(this tbl_InvWarehouse tbl_InvWarehouse, string whid, string prodIDs)
+        {
+            try
+            {
+                int ret = 0;
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@WHID", whid);
+                sqlParmas.Add("@ProductIDs", prodIDs);
+
+                string sql = "proc_calc_invwarehouse";
+
+                ret = My_DataTable_Extensions.ExecuteSQLScalar(sql, CommandType.StoredProcedure, sqlParmas);
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(null);
+                return 0;
+            }
+        }
+
+        public static List<tbl_InvWarehouse> Select(this tbl_InvWarehouse tbl_InvWarehouse, string whID)
+        {
+            List<tbl_InvWarehouse> list = new List<tbl_InvWarehouse>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_InvWarehouse] ";
+                sql += " WHERE WHID = '" + whID.Trim() + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvWarehouse), sql);
+                list = dynamicListReturned.Cast<tbl_InvWarehouse>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_InvWarehouse.GetType());
+            }
+
+            return list;
+        }
+
         public static List<tbl_InvWarehouse> Select(this tbl_InvWarehouse tbl_InvWarehouse, string productID, string whID)
         {
             List<tbl_InvWarehouse> list = new List<tbl_InvWarehouse>();
@@ -105,6 +150,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_InvWarehouse tbl_InvWarehouse, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvWarehouseDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_InvWarehouse.Attach(tbl_InvWarehouse);
@@ -114,10 +162,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
+
+            msg = "end InvWarehouseDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_InvWarehouse> tbl_InvWarehouses, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvWarehouseDao=>InsertListWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 foreach (var tbl_InvWarehouse in tbl_InvWarehouses)
@@ -130,10 +184,16 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end InvWarehouseDao=>InsertListWithDB";
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this List<tbl_InvWarehouse> tbl_InvWarehouses, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
+            string msg = "start InvWarehouseDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -187,12 +247,17 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
+            msg = "end InvWarehouseDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             return ret;
         }
 
-
         public static int Update(this List<tbl_InvWarehouse> tbl_InvWarehouses)
         {
+            string msg = "start InvWarehouseDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -238,6 +303,9 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_InvWarehouse);
             }
 
+            msg = "end InvWarehouseDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
@@ -248,6 +316,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Delete(this tbl_InvWarehouse tbl_InvWarehouse, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start InvWarehouseDao=>DeleteWithDB ";
+            msg.WriteLog(null);
+
             try
             {
                 db.Entry(tbl_InvWarehouse).State = EntityState.Deleted;
@@ -257,6 +328,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
+
+            msg = "end InvWarehouseDao=>DeleteWithDB ";
+            msg.WriteLog(null);
         }
 
         /// <summary>
@@ -266,6 +340,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_InvWarehouse tbl_InvWarehouse)
         {
+            string msg = "start InvWarehouseDao=>Insert";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -281,6 +358,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
 
+            msg = "end InvWarehouseDao=>Insert";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -291,6 +371,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_InvWarehouse tbl_InvWarehouse)
         {
+            string msg = "start InvWarehouseDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -329,6 +412,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
 
+            msg = "end InvWarehouseDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -339,6 +425,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_InvWarehouse tbl_InvWarehouse, string WHID, string docTypeCode)
         {
+            string msg = "start InvWarehouseDao=>UpdateWithWHID,docTypeCode";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -403,6 +492,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
 
+            msg = "end InvWarehouseDao=>UpdateWithWHID,docTypeCode";
+            msg.WriteLog(null);
+
             return ret;
         }
 
@@ -413,6 +505,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_InvWarehouse tbl_InvWarehouse)
         {
+            string msg = "start InvWarehouseDao=>Delete";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -428,7 +523,128 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_InvWarehouse.GetType());
             }
 
+            msg = "end InvWarehouseDao=>Delete";
+            msg.WriteLog(null);
+
             return ret;
         }
+
+
+
+
+        public static int BulkInsert(this List<tbl_InvWarehouse> tbl_InvWarehouses)
+        {
+            string msg = "start tbl_InvWarehouse=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_InvWarehouses.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_InvWarehouse";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end tbl_InvWarehouse=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_InvWarehouse> tbl_InvWarehouses)
+        {
+            string msg = "start InvWarehouseDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string prdIds = "";
+                int i = 0;
+                foreach (var prdID in tbl_InvWarehouses.Select(a => a.ProductID).Distinct().ToList())
+                {
+                    if (i == tbl_InvWarehouses.Select(a => a.ProductID).Distinct().ToList().Count - 1)
+                        prdIds += "'" + prdID + "' ";
+                    else
+                        prdIds += "'" + prdID + "', ";
+
+                    i++;
+                }
+
+                string whIds = "";
+                int j = 0;
+                foreach (var whid in tbl_InvWarehouses.Select(a => a.WHID).Distinct().ToList())
+                {
+                    if (j == tbl_InvWarehouses.Select(a => a.WHID).Distinct().ToList().Count - 1)
+                        whIds += "'" + whid + "' ";
+                    else
+                        whIds += "'" + whid + "', ";
+
+                    j++;
+                }
+
+                string sql = " DELETE FROM tbl_InvWarehouse WHERE WHID IN (" + whIds + ") AND ProductID IN (" + prdIds + ") ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_InvWarehouses.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end tbl_InvWarehouse=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_InvWarehouse> tbl_InvWarehouses, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start tbl_InvWarehouse=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                ret = tbl_InvWarehouses.BulkUpdate();              
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end tbl_InvWarehouse=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
     }
 }

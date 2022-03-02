@@ -4,15 +4,23 @@
 	<xsl:output encoding="utf-8" />
 
 	<xsl:output omit-xml-declaration="yes" indent="yes"/>
-	<xsl:key name="kCols" match="ProductName" use="."/>
-
+	<xsl:key name="kCols1" match="ProductID" use="."/>
+	<xsl:key name="kCols2" match="ProductName" use="."/>
 	<xsl:key name="kRows" match="Rep_Rec_By_Subb_XSLT" use="SupplierID"/>
 
-	<xsl:variable name="colIds" select=
+	<xsl:variable name="prdIds" select=
+      "//ProductID
+      [generate-id()
+      =
+      generate-id(key('kCols1', .)[1])
+      ]
+      "/>
+
+	<xsl:variable name="prdNms" select=
       "//ProductName
       [generate-id()
       =
-      generate-id(key('kCols', .)[1])
+      generate-id(key('kCols2', .)[1])
       ]
       "/>
 
@@ -168,10 +176,17 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					<TR>
 						<TD Colspan="13"></TD>
 					</TR>
+					<TR>
+						<thead>
+							<TH Colspan="2"></TH>
+							<xsl:apply-templates select="$prdIds"/>
+
+						</thead>
+					</TR>
 					<thead>					
 						<th class="ResultItem">รหัสเจ้าหนี้</th>
 						<th class="ResultItem">ชื่อเจ้าหนี้</th>
-						<xsl:apply-templates select="$colIds"/>
+						<xsl:apply-templates select="$prdNms"/>
 						<th class="ResultItem">สถานะเอกสาร</th>
 					</thead>
 					<tbody colspan="1">
@@ -188,8 +203,14 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 		</html>
 	</xsl:template>
 
+	<xsl:template match="ProductID">
+		<th class="ResultItem2">
+			<xsl:value-of select="."/>
+		</th>
+	</xsl:template>
+
 	<xsl:template match="ProductName">
-		<th class="ResultItem2" colspan="1">
+		<th class="ResultItem2">
 			<xsl:value-of select="."/>
 		</th>
 	</xsl:template>
@@ -206,7 +227,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:value-of select="SuppName"/>
 			</td>
 
-			<xsl:apply-templates select="$colIds" mode="row">
+			<xsl:apply-templates select="$prdIds" mode="row">
 				<xsl:with-param name="nRows" select="key('kRows', SupplierID)"/>
 			</xsl:apply-templates>
 
@@ -218,17 +239,17 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 	</xsl:template>
 
 
-	<xsl:template match="ProductName" mode="row">
+	<xsl:template match="ProductID" mode="row">
 		<xsl:param name="nRows"/>
 
 		<td class="ResultItem2" align="Right">
 
 			<xsl:choose>
-				<xsl:when test="not(number($nRows[ProductName=current()]/ReceivedQty))">
-					<xsl:value-of select='$nRows[ProductName=current()]/ReceivedQty'/>
+				<xsl:when test="not(number($nRows[ProductID=current()]/ReceivedQty))">
+					<xsl:value-of select='$nRows[ProductID=current()]/ReceivedQty'/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select='number($nRows[ProductName=current()]/ReceivedQty)'/>
+					<xsl:value-of select='number($nRows[ProductID=current()]/ReceivedQty)'/>
 				</xsl:otherwise>
 			</xsl:choose>
 

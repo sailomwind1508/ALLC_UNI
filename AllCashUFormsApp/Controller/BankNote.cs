@@ -27,6 +27,7 @@ namespace AllCashUFormsApp.Controller
         {
             return (new V_BankNote()).GetBankNoteTable(dtDocDate);
         }
+
         public List<tbl_PayMaster> GetAllPayMaster()
         {
             return new tbl_PayMaster().SelectAll();

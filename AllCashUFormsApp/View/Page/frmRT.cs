@@ -49,11 +49,13 @@ namespace AllCashUFormsApp.View.Page
         //List<tbl_ProductGroup> allProdGroup = new List<tbl_ProductGroup>();
         //List<tbl_ProductSubGroup> allProdSubGroup = new List<tbl_ProductSubGroup>();
 
+        List<tbl_Employee> allEmp2 = new List<tbl_Employee>();
+
         public frmRT()
         {
             InitializeComponent();
 
-            searchCustControls = new List<Control> { txtCustomerCode, txtCustName, txtBillTo, txtContact, txtTelephone };
+            searchCustControls = new List<Control> { txtCustomerID, txtCustName, txtBillTo, txtContact, txtTelephone };
             searchBWHControls = new List<Control> { txtWHCode, txtWHName };
             searchEmpControls = new List<Control> { txtEmpCode };
             readOnlyControls = new List<string>() { txtCustName.Name, txtWHName.Name, txtEmpCode.Name };
@@ -63,7 +65,7 @@ namespace AllCashUFormsApp.View.Page
 
             txdDocNo.KeyDown += TxdDocNo_KeyDown;
             txtWHCode.KeyDown += TxtWHCode_KeyDown;
-            txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
+            txtCustomerID.KeyDown += TxtCustomerCode_KeyDown;
         }
 
         #region private methods
@@ -87,6 +89,7 @@ namespace AllCashUFormsApp.View.Page
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
@@ -151,6 +154,7 @@ namespace AllCashUFormsApp.View.Page
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
             btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             txdDocNo.DisableTextBox(false);
             txdDocNo.BackColor = Color.Turquoise;
@@ -165,9 +169,14 @@ namespace AllCashUFormsApp.View.Page
         {
             txdDocNo.Text = po.DocNo;
 
+            if (allEmp2.Count == 0)
+            {
+                allEmp2 = bu.GetEmployee();
+            }
+
             dtpDocDate.Value = po.DocDate.ToDateTimeFormat();
 
-            txtCustomerCode.Text = po.CustomerID;
+            txtCustomerID.Text = po.CustomerID;
             txtCustName.Text = po.CustName;
             txtContact.Text = po.ContactName;
             txtTelephone.Text = po.ContactTel;
@@ -176,7 +185,7 @@ namespace AllCashUFormsApp.View.Page
             var emp = bu.GetEmployee().FirstOrDefault(x => x.EmpID == po.EmpID);
             if (emp != null)
             {
-                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
             }
 
             txtWHCode.Text = po.WHID;
@@ -519,30 +528,110 @@ namespace AllCashUFormsApp.View.Page
         {
             if (!string.IsNullOrEmpty(text))
             {
-                //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == text);
-                var cust = bu.GetCustomer(text.Trim());
-                if (cust != null && cust.Count > 0)
+                //Func<tbl_ArCustomer, bool> func = (x => x.CustomerID == text.Trim());
+
+                //24/11/2021 by sailom .k-----------------------------------------------------------------
+                bool ret = FindSaleAreaByCust(text); //find sale area by customer id
+
+                if (!ret)
                 {
-                    var _saleAreaList = salAreaDistrictList.Where(x => x.WHID == cust[0].WHID);
-                    var listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
-                    saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+                    FindSaleAreaByWHID(text); //find sale area by whid
+                }
+                //24/11/2021 by sailom .k-----------------------------------------------------------------
+            }
+        }
 
-                    Predicate<tbl_SalArea> predicate = delegate (tbl_SalArea p) { return p.SalAreaID == cust[0].SalAreaID; };
-                    ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID", null, predicate);
+        /// <summary>
+        /// 24/11/2021 by sailom .k
+        /// </summary>
+        /// <param name="text"></param>
+        private bool FindSaleAreaByCust(string text)
+        {
+            bool ret = false;
+            var cust = bu.GetCustomer(text.Trim());
+            if (cust != null && cust.Count > 0)
+            {
+                var _saleAreaList = salAreaDistrictList.Where(x => x.WHID == cust[0].WHID);
+                var listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
+                //saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+                saleAreaList = bu.GetAllSaleArea(listOfSalAreaID); //Last edit by sailom.k 14/09/2021 tunning performance
 
-                    var emp = bu.GetEmployee(cust[0].EmpID);
-                    if (emp != null)
-                        txtEmpCode.Text = emp.TitleName + " " + emp.FirstName;
+                //edit by sailom 07-06-2021---------------------------------------
+                saleAreaList = saleAreaList.Where(p => p.SalAreaID == cust[0].SalAreaID).ToList();
 
-                    Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == cust[0].WHID);
-                    var wh = bu.GetBranchWarehouse(whFunc);
-                    if (wh != null)
+                if (saleAreaList.Count == 0)
+                    saleAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(cust[0].WHID.Substring(3, 3)));
+
+                if (saleAreaList.Count > 0)
+                {
+                    Predicate<tbl_SalArea> defaultSelect = delegate (tbl_SalArea p) { return p.SalAreaID == cust[0].SalAreaID; };
+                    ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID", null, defaultSelect);
+                    ret = saleAreaList.Count > 0;
+                }
+
+                //edit by sailom 07-06-2021---------------------------------------
+                string empID = cust[0].EmpID;
+                var emp = allEmp2.FirstOrDefault(x => x.EmpID == empID);// bu.GetEmployee(empID);
+                if (emp != null)
+                    txtEmpCode.Text = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
+
+                Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == cust[0].WHID);
+                var wh = bu.GetBranchWarehouse(whFunc);
+                if (wh != null)
+                {
+                    txtWHCode.Text = wh.WHCode;
+                    txtWHName.Text = wh.WHName;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 24/11/2021 by sailom .k
+        /// </summary>
+        /// <param name="text"></param>
+        private void FindSaleAreaByWHID(string text)
+        {
+            var _saleAreaList = salAreaDistrictList.Where(x => x.WHID == text.Trim());
+            var listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
+            //saleAreaList = bu.GetAllSaleArea().Where(x => listOfSalAreaID.Contains(x.SalAreaID)).ToList();
+            saleAreaList = bu.GetAllSaleArea(listOfSalAreaID); //Last edit by sailom.k 14/09/2021 tunning performance
+
+            if (saleAreaList.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(txtCustomerID.Text))
+                {
+                    var cust = bu.GetCustomer(txtCustomerID.Text.Trim());
+                    if (cust != null && cust.Count > 0)
                     {
-                        txtWHCode.Text = wh.WHCode;
-                        txtWHName.Text = wh.WHName;
+                        _saleAreaList = salAreaDistrictList.Where(x => x.WHID == cust[0].WHID);
+                        listOfSalAreaID = _saleAreaList.Select(a => a.SalAreaID).ToList();
+                        saleAreaList = bu.GetAllSaleArea(listOfSalAreaID); //Last edit by sailom.k 14/09/2021 tunning performance
+                        saleAreaList = saleAreaList.Where(p => p.SalAreaID == cust[0].SalAreaID).ToList();
+
+                        if (saleAreaList.Count == 0)
+                            saleAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(cust[0].WHID.Substring(3, 3)));
                     }
                 }
             }
+
+            ddlSaleArea.BindDropdownList(saleAreaList, "SalAreaName", "SalAreaID");
+
+            string empFullName = "";
+            var bwh = bu.GetBranchWarehouse(x => x.WHID == text);
+            if (bwh != null)
+            {
+                var emp = allEmp2.FirstOrDefault(x => x.EmpID == bwh.SaleEmpID);//bu.GetEmployee(bwh.SaleEmpID);
+                if (emp != null)
+                    empFullName = emp.TitleName + " " + emp.FirstName + " " + emp.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(empFullName))
+            {
+                txtEmpCode.Text = empFullName;
+            }
+
         }
 
         private void InitHeader()
@@ -560,6 +649,7 @@ namespace AllCashUFormsApp.View.Page
             this.ClearControl(docTypeCode, runDigit);
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, readOnlyControls.ToArray(), cellEdit);
 
@@ -568,6 +658,8 @@ namespace AllCashUFormsApp.View.Page
             grdList.AutoGenerateColumns = false;
             validateNewRow = true;
 
+            allEmp2 = bu.GetEmployee();
+
             grdList.CellContentClick -= grdList_CellContentClick;
             grdList.CellContentClick += grdList_CellContentClick;
 
@@ -575,20 +667,20 @@ namespace AllCashUFormsApp.View.Page
 
             grdList.AddNewRow(allProduct, initDataGridList, 0, "", 0, validateNewRow, uoms, bu, this, 0);
 
-            txtCustomerCode.Focus();
+            txtCustomerID.Focus();
         }
 
-        private void PreparePOMaster(bool editFlag = false)
+        private string PreparePOMaster(bool editFlag = false)
         {
             bu.tbl_POMaster = new tbl_POMaster();
 
             var comp = bu.GetCompany();
             var emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
-            var supp = bu.GetSupplier(txtCustomerCode.Text);
+            var supp = bu.GetSupplier(txtCustomerID.Text);
 
             Dictionary<string, string> allEmp = new Dictionary<string, string>();
 
-            bu.GetEmployee().ForEach(x => allEmp.Add(x.EmpID, (x.TitleName.Replace(" ", string.Empty) + x.FirstName.Replace(" ", string.Empty))));
+            bu.GetEmployee().ForEach(x => allEmp.Add(x.EmpID, (x.TitleName.Replace(" ", string.Empty) + x.FirstName.Replace(" ", string.Empty) + x.LastName.Replace(" ", string.Empty))));
             var selEmp = allEmp.FirstOrDefault(x => x.Value == txtEmpCode.Text.Replace(" ", string.Empty));
             var vanWH = bu.GetAllBranchWarehouse().FirstOrDefault(x => x.SaleEmpID == selEmp.Key);
 
@@ -618,15 +710,16 @@ namespace AllCashUFormsApp.View.Page
             po.Shipto = txtBillTo.Text;
 
             po.CreditDay = 0;
-            Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-            var cust = bu.GetCustomer(func);
+            //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+            //var cust = bu.GetCustomer(func);
+            var cust = bu.GetCustomer(txtCustomerID.Text); //edit by sailom.k 10/12/2021
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
                 po.CustType = cust[0].CustomerTypeID.Value.ToString();
             }
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
-            po.CustomerID = txtCustomerCode.Text;
+            po.CustomerID = txtCustomerID.Text;
             po.CustName = txtCustName.Text;
             po.CustInvNO = "";
             po.CustInvDate = null;
@@ -679,6 +772,8 @@ namespace AllCashUFormsApp.View.Page
             po.TotalCom = 0.00m;
             po.CNType = 0;
             po.DiscountRate = 0.00m;
+
+            return po.DocNo;
         }
 
         private void PreparePODetail(bool editFlag = false)
@@ -810,7 +905,7 @@ namespace AllCashUFormsApp.View.Page
                     editFlag = false;
                     bu.PrepareDocRunning(docTypeCode);
 
-                    PreparePOMaster(editFlag);
+                    docno = PreparePOMaster(editFlag);
 
                     //validate docno by sailom.k 27-05-2021
                     if (bu.tbl_POMaster.DocNo.Length < 12)
@@ -836,8 +931,9 @@ namespace AllCashUFormsApp.View.Page
                     this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
                     btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
+                    btnPrintCrys.Enabled = btnPrint.Enabled;
 
-                    txdDocNo.Text = bu.tbl_POMaster.DocNo; ;
+                    txdDocNo.Text = docno;
 
                     grdList.CellContentClick -= grdList_CellContentClick;
 
@@ -892,7 +988,7 @@ namespace AllCashUFormsApp.View.Page
             var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (dtpDocDate.Value != null && docDate < cDate)
+            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -901,7 +997,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (!dtpDocDate.ValidateEndDay(bu))
+                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
                 {
                     string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
                     message.ShowWarningMessage();
@@ -911,7 +1007,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                errList.SetErrMessageList(txtCustomerCode, lblCustomerCode);
+                errList.SetErrMessageList(txtCustomerID, lblCustomerCode);
                 errList.SetErrMessageList(txtBillTo, lblBillTo);
                 errList.SetErrMessageList(txtContact, lblContact);
                 errList.SetErrMessageList(txtEmpCode, lblEmpCode);
@@ -919,13 +1015,13 @@ namespace AllCashUFormsApp.View.Page
 
                 if (errList.Count == 0)
                 {
-                    Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
-                    var sup = bu.GetCustomer(func);
+                    //Func<tbl_ArCustomer, bool> func = (x => x.CustomerCode == txtCustomerCode.Text);
+                    var sup = bu.GetCustomer(txtCustomerID.Text);  //edit by sailom.k 10/12/2021
                     if (sup == null)
                     {
                         string t = lblCustomerCode.Text;
                         errList.Add(string.Format("--> {0}", t));
-                        txtCustomerCode.ErrorTextBox();
+                        txtCustomerID.ErrorTextBox();
                     }
 
                     Func<tbl_BranchWarehouse, bool> whFunc = (x => x.WHID == txtWHCode.Text);
@@ -1002,6 +1098,7 @@ namespace AllCashUFormsApp.View.Page
             txdDocNo.BackColor = Color.Turquoise; // Translator.FromHtml("#7FFFD4");
             ddlDocStatus.Enabled = true;
             btnCancel.Enabled = true;
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             validateNewRow = true;
 
@@ -1023,6 +1120,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnCopy_Click(object sender, EventArgs e)
         {
             btnCopy.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnPrint, txdDocNo.Text);
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             this.OpenControl(true, readOnlyControls.ToArray(), cellEdit);
 
@@ -1031,6 +1129,8 @@ namespace AllCashUFormsApp.View.Page
             ddlDocStatus.Enabled = false;
 
             txdDocNo.Text = string.Empty;
+
+            allEmp2 = bu.GetEmployee();
 
             validateNewRow = true;
 
@@ -1049,6 +1149,7 @@ namespace AllCashUFormsApp.View.Page
             btnAdd.Enabled = true;
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
+            btnPrintCrys.Enabled = btnPrint.Enabled;
 
             validateNewRow = true;
 
@@ -1064,7 +1165,24 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@DocNo", txdDocNo.Text);
+
+            this.OpenTestCrystalReportsPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
+        }
+
+        private void btnPrintCrys_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txdDocNo.Text))
+            {
+                FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                this.OpenCrystalReportsPopup("ใบคืนสินค้า", "Form_RT.rpt", "Form_RT", _params);
+            }
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
@@ -1095,7 +1213,7 @@ namespace AllCashUFormsApp.View.Page
         {
             this.OpenCustomerPopup(searchCustControls, "เลือกลูกค้า");
 
-            FilterSaleArea(txtCustomerCode.Text);
+            FilterSaleArea(txtCustomerID.Text);
         }
 
         private void btnCustInfo_Click(object sender, EventArgs e)
@@ -1311,5 +1429,7 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
+
     }
 }

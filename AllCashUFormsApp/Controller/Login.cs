@@ -8,8 +8,13 @@ using System.Windows.Forms;
 
 namespace AllCashUFormsApp.Controller
 {
-    public class Login
+    public class Login : BaseControl
     {
+        public Login() : base("")
+        {
+            
+        }
+
         public bool ValidateData(string username, string password, string depo)
         {
             bool ret = true;
@@ -87,7 +92,6 @@ namespace AllCashUFormsApp.Controller
 
             return ret;
         }
-
 
         public List<tbl_Users> GetAllData()
         {

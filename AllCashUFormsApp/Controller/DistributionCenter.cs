@@ -222,7 +222,11 @@ namespace AllCashUFormsApp.Controller
                         EmpID = e.EmpID,
                     };
 
-                    branchEmployeeModelList.Add(branchEmployeeModel);
+                    if (!branchEmployeeModelList.Any(x => x.EmpID == branchEmployeeModel.EmpID))
+                    {
+                        branchEmployeeModelList.Add(branchEmployeeModel);
+                    }
+
                 }
 
                 return branchEmployeeModelList;
@@ -255,7 +259,7 @@ namespace AllCashUFormsApp.Controller
 
                 for (int i = 0; i < query.Rows.Count; i++)
                 {
-                    _dt.Rows.Add(query.Rows[i]["EmpCode"], query.Rows[i]["FullName"], query.Rows[i]["DepartmentName"], query.Rows[i]["PositionName"], query.Rows[i]["MgrName"],
+                    _dt.Rows.Add(query.Rows[i]["EmpCode"], query.Rows[i]["FullName"], query.Rows[i]["DepartmentName"], query.Rows[i]["PositionName"], "",
                         query.Rows[i]["Mobile"], query.Rows[i]["CrDate"], query.Rows[i]["CrUser"],
                         query.Rows[i]["EdDate"], query.Rows[i]["EdUser"], query.Rows[i]["FlagDel"]);
                 }
@@ -268,6 +272,12 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
+
+        public DataTable proc_GetEmployee_Data(Dictionary<string, object> _params, bool flagAllColumns = false)
+        {
+            return (new tbl_Employee()).proc_GetEmployee_Data(_params , flagAllColumns);
+        }
+
 
         #endregion
 
@@ -441,6 +451,8 @@ namespace AllCashUFormsApp.Controller
                 {
                     _dt.Rows.Add(item.SalAreaID, item.SalAreaCode, item.SalAreaName, item.Seq, item.ZoneName, item.CountCustomer);
                 }
+                var _dt2 = query.ToDataTable();
+                int row_ = _dt.Rows.Count;
 
                 return _dt;
             }
@@ -463,6 +475,15 @@ namespace AllCashUFormsApp.Controller
             return ret;
         }
 
+        public DataTable proc_GetMKT_Data(Dictionary<string, object> _params)
+        {
+            return new tbl_SalArea().proc_GetMKT_Data(_params);
+        }
+
+        public List<tbl_SalAreaDistrict> SelectSalAreaDistrict(string _SalAreaID)
+        {
+            return new tbl_SalAreaDistrict().SelectSingle(_SalAreaID);
+        }
         #endregion
 
     }

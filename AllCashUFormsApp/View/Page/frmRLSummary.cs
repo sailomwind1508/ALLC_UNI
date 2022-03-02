@@ -1010,7 +1010,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchDepo_Click(object sender, EventArgs e)
         {
-            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกสาขา/ซุ้ม");
+            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -1233,6 +1233,8 @@ namespace AllCashUFormsApp.View.Page
         private void btnPrint_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
             var _tbl_PRMasters = new List<tbl_PRMaster>();
             for (int i = 0; i < grdVan.Rows.Count; i++)

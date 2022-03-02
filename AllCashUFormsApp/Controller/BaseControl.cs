@@ -35,8 +35,28 @@ namespace AllCashUFormsApp.Controller
         private List<tbl_ArCustomer> _tbl_ArCustomers = null;
         private List<tbl_ShopType> _tbl_ShopTypes = null;
         private List<tbl_ArCustomerShelf> _tbl_ArCustomerShelfs = null;
+        private static List<tbl_Branch> _tbl_Branchs = new List<tbl_Branch>();
+        private static List<tbl_Company> _tbl_Companies = new List<tbl_Company>();
 
         private string _docTypeCode;
+
+        public virtual List<tbl_Branch> tbl_Branchs
+        {
+            get { return _tbl_Branchs; }
+            set
+            {
+                _tbl_Branchs = value;
+            }
+        }
+
+        public virtual List<tbl_Company> tbl_Companies
+        {
+            get { return _tbl_Companies; }
+            set
+            {
+                _tbl_Companies = value;
+            }
+        }
 
         public virtual tbl_POMaster tbl_POMaster
         {
@@ -64,6 +84,7 @@ namespace AllCashUFormsApp.Controller
                 _tbl_POMaster_PRE = value;
             }
         }
+
         public virtual List<tbl_PODetail_PRE> tbl_PODetails_PRE
         {
             get { return _tbl_PODetails_PRE; }
@@ -217,6 +238,9 @@ namespace AllCashUFormsApp.Controller
             _tbl_PayMasters = new List<tbl_PayMaster>();//
             _docTypepredicate = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());
             _docTypeCode = docTypeCode;
+
+            //_tbl_Branchs = new List<tbl_Branch>();
+            //_tbl_Companies = new List<tbl_Company>();
         }
 
         public List<tbl_ArCustomer> GetCustomerSalArea(string SalAreaID)
@@ -350,8 +374,8 @@ namespace AllCashUFormsApp.Controller
             {
                 if (docTypeCode == "V")
                 {
-                    Func<tbl_IVMaster, bool> ivPredicate = (x => x.DocNo == docNo);
-                    var _tbl_IVMaster = new tbl_IVMaster().Select(ivPredicate);
+                    //Func<tbl_IVMaster, bool> ivPredicate = (x => x.DocNo == docNo);
+                    var _tbl_IVMaster = new tbl_IVMaster().SelectExists(docNo);
                     if (_tbl_IVMaster != null && _tbl_IVMaster.Count > 0)
                     {
                         tbl_IVMaster = _tbl_IVMaster[0];
@@ -376,7 +400,7 @@ namespace AllCashUFormsApp.Controller
                     }
 
                 }
-                else if (docTypeCode == "RE" || docTypeCode == "OD" || docTypeCode == "IV" || docTypeCode == "IM" || docTypeCode == "IV2") //IV2 is new Pre-Order
+                else if (docTypeCode == "RE" || docTypeCode == "OD" || docTypeCode == "IV" || docTypeCode == "IM" || docTypeCode == "IV2" || docTypeCode == "RT") //IV2 is new Pre-Order
                 {
                     if (docTypeCode == "IV2") //IV2 is new Pre-Order
                     {
@@ -412,11 +436,10 @@ namespace AllCashUFormsApp.Controller
 
                     }
                 }
-                else if (docTypeCode == "RL" || docTypeCode == "RB" ||
-                    docTypeCode == "RT" || docTypeCode == "RJ" || docTypeCode == "TR")
+                else if (docTypeCode == "RL" || docTypeCode == "RB" || docTypeCode == "RJ" || docTypeCode == "TR")
                 {
-                    Func<tbl_PRMaster, bool> prPredicate = (x => x.DocNo == docNo);
-                    var _tbl_PRMaster = new tbl_PRMaster().Select(prPredicate, docTypeCode);
+                    //Func<tbl_PRMaster, bool> prPredicate = (x => x.DocNo == docNo);
+                    var _tbl_PRMaster = new tbl_PRMaster().SelectExists(docNo, docTypeCode);
                     if (_tbl_PRMaster != null && _tbl_PRMaster.Count > 0)
                     {
                         tbl_PRMaster = _tbl_PRMaster[0];
@@ -463,6 +486,9 @@ namespace AllCashUFormsApp.Controller
 
         public virtual int AddData()
         {
+            string msg = "start BaseControl=>AddData";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
@@ -519,6 +545,9 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>AddData";
+            msg.WriteLog(this.GetType());
 
             return ret.All(x => x == 1) ? 1 : 0;
         }
@@ -713,8 +742,247 @@ namespace AllCashUFormsApp.Controller
             return result != 0 ? 1 : 0;  //return ret.All(x => x == 1) ? 1 : 0;
         }
 
+        public virtual int PerformUpdateData(string docTypeCode = "")
+        {
+            int result = 0;
+            List<int> ret = new List<int>();
+            bool isUpdateEntity = false;
+
+            try
+            {
+                DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString);
+
+                //PO--------------------------------------------------------------------------------
+                if (_tbl_POMaster != null && !string.IsNullOrEmpty(_tbl_POMaster.DocNo))
+                {
+                    ret.Add(_tbl_POMaster.UpdateEntity(db));
+                    isUpdateEntity = true;
+                }
+
+                if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
+                {
+                    ret.Add(_tbl_PODetails.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //ret.Add(_tbl_PODetails.UpdateEntity(db));
+                    //foreach (var tbl_PODetail in _tbl_PODetails)
+                    //{
+                    //    ret.Add(tbl_PODetail.Update());
+                    //}
+                }
+                //PO--------------------------------------------------------------------------------
+
+                //PO Pre-Odrer--------------------------------------------------------------------------------
+                if (_tbl_POMaster_PRE != null && !string.IsNullOrEmpty(_tbl_POMaster_PRE.DocNo))
+                { 
+                    ret.Add(_tbl_POMaster_PRE.UpdateEntity(db));
+                    isUpdateEntity = true;
+                }
+
+                if (_tbl_PODetails_PRE != null && _tbl_PODetails_PRE.Count > 0)
+                {
+                    ret.Add(_tbl_PODetails_PRE.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //ret.Add(_tbl_PODetails_PRE.UpdateEntity(db));
+                    //foreach (var tbl_PODetail in _tbl_PODetails)
+                    //{
+                    //    ret.Add(tbl_PODetail.Update());
+                    //}
+                }
+                //PO Pre-Odrer--------------------------------------------------------------------------------
+
+                //PR--------------------------------------------------------------------------------
+                if (_tbl_PRMaster != null && !string.IsNullOrEmpty(_tbl_PRMaster.DocNo))
+                {
+                    ret.Add(_tbl_PRMaster.UpdateEntity(db));
+                    isUpdateEntity = true;
+                }
+
+                if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
+                {
+                    ret.Add(_tbl_PRDetails.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //foreach (var tbl_PRDetail in _tbl_PRDetails)
+                    //{
+                    //    ret.Add(tbl_PRDetail.Update());
+                    //}
+                }
+                //PR--------------------------------------------------------------------------------
+
+                //InvTransactions--------------------------------------------------------------------------------
+                if (_tbl_InvTransactions != null && _tbl_InvTransactions.Count > 0)
+                {
+                    ret.Add(_tbl_InvTransactions.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //ret.Add(_tbl_InvTransactions.UpdateEntity(db));
+                    //foreach (var tbl_InvTransactions in _tbl_InvTransactions)
+                    //{
+                    //    ret.Add(tbl_InvTransactions.Update());
+                    //}
+                }
+                //InvTransactions--------------------------------------------------------------------------------
+
+                //InvMovements--------------------------------------------------------------------------------
+                if (_tbl_InvMovements != null && _tbl_InvMovements.Count > 0)
+                {
+                    ret.Add(_tbl_InvMovements.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //ret.Add(_tbl_InvMovements.UpdateEntity(db));
+                    //foreach (var tbl_InvMovement in _tbl_InvMovements)
+                    //{
+                    //    ret.Add(tbl_InvMovement.Update());
+                    //}
+                }
+                //InvMovements--------------------------------------------------------------------------------
+
+                //IV--------------------------------------------------------------------------------
+                if (_tbl_IVMaster != null && !string.IsNullOrEmpty(_tbl_IVMaster.DocNo))
+                {
+                    ret.Add(_tbl_IVMaster.UpdateEntity(db));
+                    isUpdateEntity = true;
+                }
+
+                if (_tbl_IVDetails != null && _tbl_IVDetails.Count > 0)
+                {
+                    ret.Add(_tbl_IVDetails.PerformUpdate(db)); //edit by sailom 14/12/2021
+                    //ret.Add(_tbl_IVDetails.UpdateEntity(db));
+                    //foreach (var _tbl_IVDetail in _tbl_IVDetails)
+                    //{
+                    //    ret.Add(_tbl_IVDetail.Update());
+                    //}
+                }
+                //IV--------------------------------------------------------------------------------
+
+                //DocRunning--------------------------------------------------------------------------------
+                if (_tbl_DocRunning != null && _tbl_DocRunning.Count > 0)
+                {
+                    ret.Add(_tbl_DocRunning.PerformUpdate(db)); //edit by sailom 07/02/2022
+
+                    //ret.Add(_tbl_DocRunning.UpdateEntity(db));
+                    //isUpdateEntity = true;
+
+                    //foreach (var tbl_DocRunning in _tbl_DocRunning)
+                    //{
+                    //    ret.Add(tbl_DocRunning.Update());
+                    //}
+                }
+                //DocRunning--------------------------------------------------------------------------------
+                //PriceGroup--------------------------------------------------------------------------------
+                if (_tbl_PriceGroups != null && _tbl_PriceGroups.Count > 0)
+                {
+                    foreach (var tbl_PriceGroup in _tbl_PriceGroups)
+                    {
+                        ret.Add(tbl_PriceGroup.UpdateEntity(db));
+                    }
+                    isUpdateEntity = true;
+                }
+                //PriceGroup--------------------------------------------------------------------------------
+
+                //ShopType----------------------------------------------------------------------------------
+                if (_tbl_ShopTypes != null && _tbl_ShopTypes.Count > 0)
+                {
+                    foreach (var tbl_ShopTypes in _tbl_ShopTypes)
+                    {
+                        ret.Add(tbl_ShopTypes.UpdateEntity(db));
+                    }
+                    isUpdateEntity = true;
+                }
+                //ShopType----------------------------------------------------------------------------------
+
+                //Customer----------------------------------------------------------------------------------
+                if (_tbl_ArCustomers != null && _tbl_ArCustomers.Count > 0)
+                {
+                    foreach (var tbl_ArCustomers in _tbl_ArCustomers)
+                    {
+                        ret.Add(tbl_ArCustomers.UpdateEntity(db));
+                    }
+                    isUpdateEntity = true;
+                }
+                //
+
+                //CustomerShelf-------------------------------------------------------------------------------
+                if (_tbl_ArCustomerShelfs != null && _tbl_ArCustomerShelfs.Count > 0)
+                {
+                    foreach (var tbl_ArCustomerShelfs in _tbl_ArCustomerShelfs)
+                    {
+                        ret.Add(tbl_ArCustomerShelfs.UpdateEntity(db));
+                    }
+                    isUpdateEntity = true;
+                }
+                //---------------------------------------------------------------------------------------------
+
+
+                //PayDetail--------------------------------------------------------------------------------
+                if (_tbl_PayDetails != null && _tbl_PayDetails.Count > 0)
+                {
+                    ret.Add(_tbl_PayDetails.PerformUpdate(db));  //edit by sailom .k 10/01/2022
+                    //ret.Add(_tbl_PayDetails.UpdateEntity(db));
+                    //isUpdateEntity = true;
+
+                    //foreach (var tbl_PayDetails in _tbl_PayDetails)
+                    //{
+                    //    ret.Add(tbl_PayDetails.Update());
+                    //}
+                }
+                //PayDetail--------------------------------------------------------------------------------
+
+                //PayMaster--------------------------------------------------------------------------------
+                if (_tbl_PayMasters != null && _tbl_PayMasters.Count > 0)
+                {
+                    ret.Add(_tbl_PayMasters.UpdateEntity(db));
+                    isUpdateEntity = true;
+                    //foreach (var tbl_PayMasters in _tbl_PayMasters)
+                    //{
+                    //    ret.Add(tbl_PayMasters.Update());
+                    //}
+                }
+                //PayMaster-----------------
+
+                //InvWarehouses--------------------------------------------------------------------------------
+                if (_tbl_InvWarehouses != null && _tbl_InvWarehouses.Count > 0)
+                {
+                    ////edit by sailom .k 14/12/2021---------------------------------------
+                    //string prodIDs = "";
+                    //prodIDs = string.Join(",", GetProduct().Where(x => !x.FlagDel).Select(x => x.ProductID).ToList());
+                    //foreach (var whid in _tbl_InvWarehouses.Select(x => x.WHID).Distinct().ToList())
+                    //{
+                    //    ret.Add(_tbl_InvWarehouses.First().ReCalc(whid, prodIDs));
+                    //}
+                    ////edit by sailom .k 14/12/2021---------------------------------------
+
+                    //ret.Add(_tbl_InvWarehouses.UpdateEntity(db));
+
+                    //foreach (var tbl_InvWarehouse in _tbl_InvWarehouses)
+                    //{
+                    //    ret.Add(tbl_InvWarehouse.Update());
+                    //}
+
+                    ret.Add(_tbl_InvWarehouses.PerformUpdate(db));
+                }
+                //InvWarehouses--------------------------------------------------------------------------------
+
+                if (ret.All(x => x == 1))
+                {
+                    if (isUpdateEntity)
+                        result = db.SaveChanges();
+                    else
+                        result = ret.All(x => x == 1) ? 1 : 0;
+                }
+
+                if (ret.Any(x => x == 0)) //reverse data
+                {
+                    ReverseData(docTypeCode);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+                ex.WriteLog(this.GetType());
+            }
+
+            return result != 0 ? 1 : 0;  //return ret.All(x => x == 1) ? 1 : 0;
+        }
+
         private void ReverseData(string docTypeCode = "")
         {
+            string msg = "start BaseControl=>ReverseData";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
@@ -724,10 +992,11 @@ namespace AllCashUFormsApp.Controller
 
                 if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
                 {
-                    foreach (var tbl_PODetail in _tbl_PODetails)
-                    {
-                        ret.Add(tbl_PODetail.Delete());
-                    }
+                    //foreach (var tbl_PODetail in _tbl_PODetails)
+                    //{
+                    //    ret.Add(tbl_PODetail.Delete());
+                    //}
+                    ret.Add(_tbl_PODetails.BulkRemove());
                 }
                 //PO--------------------------------------------------------------------------------
 
@@ -737,30 +1006,33 @@ namespace AllCashUFormsApp.Controller
 
                 if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
                 {
-                    foreach (var tbl_PRDetail in _tbl_PRDetails)
-                    {
-                        ret.Add(tbl_PRDetail.Delete());
-                    }
+                    //foreach (var tbl_PRDetail in _tbl_PRDetails)
+                    //{
+                    //    ret.Add(tbl_PRDetail.Delete());
+                    //}
+                    ret.Add(_tbl_PRDetails.BulkRemove());
                 }
                 //PR--------------------------------------------------------------------------------
 
                 //InvTransactions--------------------------------------------------------------------------------
                 if (_tbl_InvTransactions != null && _tbl_InvTransactions.Count > 0)
                 {
-                    foreach (var tbl_InvTransactions in _tbl_InvTransactions)
-                    {
-                        ret.Add(tbl_InvTransactions.Delete());
-                    }
+                    //foreach (var tbl_InvTransactions in _tbl_InvTransactions)
+                    //{
+                    //    ret.Add(tbl_InvTransactions.Delete());
+                    //}
+                    ret.Add(_tbl_InvTransactions.BulkRemove());
                 }
                 //InvTransactions--------------------------------------------------------------------------------
 
                 //InvMovements--------------------------------------------------------------------------------
                 if (_tbl_InvMovements != null && _tbl_InvMovements.Count > 0)
                 {
-                    foreach (var tbl_InvMovement in _tbl_InvMovements)
-                    {
-                        ret.Add(tbl_InvMovement.Delete());
-                    }
+                    //foreach (var tbl_InvMovement in _tbl_InvMovements)
+                    //{
+                    //    ret.Add(tbl_InvMovement.Delete());
+                    //}
+                    ret.Add(_tbl_InvMovements.BulkRemove());
                 }
                 //InvMovements--------------------------------------------------------------------------------
 
@@ -770,10 +1042,11 @@ namespace AllCashUFormsApp.Controller
 
                 if (_tbl_IVDetails != null && _tbl_IVDetails.Count > 0)
                 {
-                    foreach (var _tbl_IVDetail in _tbl_IVDetails)
-                    {
-                        ret.Add(_tbl_IVDetail.Delete());
-                    }
+                    //foreach (var _tbl_IVDetail in _tbl_IVDetails)
+                    //{
+                    //    ret.Add(_tbl_IVDetail.Delete());
+                    //}
+                    ret.Add(_tbl_IVDetails.BulkRemove());
                 }
                 //IV--------------------------------------------------------------------------------
 
@@ -792,21 +1065,28 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>ReverseData";
+            msg.WriteLog(this.GetType());
         }
 
         public virtual int RemovePODetails(string docNo)
         {
+            string msg = "start BaseControl=>RemovePODetails";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
                 if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
                 {
-                    //Func<tbl_PODetail, bool> tbl_PODetailPre = (x => x.DocNo == _tbl_PODetails[0].DocNo);
-                    var oldTbl_PODetails = new tbl_PODetail().Select(docNo);
-                    foreach (var tbl_PODetail in oldTbl_PODetails)
-                    {
-                        ret.Add(tbl_PODetail.Delete());
-                    }
+                    ////Func<tbl_PODetail, bool> tbl_PODetailPre = (x => x.DocNo == _tbl_PODetails[0].DocNo);
+                    //var oldTbl_PODetails = new tbl_PODetail().Select(docNo);
+                    //foreach (var tbl_PODetail in oldTbl_PODetails)
+                    //{
+                    //    ret.Add(tbl_PODetail.Delete());
+                    //}
+                    ret.Add(_tbl_PODetails.BulkRemove());
                 }
             }
             catch (Exception ex)
@@ -814,23 +1094,30 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>RemovePODetails";
+            msg.WriteLog(this.GetType());
 
             return ret.All(x => x == 1) ? 1 : 0;
         }
 
         public virtual int RemovePRDetails(string docNo)
         {
+            string msg = "start BaseControl=>RemovePRDetails";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
                 if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
                 {
-                    //Func<tbl_PRDetail, bool> tbl_PRDetailPre = (x => x.DocNo == _tbl_PRDetails[0].DocNo);
-                    var oldTbl_PRDetails = new tbl_PRDetail().Select(docNo);
-                    foreach (var tbl_PRDetail in oldTbl_PRDetails)
-                    {
-                        ret.Add(tbl_PRDetail.Delete());
-                    }
+                    ////Func<tbl_PRDetail, bool> tbl_PRDetailPre = (x => x.DocNo == _tbl_PRDetails[0].DocNo);
+                    //var oldTbl_PRDetails = new tbl_PRDetail().Select(docNo);
+                    //foreach (var tbl_PRDetail in oldTbl_PRDetails)
+                    //{
+                    //    ret.Add(tbl_PRDetail.Delete());
+                    //}
+                    ret.Add(_tbl_PRDetails.BulkRemove());
                 }
             }
             catch (Exception ex)
@@ -838,31 +1125,38 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>RemovePRDetails";
+            msg.WriteLog(this.GetType());
 
             return ret.All(x => x == 1) ? 1 : 0;
         }
 
         public virtual int RemoveInvMovements(string refDocNo)
         {
+            string msg = "start BaseControl=>RemoveInvMovements";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             var allInvMovements = new tbl_InvMovement().Select(refDocNo);
             try
             {
                 if (_tbl_InvMovements != null && _tbl_InvMovements.Count > 0)
                 {
-                    foreach (var item in _tbl_InvMovements)
-                    {
-                        Func<tbl_InvMovement, bool> tbl_InvMovementPre = (x => x.ProductID == item.ProductID && x.WHID == item.WHID && x.RefDocNo == item.RefDocNo);
-                        var delTbl_InvMovements = allInvMovements.Where(tbl_InvMovementPre).ToList();// new tbl_InvMovement().Select(tbl_InvMovementPre);
-                        if (delTbl_InvMovements != null && delTbl_InvMovements.Count > 0)
-                        {
-                            foreach (tbl_InvMovement tbl_InvMovement in delTbl_InvMovements)
-                            {
-                                ret.Add(tbl_InvMovement.Delete());
-                            }
+                    //foreach (var item in _tbl_InvMovements)
+                    //{
+                    //    Func<tbl_InvMovement, bool> tbl_InvMovementPre = (x => x.ProductID == item.ProductID && x.WHID == item.WHID && x.RefDocNo == item.RefDocNo);
+                    //    var delTbl_InvMovements = allInvMovements.Where(tbl_InvMovementPre).ToList();// new tbl_InvMovement().Select(tbl_InvMovementPre);
+                    //    if (delTbl_InvMovements != null && delTbl_InvMovements.Count > 0)
+                    //    {
+                    //        foreach (tbl_InvMovement tbl_InvMovement in delTbl_InvMovements)
+                    //        {
+                    //            ret.Add(tbl_InvMovement.Delete());
+                    //        }
 
-                        }
-                    }
+                    //    }
+                    //}
+                    ret.Add(_tbl_InvMovements.BulkRemove());
                 }
             }
             catch (Exception ex)
@@ -870,31 +1164,38 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>RemoveInvMovements";
+            msg.WriteLog(this.GetType());
 
             return ret.All(x => x == 1) ? 1 : 0;
         }
 
         public virtual int RemoveInvTransaction()
         {
+            string msg = "start BaseControl=>RemoveInvTransaction";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             var allInvTransaction = new tbl_InvTransaction().SelectAll();
             try
             {
                 if (_tbl_InvTransactions != null && _tbl_InvTransactions.Count > 0)
                 {
-                    foreach (var item in _tbl_InvTransactions)
-                    {
-                        Func<tbl_InvTransaction, bool> tbl_InvTransactionPre = (x => x.ProductID == item.ProductID && x.WHFrom == item.WHFrom && x.RefDocNo == item.RefDocNo);
-                        var deltbl_InvTransactions = allInvTransaction.Where(tbl_InvTransactionPre).ToList(); // new tbl_InvTransaction().Select(tbl_InvTransactionPre);
-                        if (deltbl_InvTransactions != null && deltbl_InvTransactions.Count > 0)
-                        {
-                            foreach (tbl_InvTransaction tbl_InvTransaction in deltbl_InvTransactions)
-                            {
-                                ret.Add(tbl_InvTransaction.Delete());
-                            }
+                    //foreach (var item in _tbl_InvTransactions)
+                    //{
+                    //    Func<tbl_InvTransaction, bool> tbl_InvTransactionPre = (x => x.ProductID == item.ProductID && x.WHFrom == item.WHFrom && x.RefDocNo == item.RefDocNo);
+                    //    var deltbl_InvTransactions = allInvTransaction.Where(tbl_InvTransactionPre).ToList(); // new tbl_InvTransaction().Select(tbl_InvTransactionPre);
+                    //    if (deltbl_InvTransactions != null && deltbl_InvTransactions.Count > 0)
+                    //    {
+                    //        foreach (tbl_InvTransaction tbl_InvTransaction in deltbl_InvTransactions)
+                    //        {
+                    //            ret.Add(tbl_InvTransaction.Delete());
+                    //        }
 
-                        }
-                    }
+                    //    }
+                    //}
+                    ret.Add(_tbl_InvTransactions.BulkRemove());
                 }
             }
             catch (Exception ex)
@@ -903,11 +1204,17 @@ namespace AllCashUFormsApp.Controller
                 ex.WriteLog(this.GetType());
             }
 
+            msg = "end BaseControl=>RemoveInvTransaction";
+            msg.WriteLog(this.GetType());
+
             return ret.All(x => x == 1) ? 1 : 0;
         }
 
         public virtual int RemoveIVMaster()
         {
+            string msg = "start BaseControl=>RemoveIVMaster";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
@@ -927,22 +1234,29 @@ namespace AllCashUFormsApp.Controller
                 ex.WriteLog(this.GetType());
             }
 
+            msg = "end BaseControl=>RemoveIVMaster";
+            msg.WriteLog(this.GetType());
+
             return ret.All(x => x == 1) ? 1 : 0;
         }
 
         public virtual int RemoveIVDetails()
         {
+            string msg = "start BaseControl=>RemoveIVDetails";
+            msg.WriteLog(this.GetType());
+
             List<int> ret = new List<int>();
             try
             {
                 if (_tbl_IVDetails != null && _tbl_IVDetails.Count > 0)
                 {
-                    Func<tbl_IVDetail, bool> _tbl_IVDetailPre = (x => x.DocNo == _tbl_IVDetails[0].DocNo);
-                    var oldTbl_IVDetails = new tbl_IVDetail().Select(_tbl_IVDetailPre);
-                    foreach (var tbl_IVDetail in oldTbl_IVDetails)
-                    {
-                        ret.Add(tbl_IVDetail.Delete());
-                    }
+                    //Func<tbl_IVDetail, bool> _tbl_IVDetailPre = (x => x.DocNo == _tbl_IVDetails[0].DocNo);
+                    //var oldTbl_IVDetails = new tbl_IVDetail().Select(_tbl_IVDetailPre);
+                    //foreach (var tbl_IVDetail in oldTbl_IVDetails)
+                    //{
+                    //    ret.Add(tbl_IVDetail.Delete());
+                    //}
+                    ret.Add(_tbl_IVDetails.BulkRemove());
                 }
             }
             catch (Exception ex)
@@ -950,6 +1264,9 @@ namespace AllCashUFormsApp.Controller
                 ex.Message.ShowErrorMessage();
                 ex.WriteLog(this.GetType());
             }
+
+            msg = "end BaseControl=>RemoveIVDetails";
+            msg.WriteLog(this.GetType());
 
             return ret.All(x => x == 1) ? 1 : 0;
         }
@@ -1016,6 +1333,11 @@ namespace AllCashUFormsApp.Controller
             }
             else
                 return null;
+        }
+
+        public List<tbl_Company> GetAllCompany()
+        {
+            return (new tbl_Company()).SelectAll();
         }
 
         /// <summary>
@@ -1088,7 +1410,6 @@ namespace AllCashUFormsApp.Controller
             return new tbl_PRDetail().Select(func, docTypeCode);
         }
 
-
         public List<tbl_POMaster> GetPOMaster(string docTypeCode, Func<tbl_POMaster, bool> predicate = null)
         {
             if (predicate == null)
@@ -1151,7 +1472,6 @@ namespace AllCashUFormsApp.Controller
             else
                 return null;
         }
-
 
         public List<tbl_DiscountType> GetDiscountType()
         {
@@ -1298,10 +1618,13 @@ namespace AllCashUFormsApp.Controller
             tbl_Employee tbl_Employee = new tbl_Employee();
             try
             {
-                var allData = new tbl_Employee().SelectAll();
-                tbl_Employee = allData.FirstOrDefault(x => x.EmpID == empID);
+                //Last edit by sailom .k 07/02/2022
 
-                return tbl_Employee;
+                //var allData = new tbl_Employee().SelectAll();
+                //tbl_Employee = allData.FirstOrDefault(x => x.EmpID == empID);
+                //return tbl_Employee;
+
+                return new tbl_Employee().SelectSingle(empID);
             }
             catch (Exception ex)
             {
@@ -1327,6 +1650,18 @@ namespace AllCashUFormsApp.Controller
                 var user = allUser.FirstOrDefault(x => x.Username.ToLower() == userName.ToLower());
                 if (user != null)
                     tbl_Employee = GetEmployee(user.EmpID);
+                else
+                {
+                    var bwh = GetBranchWarehouse(x => x.WHID == userName);
+                    if (bwh != null)
+                    {
+                        tbl_Employee = GetEmployee(bwh.SaleEmpID);
+                    }
+                    else
+                    {
+                        tbl_Employee = GetEmployee(userName);
+                    }
+                }
 
                 return tbl_Employee;
             }
@@ -1394,6 +1729,11 @@ namespace AllCashUFormsApp.Controller
             return new tbl_Product().Select(predicate);
         }
 
+        public tbl_Product GetProduct(string productID)
+        {
+            return new tbl_Product().SelectSingle(productID);
+        }
+
         public int GetMinProductUOM(Func<tbl_Product, bool> predicate)
         {
             int ret = 0;
@@ -1428,9 +1768,26 @@ namespace AllCashUFormsApp.Controller
             //return new tbl_InvWarehouse().Select(tbl_InvWarehousePre);
         }
 
+        public List<tbl_InvWarehouse> GetInvWarehouse(string whID)
+        {
+            return new tbl_InvWarehouse().Select(whID);
+            //Func<tbl_InvWarehouse, bool> tbl_InvWarehousePre = (x => x.ProductID == productID && x.WHID == whID);
+            //return new tbl_InvWarehouse().Select(tbl_InvWarehousePre);
+        }
+
         public List<tbl_InvMovement> GetStockMovement(string productID, string whID)
         {
-            return new tbl_InvMovement().SelectStock(productID, whID); 
+            return new tbl_InvMovement().SelectStock(productID, whID);
+        }
+
+        public List<tbl_InvMovement> GetTotalStockMovement(List<string> productID, string whID)
+        {
+            return new tbl_InvMovement().SelectTotalStock(productID, whID);
+        }
+
+        public List<tbl_InvMovement> ValidatetStockMovement()
+        {
+            return new tbl_InvMovement().ValidateStock();
         }
 
         public List<tbl_InvWarehouse> GetInvWarehouse(Func<tbl_InvWarehouse, bool> func = null)
@@ -1452,26 +1809,25 @@ namespace AllCashUFormsApp.Controller
             //Func<tbl_InvMovement, bool> tbl_InvMovementPre = (x => x.RefDocNo == docNo);
             //return new tbl_InvMovement().Select(tbl_InvMovementPre);
         }
+
         public List<tbl_PriceGroup> GetPriceGroup(int pricegroupID)
         {
             Func<tbl_PriceGroup, bool> tbl_PriceGroupPre = (x => x.PriceGroupID == pricegroupID);
             return new tbl_PriceGroup().Select(tbl_PriceGroupPre);
         }
+
         public List<tbl_ArCustomer> GetCustomer(string custID)
         {
             Func<tbl_ArCustomer, bool> tbl_ArCustomerPre = (x => x.CustomerID == custID);
             return new tbl_ArCustomer().SelectSingle(custID);
         }
-        public List<tbl_ArCustomerShelf> GetCustomerShelf(string ShelfID)
-        {
-            Func<tbl_ArCustomerShelf, bool> tbl_ArCustomerShelfPre = (x => x.ShelfID == ShelfID);
-            return new tbl_ArCustomerShelf().Select(tbl_ArCustomerShelfPre);
-        }
+
         public List<tbl_ShopType> GetShopType(int shopTypeID)
         {
             Func<tbl_ShopType, bool> tbl_ShopTypePre = (x => x.ShopTypeID == shopTypeID);
             return new tbl_ShopType().SelectAllFlagPredi(tbl_ShopTypePre);
         }
+
         public List<tbl_InvTransaction> GetInvTransaction(string docNo)
         {
             return new tbl_InvTransaction().Select(docNo);
@@ -1484,6 +1840,7 @@ namespace AllCashUFormsApp.Controller
         {
             return new tbl_ProductUom().Select(tbl_ProductUomPre);
         }
+
         public List<tbl_DisplayImage> GetDisplayImage(Func<tbl_DisplayImage, bool> condition = null)
         {
             if (condition != null)
@@ -1491,6 +1848,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_DisplayImage().SelectAll();
         }
+
         public List<tbl_ProductSubGroup> GetProductSubGroup(Func<tbl_ProductSubGroup, bool> condition = null)
         {
             if (condition != null)
@@ -1498,6 +1856,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ProductSubGroup().SelectAll();
         }
+
         public List<tbl_ProductUomSet> GetUOMSet(Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = null)
         {
             if (tbl_ProductUomSetPre == null)
@@ -1525,6 +1884,16 @@ namespace AllCashUFormsApp.Controller
                 return null;
         }
 
+        public tbl_BranchWarehouse GetBranchWarehouse(string whCode, int vanType)
+        {
+            return new tbl_BranchWarehouse().SelectSingle(whCode, vanType);
+        }
+
+        public tbl_BranchWarehouse GetBranchWarehouse(string whCode)
+        {
+            return new tbl_BranchWarehouse().SelectSingle(whCode);
+        }
+
         public List<tbl_BranchWarehouse> GetAllBranchWarehouse(Func<tbl_BranchWarehouse, bool> condition = null)
         {
             if (condition != null)
@@ -1542,6 +1911,11 @@ namespace AllCashUFormsApp.Controller
             }
             else
                 return null;
+        }
+
+        public tbl_SaleBranchSummary ValidateCheckEndDay(string branchID, DateTime saleDate)
+        {
+            return new tbl_SaleBranchSummary().Select(branchID, saleDate);
         }
 
         public List<tbl_SaleBranchSummary> GetAllSaleBranchSummary()
@@ -1573,55 +1947,63 @@ namespace AllCashUFormsApp.Controller
         {
             return new tbl_BranchGroup().SelectAll();
         }
-        public List<tbl_ProductFlavour> GetProductFlavour(Func<tbl_ProductFlavour, bool> condition = null)//
+
+        public List<tbl_ProductFlavour> GetProductFlavour(Func<tbl_ProductFlavour, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_ProductFlavour().SelectAll();
             else
                 return new tbl_ProductFlavour().Select(condition);
         }
-        public List<tbl_ProductUom> GetProductUom(Func<tbl_ProductUom, bool> condition = null)//
+
+        public List<tbl_ProductUom> GetProductUom(Func<tbl_ProductUom, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_ProductUom().SelectAllNonFlag();
             else
                 return new tbl_ProductUom().SelectNonFlag(condition);
         }
-        public List<tbl_Department> GetDepartment(Func<tbl_Department, bool> condition = null)//
+
+        public List<tbl_Department> GetDepartment(Func<tbl_Department, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_Department().SelectAllNonFlag();
             else
                 return new tbl_Department().SelectNonFlag(condition);
         }
-        public List<tbl_Position> GetPosition(Func<tbl_Position, bool> condition = null)//
+
+        public List<tbl_Position> GetPosition(Func<tbl_Position, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_Position().SelectAllNonFlag();
             else
                 return new tbl_Position().SelectNonFlag(condition);
         }
-        public List<tbl_ApSupplier> GetSupplier(Func<tbl_ApSupplier, bool> condition = null)//
+
+        public List<tbl_ApSupplier> GetSupplier(Func<tbl_ApSupplier, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_ApSupplier().SelectAllNonFlag();
             else
                 return new tbl_ApSupplier().SelectNonFlag(condition);
         }
-        public List<tbl_ApSupplierType> GetSupplierType(Func<tbl_ApSupplierType, bool> condition = null)//
+
+        public List<tbl_ApSupplierType> GetSupplierType(Func<tbl_ApSupplierType, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_ApSupplierType().SelectAllNonFlag();
             else
                 return new tbl_ApSupplierType().SelectNonFlag(condition);
         }
-        public List<tbl_ProductRemarkReject> GetProductRemarkReject(Func<tbl_ProductRemarkReject, bool> condition = null)//
+
+        public List<tbl_ProductRemarkReject> GetProductRemarkReject(Func<tbl_ProductRemarkReject, bool> condition = null)
         {
             if (condition == null)
                 return new tbl_ProductRemarkReject().SelectAll();
             else
                 return new tbl_ProductRemarkReject().Select(condition);
         }
+
         public List<tbl_DocumentType> GetDocumentType(Func<tbl_DocumentType, bool> condition = null)
         {
             if (condition != null)
@@ -1629,6 +2011,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_DocumentType().SelectAllNonFlag();
         }
+
         public List<tbl_MstProvince> GetMstProvince(Func<tbl_MstProvince, bool> condition = null)
         {
             if (condition != null)
@@ -1652,6 +2035,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_MstArea().SelectAll();
         }
+
         public List<Model.tbl_MstProvince> GetAllProvince()
         {
             return new Model.tbl_MstProvince().SelectAll();
@@ -1696,6 +2080,7 @@ namespace AllCashUFormsApp.Controller
         {
             return new Model.tbl_ShopType().SelectAll();
         }
+
         public List<Model.tbl_ShopType> GetShopTypeALLFlag()
         {
             return new Model.tbl_ShopType().SelectAllFlag();
@@ -1710,6 +2095,7 @@ namespace AllCashUFormsApp.Controller
         {
             return new tbl_BranchWarehouse().SelectAll();
         }
+
         public List<tbl_ShopType> GetShopType(Func<tbl_ShopType, bool> condition = null)
         {
             if (condition != null)
@@ -1717,20 +2103,23 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ShopType().SelectAll();
         }
-        public List<tbl_ShopType> GetShopTypeALL(Func<tbl_ShopType, bool> condition = null)//
+
+        public List<tbl_ShopType> GetShopTypeALL(Func<tbl_ShopType, bool> condition = null)
         {
             if (condition != null)
                 return new tbl_ShopType().SelectFlag(condition);
             else
                 return new tbl_ShopType().SelectAllFlag();
         }
-        public List<tbl_ShopTypeGroup> GetShopTypeGroup(Func<tbl_ShopTypeGroup, bool> condition = null)//
+
+        public List<tbl_ShopTypeGroup> GetShopTypeGroup(Func<tbl_ShopTypeGroup, bool> condition = null)
         {
             if (condition != null)
                 return new tbl_ShopTypeGroup().Select(condition);
             else
                 return new tbl_ShopTypeGroup().SelectAll();
         }
+
         public List<tbl_PayMaster> GetPayMaster(Func<tbl_PayMaster, bool> condition = null)
         {
             if (condition != null)
@@ -1738,6 +2127,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_PayMaster().SelectAll();
         }
+
         public List<tbl_PayDetail> GetPayDetail(Func<tbl_PayDetail, bool> condition = null)
         {
             if (condition != null)
@@ -1745,6 +2135,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_PayDetail().SelectAll();
         }
+
         public List<tbl_SalAreaDistrict> GetSaleAreaDistrict(Func<tbl_SalAreaDistrict, bool> condition = null)
         {
             if (condition != null)
@@ -1752,6 +2143,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_SalAreaDistrict().SelectAll();
         }
+
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> condition = null)
         {
             if (condition != null)
@@ -1759,13 +2151,15 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ArCustomer().SelectAll();
         }
-        public List<tbl_ArCustomerType> GetCustomerType(Func<tbl_ArCustomerType, bool> condition = null)//
+
+        public List<tbl_ArCustomerType> GetCustomerType(Func<tbl_ArCustomerType, bool> condition = null)
         {
             if (condition != null)
                 return new tbl_ArCustomerType().SelectFlag(condition).ToList();
             else
                 return new tbl_ArCustomerType().SelectAllFlag();
         }
+
         public List<tbl_ArCustomerShelf> GetCustomerShelf(Func<tbl_ArCustomerShelf, bool> condition = null)
         {
             if (condition != null)
@@ -1773,6 +2167,19 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ArCustomerShelf().SelectAll();
         }
+
+        public List<tbl_ArCustomerShelf> GetCustomerShelf(string ShelfID)
+        {
+            Func<tbl_ArCustomerShelf, bool> tbl_ArCustomerShelfPre = (x => x.ShelfID == ShelfID);
+            return new tbl_ArCustomerShelf().Select(tbl_ArCustomerShelfPre);
+        }
+
+        public List<tbl_ArCustomerShelf> GetCustomerShelfByCustID(string customerID)
+        {
+            //Func<tbl_ArCustomerShelf, bool> tbl_ArCustomerShelfPre = (x => x.ShelfID == ShelfID);
+            return new tbl_ArCustomerShelf().SelectByCustID(customerID);
+        }
+
         public List<tbl_PriceGroup> GetPriceGroup(Func<tbl_PriceGroup, bool> condition = null)
         {
             if (condition != null)
@@ -1780,10 +2187,12 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_PriceGroup().SelectAll();
         }
+
         public List<tbl_SalArea> GetSaleArea()
         {
             return new tbl_SalArea().SelectAll();
         }
+
         public List<tbl_SalArea> GetAllMarket()
         {
             return new tbl_SalArea().SelectAll();
@@ -1876,10 +2285,13 @@ namespace AllCashUFormsApp.Controller
 
         public bool UpdateCustomerSAPCode(string customerID)
         {
+            string msg = "start BaseControl=>UpdateCustomerSAPCode->customerID";
+            msg.WriteLog(this.GetType());
+
+            bool ret = false;
+
             try
             {
-                bool ret = false;
-
                 using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
                 {
                     con.Open();
@@ -1892,17 +2304,81 @@ namespace AllCashUFormsApp.Controller
                     ret = true;
 
                     con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
 
+            msg = "end BaseControl=>UpdateCustomerSAPCode->customerID";
+            msg.WriteLog(this.GetType());
+
+            return ret;
+        }
+
+        public bool UpdateCustomerSAPCode(string customerID, string ivDocNo, string poDocNo)
+        {
+            string msg = "start BaseControl=>UpdateCustomerSAPCode->customerID,ivDocNo,poDocNo";
+            msg.WriteLog(this.GetType());
+
+            bool ret = false;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand("proc_update_customer_sap_code", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+                    cmd.Parameters.Add(new SqlParameter("@CustomerID", customerID.Trim()));
+                    var result = cmd.ExecuteNonQuery();
+                    ret = true;
+
+                    con.Close();
                 }
 
-                return ret;
+                //verify iv details when diff po details Last edit by sailom .k 18/10/2021------------------------
+                if (ret)
+                {
+                    VerifyIVDetails(ivDocNo, poDocNo);
+                }
+                //verify iv details when diff po details Last edit by sailom .k 18/10/2021------------------------
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            msg = "end BaseControl=>UpdateCustomerSAPCode->customerID,ivDocNo,poDocNo";
+            msg.WriteLog(this.GetType());
+
+            return ret;
+        }
+
+        public bool VerifyIVDetails(string ivDocNo, string poDocNo)
+        {
+            try
+            {
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@IVDocNo", ivDocNo);
+                sqlParmas.Add("@PODocNo", poDocNo);
+
+                string sql = "proc_tbl_IVDetail_fix";
+
+                My_DataTable_Extensions.ExecuteSQLScalar(sql, CommandType.StoredProcedure, sqlParmas);
+
+                return true;
             }
             catch (Exception ex)
             {
                 ex.WriteLog(this.GetType());
                 return false;
             }
-
         }
 
         public List<tbl_CfgSetting> GetCfgSetting()
@@ -1917,6 +2393,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_HQ_Promotion_Master().SelectAll();
         }
+
         public List<tbl_HQ_Reward> GetHQ_Reward(Func<tbl_HQ_Reward, bool> condition = null)
         {
             if (condition != null)
@@ -1924,6 +2401,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_HQ_Reward().SelectAll();
         }
+
         public List<tbl_HQ_SKUGroup> GetHQ_SKUGroup(Func<tbl_HQ_SKUGroup, bool> condition = null)
         {
             if (condition != null)
@@ -1931,6 +2409,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_HQ_SKUGroup().SelectAll();
         }
+
         public List<tbl_HQ_SKUGroup_EXC> GetHQ_SKUGroupExc(Func<tbl_HQ_SKUGroup_EXC, bool> condition = null)
         {
             if (condition != null)

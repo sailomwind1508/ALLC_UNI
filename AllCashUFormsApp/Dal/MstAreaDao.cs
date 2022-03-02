@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -160,6 +161,23 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+
+        public static DataTable GetAreaTable(this tbl_MstArea tbl_MstArea, int flagDel, int ProvinceID, string Text)
+        {
+            DataTable dt = new DataTable();
+
+            string sql = "SELECT * FROM tbl_MstArea WHERE FlagDel = " + flagDel + "";
+            sql += " AND " + ProvinceID + " = CASE WHEN " + ProvinceID + " <> 0 THEN ProvinceID ELSE 0 END";
+            if (!string.IsNullOrEmpty(Text))
+            {
+                sql += " AND (AreaCode like '%" + Text + "%'" + " OR AreaName like '%" + Text + "%' )";
+            }
+            sql += " ORDER BY ProvinceID,AreaCode ";
+
+            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+            return dt;
         }
     }
 }

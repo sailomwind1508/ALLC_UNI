@@ -1,10 +1,12 @@
 ﻿using AllCashUFormsApp.Controller;
 using AllCashUFormsApp.Model;
+using AllCashUFormsApp.View.UControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -16,6 +18,8 @@ namespace AllCashUFormsApp.View.Page
         MasterDataControl bu = new MasterDataControl();
         MenuBU menuBU = new MenuBU();
         Dictionary<Control, Label> Validate_PriceGroup = new Dictionary<Control, Label>();
+        static DataTable tmpDTData = new DataTable();
+
         public frmProductTable()
         {
             InitializeComponent();
@@ -228,7 +232,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     dtpEndDate.Value = Convert.ToDateTime(grdRows.Cells["colEndDate"].Value);
                 }
-               
+
             }
         }
         private void grdPriceGroup_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -305,7 +309,7 @@ namespace AllCashUFormsApp.View.Page
                 cbbList.Add(ddlPriceGroup);
                 cbbList.Add(ddlProductGroup);
                 cbbList.Add(ddlProductSubGroup);
-                SetPanelSearch(false,cbbList, txtSearchProGroup, btnSearchPriceGroup);
+                SetPanelSearch(false, cbbList, txtSearchProGroup, btnSearchPriceGroup);
             }
             else if (tabName == "ตารางค่าคอมมิชชั่น")
             {
@@ -441,7 +445,7 @@ namespace AllCashUFormsApp.View.Page
                 SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
 
                 PrePareDataToCombobox(cbbList);
-              
+
                 btnSearchPriceGroup.PerformClick();
             }
             else if (tabName == "ตารางค่าคอมมิชชั่น")
@@ -466,7 +470,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     //bool ChkBranch = Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value);
                     bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-                    
+
                     if (OnlineStatus == true && chkBoxSelectBranch.Checked == true)
                     {
                         grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
@@ -637,7 +641,7 @@ namespace AllCashUFormsApp.View.Page
                     cbbList.Add(ddlPriceGroup);
                     cbbList.Add(ddlProductGroup);
                     cbbList.Add(ddlProductSubGroup);
-                    SetPanelSearch(true,cbbList,txtSearchProGroup,btnSearchPriceGroup);
+                    SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
 
                     btnSearchPriceGroup.PerformClick();
 
@@ -787,7 +791,7 @@ namespace AllCashUFormsApp.View.Page
                         cbbList.Add(cbbPriceGroup);
                         cbbList.Add(cbbProductGroup);
                         cbbList.Add(cbbProductSubGroup);
-                        SetPanelSearch(true,cbbList,txtSearchCommission,btnSearchCommission);
+                        SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
 
                         grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
                         grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
@@ -957,7 +961,7 @@ namespace AllCashUFormsApp.View.Page
         }
         private void BindPrdPriceGroupData()
         {
-            if (grdBranch.RowCount > 0)
+            //if (grdBranch.RowCount > 0) //edit by sailom .k 17/12/2021
             {
                 DataTable dtProData = new DataTable();
 
@@ -967,7 +971,7 @@ namespace AllCashUFormsApp.View.Page
 
                 dtProData = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchProGroup.Text, true);
 
-                DataTable dtProPriceGroup = bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
+                DataTable dtProPriceGroup = PriceGroupID == 0 ? bu.GetProductPriceGroup(null).ToDataTable() : bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
 
                 DataTable newTable = new DataTable();
 
@@ -1025,6 +1029,8 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 grdPrdPriceGroup.DataSource = newTable;
+                tmpDTData.TableName = "Sheet1";
+                tmpDTData = newTable;
                 label1.Text = newTable.Rows.Count.ToNumberFormat();
 
                 SetButtonAfterBindGrid(grdPrdPriceGroup.RowCount);
@@ -1054,6 +1060,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnSearchPriceGroup_Click(object sender, EventArgs e)
         {
             BindPrdPriceGroupData();
+            btnPrint.Enabled = true;
         }
         private void SetPanelSearch(bool flag, List<ComboBox> cbbList, TextBox txtSearch, Button btnSearch)
         {
@@ -1130,7 +1137,7 @@ namespace AllCashUFormsApp.View.Page
         }
         private void BindCommissionData()
         {
-            if (grdBranch.RowCount > 0)
+            //if (grdBranch.RowCount > 0)  //edit by sailom .k 17/12/2021
             {
                 DataTable dtPrdUomset = new DataTable();
 
@@ -1138,7 +1145,7 @@ namespace AllCashUFormsApp.View.Page
                 int ProductGroupID = Convert.ToInt32(cbbProductGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductGroup.SelectedValue);
                 int ProductSubGroupID = Convert.ToInt32(cbbProductSubGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductSubGroup.SelectedValue);
 
-                dtPrdUomset = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchProGroup.Text, false);
+                dtPrdUomset = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchCommission.Text, false);
 
                 DataTable dtProPriceGroup = bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
 
@@ -1188,7 +1195,7 @@ namespace AllCashUFormsApp.View.Page
                 label1.Text = newTable.Rows.Count.ToNumberFormat();
 
                 SetButtonAfterBindGrid(grdCommission.RowCount);
-               
+
                 if (newTable.Rows.Count > 0)
                 {
                     grdCommission.Columns["colComPrice_t3"].ReadOnly = false;
@@ -1216,7 +1223,7 @@ namespace AllCashUFormsApp.View.Page
 
             }
         }
-        private void DataGridView_CellEndEdit(DataGridViewCellEventArgs e,DataGridView grd)
+        private void DataGridView_CellEndEdit(DataGridViewCellEventArgs e, DataGridView grd)
         {
             string columns = grd.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
             if (string.IsNullOrEmpty(columns))
@@ -1231,7 +1238,7 @@ namespace AllCashUFormsApp.View.Page
         }
         private void grdCommission_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {  //Commission ColumnIndex = 11
-            DataGridView_CellEndEdit(e,grdCommission);
+            DataGridView_CellEndEdit(e, grdCommission);
         }
         private void grdCommission_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -1346,7 +1353,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
-        private void SelectPrdPriceGroupList(List<string> PriceGroupID,List<string> ProductID)
+        private void SelectPrdPriceGroupList(List<string> PriceGroupID, List<string> ProductID)
         {
             for (int i = 0; i < grdPrdPriceGroup.Rows.Count; i++)
             {
@@ -1412,15 +1419,15 @@ namespace AllCashUFormsApp.View.Page
             List<string> TLPriceGroupID = new List<string>();
             SelectTLPriceGroup(TLPriceGroupID);
             var allTLPriceGroupID = string.Join(",", TLPriceGroupID);
-           
+
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@BranchIDs", allBranchID);
             _params.Add("@PrdPriceGroupIDs", allPrdGroupID);//ProductPriceGroup
             _params.Add("@ProductIDs", allProductID);//14
             _params.Add("@PriceGroupIDs", allTLPriceGroupID);
 
-            
-           ret = bu.CallSendAllProductPriceGroupData(_params);
+
+            ret = bu.CallSendAllProductPriceGroupData(_params);
 
             if (ret == true)
             {
@@ -1439,6 +1446,44 @@ namespace AllCashUFormsApp.View.Page
         private void frmProductTable_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            frmWait wait = new frmWait();
+            wait.Show();
+
+            string dir = @"C:\AllCashExcels";
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            var _newTable = new DataTable("Sheet1");
+            _newTable.Columns.Add("ชื่อกลุ่มสินค้า", typeof(string));
+            _newTable.Columns.Add("รหัสสินค้า", typeof(string));
+            _newTable.Columns.Add("ชื่อสินค้า", typeof(string));
+            _newTable.Columns.Add("หน่วย", typeof(string));
+            _newTable.Columns.Add("ก่อนภาษี(ราคาขาย)", typeof(decimal));
+            _newTable.Columns.Add("รวมภาษี(ราคาขาย)", typeof(decimal));
+            _newTable.Columns.Add("ก่อนภาษี(ราคาซื้อ)", typeof(decimal));
+
+            foreach (DataRow r in tmpDTData.Rows)
+            {
+                _newTable.Rows.Add(r["ProductGroupName"], r["ProductID"], r["ProductName"]
+                    , r["UomSetName"], r["SellPrice"], r["SellPriceVat"], r["BuyPrice"]);
+
+            }
+
+            //string _excelName = dir + @"\" + excelName + ".xlsx";
+            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+            string _excelName = dir + @"\" + string.Join("", "รายงานตารางราคาสินค้า", '_', cDate) + ".xls";
+
+            My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { _newTable }, _excelName, "รายงานตารางราคาสินค้า");
+
+            wait.Hide();
+            wait.Dispose();
+            wait.Close();
         }
     }
 }

@@ -4,14 +4,23 @@
 	<xsl:output encoding="utf-8" />
 
 	<xsl:output omit-xml-declaration="yes" indent="yes"/>
-	<xsl:key name="kUsers" match="FullPrdName" use="."/>
-	<xsl:key name="kRowByName" match="Rep_Detail_Sales_By_Cust_XSLT" use="CustomerID"/>
+	<xsl:key name="kCols1" match="ProductID" use="."/>
+	<xsl:key name="kCols2" match="ProductName" use="."/>
+	<xsl:key name="kRows" match="Rep_Detail_Sales_By_Cust_XSLT" use="CustomerID"/>
 
 	<xsl:variable name="prdIds" select=
-      "//FullPrdName
+      "//ProductID
       [generate-id()
       =
-      generate-id(key('kUsers', .)[1])
+      generate-id(key('kCols1', .)[1])
+      ]
+      "/>
+
+	<xsl:variable name="prdNms" select=
+      "//ProductName
+      [generate-id()
+      =
+      generate-id(key('kCols2', .)[1])
       ]
       "/>
 
@@ -86,7 +95,14 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					color: Black;
 					border: solid thin Black;
 					font-size: 10pt;
-					width: 100px;
+					width: 120px;
+					}
+					.ResultItem {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 80px;
 					}
 					.SearchResultAltItem {
 					background-color: #99CCFF;
@@ -158,10 +174,17 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					<TR>
 						<TD Colspan="7"></TD>
 					</TR>
+					<TR>
+						<thead>
+							<TH Colspan="2"></TH>
+							<xsl:apply-templates select="$prdIds"/>
+
+						</thead>
+					</TR>
 					<thead>
 						<th class="SearchResultItem">รหัสลูกค้า</th>
 						<th class="SearchResultItem">ชื่อลูกค้า</th>
-						<xsl:apply-templates select="$prdIds"/>
+						<xsl:apply-templates select="$prdNms"/>
 						<th class="SearchResultItem">มูลค่า(บาท)</th>
 						<th class="SearchResultItem">สถานะเอกสาร</th>
 					</thead>
@@ -169,36 +192,29 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						<xsl:apply-templates select=
                 "//Rep_Detail_Sales_By_Cust_XSLT
                 [generate-id() = 
-                 generate-id(key('kRowByName', CustomerID))]">
+                 generate-id(key('kRows', CustomerID))]">
 							<xsl:sort select="CustomerID"/>
 						</xsl:apply-templates>
 
-						<!--<tr>
-							<td ColSpan="2" Class="SearchResultItem" align="Right">
-								รวม
 
-							</td>
-
-							<xsl:apply-templates select="$prdIds" mode="row">
-								<xsl:with-param name="nRows" select="key('kRowByName', CustomerID)"/>
-							</xsl:apply-templates>
-
-							<td class="SearchResultItem">
-								<xsl:value-of select='format-number(Rep_Detail_Sales_By_Cust_XSLT/TotalPrice,"###,###.00")'/>
-							</td>
-						</tr>-->
 					</tbody>
 				</Worksheet>
 			</table>
 		</html>
 	</xsl:template>
 
-	<xsl:template match="FullPrdName">
+	<xsl:template match="ProductID">
 		<th class="SearchResultItem">
 			<xsl:value-of select="."/>
 		</th>
 	</xsl:template>
-	
+
+	<xsl:template match="ProductName">
+		<th class="SearchResultItem">
+			<xsl:value-of select="."/>
+		</th>
+	</xsl:template>
+
 	<xsl:template match="Rep_Detail_Sales_By_Cust_XSLT">
 		<tr>
 			<td class="SearchResultItem">
@@ -210,9 +226,9 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			</td>
 
 			<xsl:apply-templates select="$prdIds" mode="row">
-				<xsl:with-param name="nRows" select="key('kRowByName', CustomerID)"/>
+				<xsl:with-param name="nRows" select="key('kRows', CustomerID)"/>
 			</xsl:apply-templates>
-			
+
 			<td class="SearchResultItem">
 				<xsl:value-of select='format-number(TotalDue,"###,###.00")'/>
 			</td>
@@ -221,16 +237,16 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			</td>
 		</tr>
 	</xsl:template>
-	
-	
-	<xsl:template match="FullPrdName" mode="row">
+
+
+	<xsl:template match="ProductID" mode="row">
 		<xsl:param name="nRows"/>
 		<td class="SearchResultItem" align="Right">
-			<xsl:if test="$nRows[FullPrdName=current()]/OrderQty=0">
+			<xsl:if test="$nRows[ProductID=current()]/OrderQty=0">
 				-
 			</xsl:if>
-			<xsl:if test="$nRows[FullPrdName=current()]/OrderQty>0">
-				<xsl:value-of select='format-number($nRows[FullPrdName=current()]/OrderQty,"###,###.00")'/>
+			<xsl:if test="$nRows[ProductID=current()]/OrderQty>0">
+				<xsl:value-of select='format-number($nRows[ProductID=current()]/OrderQty,"###,###.00")'/>
 			</xsl:if>
 		</td>
 	</xsl:template>

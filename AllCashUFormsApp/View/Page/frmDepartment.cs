@@ -41,6 +41,8 @@ namespace AllCashUFormsApp.View.Page
             }
 
             grdDepartment.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grdDepartment.RowsDefaultCellStyle.BackColor = Color.White;
+            grdDepartment.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
         private void OpenPanelEdit(bool flagEnable)
         {

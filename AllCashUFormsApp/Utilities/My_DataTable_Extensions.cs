@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -41,6 +42,15 @@ namespace AllCashUFormsApp
 
             var conn = new SqlConnection(Connection.ConnectionString);
             return GetDataTable(cSql, conn, CommandType.StoredProcedure);
+        }
+
+        public static DataTable ExecuteCenterStoreToDataTable(string cSql, Dictionary<string, object> sqlParmas)
+        {
+            MemoryManagement.FlushMemory();
+
+            var conStr = ConfigurationManager.AppSettings["CenterConnect"].ToString();
+            var conn = new SqlConnection(conStr);
+            return GetDataTable(cSql, conn, CommandType.StoredProcedure, sqlParmas);
         }
 
         public static DataTable ExecuteStoreToDataTable(string cSql, Dictionary<string, object> sqlParmas)
@@ -364,6 +374,9 @@ namespace AllCashUFormsApp
                     {
                         if (_dt.Rows.Count > 2)
                         {
+                            if (string.IsNullOrEmpty(_dt.TableName))
+                                _dt.TableName = "Sheet1";
+
                             _wb.Worksheets.Add(_dt, _dt.TableName);
                         }
                     }

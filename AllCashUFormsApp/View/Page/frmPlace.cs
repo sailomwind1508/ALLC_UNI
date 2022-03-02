@@ -55,7 +55,18 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
+
+            SetDefaultGridViewEvent(grdDistrict);
+            SetDefaultGridViewEvent(grdArea);
+            SetDefaultGridViewEvent(grdProvince);
         }
+
+        public void SetDefaultGridViewEvent(DataGridView grd)
+        {
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+        }
+
         private void BindProvince()
         {
             string text = txtSearchProvince.Text;
@@ -75,6 +86,13 @@ namespace AllCashUFormsApp.View.Page
             {
                 EnableButton(true);
             }
+
+            grdProvince.RowsDefaultCellStyle.BackColor = Color.White;
+            grdProvince.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+            grdArea.RowsDefaultCellStyle.BackColor = Color.White;
+            grdArea.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+            grdDistrict.RowsDefaultCellStyle.BackColor = Color.White;
+            grdDistrict.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
 
             //pnlPrvStatus.Visible = rdoProvinceN.Checked ? false : true;
         }

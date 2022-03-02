@@ -217,13 +217,17 @@ namespace AllCashUFormsApp
 
             return ret;
         }
-        public static DataTable GetProductGroupTable(this tbl_ProductGroup tbl_ProductGroup)
+
+        public static DataTable GetProductGroupTable(this tbl_ProductGroup tbl_ProductGroup, int flagDel)
         {
             DataTable dt = new DataTable();
-            string sql = "SELECT * FROM tbl_ProductGroup WHERE FlagDel = 0 ORDER BY ProductGroupID";
+            string sql = "SELECT * FROM tbl_ProductGroup";
+            sql += " WHERE FlagDel = '" + flagDel + "'";
+            sql += " ORDER BY ProductGroupCode";
             dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
             return dt;
         }
+
         public static DataTable GetPrdGroupTable(this tbl_ProductGroup tbl_ProductGroup)
         {
             DataTable newTable = new DataTable();

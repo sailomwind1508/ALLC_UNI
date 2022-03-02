@@ -17,18 +17,27 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchBranchWareHouseList()
         {
             InitializeComponent();
+
+            this.Load += frmSearchBrachWareHouseList_Load;
+
+            btnAccept.Click += btnAccept_Click;
+            btnCancel.Click += btnCancel_Click;
+
+            grdList.RowPostPaint += grdList_RowPostPaint;
+            this.FormClosed += frmSearchBranchWareHouseList_FormClosed;
         }
+
         private void BindBranchWareHouse()
         {
             DataTable dt = new DataTable();
 
             if (frmReport._RptStock == "ALL")
             {
-                dt = bu.GetBranchWareHouseTable(x=>x.WHType == 0 || x.WHType == 1);
+                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && (x.WHType == 0 || x.WHType == 1)); //For remove whid = 0 last edit by sailom 11/10/2021
             }
             else
             {
-                dt = bu.GetBranchWareHouseTable(x => x.WHType == 1);
+                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType == 1); //For remove whid = 0 last edit by sailom 11/10/2021
             }
             
             if (dt != null && dt.Rows.Count > 0)
@@ -41,16 +50,19 @@ namespace AllCashUFormsApp.View.UControl
             }
 
         }
+
         private void frmSearchBrachWareHouseList_Load(object sender, EventArgs e)
         {
             grdList.AutoGenerateColumns = false;
            
             BindBranchWareHouse();
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void btnAccept_Click(object sender, EventArgs e)
         {
             List<string> selectList = new List<string>();
@@ -69,9 +81,15 @@ namespace AllCashUFormsApp.View.UControl
 
             this.Close();
         }
+
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void frmSearchBranchWareHouseList_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
         }
     }
 }

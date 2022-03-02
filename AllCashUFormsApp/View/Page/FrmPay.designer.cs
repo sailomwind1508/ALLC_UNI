@@ -95,6 +95,7 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -104,7 +105,6 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.gridPayment)).BeginInit();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -160,9 +160,8 @@
             this.gridPayment.Name = "gridPayment";
             this.gridPayment.Size = new System.Drawing.Size(1005, 364);
             this.gridPayment.TabIndex = 245;
-            this.gridPayment.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gridPayment_CellBeginEdit);
             this.gridPayment.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridPayment_CellEndEdit);
-            this.gridPayment.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridPayment_DataBindingComplete);
+            this.gridPayment.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.gridPayment_CellValidating);
             this.gridPayment.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridPayment_EditingControlShowing);
             this.gridPayment.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.gridPayment_RowPostPaint);
             this.gridPayment.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridPayment_KeyDown);
@@ -771,6 +770,18 @@
             this.panel5.Size = new System.Drawing.Size(782, 31);
             this.panel5.TabIndex = 18;
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.Azure;
+            this.panel1.Controls.Add(this.panel7);
+            this.panel1.Location = new System.Drawing.Point(0, 26);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1008, 580);
+            this.panel1.TabIndex = 31;
+            // 
             // btnClose
             // 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -952,18 +963,6 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.Azure;
-            this.panel1.Controls.Add(this.panel7);
-            this.panel1.Location = new System.Drawing.Point(0, 26);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1008, 580);
-            this.panel1.TabIndex = 31;
             // 
             // FrmPay
             // 

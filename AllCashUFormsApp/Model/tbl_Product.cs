@@ -48,5 +48,6 @@ namespace AllCashUFormsApp.Model
         public bool FlagEdit { get; set; }
         public int ProductBrandID { get; set; }
         public int ProductLine { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

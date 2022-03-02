@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -104,6 +105,51 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_Company.GetType());
+            }
+
+            return ret;
+        }
+
+
+        public static int Test(this tbl_Company tbl_Company)
+        {
+            int ret = 0;
+            try
+            {
+
+                SqlConnection con = new SqlConnection(Connection.ConnectionString);
+
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand("proc_tbl_Company_insert", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                foreach (PropertyInfo updateDataItem in tbl_Company.GetType().GetProperties())
+                {
+                    var value = updateDataItem.GetValue(tbl_Company, null);
+
+                    Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                    object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+
+                    cmd.Parameters.Add(new SqlParameter("@" + updateDataItem.Name, safeValue));
+
+
+                }
+
+                var result = cmd.ExecuteNonQuery();
+
+                con.Close();
+
+                ret = 1;
+
+
+            }
+            catch (Exception ex)
+            {
+                ret = -1;
                 ex.WriteLog(tbl_Company.GetType());
             }
 

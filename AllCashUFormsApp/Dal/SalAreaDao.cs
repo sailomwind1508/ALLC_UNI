@@ -115,7 +115,7 @@ namespace AllCashUFormsApp
                 DataTable dt = new DataTable();
                 string sql = "";
                 sql += " SELECT * ";
-                sql += "  FROM [dbo].[tbl_SalArea] Order By SalAreaCode, Seq ";
+                sql += "  FROM [dbo].[tbl_SalArea] Order By Seq ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
                 list = dynamicListReturned.Cast<tbl_SalArea>().ToList();
@@ -234,6 +234,60 @@ namespace AllCashUFormsApp
             }
 
             return ret;
+        }
+
+        public static DataTable proc_GetMKT_Data(this tbl_SalArea tbl_SalArea, Dictionary<string, object> _params)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_GetMKT_Data";
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static DataTable proc_GetMarketData(this tbl_SalArea tbl_SalArea, Dictionary<string, object> _params)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = "proc_GetMarketData";
+
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+                return null;
+            }
+
+            return dt;
+        }
+
+        public static List<tbl_SalArea> GetSalAreaByWHID(this tbl_SalArea tbl_SalArea, string _WHID)
+        {
+            List<tbl_SalArea> list = new List<tbl_SalArea>();
+            try
+            {
+                string sql = @"SELECT * FROM tbl_SalArea t1 
+                            INNER JOIN (SELECT DISTINCT SalAreaID FROM tbl_SalAreaDistrict 
+                            WHERE WHID = '" + _WHID + "' )t2 ON t1.SalAreaID = T2.SalAreaID ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
+                list = dynamicListReturned.Cast<tbl_SalArea>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+                return null;
+            }
+
+            return list;
         }
     }
 }

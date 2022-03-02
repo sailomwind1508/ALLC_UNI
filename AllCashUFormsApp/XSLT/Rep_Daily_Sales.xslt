@@ -86,14 +86,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					color: Black;
 					border: solid thin Black;
 					font-size: 10pt;
-					width: 100%;
-					}
-					.ResultItem2 {
-					background-color: #FFFFFF;
-					color: Black;
-					border: solid thin Black;
-					font-size: 10pt;
-					width: 80px;
+					width: 100px;
 					}
 					.SearchResultAltItem {
 					background-color: #99CCFF;
@@ -205,7 +198,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 	</xsl:template>
 
 	<xsl:template match="ProductAll">
-		<th class="ResultItem2">
+		<th class="SearchResultItem">
 			<xsl:value-of select="."/>
 		</th>
 	</xsl:template>
@@ -282,7 +275,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 
 	<xsl:template match="ProductAll" mode="row">
 		<xsl:param name="nRows"/>
-		<td class="ResultItem2" align="Right">
+		<td class="SearchResultItem" align="Right">
 			<!--<xsl:value-of select='format-number($nRows[ProductAll=current()]/QTY,"###,###.00")'/>-->
 			<xsl:if test="$nRows[ProductAll=current()]/QTY=0">
 -

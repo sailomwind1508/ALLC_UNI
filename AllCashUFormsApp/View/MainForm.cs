@@ -10,11 +10,14 @@ using System.Configuration;
 using AllCashUFormsApp.Model;
 using AllCashUFormsApp.View.Page;
 using AllCashUFormsApp.Controller;
+using System.Globalization;
 
 namespace AllCashUFormsApp.View
 {
     public partial class MainForm : Form
     {
+        CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
+
         MenuBU menuBU = new MenuBU();
         Permission permBU = new Permission();
         List<tbl_MstMenu> menuList = new List<tbl_MstMenu>();
@@ -22,11 +25,28 @@ namespace AllCashUFormsApp.View
         public MainForm()
         {
             InitializeComponent();
-            this.Text = "หน้าหลัก" + " - " + ConfigurationManager.AppSettings["Version"];
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            this.Text = "หน้าหลัก" + " - " + ConfigurationManager.AppSettings["Version"] + " Version " + version;
 
             menuStrip1.Cursor = Cursors.Hand;
+            StartTimer();
             //menuStrip1.MouseLeave += new EventHandler(SetCursorToHandOn_MouseLeave);
             //menuStrip1.MouseEnter += new EventHandler(SetCursorToArrowOn_MouseEnter);
+
+            toolStripStatusLabel1.BackColor = Color.FromArgb(94, 186, 125);
+            statusStrip1.BackColor = Color.FromArgb(205, 233, 254);
+        }
+
+        System.Windows.Forms.Timer tmr = null;
+        private void StartTimer()
+        {
+            tmr = new System.Windows.Forms.Timer();
+            tmr.Interval = 1000;
+            tmr.Tick += new EventHandler(timer1_Tick);
+            tmr.Enabled = true;
         }
 
         //private void SetCursorToArrowOn_MouseHover(object sender, EventArgs e)
@@ -52,7 +72,7 @@ namespace AllCashUFormsApp.View
 
             if (Helper.tbl_Users != null)
             {
-                toolStripStatusLabel1.Text = "ฐานข้อมูล : " + Helper.BranchName + ", ผู้ใช้งานระบบ : " + Helper.tbl_Users.Username;
+                toolStripStatusLabel1.Text = "";
             }
 
             var menuImage = new Bitmap(AllCashUFormsApp.Properties.Resources.menu);
@@ -139,8 +159,14 @@ namespace AllCashUFormsApp.View
         {
             bool isOpen = false;
             string name = ((ToolStripItem)sender).Name;
+            List<Form> openForms = new List<Form>();
 
             foreach (Form f in Application.OpenForms)
+            {
+                openForms.Add(f);
+            }
+
+            foreach (Form f in openForms)
             {
                 if (f.Name.ToLower() == name.ToLower()) //(f.Name == "frmOD")
                 {
@@ -170,29 +196,69 @@ namespace AllCashUFormsApp.View
                 }
             }
 
+            if (name == "frmMinimize")
+            {
+                foreach (Form f in openForms)
+                {
+                    foreach (Form childForm in f.MdiChildren)
+                    {
+                        if (f.WindowState == FormWindowState.Maximized)
+                        {
+                            childForm.WindowState = FormWindowState.Minimized;
+                            //childForm.WindowState = FormWindowState.Normal;
+                        }
+                        else
+                        {
+                            childForm.WindowState = FormWindowState.Normal;
+                        }
+                    }
+                }
+            }
+            else if (name == "frmMaximize")
+            {
+                foreach (Form f in openForms)
+                {
+                    foreach (Form childForm in f.MdiChildren)
+                    {
+                        childForm.WindowState = FormWindowState.Maximized;
+                    }
+                }
+            }
+            else if (name == "frmCascade")
+            {
+                this.LayoutMdi(MdiLayout.Cascade);
+            }
+            else if (name == "frmTileHorizontal")
+            {
+                this.LayoutMdi(MdiLayout.TileHorizontal);
+            }
+            else if (name == "frmTileVertical")
+            {
+                this.LayoutMdi(MdiLayout.TileVertical);
+            }
+
             if (!isOpen)
             {
                 if (name == "frmLogOff")
                 {
-                    List<Form> openForms = new List<Form>();
-
-                    foreach (Form f in Application.OpenForms)
-                    {
-                        openForms.Add(f);
-                    }
-
                     frmLogin login = new frmLogin();
-                    foreach (Form f in openForms)
-                    {
-                        if (f.Name != login.Name)
-                        {
-                            f.Hide();
-                            f.Dispose();
-                        }
-                    }
+
+                    //Last edit by sailom .k 28/02/2022-----------------------------------------------------
+                    //foreach (Form f in openForms)
+                    //{
+                    //    if (f.Name != login.Name)
+                    //    {
+                    //        f.Hide();
+                    //        f.Dispose();
+                    //    }
+                    //}
+                    //Last edit by sailom .k 28/02/2022-----------------------------------------------------
 
                     if (login != null)
                     {
+                        if (Helper.tbl_Users != null)
+                            login.PrepareDefaultLogin(Helper.tbl_Users.Username, Helper.tbl_Users.Password);
+
                         login.Show();
                         return;
                     }
@@ -216,9 +282,10 @@ namespace AllCashUFormsApp.View
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-
+            string cTime = DateTime.Now.ToString("dd MMMM yyyy hh:mm:ss", cultures);
+            toolStripStatusLabel1.Text = "ฐานข้อมูล : " + Helper.BranchName + ", ผู้ใช้งานระบบ : " + Helper.tbl_Users.Username + ", วันที่ : " + cTime;
         }
     }
 }

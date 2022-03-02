@@ -12,11 +12,70 @@ namespace AllCashUFormsApp
 {
     public static class ProductDao
     {
+        public static tbl_Product SelectSingle(this tbl_Product tbl_Product, string productID)
+        {
+            List<tbl_Product> list = new List<tbl_Product>();
+            tbl_Product ret = null;
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_Product] WHERE ProductID = '"+ productID + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Product), sql);
+                list = dynamicListReturned.Cast<tbl_Product>().ToList();
+
+                if (list.Count > 0)
+                {
+                    ret = list.First();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// select data
+        /// </summary>
+        /// <param name="tbl_Product"></param>
+        /// <returns></returns>
+        public static List<tbl_Product> SelectForMovement(this tbl_Product tbl_Product, string prdGroupID, string prdSubGroupID)
+        {
+            List<tbl_Product> list = new List<tbl_Product>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += " FROM [dbo].[tbl_Product] WHERE FlagDel = 0 ";
+
+                if (prdGroupID != "-1")
+                    sql += " AND ProductGroupID  = '" + prdGroupID + "' ";
+                if (prdSubGroupID != "-1")
+                    sql += " AND ProductSubGroupID  = '" + prdSubGroupID + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Product), sql);
+                list = dynamicListReturned.Cast<tbl_Product>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+            }
+
+            return list;
+        }
+
         //private static List<tbl_Product> tbl_Products = new List<tbl_Product>();
 
         public static List<tbl_Product> SelectEntity(this tbl_Product tbl_Product, Func<tbl_Product, bool> predicate)
         {
-            List<tbl_Product> list = new List<tbl_Product>();
+            var list = new List<tbl_Product>();
             try
             {
                 DataTable dt = new DataTable();
@@ -260,6 +319,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Insert(this tbl_Product tbl_Product)
         {
+            string msg = "start ProductDao=>Insert";
+           msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -275,6 +337,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_Product.GetType());
             }
 
+            msg = "end ProductDao=>Insert";
+           msg.WriteLog(null);
+
             return ret;
         }
 
@@ -285,6 +350,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_Product tbl_Product)
         {
+            string msg = "start ProductDao=>Update";
+           msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -323,6 +391,9 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_Product.GetType());
             }
 
+            msg = "end ProductDao=>Update";
+           msg.WriteLog(null);
+
             return ret;
         }
 
@@ -333,6 +404,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Delete(this tbl_Product tbl_Product)
         {
+            string msg = "start ProductDao=>Delete";
+           msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -347,6 +421,9 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_Product.GetType());
             }
+
+            msg = "end ProductDao=>Delete";
+           msg.WriteLog(null);
 
             return ret;
         }
@@ -368,36 +445,7 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
-        
-        public static DataTable GetProductView(this tbl_Product tbl_Product,int flagDel,int ProductGroupID,int ProductSubGroupID,string Text)
-        {
-            try
-            {
-                DataTable newTable = new DataTable();
 
-                string sql = "SELECT * FROM ProductView as t1 WHERE t1.FlagDel = " + flagDel + "";
-
-                sql += " AND " + ProductGroupID + " = CASE WHEN " + ProductGroupID + " <> 0 THEN t1.ProductGroupID ELSE 0 END";
-                sql += " AND " + ProductSubGroupID + " = CASE WHEN " + ProductSubGroupID + " <> 0 THEN t1.ProductSubGroupID ELSE 0 END";
-
-                if (!string.IsNullOrEmpty(Text))
-                {
-                    sql += " AND (t1.ProductID like '%" + Text + "%'";
-                    sql += " OR t1.ProductName like '%" + Text + "%')";
-                }
-
-                sql += " ORDER BY t1.ProductGroupID,t1.ProductSubGroupID";
-
-                newTable = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
-
-                return newTable;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        
         public static DataTable GetSendData_Product(this tbl_Product tbl_Product, Dictionary<string, object> _params)
         {
             try
@@ -470,6 +518,71 @@ namespace AllCashUFormsApp
             }
             catch (Exception)
             {
+                return null;
+            }
+        }
+
+        public static DataTable proc_tbl_Product_Data(this tbl_Product tbl_Product, Dictionary<string, object> _params)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_tbl_Product_Data";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql,_params);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+                return null;
+            }
+        
+        }
+
+        public static List<tbl_Product> SelectProductList(this tbl_Product tbl_Product, string _ProductID)
+        {
+            var list = new List<tbl_Product>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_Product";
+
+                if (_ProductID.Length == 8)
+                {
+                    sql += " WHERE ProductID = '" + _ProductID + "'";
+                }
+                else
+                {
+                    sql += " WHERE ProductID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _ProductID + "', ',')) ";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Product), sql);
+                list = dynamicListReturned.Cast<tbl_Product>().ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+                return null;
+            }
+        }
+
+        public static List<tbl_Product> SelectSingleProduct(this tbl_Product tbl_Product)
+        {
+            var list = new List<tbl_Product>();
+            try
+            {
+                string sql = "SELECT TOP 1 * FROM tbl_Product";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Product), sql);
+                list = dynamicListReturned.Cast<tbl_Product>().ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
                 return null;
             }
         }

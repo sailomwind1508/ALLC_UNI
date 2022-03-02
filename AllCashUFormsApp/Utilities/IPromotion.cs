@@ -8,6 +8,6 @@ namespace AllCashUFormsApp
 {
     interface IPromotion
     {
-        List<T> GetData<T>(List<T> obj, object condition);
+        List<T> GetData<T>(List<T> obj, object condition, string whid);
     }
 }

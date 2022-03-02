@@ -16,6 +16,8 @@ namespace AllCashUFormsApp.View.Page
 {
     public partial class frmEndDay : Form
     {
+        CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
+
         MenuBU menuBU = new MenuBU();
         EndDay bu = new EndDay();
         DataTable dt = new DataTable();
@@ -45,6 +47,7 @@ namespace AllCashUFormsApp.View.Page
         List<tbl_POMaster> allPOMaster = new List<tbl_POMaster>();
         List<tbl_PODetail> allPODetails = new List<tbl_PODetail>();
         List<tbl_PRMaster> allPRMaster = new List<tbl_PRMaster>();
+        List<tbl_Employee> allEmployee = new List<tbl_Employee>();
 
         public frmEndDay()
         {
@@ -77,7 +80,27 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
 
+            SetDefaultGridViewEvent(grdDailySales);
+            SetDefaultGridViewEvent(grdRL);
+            SetDefaultGridViewEvent(grdRB);
+            SetDefaultGridViewEvent(grdOD);
+
+            SetDefaultGridViewEvent(grdDailySalesTotal);
+            SetDefaultGridViewEvent(grdRLTotal);
+            SetDefaultGridViewEvent(grdRBTotal);
+            SetDefaultGridViewEvent(grdODTotal);
+
             InitialData();
+        }
+
+        public void SetDefaultGridViewEvent(DataGridView grd)
+        {
+            grd.RowPostPaint -= new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(grd_RowPostPaint);
+
+            grd.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(grd_RowPostPaint);
+
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
 
         private void InitialData()
@@ -119,6 +142,8 @@ namespace AllCashUFormsApp.View.Page
 
             var dt_rb = bu.GetEndDay_PRDetails(docDate, "RB");
 
+            allEmployee = bu.GetEmployee();
+
             if (dt_po == null && dt_po.Rows.Count == 0 &&
                 dt_od == null && dt_od.Rows.Count == 0 &&
                 dt_rl == null && dt_rl.Rows.Count == 0 &&
@@ -154,6 +179,7 @@ namespace AllCashUFormsApp.View.Page
         private void BindPO(DataTable dt)
         {
             BindGridView(grdDailySales, dt);
+
             if (dt != null && dt.Rows.Count > 0)
             {
                 grdDailySales.Columns[0].Visible = false;
@@ -201,6 +227,10 @@ namespace AllCashUFormsApp.View.Page
                     grdDailySalesTotal.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
             }
+            else
+            {
+                grdDailySalesTotal.DataSource = null;
+            }
         }
 
         private void BindTF(DataGridView grd, DataTable dt)
@@ -233,13 +263,25 @@ namespace AllCashUFormsApp.View.Page
 
                 BindGridView(grd, newTable);
             }
+            else
+            {
+                grd.DataSource = null;
+            }
         }
 
         private void BindGridView(DataGridView grd, DataTable dt)
         {
             grd.DataSource = null;
-            grd.DataSource = dt;
+            if (dt.Rows.Count > 0)
+            {
+                grd.DataSource = dt;
+            }
             grd.ReadOnly = true;
+
+            if (grd.DataSource != null && grd.Name == grdDailySales.Name)
+            {
+                grd.Columns[3].Width = 250;              
+            }
         }
 
         private void ClearData()
@@ -256,6 +298,417 @@ namespace AllCashUFormsApp.View.Page
             bu.tbl_SaleBranchSummary = null;
         }
 
+        private void CloseEndDayNew()
+        {
+            try
+            {
+                string docno = string.Empty;
+                var cDate = DateTime.Now;
+
+                //edit by adisorn for check VE customer 08/11/2021--------------------------
+                bool endday = true;
+                string docDate = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
+                var verifyVECust = bu.VerifyFlagBill(docDate);
+
+                if (verifyVECust.Rows.Count > 0)
+                {
+                    string cfMsg = "พบร้านค้าที่ยังไม่ออกใบกำกับภาษีเต็มรูป!!! \n";
+                    cfMsg += "- กด 'Yes' เพื่อปิดวัน \n- กด 'No' เพื่อออกใบกำกับภาษี \n" + "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string title = "ยืนยันการปิดวัน";
+
+                    if (cfMsg.ConfirmMessageBox(title))
+                        endday = true; //Yes
+                    else
+                        endday = false; //No
+
+                    if (endday == false)
+                    {
+                        frmVerifyCustomer frm = new frmVerifyCustomer();
+                        frm.PreparefrmVerifyCustomer(verifyVECust);
+                        frm.ShowDialog();
+                        return;
+                    }
+                }
+                else
+                {
+                    string cfMsg = "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string title = "ยืนยันการปิดวัน";
+                    bool confirmMsg = cfMsg.ConfirmMessageBox(title);
+                    if (confirmMsg)
+                        endday = true;
+                    else
+                        endday = false;
+                }
+
+                if (endday == false)
+                    return;
+
+                Cursor.Current = Cursors.WaitCursor;
+                List<string> customerIDList = new List<string>();
+
+                bu = new EndDay();
+                int ret = 0;
+
+                allUomSet = bu.GetUOMSet();
+                allProduct = bu.GetProduct();
+                allProductPrice = bu.GetProductPriceGroup();
+                allPOMaster = bu.GetAllPOMaster(dtpDocDate.Value);
+                allBranchWH = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType == 1);
+                allPODetails = bu.GetAllPODetails(dtpDocDate.Value);
+                allBranch = bu.GetBranch();
+                allPRMaster = bu.GetAllPRMaster(dtpDocDate.Value);
+
+                //PO Tab--------------------------------------------------------------------------------------
+                List<int> retList = new List<int>();
+                if (grdDailySales.Rows.Count > 0)
+                {
+                    var allPOEndDay = bu.GetEndDay_PO(dtpDocDate.Value, "IV", true, false);
+                    List<string> whidList = new List<string>();
+
+                    for (int i = 0; i < grdDailySales.Rows.Count; i++)
+                    {
+                        var _cell1 = grdDailySales.Rows[i].Cells[1];
+                        var cell7 = grdDailySales.Rows[i].Cells[7];
+
+                        if (_cell1.IsNotNullOrEmptyCell() && (cell7.Value == null || string.IsNullOrEmpty(cell7.Value.ToString())))
+                        {
+                            string _whid = _cell1.Value.ToString();
+                            if (whidList.All(x => x != _whid))
+                            {
+                                whidList.Add(_whid);
+                            }
+                        }
+                    }
+
+
+                    Dictionary<string, List<string>> updatePOList = new Dictionary<string, List<string>>();
+                    Dictionary<string, string> fixEndDayList = new Dictionary<string, string>();
+                    var tbl_IVDetailList = new List<tbl_IVDetail>();
+                    List<int> ivMasterFlag = new List<int>();
+                    int index = 0;
+                    string tmpDocNo = "";
+
+                    foreach (var _whid in whidList)
+                    {
+                        var tbl_IVMaster = new tbl_IVMaster();
+                        if (index == 0)
+                        {
+                            tbl_IVMaster = PreparePOInvMasters(_whid, allPOEndDay);
+                            tmpDocNo = tbl_IVMaster.DocNo;
+                        }
+                        else
+                            tbl_IVMaster.DocNo = tmpDocNo;
+
+                        if (index > 0)
+                        {
+                            int subAmt = tbl_IVMaster.DocNo.Length - 4;
+                            var tmp = tbl_IVMaster.DocNo.Substring(subAmt, 4);
+                            var tmpNo = Convert.ToInt32(tmp) + index;
+                            var preFix = tbl_IVMaster.DocNo.Substring(0, subAmt);
+                            var runningNo = "";
+                            if (tmpNo.ToString().Length == 3)
+                            {
+                                runningNo = "0";
+                            }
+                            else if (tmpNo.ToString().Length == 2)
+                            {
+                                runningNo = "00";
+                            }
+                            else if (tmpNo.ToString().Length == 1)
+                            {
+                                runningNo = "000";
+                            }
+
+                            runningNo = runningNo + tmpNo.ToString();
+                            tbl_IVMaster.DocNo = preFix + runningNo;
+                            tbl_IVMaster = PreparePOInvMasters(_whid, allPOEndDay, tbl_IVMaster.DocNo);
+                        }    
+
+                        ClearData();
+                        bu.tbl_IVMaster = tbl_IVMaster;
+
+                        ivMasterFlag.Add(bu.PerformUpdateData());
+
+                        if (bu.tbl_ArCustomers.Any(x => x.CustomerID == tbl_IVMaster.CustomerID))
+                        {
+                            customerIDList.Add(tbl_IVMaster.CustomerID);
+                        }
+
+                        var docNos = tempUpdateDocRef.Distinct().FirstOrDefault(x => x.Key == tbl_IVMaster.DocNo).Value;
+                        PreparePOInvDetails(docNos, tbl_IVMaster.DocNo);
+
+                        List<tbl_IVDetail> ivDTList = new List<tbl_IVDetail>();
+                        ivDTList = bu.tbl_IVDetails.GroupBy(a => new { a.ProductID }).Select(x => x.First()).ToList();
+
+                        foreach (var ivDT in ivDTList)
+                        {
+                            var tmp = bu.tbl_IVDetails.Where(x => x.ProductID == ivDT.ProductID).ToList();
+
+                            ivDT.OrderQty = tmp.Sum(x => x.OrderQty);
+                            ivDT.ReceivedQty = tmp.Sum(x => x.ReceivedQty);
+                            ivDT.RejectedQty = tmp.Sum(x => x.RejectedQty);
+                            ivDT.StockedQty = tmp.Sum(x => x.StockedQty);
+                            ivDT.LineDiscount = tmp.Sum(x => x.LineDiscount);
+                            ivDT.LineTotal = tmp.Sum(x => x.LineTotal);
+                        }
+
+                        tbl_IVDetailList.AddRange(ivDTList);
+                        updatePOList.Add(tbl_IVMaster.DocNo, docNos);
+                        fixEndDayList.Add(_whid, tbl_IVMaster.DocNo);
+
+                        index++;
+                    }
+
+                    if (ivMasterFlag.All(x => x == 1))
+                    {
+                        if (tbl_IVDetailList.Count > 0)
+                        {
+                            bu.tbl_IVDetails = tbl_IVDetailList;
+                        }
+
+                        var _ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
+
+                        if (_ret == 1)
+                        {
+                            string sql = "";
+                            foreach (KeyValuePair<string, List<string>> item in updatePOList)
+                            {
+                                string _docNos = "";
+                                int i = 0;
+
+                                foreach (var no in item.Value)
+                                {
+                                    if (i == item.Value.Count - 1)
+                                        _docNos += "'" + no + "' ";
+                                    else
+                                        _docNos += "'" + no + "', ";
+
+                                    i++;
+                                }
+
+                                sql += " UPDATE dbo.tbl_POMaster ";
+                                sql += " SET CustInvNO = '" + item.Key + "', ";
+                                sql += "    EdUser = '" + Helper.tbl_Users.Username + "', ";
+                                sql += "    EdDate = GETDATE(), ";
+                                sql += "    FlagSend = 0 ";
+                                sql += " WHERE DocNo IN (" + _docNos + ") ";
+                            }
+
+
+                            if (!string.IsNullOrEmpty(sql))
+                                _ret = bu.UpdatePOMasterSQL(sql);
+
+                            foreach (var item in fixEndDayList)
+                            {
+                                bu.FixIVDetails(item.Value, item.Key, dtpDocDate.Value); //For fix bug when end day iv details is wrong 02/11/2021 by sailom
+                            }
+
+                            retList.Add(_ret);
+
+                            ret = retList.All(x => x == 1) ? 1 : 0;
+                        }
+                    }
+
+                    customerIDList = customerIDList.Distinct().ToList();
+                    //PO Tab--------------------------------------------------------------------------------------
+                }
+
+                //OD Tab-----------------------------------------------------
+
+                retList = new List<int>();
+                if (grdOD.Rows.Count > 0)
+                {
+                    List<string> docNoList = new List<string>();
+
+                    for (int i = 0; i < grdOD.Rows.Count; i++)
+                    {
+                        var _cell0 = grdOD.Rows[i].Cells[0];
+                        var _cell8 = grdOD.Rows[i].Cells[8];
+                        if (_cell8.IsNotNullOrEmptyCell())
+                        {
+                            string _docNo = _cell8.Value.ToString();
+                            if (docNoList.All(x => x != _docNo))
+                                docNoList.Add(_docNo);
+                        }
+                    }
+
+                    string sql = "";
+
+                    foreach (var docNo in docNoList)
+                    {
+                        var tbl_IVMaster = new tbl_IVMaster();
+                        tbl_IVMaster = PrepareODInvMaster(docNo);
+
+                        ClearData();
+                        bu.tbl_IVMaster = tbl_IVMaster;
+
+                        PreparePOInvDetails(new List<string> { docNo }, tbl_IVMaster.DocNo);
+
+                        //var _ret = bu.UpdateData();
+                        var _ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
+
+                        if (_ret == 1)
+                        {
+                            bu.tbl_POMaster = allPOMaster.FirstOrDefault(x => x.DocNo == docNo);// bu.GetPOMaster(docNo);
+                            bu.tbl_POMaster.DocRef = tbl_IVMaster.DocNo;
+                            bu.tbl_POMaster.FlagSend = false;
+
+                            //_ret = bu.UpdatePOMaster(bu.tbl_POMaster);
+
+                            //edit by sailom 14-06-2021
+
+                            sql += " UPDATE dbo.tbl_POMaster ";
+                            sql += " SET DocRef = '" + tbl_IVMaster.DocNo + "', ";
+                            sql += "    EdUser = '" + Helper.tbl_Users.Username + "', ";
+                            sql += "    EdDate = GETDATE(), ";
+                            sql += "    FlagSend = 0 ";
+                            sql += " WHERE DocNo = '" + bu.tbl_POMaster.DocNo + "' ";
+                        }
+
+                        retList.Add(_ret);
+                    }
+
+                    ret = retList.All(x => x == 1) ? 1 : 0;
+
+                    if (ret == 1 && !string.IsNullOrEmpty(sql))
+                    {
+                        ret = bu.UpdatePOMasterSQL(sql);
+                    }
+                }
+
+                //OD Tab-----------------------------------------------------
+
+                //RL Tab----------------------------------------------------
+
+                retList = new List<int>();
+                if (grdRL.Rows.Count > 0)
+                {
+                    var dt_rl = bu.GetEndDay_PRDetails(dtpDocDate.Value, "RL");
+                    var tmpRLs = dt_rl.AsEnumerable().ToList().Select(x => new { DocNo = x.Field<string>("เลขที่อ้างอิง"), WHID = x.Field<string>("VAN") }).ToList();
+                    tmpRLs = tmpRLs.GroupBy(x => new { x.DocNo }).Select(a => a.First()).ToList();
+
+                    foreach (var rlItem in tmpRLs)
+                    {
+                        var tbl_PRMaster = PreparePRInvMaster("RL", rlItem.DocNo, rlItem.WHID);
+                        if (tbl_PRMaster != null)
+                        {
+                            bu.tbl_IVMaster = new tbl_IVMaster();
+                            bu.tbl_IVDetails = new List<tbl_IVDetail>();
+                            bu.tbl_POMaster = new tbl_POMaster();
+                            bu.tbl_PODetails = new List<tbl_PODetail>();
+                            bu.tbl_PRDetails = new List<tbl_PRDetail>();
+                            bu.tbl_PRMaster = tbl_PRMaster;
+                            //var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+                            var _ret = bu.PerformUpdateData();
+
+                            retList.Add(_ret);
+                        }
+                    }
+
+                    ret = retList.All(x => x == 1) ? 1 : 0;
+                }
+
+                //RL Tab----------------------------------------------------
+
+                //RB Tab----------------------------------------------------
+
+                retList = new List<int>();
+                if (grdRB.Rows.Count > 0)
+                {
+                    var dt_rb = bu.GetEndDay_PRDetails(dtpDocDate.Value, "RB");
+
+                    var tmpRBs = dt_rb.AsEnumerable().ToList().Select(x => new { DocNo = x.Field<string>("เลขที่อ้างอิง"), WHID = x.Field<string>("VAN") }).ToList();
+                    tmpRBs = tmpRBs.GroupBy(x => new { x.DocNo }).Select(a => a.First()).ToList();
+
+                    foreach (var rbItem in tmpRBs)
+                    {
+                        var tbl_PRMaster = PreparePRInvMaster("RB", rbItem.DocNo, rbItem.WHID);
+                        if (tbl_PRMaster != null)
+                        {
+                            bu.tbl_IVMaster = new tbl_IVMaster();
+                            bu.tbl_IVDetails = new List<tbl_IVDetail>();
+                            bu.tbl_POMaster = new tbl_POMaster();
+                            bu.tbl_PODetails = new List<tbl_PODetail>();
+                            bu.tbl_PRDetails = new List<tbl_PRDetail>();
+                            bu.tbl_PRMaster = tbl_PRMaster;
+
+                            //var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+                            var _ret = bu.PerformUpdateData();
+                            retList.Add(_ret);
+                        }
+                    }
+
+                    ret = retList.All(x => x == 1) ? 1 : 0;
+                }
+
+                //RB Tab----------------------------------------------------
+
+                if (ret == 1)
+                {
+                    ClearData();
+
+                    PrepareSaleBranchSummary(cDate);
+
+                    ret = bu.UpdateSaleBranchSummaryData(bu.tbl_SaleBranchSummary);
+
+                    if (ret == 1)
+                    {
+                        Cursor.Current = Cursors.Default;
+
+                        //update customer SAP code-----------------------
+                        List<bool> retCustList = new List<bool>();
+                        foreach (var customerID in customerIDList)
+                        {
+                            bool result = bu.UpdateCustomerSAPCode(customerID);
+                            retCustList.Add(result);
+                        }
+                        //update customer SAP code-----------------------
+
+                        if (retCustList.All(x => x == true))
+                        {
+                            //show popup close end day success.
+                            string msg = "ปิดวันเรียบร้อยแล้ว";
+                            msg.ShowInfoMessage();
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+
+                            var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
+
+                            //FormHelper.CreateAndSendMail("พบการ ปิดวัน", bu.tbl_Branchs[0].BranchName, cdate);
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+
+                        }
+
+                        BindEndDayData(dtpDocDate.Value, true);
+
+                        var item = bu.GetSaleBranchSummary(x => !x.FlagDel && x.SaleDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString());
+                        if (item != null)
+                            btnEndDay.Enabled = false;
+                        else
+                            btnEndDay.Enabled = true;
+
+                        btnCancelEndDay.Enabled = !btnEndDay.Enabled;
+                    }
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                    this.ShowProcessErr();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
+        }
+
         private void CloseEndDay()
         {
             try
@@ -263,10 +716,68 @@ namespace AllCashUFormsApp.View.Page
                 string docno = string.Empty;
                 var cDate = DateTime.Now;
 
-                string cfMsg = "คุณจะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก?";
-                string title = "ยืนยันการปิดวัน!!";
-                if (!cfMsg.ConfirmMessageBox(title))
+                //edit by adisorn for check VE customer 08/11/2021--------------------------
+                bool endday = true;
+                string docDate = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
+                var verifyVECust = bu.VerifyFlagBill(docDate);
+
+                if (verifyVECust.Rows.Count > 0)
+                {
+                    string cfMsg = "พบร้านค้าที่ยังไม่ออกใบกำกับภาษีเต็มรูป!!! \n";
+                    cfMsg += "- กด 'Yes' เพื่อปิดวัน \n- กด 'No' เพื่อออกใบกำกับภาษี \n" + "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string title = "ยืนยันการปิดวัน";
+
+                    if (cfMsg.ConfirmMessageBox(title))
+                        endday = true; //Yes
+                    else
+                        endday = false; //No
+
+                    if (endday == false)
+                    {
+                        //string _custID = verifyVECust.AsEnumerable().First().Field<string>("CustomerID");
+                        //var poMaster = bu.SelectCustomer_POMaster(_custID);
+                        //if (poMaster.Count > 0)
+                        //{
+                        frmVerifyCustomer frm = new frmVerifyCustomer();
+                        frm.PreparefrmVerifyCustomer(verifyVECust);
+                        frm.ShowDialog();
+                        return;
+                        //}
+                    }
+                }
+                else
+                {
+                    string cfMsg = "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string title = "ยืนยันการปิดวัน";
+                    bool confirmMsg = cfMsg.ConfirmMessageBox(title);
+                    if (confirmMsg)
+                        endday = true;
+                    else
+                        endday = false;
+                }
+
+                if (endday == false)
                     return;
+
+                //frmTabletSales frm = new frmTabletSales();
+                //frm.docTypeCode = poMaster[0].DocTypeCode;
+
+                //MainForm mfrm = null;
+                //foreach (Form f in Application.OpenForms)
+                //{
+                //    if (f.Name.ToLower() == "mainform") //(f.Name == "frmOD")
+                //    {
+                //        mfrm = (MainForm)f;
+                //    }
+                //}
+
+                //frm.MdiParent = mfrm;
+                //frm.StartPosition = FormStartPosition.CenterParent;
+                //frm.WindowState = FormWindowState.Minimized;
+                //frm.Show();
+                //frm.WindowState = FormWindowState.Maximized;
+                //frm.BindTabletSalesData(poMaster[0].DocNo);
+                //return;
 
                 Cursor.Current = Cursors.WaitCursor;
                 List<string> customerIDList = new List<string>();
@@ -345,10 +856,13 @@ namespace AllCashUFormsApp.View.Page
 
                         bu.tbl_IVDetails = ivDTList;
 
-                        var _ret = bu.UpdateData();
+                        //var _ret = bu.UpdateData();
+                        var _ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
 
                         if (_ret == 1)
                         {
+                            string sql = "";
+
                             foreach (string poDocNo in docNos)
                             {
                                 bu.tbl_POMaster = allPOMaster.FirstOrDefault(x => x.DocNo == poDocNo && x.DocDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString()); //Last edit at 24-05-2021 by sailom.k  // bu.GetPOMaster(poDocNo);
@@ -358,15 +872,39 @@ namespace AllCashUFormsApp.View.Page
                                 //_ret = bu.UpdatePOCustInvNO(bu.tbl_POMaster);
 
                                 //edit by sailom 14-06-2021
-                                string sql = "";
-                                sql += " UPDATE dbo.tbl_POMaster ";
-                                sql += " SET CustInvNO = '" + tbl_IVMaster.DocNo + "', ";
-                                sql += "    EdUser = '" + tbl_IVMaster.EdUser + "', ";
-                                sql += "    EdDate = GETDATE(), ";
-                                sql += "    FlagSend = 0 ";
-                                sql += " WHERE DocNo = '" + bu.tbl_POMaster.DocNo + "' ";
-                                _ret = bu.UpdatePOMasterSQL(sql);
+
+                                //sql += " UPDATE dbo.tbl_POMaster ";
+                                //sql += " SET CustInvNO = '" + tbl_IVMaster.DocNo + "', ";
+                                //sql += "    EdUser = '" + Helper.tbl_Users.Username + "', ";
+                                //sql += "    EdDate = GETDATE(), ";
+                                //sql += "    FlagSend = 0 ";
+                                //sql += " WHERE DocNo = '" + bu.tbl_POMaster.DocNo + "' ";
                             }
+
+                            string _docNos = "";
+                            int i = 0;
+                            foreach (var no in docNos)
+                            {
+                                if (i == docNos.Count - 1)
+                                    _docNos += "'" + no + "' ";
+                                else
+                                    _docNos += "'" + no + "', ";
+
+                                i++;
+                            }
+
+                            sql += " UPDATE dbo.tbl_POMaster ";
+                            sql += " SET CustInvNO = '" + tbl_IVMaster.DocNo + "', ";
+                            sql += "    EdUser = '" + Helper.tbl_Users.Username + "', ";
+                            sql += "    EdDate = GETDATE(), ";
+                            sql += "    FlagSend = 0 ";
+                            sql += " WHERE DocNo IN (" + _docNos + ") ";
+
+                            if (!string.IsNullOrEmpty(sql))
+                                _ret = bu.UpdatePOMasterSQL(sql);
+
+                            bu.FixIVDetails(tbl_IVMaster.DocNo, tbl_IVMaster.WHID, dtpDocDate.Value); //For fix bug when end day iv details is wrong 02/11/2021 by sailom
+
                         }
 
                         retList.Add(_ret);
@@ -398,6 +936,8 @@ namespace AllCashUFormsApp.View.Page
                         }
                     }
 
+                    string sql = "";
+
                     foreach (var docNo in docNoList)
                     {
                         var tbl_IVMaster = new tbl_IVMaster();
@@ -408,7 +948,8 @@ namespace AllCashUFormsApp.View.Page
 
                         PreparePOInvDetails(new List<string> { docNo }, tbl_IVMaster.DocNo);
 
-                        var _ret = bu.UpdateData();
+                        //var _ret = bu.UpdateData();
+                        var _ret = bu.PerformUpdateData(); //edit by sailom .k 14/12/2021
 
                         if (_ret == 1)
                         {
@@ -419,21 +960,24 @@ namespace AllCashUFormsApp.View.Page
                             //_ret = bu.UpdatePOMaster(bu.tbl_POMaster);
 
                             //edit by sailom 14-06-2021
-                            string sql = "";
+                            
                             sql += " UPDATE dbo.tbl_POMaster ";
                             sql += " SET DocRef = '" + tbl_IVMaster.DocNo + "', ";
-                            sql += "    EdUser = '" + tbl_IVMaster.EdUser + "', ";
+                            sql += "    EdUser = '" + Helper.tbl_Users.Username + "', ";
                             sql += "    EdDate = GETDATE(), ";
                             sql += "    FlagSend = 0 ";
                             sql += " WHERE DocNo = '" + bu.tbl_POMaster.DocNo + "' ";
-                            _ret = bu.UpdatePOMasterSQL(sql);
-
                         }
 
                         retList.Add(_ret);
                     }
 
                     ret = retList.All(x => x == 1) ? 1 : 0;
+
+                    if (ret == 1 && !string.IsNullOrEmpty(sql))
+                    {
+                        ret = bu.UpdatePOMasterSQL(sql);
+                    } 
                 }
 
                 //OD Tab-----------------------------------------------------
@@ -452,8 +996,14 @@ namespace AllCashUFormsApp.View.Page
                         var tbl_PRMaster = PreparePRInvMaster("RL", rlItem.DocNo, rlItem.WHID);
                         if (tbl_PRMaster != null)
                         {
+                            bu.tbl_IVMaster = new tbl_IVMaster();
+                            bu.tbl_IVDetails = new List<tbl_IVDetail>();
+                            bu.tbl_POMaster = new tbl_POMaster();
+                            bu.tbl_PODetails = new List<tbl_PODetail>();
+                            bu.tbl_PRDetails = new List<tbl_PRDetail>();
                             bu.tbl_PRMaster = tbl_PRMaster;
-                            var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+                            //var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+                            var _ret = bu.PerformUpdateData();
 
                             retList.Add(_ret);
                         }
@@ -479,8 +1029,15 @@ namespace AllCashUFormsApp.View.Page
                         var tbl_PRMaster = PreparePRInvMaster("RB", rbItem.DocNo, rbItem.WHID);
                         if (tbl_PRMaster != null)
                         {
+                            bu.tbl_IVMaster = new tbl_IVMaster();
+                            bu.tbl_IVDetails = new List<tbl_IVDetail>();
+                            bu.tbl_POMaster = new tbl_POMaster();
+                            bu.tbl_PODetails = new List<tbl_PODetail>();
+                            bu.tbl_PRDetails = new List<tbl_PRDetail>();
                             bu.tbl_PRMaster = tbl_PRMaster;
-                            var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+
+                            //var _ret = bu.UpdatePRMaster(bu.tbl_PRMaster);
+                            var _ret = bu.PerformUpdateData();
                             retList.Add(_ret);
                         }
                     }
@@ -516,6 +1073,15 @@ namespace AllCashUFormsApp.View.Page
                             //show popup close end day success.
                             string msg = "ปิดวันเรียบร้อยแล้ว";
                             msg.ShowInfoMessage();
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+
+                            var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
+
+                            //FormHelper.CreateAndSendMail("พบการ ปิดวัน", bu.tbl_Branchs[0].BranchName, cdate);
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+
                         }
 
                         BindEndDayData(dtpDocDate.Value, true);
@@ -653,7 +1219,7 @@ namespace AllCashUFormsApp.View.Page
                         if (ret == 1)
                         {
                             var tbl_POMasters = new List<tbl_POMaster>();
-                            tbl_POMasters =  allPOMaster.Where(x => x.DocTypeCode.Trim() == "OD" && x.DocRef.Trim() == docNo.Trim()).ToList();// bu.GetPOMaster(x => x.DocTypeCode.Trim() == "OD" && x.DocRef.Trim() == docNo.Trim());
+                            tbl_POMasters = allPOMaster.Where(x => x.DocTypeCode.Trim() == "OD" && x.DocRef.Trim() == docNo.Trim()).ToList();// bu.GetPOMaster(x => x.DocTypeCode.Trim() == "OD" && x.DocRef.Trim() == docNo.Trim());
                             if (tbl_POMasters.Count > 0)
                             {
                                 List<int> _letODs = new List<int>();
@@ -776,8 +1342,15 @@ namespace AllCashUFormsApp.View.Page
                         {
                             //show popup close end day success.
                             Cursor.Current = Cursors.Default;
-                            string msg = "ยกเลิกปิดวัน สำเร็จ!!!";
+                            string msg = "พบการ ยกเลิกปิดวัน สำเร็จ!!!";
                             msg.ShowInfoMessage();
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
+                            var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
+
+                            //FormHelper.CreateAndSendMail("ยกเลิกปิดวัน", bu.tbl_Branchs[0].BranchName, cdate);
+
+                            //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
 
                             BindEndDayData(dtpDocDate.Value, true);
 
@@ -808,7 +1381,7 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private tbl_IVMaster PreparePOInvMasters(string whid, DataTable dt = null)
+        private tbl_IVMaster PreparePOInvMasters(string whid, DataTable dt = null, string _docNo = "")
         {
             tempUpdateDocRef = new Dictionary<string, List<string>>();
 
@@ -890,7 +1463,8 @@ namespace AllCashUFormsApp.View.Page
             var iv = bu.tbl_IVMaster;
 
             string custInvNO = "";
-            custInvNO = bu.GenDocNo("V", whid);
+            //custInvNO = bu.GenDocNo("V", whid);
+            custInvNO = !string.IsNullOrEmpty(_docNo) ? _docNo : bu.GenDocNo("V", whid);
 
             if (tempUpdateDocRef.Count(x => x.Key == custInvNO) == 0)
                 tempUpdateDocRef.Add(custInvNO, docNoList.Distinct().ToList());
@@ -913,7 +1487,7 @@ namespace AllCashUFormsApp.View.Page
                 iv.EmpID = saleEmpID;
                 iv.SaleEmpID = saleEmpID;
 
-                var emp = bu.GetEmployee(x => x.EmpID == saleEmpID);
+                var emp = allEmployee.Count > 0 ? allEmployee : bu.GetEmployee(x => x.EmpID == saleEmpID);
                 if (emp != null && emp.Count > 0)
                 {
                     custName = string.Join(" ", emp.First().TitleName, emp.First().FirstName, emp.First().LastName);
@@ -925,7 +1499,7 @@ namespace AllCashUFormsApp.View.Page
                 iv.SaleEmpID = "";
             }
             iv.SalAreaID = "";
-            iv.Address = bu.GetBranch().First().Address;
+            iv.Address = bu.tbl_Branchs.Count > 0 ? bu.tbl_Branchs.First().Address : bu.GetBranch().First().Address;
             iv.ContactName = "";
             iv.ContactTel = "";
             iv.Shipto = "";
@@ -987,7 +1561,7 @@ namespace AllCashUFormsApp.View.Page
         private void PreparePOInvDetails(List<string> docNos, string ivDocNo)
         {
             List<tbl_PODetail> poDTList = new List<tbl_PODetail>();
-            
+
             foreach (var docNo in docNos)
             {
                 var _tbl_PODetails = allPODetails.Where(x => x.DocNo == docNo).ToList(); // bu.GetPODetails(docNo);
@@ -1254,7 +1828,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchBranchCode_Click(object sender, EventArgs e)
         {
-            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกสาขา/ซุ้ม");
+            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
         }
 
         private void btnSearchEndDay_Click(object sender, EventArgs e)
@@ -1268,6 +1842,12 @@ namespace AllCashUFormsApp.View.Page
                 btnEndDay.Enabled = true;
 
             btnCancelEndDay.Enabled = !btnEndDay.Enabled;
+
+            if (item == null && grdDailySales.RowCount == 0)
+            {
+                btnEndDay.Enabled = false;
+                btnCancelEndDay.Enabled = btnEndDay.Enabled;
+            }
 
             MemoryManagement.FlushMemory();
         }
@@ -1285,6 +1865,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnEndDay_Click(object sender, EventArgs e)
         {
             CloseEndDay();
+            //CloseEndDayNew();
 
             MemoryManagement.FlushMemory();
         }
@@ -1294,6 +1875,13 @@ namespace AllCashUFormsApp.View.Page
             CancelEndDay();
 
             MemoryManagement.FlushMemory();
+        }
+
+        private void grd_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            var grd = (DataGridView)sender;
+            if (grd != null && grd.DataSource != null)
+                grd.SetRowPostPaint(sender, e, this.Font);
         }
 
         #endregion

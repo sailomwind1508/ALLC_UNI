@@ -43,7 +43,15 @@ namespace AllCashUFormsApp.View.Page
             }
 
             grdProductUom.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            SetDefaultGridViewEvent(grdProductUom);
         }
+
+        public void SetDefaultGridViewEvent(DataGridView grd)
+        {
+            grd.RowsDefaultCellStyle.BackColor = Color.White;
+            grd.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
+        }
+
         private void OpenPanelEdit(bool flagEnable)
         {
             pnlEdit.OpenControl(flagEnable, PanelEditControls.ToArray());

@@ -24,6 +24,7 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_ProductFlavour().SelectAll();
         }
+
         public List<tbl_ProductUom> GetProductUOM(Func<tbl_ProductUom, bool> condition = null)
         {
             if (condition != null)
@@ -32,7 +33,6 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_ProductUom().SelectAll();
         }
 
-
         public List<tbl_Product> GetProductEntity(Func<tbl_Product, bool> condition = null)
         {
             if (condition != null)
@@ -40,7 +40,6 @@ namespace AllCashUFormsApp.Controller
             else
                 return new tbl_Product().SelectAllEntity();
         }
-
 
         public List<tbl_ProductPriceGroup> GetProductPriceGroup(Func<tbl_ProductPriceGroup, bool> predicate = null)
         {
@@ -101,14 +100,17 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_Product.Delete();
         }
+
         public int RemoveData(tbl_ProductUomSet tbl_ProductUomSet)
         {
             return tbl_ProductUomSet.Delete();
         }
+
         public int RemoveData(tbl_ProductPriceGroup tbl_ProductPriceGroup)
         {
             return tbl_ProductPriceGroup.Delete();
         }
+
         public DataTable GetDataTable(bool isPopup = true)
         {
             try
@@ -121,6 +123,7 @@ namespace AllCashUFormsApp.Controller
                 return null;
             }
         }
+
         //public DataTable GetDataTable(bool isPopup = true)
         //{
         //    try
@@ -214,6 +217,7 @@ namespace AllCashUFormsApp.Controller
 
             return dt;
         }
+
         public DataTable GetProductTable(Func<tbl_Product, bool> func)
         {
             DataTable dt = new DataTable();
@@ -222,6 +226,7 @@ namespace AllCashUFormsApp.Controller
             dt = tbl_Products.ToDataTable();
             return dt;
         }
+
         public DataTable GetPrdTable(Func<tbl_Product, bool> func = null)
         {
             DataTable dt = new DataTable();
@@ -292,6 +297,7 @@ namespace AllCashUFormsApp.Controller
           
             return dt;
         }
+
         //public DataTable GetPrdPriceGroupTable(Func<tbl_ProductUomSet, bool> func = null)
         //{
         //    DataTable dt = new DataTable();
@@ -333,21 +339,40 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_Product()).GetProductGroupPriceData(_params);
         }
+
         public int UpdateData(tbl_ProductPriceGroup tbl_ProductPriceGroup)
         {
             return tbl_ProductPriceGroup.Update();
         }
+
         public int UpdateData(tbl_ProductUomSet tbl_ProductUomSet)
         {
             return tbl_ProductUomSet.Update();
         }
-        public DataTable GetProductView(int flagDel, int ProductGroupID, int ProductSubGroupID, string Text)
-        {
-            return new tbl_Product().GetProductView(flagDel,ProductGroupID,ProductSubGroupID,Text);
-        }
+
         public DataTable GetProductViewCheck(string ProductID)
         {
             return new tbl_Product().GetProductViewCheck(ProductID);
+        }
+
+        public DataTable proc_tbl_Product_Data(Dictionary<string, object> _params)
+        {
+            return (new tbl_Product()).proc_tbl_Product_Data(_params);
+        }
+
+        public List<tbl_SaleType> GetSaleType()
+        {
+            return new tbl_SaleType().SelectAll();
+        }
+
+        public List<tbl_Product> SelectProductList(string _ProductID)
+        {
+            return (new tbl_Product()).SelectProductList(_ProductID);
+        }
+
+        public List<tbl_Product> SelectSingleProduct()//Modified By ADISORN 29/12/2564
+        {
+            return (new tbl_Product()).SelectSingleProduct();
         }
     }
 }

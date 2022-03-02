@@ -26,7 +26,7 @@ namespace AllCashUFormsApp.Model
         {
             throw new UnintentionalCodeFirstException();
         }
-
+    
         public virtual DbSet<tbl_AdmAuthorize> tbl_AdmAuthorize { get; set; }
         public virtual DbSet<tbl_AdmControlList> tbl_AdmControlList { get; set; }
         public virtual DbSet<tbl_AdmFormList> tbl_AdmFormList { get; set; }
@@ -64,6 +64,7 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_error_logs> tbl_error_logs { get; set; }
         public virtual DbSet<tbl_ErrorLog> tbl_ErrorLog { get; set; }
         public virtual DbSet<tbl_Expense> tbl_Expense { get; set; }
+        public virtual DbSet<tbl_HQ_Promotion> tbl_HQ_Promotion { get; set; }
         public virtual DbSet<tbl_HQ_Promotion_Hit> tbl_HQ_Promotion_Hit { get; set; }
         public virtual DbSet<tbl_HQ_Promotion_Hit_Temp> tbl_HQ_Promotion_Hit_Temp { get; set; }
         public virtual DbSet<tbl_HQ_Promotion_Master> tbl_HQ_Promotion_Master { get; set; }
@@ -100,6 +101,7 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_PayDetail> tbl_PayDetail { get; set; }
         public virtual DbSet<tbl_PayMaster> tbl_PayMaster { get; set; }
         public virtual DbSet<tbl_PODetail> tbl_PODetail { get; set; }
+        public virtual DbSet<tbl_PODetail_PRE> tbl_PODetail_PRE { get; set; }
         public virtual DbSet<tbl_POMaster> tbl_POMaster { get; set; }
         public virtual DbSet<tbl_POMaster_PRE> tbl_POMaster_PRE { get; set; }
         public virtual DbSet<tbl_Position> tbl_Position { get; set; }
@@ -131,6 +133,7 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_PromotionProduct> tbl_PromotionProduct { get; set; }
         public virtual DbSet<tbl_PromotionReward> tbl_PromotionReward { get; set; }
         public virtual DbSet<tbl_PromotionVanProduct> tbl_PromotionVanProduct { get; set; }
+        public virtual DbSet<tbl_RemainingStock> tbl_RemainingStock { get; set; }
         public virtual DbSet<tbl_Roles> tbl_Roles { get; set; }
         public virtual DbSet<tbl_RouteOnsite> tbl_RouteOnsite { get; set; }
         public virtual DbSet<tbl_SalArea> tbl_SalArea { get; set; }
@@ -141,6 +144,7 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_SaleExpenseDetail> tbl_SaleExpenseDetail { get; set; }
         public virtual DbSet<tbl_SaleExpenseMaster> tbl_SaleExpenseMaster { get; set; }
         public virtual DbSet<tbl_SalesTrace> tbl_SalesTrace { get; set; }
+        public virtual DbSet<tbl_SaleType> tbl_SaleType { get; set; }
         public virtual DbSet<tbl_SaleYearTarget> tbl_SaleYearTarget { get; set; }
         public virtual DbSet<tbl_SendData> tbl_SendData { get; set; }
         public virtual DbSet<tbl_ShopType> tbl_ShopType { get; set; }
@@ -150,14 +154,23 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_SimOrderItem> tbl_SimOrderItem { get; set; }
         public virtual DbSet<tbl_TargetMaster> tbl_TargetMaster { get; set; }
         public virtual DbSet<tbl_TL_ArCustomer> tbl_TL_ArCustomer { get; set; }
+        public virtual DbSet<tbl_TL_ArCustomer_HIS> tbl_TL_ArCustomer_HIS { get; set; }
         public virtual DbSet<tbl_TL_ArCustomerShelf> tbl_TL_ArCustomerShelf { get; set; }
+        public virtual DbSet<tbl_TL_ArCustomerShelf_HIS> tbl_TL_ArCustomerShelf_HIS { get; set; }
         public virtual DbSet<tbl_TL_CustomerCode> tbl_TL_CustomerCode { get; set; }
+        public virtual DbSet<tbl_TL_CustomerCode_HIS> tbl_TL_CustomerCode_HIS { get; set; }
         public virtual DbSet<tbl_TL_PODetail> tbl_TL_PODetail { get; set; }
+        public virtual DbSet<tbl_TL_PODetail_HIS> tbl_TL_PODetail_HIS { get; set; }
         public virtual DbSet<tbl_TL_POMaster> tbl_TL_POMaster { get; set; }
+        public virtual DbSet<tbl_TL_POMaster_HIS> tbl_TL_POMaster_HIS { get; set; }
         public virtual DbSet<tbl_TL_SalesTrace> tbl_TL_SalesTrace { get; set; }
+        public virtual DbSet<tbl_TL_SalesTrace_HIS> tbl_TL_SalesTrace_HIS { get; set; }
         public virtual DbSet<tbl_TL_Visit> tbl_TL_Visit { get; set; }
+        public virtual DbSet<tbl_TL_Visit_HIS> tbl_TL_Visit_HIS { get; set; }
         public virtual DbSet<tbl_TL_VisitShopImage> tbl_TL_VisitShopImage { get; set; }
+        public virtual DbSet<tbl_TL_VisitShopImage_HIS> tbl_TL_VisitShopImage_HIS { get; set; }
         public virtual DbSet<tbl_TL_VisitStock> tbl_TL_VisitStock { get; set; }
+        public virtual DbSet<tbl_TL_VisitStock_HIS> tbl_TL_VisitStock_HIS { get; set; }
         public virtual DbSet<tbl_TLDetail> tbl_TLDetail { get; set; }
         public virtual DbSet<tbl_TLMaster> tbl_TLMaster { get; set; }
         public virtual DbSet<tbl_TmpPRDetail> tbl_TmpPRDetail { get; set; }
@@ -165,12 +178,16 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_TRMaster> tbl_TRMaster { get; set; }
         public virtual DbSet<tbl_UpdateInvWH> tbl_UpdateInvWH { get; set; }
         public virtual DbSet<tbl_Users> tbl_Users { get; set; }
+        public virtual DbSet<tbl_VANStock> tbl_VANStock { get; set; }
         public virtual DbSet<tbl_VanType> tbl_VanType { get; set; }
         public virtual DbSet<tbl_Visit> tbl_Visit { get; set; }
         public virtual DbSet<tbl_VisitShopImage> tbl_VisitShopImage { get; set; }
         public virtual DbSet<tbl_VisitStock> tbl_VisitStock { get; set; }
         public virtual DbSet<tbl_Zone> tbl_Zone { get; set; }
+        public virtual DbSet<tblStMoveReport> tblStMoveReports { get; set; }
         public virtual DbSet<tbl_AmtArCustomer> tbl_AmtArCustomer { get; set; }
+        public virtual DbSet<tbl_AmtArCustomerDetail> tbl_AmtArCustomerDetail { get; set; }
+        public virtual DbSet<tbl_BranchWarehouseMapping> tbl_BranchWarehouseMapping { get; set; }
         public virtual DbSet<tbl_CfgFixedHolidays> tbl_CfgFixedHolidays { get; set; }
         public virtual DbSet<tbl_CfgFloatingHolidays> tbl_CfgFloatingHolidays { get; set; }
         public virtual DbSet<tbl_DelArCustomer> tbl_DelArCustomer { get; set; }
@@ -186,36 +203,6 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_VMIMaster> tbl_VMIMaster { get; set; }
         public virtual DbSet<tbl_VMISafety> tbl_VMISafety { get; set; }
         public virtual DbSet<tbl_VMISetting> tbl_VMISetting { get; set; }
-        public virtual DbSet<ArCustomerView> ArCustomerViews { get; set; }
-        public virtual DbSet<GetBranchWarehouse> GetBranchWarehouses { get; set; }
-        public virtual DbSet<GetCust_Routing> GetCust_Routing { get; set; }
-        public virtual DbSet<GetProduct> GetProducts { get; set; }
-        public virtual DbSet<GetPromotion> GetPromotions { get; set; }
-        public virtual DbSet<GetProvinceAndDistrict> GetProvinceAndDistricts { get; set; }
-        public virtual DbSet<GetSetting> GetSettings { get; set; }
-        public virtual DbSet<GetStock> GetStocks { get; set; }
-        public virtual DbSet<GetTwoBill> GetTwoBills { get; set; }
-        public virtual DbSet<GetTwoStock> GetTwoStocks { get; set; }
-        public virtual DbSet<ProductView> ProductViews { get; set; }
-        public virtual DbSet<ReceiveTabletDataView> ReceiveTabletDataViews { get; set; }
-        public virtual DbSet<ReceiveTabletDataView_Lastest> ReceiveTabletDataView_Lastest { get; set; }
-        public virtual DbSet<Rpt_DSR> Rpt_DSR { get; set; }
-        public virtual DbSet<Rpt_DSR_KPI> Rpt_DSR_KPI { get; set; }
-        public virtual DbSet<RPTStock> RPTStocks { get; set; }
-        public virtual DbSet<V_Acutal_Sales_By_VAN> V_Acutal_Sales_By_VAN { get; set; }
         public virtual DbSet<V_BankNote> V_BankNote { get; set; }
-        public virtual DbSet<V_CountVisit_UBON> V_CountVisit_UBON { get; set; }
-        public virtual DbSet<V_CUSTOMERDT> V_CUSTOMERDT { get; set; }
-        public virtual DbSet<V_CUSTOMERHD> V_CUSTOMERHD { get; set; }
-        public virtual DbSet<V_INVDT> V_INVDT { get; set; }
-        public virtual DbSet<V_INVHD> V_INVHD { get; set; }
-        public virtual DbSet<V_StockMovement> V_StockMovement { get; set; }
-        public virtual DbSet<V_SummaryRL> V_SummaryRL { get; set; }
-        public virtual DbSet<V_SummaryRL_Get> V_SummaryRL_Get { get; set; }
-        public virtual DbSet<V_SummaryRL_Stock> V_SummaryRL_Stock { get; set; }
-        public virtual DbSet<V_UBNDashboard> V_UBNDashboard { get; set; }
-        public virtual DbSet<tbl_PODetail_PRE> tbl_PODetail_PRE { get; set; }
-        public virtual DbSet<tbl_HQ_Promotion> tbl_HQ_Promotion { get; set; }
-        public virtual DbSet<tbl_AmtArCustomerDetail> tbl_AmtArCustomerDetail { get; set; }
     }
 }

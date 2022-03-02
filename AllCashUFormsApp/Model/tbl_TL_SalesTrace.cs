@@ -22,5 +22,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<decimal> Distance { get; set; }
         public Nullable<int> Status { get; set; }
         public string WHID { get; set; }
+        public Nullable<bool> FlagModify { get; set; }
     }
 }

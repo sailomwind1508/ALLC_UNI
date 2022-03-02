@@ -13,6 +13,7 @@ namespace AllCashUFormsApp.Controller
 {
     public class IV : BaseControl, IObject
     {
+        bool flagAll = false;
         private Func<tbl_POMaster, bool> _ivDocTypePredicate = null;
         public virtual Func<tbl_POMaster, bool> ivDocTypePredicate
         {
@@ -34,9 +35,12 @@ namespace AllCashUFormsApp.Controller
             {
                 DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
 
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@FlagAll", flagAll ? 1 : 0);
+
                 string sql = "proc_IV_GetDataTable";
 
-                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas); //edit by sailom .k 13/12/2021
 
                 //List<tbl_POMaster> tbl_POMaster = new List<tbl_POMaster>();
                 //tbl_POMaster = (new tbl_POMaster()).Select(ivDocTypePredicate, "IV");
@@ -106,10 +110,12 @@ namespace AllCashUFormsApp.Controller
 
             if (filters != null)
             {
-
+                flagAll = true;
+                dt = GetDataTable(); //edit by sailom .k 13/12/2021
             }
             else
             {
+                flagAll = false;
                 dt = GetDataTable();
             }
 

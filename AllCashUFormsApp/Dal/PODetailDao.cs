@@ -203,6 +203,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static void Insert(this tbl_PODetail tbl_PODetail, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PODetailDao=>InsertWithDB";
+            msg.WriteLog(null);
+
             try
             {
                 db.tbl_PODetail.Attach(tbl_PODetail);
@@ -212,10 +215,15 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(tbl_PODetail.GetType());
             }
+
+            msg = "end PODetailDao=>InsertWithDB";
+            msg.WriteLog(null);
         }
 
         public static void Insert(this List<tbl_PODetail> tbl_PODetails, DB_ALL_CASH_UNIEntities db)
         {
+            string msg = "start PODetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
             try
             {
                 foreach (var tbl_PODetail in tbl_PODetails)
@@ -228,10 +236,42 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(db.GetType());
             }
+
+            msg = "end PODetailDao=>InsertListWithDB";
+            msg.WriteLog(null);
+        }
+
+        public static int Insert(this tbl_PODetail tbl_PODetail)
+        {
+            string msg = "start PODetailDao=>Insert";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    db.tbl_PODetail.Attach(tbl_PODetail);
+                    db.tbl_PODetail.Add(tbl_PODetail);
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PODetail.GetType());
+            }
+
+            msg = "end PODetailDao=>Insert";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public static int Update(this List<tbl_PODetail> tbl_PODetails)
         {
+            string msg = "start PODetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             int ret = 0;
 
             try
@@ -276,11 +316,17 @@ namespace AllCashUFormsApp
                 //ex.WriteLog(tbl_PODetail);
             }
 
+            msg = "end PODetailDao=>UpdateList";
+            msg.WriteLog(null);
+
             return ret != 0 ? 1 : 0;
         }
 
         public static int UpdateEntity(this List<tbl_PODetail> tbl_PODetails, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
+            string msg = "start PODetailDao=>UpdateEntity";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -330,43 +376,8 @@ namespace AllCashUFormsApp
                 ret = 0;
             }
 
-            return ret;
-        }
-
-        /// <summary>
-        /// remove data
-        /// </summary>
-        /// <param name="tbl_PODetail"></param>
-        /// <returns></returns>
-        public static void Delete(this tbl_PODetail tbl_PODetail, DB_ALL_CASH_UNIEntities db)
-        {
-            try
-            {
-                db.Entry(tbl_PODetail).State = EntityState.Deleted;
-                db.tbl_PODetail.Remove(tbl_PODetail);
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PODetail.GetType());
-            }
-        }
-
-        public static int Insert(this tbl_PODetail tbl_PODetail)
-        {
-            int ret = 0;
-            try
-            {
-                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
-                {
-                    db.tbl_PODetail.Attach(tbl_PODetail);
-                    db.tbl_PODetail.Add(tbl_PODetail);
-                    ret = db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(tbl_PODetail.GetType());
-            }
+            msg = "end PODetailDao=>UpdateEntity";
+            msg.WriteLog(null);
 
             return ret;
         }
@@ -378,6 +389,9 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static int Update(this tbl_PODetail tbl_PODetail)
         {
+            string msg = "start PODetailDao=>Update";
+            msg.WriteLog(null);
+
             int ret = 0;
             try
             {
@@ -415,11 +429,40 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PODetail.GetType());
             }
 
+            msg = "end PODetailDao=>Update";
+            msg.WriteLog(null);
+
             return ret;
+        }
+
+        /// <summary>
+        /// remove data
+        /// </summary>
+        /// <param name="tbl_PODetail"></param>
+        /// <returns></returns>
+        public static void Delete(this tbl_PODetail tbl_PODetail, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PODetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
+
+            try
+            {
+                db.Entry(tbl_PODetail).State = EntityState.Deleted;
+                db.tbl_PODetail.Remove(tbl_PODetail);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PODetail.GetType());
+            }
+
+            msg = "end PODetailDao=>DeleteWithDB";
+            msg.WriteLog(null);
         }
 
         public static int Delete(this tbl_PODetail tbl_PODetail)
         {
+            string msg = "start PODetailDao=>Delete";
+            msg.WriteLog(null);
             int ret = 0;
             try
             {
@@ -435,7 +478,163 @@ namespace AllCashUFormsApp
                 ex.WriteLog(tbl_PODetail.GetType());
             }
 
+            msg = "end PODetailDao=>Delete";
+            msg.WriteLog(null);
+
             return ret;
         }
+
+
+        public static int BulkInsert(this List<tbl_PODetail> tbl_PODetails)
+        {
+            string msg = "start PODetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_PODetails.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_PODetail";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end PODetailDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_PODetail> tbl_PODetails)
+        {
+            string msg = "start tbl_PODetail=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                //var table = tbl_PODetails.ToDataTable();
+                //if (table != null && table.Rows.Count > 0)
+                //{
+                //    using (var conn = new SqlConnection(Connection.ConnectionString))
+                //    {
+                //        if (conn.State == ConnectionState.Closed)
+                //        {
+                //            conn.Open();
+                //        }
+
+                //        string sql = " SELECT * FROM tbl_PODetail ";
+                //        var cmd = new SqlCommand(sql, conn);
+                //        var ad = new SqlDataAdapter(cmd);
+                //        SqlCommandBuilder cmdb = new SqlCommandBuilder(ad);
+                //        ad.Update(table);
+                //        table.AcceptChanges();
+
+                //        ret = 1;
+                //    }
+                //}
+
+                string sql = " DELETE FROM tbl_PODetail WHERE DocNo = '" + tbl_PODetails.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_PODetails.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end PODetailDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_PODetail> tbl_PODetails)
+        {
+            string msg = "start tbl_PODetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_PODetail WHERE DocNo = '" + tbl_PODetails.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+                
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_PODetail=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_PODetail> tbl_PODetails, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PODetailDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_PODetail();
+                var docNo = tbl_PODetails.First().DocNo;
+                updateData = db.tbl_PODetail.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_PODetails.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_PODetails.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PODetailDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
     }
 }

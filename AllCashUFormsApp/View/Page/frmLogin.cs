@@ -4,26 +4,50 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using AllCashUFormsApp.Controller;
+using AllCashUFormsApp.Model;
+using AllCashUFormsApp.View.UControl;
 
 namespace AllCashUFormsApp.View.Page
 {
     public partial class frmLogin : Form
     {
         Login bu = new Login();
+        AppVersion apVerbu = new AppVersion();
         Customer cust = new Customer();
         Product prod = new Product();
         Dictionary<string, string> depoList = new Dictionary<string, string>();
+        static bool isLogOff = false;
 
         public frmLogin()
         {
             InitializeComponent();
-            this.lblcopyR1.Text = ConfigurationManager.AppSettings["CopyRightTextR1"];
-            this.lblcopyR2.Text = ConfigurationManager.AppSettings["CopyRightTextR2"];
-            this.lblVersion.Text = ConfigurationManager.AppSettings["Version"];
+            //this.lblcopyR1.Text = ConfigurationManager.AppSettings["CopyRightTextR1"];
+            //this.lblcopyR2.Text = ConfigurationManager.AppSettings["CopyRightTextR2"];
+
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            this.lblVersion.Text = string.Join(" ", GetAttributeValue<AssemblyTitleAttribute>(a => a.Title), version);
+            lblcopyR1.Text = GetAttributeValue<AssemblyCopyrightAttribute>(a => a.Copyright);
+            lblcopyR2.Text = GetAttributeValue<AssemblyTrademarkAttribute>(a => a.Trademark);
+        }
+
+        private string GetAttributeValue<TAttr>(Func<TAttr, string> resolveFunc, string defaultResult = null) where TAttr : Attribute
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+            object[] attributes = assembly.GetCustomAttributes(typeof(TAttr), false);
+            if (attributes.Length > 0)
+                return resolveFunc((TAttr)attributes[0]);
+            else
+                return defaultResult;
         }
 
         private void frmLogin_Load(object sender, EventArgs e)
@@ -34,10 +58,31 @@ namespace AllCashUFormsApp.View.Page
             cbDepo.DataSource = depoList.ToList();
             cbDepo.ValueMember = "Value";
             cbDepo.DisplayMember = "Key";
+
+            CheckAppVersion(); //edit by sailom .k 05/01/2022
+
+            if (isLogOff)
+            {
+                cbDepo.Focus();
+                cbDepo.Select();
+            }
+            else
+                txtUserName.Focus();
+        }
+
+        public void PrepareDefaultLogin(string userName, string password)
+        {
+            txtUserName.Text = userName;
+            txtPassword.Text = password;
+            txtUserName.ForeColor = Color.Black;
+            txtPassword.ForeColor = Color.Black;
+            isLogOff = true;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            isLogOff = false;
+
             KeyValuePair<string, string> depoSel = (KeyValuePair<string, string>)cbDepo.SelectedItem;
             string conStr = depoSel.Value;
             Helper.BranchName = depoSel.Key;
@@ -51,7 +96,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     Connection.GetConnectionStringsManual(); //for manual connect 04112020
 
-                    Helper.tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower()  && x.Password == txtPassword.Text);
+                    Helper.tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower() && x.Password == txtPassword.Text);
 
                     cust.GetAllData();
                     //prod.GetAllData();
@@ -59,8 +104,70 @@ namespace AllCashUFormsApp.View.Page
                     cust.GetUOMSet();
                     cust.GetDiscountType();
 
-                    MainForm frm = new MainForm();
-                    frm.Show();
+                    //edit by sailom .k 14/12/2021------------------------------------------
+                    bu.tbl_Branchs = bu.GetBranch();
+                    bu.tbl_Companies = bu.GetAllCompany();
+                    cust.GetProductPriceGroup();
+                    //edit by sailom .k 14/12/2021------------------------------------------
+
+                    //Write user login log by sailom.k 18/10/2021------------------------------------------------------------
+                    string myHost = System.Net.Dns.GetHostName();
+                    string myIP = System.Net.Dns.GetHostByName(myHost).AddressList[0].ToString();
+
+                    string log = string.Format("computer name : {0}, ip : {1}, time : {2}, user login : {3}", myHost, myIP, DateTime.Now.ToString(), Helper.tbl_Users.Username);
+                    log.WriteLog(this.GetType());
+                    //ErrorLogsDao.Insert(new tbl_error_logs { user_code = Helper.user_name, form_name = this.GetType().Name, function_name = Helper.GetCurrentMethod(), err_desc = log });
+                    //Write user login log by sailom.k 18/10/2021------------------------------------------------------------
+
+                    //MainForm frm = new MainForm();
+                    //frm.Show();
+
+                    //Last edit by sailom .k 28/02/2022-----------------------------------------------------
+                    string name = this.Name;
+                    List<Form> openForms = new List<Form>();
+
+                    foreach (Form f in Application.OpenForms)
+                    {
+                        openForms.Add(f);
+                    }
+
+                    foreach (Form f in openForms)
+                    {
+                        if (openForms.Count == 1 && f.Name.ToLower() == name.ToLower()) //(f.Name == "frmOD")
+                        {
+                            MainForm frm = new MainForm();
+                            frm.Show();
+                            break;
+                        }
+                        else
+                        {
+                            if (f.Visible == false)
+                            {
+                                if (f.Name.ToLower() != name.ToLower())
+                                {
+                                    f.Visible = true;
+
+                                    f.MdiParent = this;
+                                    f.StartPosition = FormStartPosition.CenterParent;
+                                    f.WindowState = FormWindowState.Minimized;
+                                    //frm.Dock = DockStyle.Fill;
+                                    f.Text = ((ToolStripItem)sender).Text;
+
+                                    MemoryManagement.FlushMemory();
+
+                                    f.Show();
+                                    f.WindowState = FormWindowState.Maximized;
+
+                                    f.Focus();
+                                }
+                            }
+                            else
+                            {
+                                f.Focus();
+                            }
+                        }
+                    }
+                    //Last edit by sailom .k 28/02/2022-----------------------------------------------------
 
                     //this.Dispose();
                     this.Hide();
@@ -70,7 +177,29 @@ namespace AllCashUFormsApp.View.Page
                     FlexibleMessageBox.Show("Invalid Username or Password!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            
+        }
+
+        private bool CheckAppVersion()
+        {
+            bool ret = false;
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            DataTable dt = apVerbu.CheckAppVersion(version);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                //192.168.1.12 => D:\WEB\UForce\Files\Back-End is a deploy path
+                frmAppVersion frm = new frmAppVersion();
+                frm.PrepareAppVersion(dt);
+                frm.ShowDialog();
+            }
+            else
+            {
+                ret = true;
+            }
+
+            return ret;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -128,5 +257,6 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
     }
 }

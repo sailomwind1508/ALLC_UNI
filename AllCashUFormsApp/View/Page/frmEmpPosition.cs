@@ -55,6 +55,8 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
             grdPosition.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grdPosition.RowsDefaultCellStyle.BackColor = Color.White;
+            grdPosition.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
         private void OpenPanelEdit(bool flagEnable)
         {

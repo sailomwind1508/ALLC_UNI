@@ -76,7 +76,7 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
-        public void PreCalcPromotion(Promotion bu, List<tbl_PODetail> productList, List<PromotionRuleModel> hitProList, string customerID = "")
+        public void PreCalcPromotion(Promotion bu, List<tbl_PODetail> productList, List<PromotionRuleModel> hitProList, string customerID = "", string whid = "")
         {
             try
             {
@@ -86,19 +86,22 @@ namespace AllCashUFormsApp.Controller
                 decimal skuAmt = 0;
 
                 List<tbl_HQ_SKUGroup_EXC> allExcPrdGroup = new List<tbl_HQ_SKUGroup_EXC>();
-                foreach (tbl_PODetail prd in productList)
-                {
-                    allExcPrdGroup.AddRange(GetPromotion_ProductGroupEXC(prd.ProductID)); //get not match product
-                }
+                allExcPrdGroup.AddRange(GetPromotionListProductGroupEXC(productList.Select(x => x.ProductID).ToList()));
+                //foreach (tbl_PODetail prd in productList)
+                //{
+                //    allExcPrdGroup.AddRange(GetPromotion_ProductGroupEXC(prd.ProductID)); //get not match product
+                //}
 
                 var notMatchGroupItems = allExcPrdGroup.Select(y => new { ProductID = y.SKU_ID }).Distinct().ToList();
                 _notMatchGroupItems.AddRange(notMatchGroupItems.Select(x => x.ProductID).ToList());
+
+                var allprdUOMSets = bu.GetUOMSet();
 
                 foreach (tbl_PODetail prd in productList)
                 {
 
                     totalPrice += prd.LineTotal.Value; //(prd.OrderQty.Value * prd.UnitPrice.Value); //
-                    totalQty += bu.GetOrderQty(bu, prd); //prd.OrderQty.Value;
+                    totalQty += bu.GetOrderQty(bu, prd, allprdUOMSets); //prd.OrderQty.Value;
 
                     if (listSku.All(x => x != prd.ProductID))
                         listSku.Add(prd.ProductID);
@@ -108,7 +111,7 @@ namespace AllCashUFormsApp.Controller
                         if (itemExc.ProductID == prd.ProductID) //except product
                         {
                             totalPrice -= prd.LineTotal.Value; //(prd.OrderQty.Value * prd.UnitPrice.Value); //prd.LineTotal.Value;
-                            totalQty -= bu.GetOrderQty(bu, prd); //prd.OrderQty.Value;
+                            totalQty -= bu.GetOrderQty(bu, prd, allprdUOMSets); //prd.OrderQty.Value;
 
                             listSku.Remove(prd.ProductID);
                         }
@@ -118,7 +121,7 @@ namespace AllCashUFormsApp.Controller
                 if (listSku != null && listSku.Count > 0)
                     skuAmt = Convert.ToDecimal(listSku.Distinct().ToList().Count);
 
-                var proTxnList = GetTXNPromotion();
+                var proTxnList = GetTXNPromotion(whid);
                 if (proTxnList != null && proTxnList.Count > 0) //txn
                 {
                     proTxnList = proTxnList.OrderBy(x => x.PromotionPriority).ToList(); //order promotion
@@ -126,12 +129,12 @@ namespace AllCashUFormsApp.Controller
                     foreach (tbl_HQ_Promotion pro in proTxnList)
                     {
                         bool isCalPro = false;
-                        //for support u-online last edit by sailom .k 18-06-2021=====================
-                        if (pro.ShopTypeID != null)
-                        {
-                            isCalPro = CheckPromotionShopType(bu, pro, customerID);
-                        } //===========================================================================
-                        else
+                        ////for support u-online last edit by sailom .k 18-06-2021=====================
+                        //if (pro.ShopTypeID != null)
+                        //{
+                        //    isCalPro = CheckPromotionShopType(bu, pro, customerID);
+                        //} //===========================================================================
+                        //else
                         {
                             isCalPro = true;
                         }
@@ -221,7 +224,12 @@ namespace AllCashUFormsApp.Controller
                 var proList = hitPrdList.Where(x => x.PromotionPattern.ToLower() == "prd").ToList();
 
                 //Distribute discount prd promotion edit by sailom 30402021-------------------------------------------------------------------------------------------------------------------------------
-                var skuG = GetHQSKUGroup(x => proList.Select(y => y.ProductGroupID).ToList().Contains(x.SKUGroupID));
+                var listProductGroupID = proList.Select(y => y.ProductGroupID).ToList();
+
+                var skuG = new List<tbl_HQ_SKUGroup>();
+                if (listProductGroupID.Count > 0)
+                    GetListHQSKUGroup(listProductGroupID);
+
                 foreach (var item in skuG)
                 {
                     if (_notMatchGroupItems.Contains(item.SKU_ID))

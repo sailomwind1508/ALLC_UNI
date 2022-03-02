@@ -38,10 +38,10 @@ namespace AllCashUFormsApp.Model
         public Nullable<System.DateTime> EffectiveDate { get; set; }
         public Nullable<System.DateTime> ExpireDate { get; set; }
         public Nullable<int> PlusSaleFrom { get; set; }
-        public Nullable<int> ShopTypeID { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public string CreateBy { get; set; }
         public string UpdateBy { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

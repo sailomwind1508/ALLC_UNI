@@ -1,7 +1,30 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AllCashUFormsApp.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DB_ALL_CASH_UNI_UBN_TESTConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=UBN.DNSDOJO.NET,14501;Initial Catalog=DB_ALL_CASH_UNI_UBN_TEST;Persist Security Info=True;User ID=sa;Password=Alldb#&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=UBN.DNSDOJO.NET,14501;Initial Catalog=DB_ALL_CASH_UNI_UBN_TEST;Persist Security Info=True;User ID=sa;Password=Alldb#</Value>
+    </Setting>
+    <Setting Name="DB_ALL_CASH_UNI_LRI_TESTConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=LRI.DNSDOJO.NET,14501;Initial Catalog=DB_ALL_CASH_UNI_LRI_TEST;Persist Security Info=True;User ID=sa;Password=Alldb#&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=LRI.DNSDOJO.NET,14501;Initial Catalog=DB_ALL_CASH_UNI_LRI_TEST;Persist Security Info=True;User ID=sa;Password=Alldb#</Value>
+    </Setting>
+    <Setting Name="DB_ALL_CASH_UNI_SNKConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=192.168.1.200;Initial Catalog=DB_ALL_CASH_UNI_SNK;Persist Security Info=True;User ID=sa;Password=Alldb#&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=192.168.1.200;Initial Catalog=DB_ALL_CASH_UNI_SNK;Persist Security Info=True;User ID=sa;Password=Alldb#</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
