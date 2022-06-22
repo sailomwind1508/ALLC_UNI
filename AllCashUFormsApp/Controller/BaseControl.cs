@@ -35,8 +35,6 @@ namespace AllCashUFormsApp.Controller
         private List<tbl_ArCustomer> _tbl_ArCustomers = null;
         private List<tbl_ShopType> _tbl_ShopTypes = null;
         private List<tbl_ArCustomerShelf> _tbl_ArCustomerShelfs = null;
-        private static List<tbl_Branch> _tbl_Branchs = new List<tbl_Branch>();
-        private static List<tbl_Company> _tbl_Companies = new List<tbl_Company>();
 
         private string _docTypeCode;
 
@@ -215,6 +213,121 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
+
+        private static List<tbl_Branch> _tbl_Branchs = new List<tbl_Branch>();
+        private static List<tbl_Company> _tbl_Companies = new List<tbl_Company>();
+
+        private static List<tbl_AdmFormList> _tbl_AdmFormList = new List<tbl_AdmFormList>();
+        private static List<tbl_DocumentType> _tbl_DocumentType = new List<tbl_DocumentType>();
+        private static List<tbl_MstMenu> _tbl_MstMenu = new List<tbl_MstMenu>();
+        private static List<tbl_ProductUom> _tbl_ProductUom = new List<tbl_ProductUom>();
+        private static List<tbl_ProductUomSet> _tbl_ProductUomSet = new List<tbl_ProductUomSet>();
+        private static List<tbl_ProductPriceGroup> _tbl_ProductPriceGroup = new List<tbl_ProductPriceGroup>();
+        private static List<tbl_SalArea> _tbl_SalArea = new List<tbl_SalArea>();
+        private static List<tbl_SalAreaDistrict> _tbl_SalAreaDistrict = new List<tbl_SalAreaDistrict>();
+        private static List<tbl_Product> _tbl_Product = new List<tbl_Product>();
+        private static List<tbl_ProductGroup> _tbl_ProductGroup = new List<tbl_ProductGroup>();
+        private static List<tbl_ProductSubGroup> _tbl_ProductSubGroup = new List<tbl_ProductSubGroup>();
+        private static List<tbl_DiscountType> _tbl_DiscountType = new List<tbl_DiscountType>();
+
+        public virtual List<tbl_DiscountType> tbl_DiscountType
+        {
+            get { return _tbl_DiscountType; }
+            set
+            {
+                _tbl_DiscountType = value;
+            }
+        }
+        public virtual List<tbl_AdmFormList> tbl_AdmFormList
+        {
+            get { return _tbl_AdmFormList; }
+            set
+            {
+                _tbl_AdmFormList = value;
+            }
+        }
+        public virtual List<tbl_DocumentType> tbl_DocumentType
+        {
+            get { return _tbl_DocumentType; }
+            set
+            {
+                _tbl_DocumentType = value;
+            }
+        }
+        public virtual List<tbl_MstMenu> tbl_MstMenu
+        {
+            get { return _tbl_MstMenu; }
+            set
+            {
+                _tbl_MstMenu = value;
+            }
+        }
+        public virtual List<tbl_ProductUom> tbl_ProductUom
+        {
+            get { return _tbl_ProductUom; }
+            set
+            {
+                _tbl_ProductUom = value;
+            }
+        }
+        public virtual List<tbl_ProductUomSet> tbl_ProductUomSet
+        {
+            get { return _tbl_ProductUomSet; }
+            set
+            {
+                _tbl_ProductUomSet = value;
+            }
+        }
+        public virtual List<tbl_ProductPriceGroup> tbl_ProductPriceGroup
+        {
+            get { return _tbl_ProductPriceGroup; }
+            set
+            {
+                _tbl_ProductPriceGroup = value;
+            }
+        }
+        public virtual List<tbl_SalArea> tbl_SalArea
+        {
+            get { return _tbl_SalArea; }
+            set
+            {
+                _tbl_SalArea = value;
+            }
+        }
+        public virtual List<tbl_SalAreaDistrict> tbl_SalAreaDistrict
+        {
+            get { return _tbl_SalAreaDistrict; }
+            set
+            {
+                _tbl_SalAreaDistrict = value;
+            }
+        }
+        public virtual List<tbl_Product> tbl_Product
+        {
+            get { return _tbl_Product; }
+            set
+            {
+                _tbl_Product = value;
+            }
+        }
+        public virtual List<tbl_ProductGroup> tbl_ProductGroup
+        {
+            get { return _tbl_ProductGroup; }
+            set
+            {
+                _tbl_ProductGroup = value;
+            }
+        }
+        public virtual List<tbl_ProductSubGroup> tbl_ProductSubGroup
+        {
+            get { return _tbl_ProductSubGroup; }
+            set
+            {
+                _tbl_ProductSubGroup = value;
+            }
+        }
+
+
         public BaseControl(string docTypeCode)
         {
             _tbl_POMaster = new tbl_POMaster();
@@ -241,6 +354,26 @@ namespace AllCashUFormsApp.Controller
 
             //_tbl_Branchs = new List<tbl_Branch>();
             //_tbl_Companies = new List<tbl_Company>();
+        }
+
+        public List<tbl_MstMenu> GetAllMenuData()
+        {
+            return (new tbl_MstMenu()).SelectAll();
+        }
+
+        public List<tbl_SalArea> GetAllSaleArea()
+        {
+            return new tbl_SalArea().SelectAll();
+        }
+
+        public DataTable GetAllSaleAreaFromDistrict(string whid)
+        {
+            return new tbl_SalArea().SelectAllWithDistrict(whid);
+        }
+
+        public List<tbl_SalAreaDistrict> GetAllSaleAreaDistrict()
+        {
+            return new tbl_SalAreaDistrict().SelectAll();
         }
 
         public List<tbl_ArCustomer> GetCustomerSalArea(string SalAreaID)
@@ -1373,6 +1506,11 @@ namespace AllCashUFormsApp.Controller
             return new tbl_PODetail().Select(docDate);
         }
 
+        public List<tbl_PODetail> GetAllPODetailsEndDay(DateTime docDate)
+        {
+            return new tbl_PODetail().SelectPODTEndDay(docDate);
+        }
+
         /// <summary>
         /// For end day
         /// </summary>
@@ -1532,6 +1670,16 @@ namespace AllCashUFormsApp.Controller
         public string GenDocNo(string docTypeCode, string whCode = null)
         {
             return new DocTypeCode().GenDocNo(docTypeCode, whCode);
+        }
+
+        public string GenDocNoPre(string docTypeCode, string whCode = null)
+        {
+            return new DocTypeCode().GenDocNoPre(docTypeCode, whCode);
+        }
+
+        public string GenDocNoPreEx(string docTypeCode, string whCode = null)
+        {
+            return new DocTypeCode().GenDocNoPreEX(docTypeCode, whCode);
         }
 
         public string GenCustSAPCode(string docTypeCode, string whCode = null)
@@ -1724,6 +1872,11 @@ namespace AllCashUFormsApp.Controller
             return new tbl_Product().SelectAll();
         }
 
+        public List<tbl_Product> GetProductNonFlag()
+        {
+            return new tbl_Product().SelectAllNonFlag();
+        }
+
         public List<tbl_Product> GetProduct(Func<tbl_Product, bool> predicate)
         {
             return new tbl_Product().Select(predicate);
@@ -1871,6 +2024,14 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_ProductPriceGroup().Select(predicate);
             else
                 return new tbl_ProductPriceGroup().SelectAll();
+        }
+
+        public List<tbl_ProductPriceGroup> GetProductPriceGroupPre(Func<tbl_ProductPriceGroup, bool> predicate = null)
+        {
+            if (predicate != null)
+                return new tbl_ProductPriceGroup().Select(predicate);
+            else
+                return new tbl_ProductPriceGroup().SelectAllEX();
         }
 
         public tbl_BranchWarehouse GetBranchWarehouse(Func<tbl_BranchWarehouse, bool> predicate)

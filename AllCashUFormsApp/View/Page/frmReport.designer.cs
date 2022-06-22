@@ -55,7 +55,8 @@
             System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("รายงานยอดขายตามจังหวัด (น้ำหนัก)");
             System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("รายงานลูกค้าใหม่");
             System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("รายงานเปลี่ยนคืนสินค้า");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("รายงานการขาย", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามประเภทแวน");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("รายงานการขาย", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
             treeNode3,
@@ -71,61 +72,68 @@
             treeNode18,
             treeNode19,
             treeNode20,
-            treeNode21});
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("รายงานรับสินค้า");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดรับสินค้า (แยกตามเอกสาร)");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดรับสินค้า (แยกตามเจ้าหนี้)");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("รายงานการรับ", new System.Windows.Forms.TreeNode[] {
-            treeNode23,
+            treeNode21,
+            treeNode22});
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("รายงานรับสินค้า");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดรับสินค้า (แยกตามเอกสาร)");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดรับสินค้า (แยกตามเจ้าหนี้)");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("รายงานการรับ", new System.Windows.Forms.TreeNode[] {
             treeNode24,
-            treeNode25});
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("รายงานสินค้าคงเหลือ แยกตามคลัง");
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสสินค้า");
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสบัญชีหน่วยเล็ก");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("รายงานสรุปยอดเคลื่อนไหว/ยอดส่งเงินประจำวัน");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดโอนสินค้า");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดทำลายสินค้า");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("รายงานสรุป RL รายแวน");
-            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("รายงานสินค้าคงคลัง", new System.Windows.Forms.TreeNode[] {
-            treeNode27,
+            treeNode25,
+            treeNode26});
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("รายงานสินค้าคงเหลือ แยกตามคลัง");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสสินค้า");
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสบัญชีหน่วยเล็ก");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("รายงานสรุปยอดเคลื่อนไหว/ยอดส่งเงินประจำวัน");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดโอนสินค้า");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("รายงานรายละเอียดทำลายสินค้า");
+            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("รายงานสรุป RL รายแวน");
+            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("รายงานสินค้าคงคลัง", new System.Windows.Forms.TreeNode[] {
             treeNode28,
             treeNode29,
             treeNode30,
             treeNode31,
             treeNode32,
-            treeNode33});
-            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("รายงานสรุปจำนวนร้านค้าทั้งหมด (ตามคลังรถ)");
-            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("รายงานลูกค้าจัดกลุ่มตามตำบล");
-            System.Windows.Forms.TreeNode treeNode37 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR");
-            System.Windows.Forms.TreeNode treeNode38 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Bath)");
-            System.Windows.Forms.TreeNode treeNode39 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Carton)");
-            System.Windows.Forms.TreeNode treeNode40 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Unit)");
-            System.Windows.Forms.TreeNode treeNode41 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (SKU)", new System.Windows.Forms.TreeNode[] {
-            treeNode38,
+            treeNode33,
+            treeNode34});
+            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("รายงานสรุปจำนวนร้านค้าทั้งหมด (ตามคลังรถ)");
+            System.Windows.Forms.TreeNode treeNode37 = new System.Windows.Forms.TreeNode("รายงานลูกค้าจัดกลุ่มตามตำบล");
+            System.Windows.Forms.TreeNode treeNode38 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR");
+            System.Windows.Forms.TreeNode treeNode39 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Bath)");
+            System.Windows.Forms.TreeNode treeNode40 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Carton)");
+            System.Windows.Forms.TreeNode treeNode41 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (Unit)");
+            System.Windows.Forms.TreeNode treeNode42 = new System.Windows.Forms.TreeNode("รายงานยอดขาย DSR (SKU)", new System.Windows.Forms.TreeNode[] {
             treeNode39,
-            treeNode40});
-            System.Windows.Forms.TreeNode treeNode42 = new System.Windows.Forms.TreeNode("รายงาน Effective Call");
-            System.Windows.Forms.TreeNode treeNode43 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (นับทุกบิล)");
-            System.Windows.Forms.TreeNode treeNode44 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (วัด KPI)");
-            System.Windows.Forms.TreeNode treeNode45 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (Product)");
-            System.Windows.Forms.TreeNode treeNode46 = new System.Windows.Forms.TreeNode("รายงานบิลซ้ำ");
-            System.Windows.Forms.TreeNode treeNode47 = new System.Windows.Forms.TreeNode("รายงาน Product Hero แยกตามวัน");
-            System.Windows.Forms.TreeNode treeNode48 = new System.Windows.Forms.TreeNode("รายงาน Distribution");
-            System.Windows.Forms.TreeNode treeNode49 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามลูกค้า");
-            System.Windows.Forms.TreeNode treeNode50 = new System.Windows.Forms.TreeNode("รายงานร้านค้าตาม Customer List");
-            System.Windows.Forms.TreeNode treeNode51 = new System.Windows.Forms.TreeNode("รายงานจำนวนร้านค้า ตามรอบการขาย");
-            System.Windows.Forms.TreeNode treeNode52 = new System.Windows.Forms.TreeNode("รายงานร้านเยี่ยมเฉลี่ย/วัน");
-            System.Windows.Forms.TreeNode treeNode53 = new System.Windows.Forms.TreeNode("รายงานการกระจายสินค้า (SKU/Invoice)");
-            System.Windows.Forms.TreeNode treeNode54 = new System.Windows.Forms.TreeNode("รายงาน KPI วัดผลการกระจาย");
-            System.Windows.Forms.TreeNode treeNode55 = new System.Windows.Forms.TreeNode("รายงานสรุป Shelf สินค้า (รายวัน)");
-            System.Windows.Forms.TreeNode treeNode56 = new System.Windows.Forms.TreeNode("รายงานสรุป Shelf สินค้า", new System.Windows.Forms.TreeNode[] {
-            treeNode55});
-            System.Windows.Forms.TreeNode treeNode57 = new System.Windows.Forms.TreeNode("รายงานรายละเอียด Shelf");
-            System.Windows.Forms.TreeNode treeNode58 = new System.Windows.Forms.TreeNode("Distribution", new System.Windows.Forms.TreeNode[] {
-            treeNode35,
+            treeNode40,
+            treeNode41});
+            System.Windows.Forms.TreeNode treeNode43 = new System.Windows.Forms.TreeNode("รายงาน Effective Call");
+            System.Windows.Forms.TreeNode treeNode44 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (นับทุกบิล)");
+            System.Windows.Forms.TreeNode treeNode45 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (วัด KPI)");
+            System.Windows.Forms.TreeNode treeNode46 = new System.Windows.Forms.TreeNode("รายงาน Effective Call (Product)");
+            System.Windows.Forms.TreeNode treeNode47 = new System.Windows.Forms.TreeNode("รายงานบิลซ้ำ");
+            System.Windows.Forms.TreeNode treeNode48 = new System.Windows.Forms.TreeNode("รายงาน Product Hero แยกตามวัน");
+            System.Windows.Forms.TreeNode treeNode49 = new System.Windows.Forms.TreeNode("รายงาน Distribution");
+            System.Windows.Forms.TreeNode treeNode50 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามลูกค้า(Brick)");
+            System.Windows.Forms.TreeNode treeNode51 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามลูกค้า(Carton)");
+            System.Windows.Forms.TreeNode treeNode52 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามลูกค้า(Bath)");
+            System.Windows.Forms.TreeNode treeNode53 = new System.Windows.Forms.TreeNode("รายงานยอดขายแยกตามลูกค้า", new System.Windows.Forms.TreeNode[] {
+            treeNode50,
+            treeNode51,
+            treeNode52});
+            System.Windows.Forms.TreeNode treeNode54 = new System.Windows.Forms.TreeNode("รายงานร้านค้าตาม Customer List");
+            System.Windows.Forms.TreeNode treeNode55 = new System.Windows.Forms.TreeNode("รายงานจำนวนร้านค้า ตามรอบการขาย");
+            System.Windows.Forms.TreeNode treeNode56 = new System.Windows.Forms.TreeNode("รายงานร้านเยี่ยมเฉลี่ย/วัน");
+            System.Windows.Forms.TreeNode treeNode57 = new System.Windows.Forms.TreeNode("รายงานการกระจายสินค้า (SKU/Invoice)");
+            System.Windows.Forms.TreeNode treeNode58 = new System.Windows.Forms.TreeNode("รายงาน KPI วัดผลการกระจาย");
+            System.Windows.Forms.TreeNode treeNode59 = new System.Windows.Forms.TreeNode("รายงานสรุป Shelf สินค้า (รายวัน)");
+            System.Windows.Forms.TreeNode treeNode60 = new System.Windows.Forms.TreeNode("รายงานสรุป Shelf สินค้า", new System.Windows.Forms.TreeNode[] {
+            treeNode59});
+            System.Windows.Forms.TreeNode treeNode61 = new System.Windows.Forms.TreeNode("รายงานรายละเอียด Shelf");
+            System.Windows.Forms.TreeNode treeNode62 = new System.Windows.Forms.TreeNode("รายงานสถานะ (Pre-Order)");
+            System.Windows.Forms.TreeNode treeNode63 = new System.Windows.Forms.TreeNode("Distribution", new System.Windows.Forms.TreeNode[] {
             treeNode36,
             treeNode37,
-            treeNode41,
+            treeNode38,
             treeNode42,
             treeNode43,
             treeNode44,
@@ -134,24 +142,26 @@
             treeNode47,
             treeNode48,
             treeNode49,
-            treeNode50,
-            treeNode51,
-            treeNode52,
             treeNode53,
             treeNode54,
+            treeNode55,
             treeNode56,
-            treeNode57});
-            System.Windows.Forms.TreeNode treeNode59 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน(SKU)");
-            System.Windows.Forms.TreeNode treeNode60 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน", new System.Windows.Forms.TreeNode[] {
-            treeNode59});
-            System.Windows.Forms.TreeNode treeNode61 = new System.Windows.Forms.TreeNode("รายงาน Eff.Call (KPI)");
-            System.Windows.Forms.TreeNode treeNode62 = new System.Windows.Forms.TreeNode("รายงานสรุปยอดขาย");
-            System.Windows.Forms.TreeNode treeNode63 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน(KPI)");
-            System.Windows.Forms.TreeNode treeNode64 = new System.Windows.Forms.TreeNode("DSR", new System.Windows.Forms.TreeNode[] {
+            treeNode57,
+            treeNode58,
             treeNode60,
             treeNode61,
-            treeNode62,
-            treeNode63});
+            treeNode62});
+            System.Windows.Forms.TreeNode treeNode64 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน(SKU)");
+            System.Windows.Forms.TreeNode treeNode65 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน", new System.Windows.Forms.TreeNode[] {
+            treeNode64});
+            System.Windows.Forms.TreeNode treeNode66 = new System.Windows.Forms.TreeNode("รายงาน Eff.Call (KPI)");
+            System.Windows.Forms.TreeNode treeNode67 = new System.Windows.Forms.TreeNode("รายงานสรุปยอดขาย");
+            System.Windows.Forms.TreeNode treeNode68 = new System.Windows.Forms.TreeNode("รายงานสัดส่วน(KPI)");
+            System.Windows.Forms.TreeNode treeNode69 = new System.Windows.Forms.TreeNode("DSR", new System.Windows.Forms.TreeNode[] {
+            treeNode65,
+            treeNode66,
+            treeNode67,
+            treeNode68});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReport));
             this.entityCommand1 = new System.Data.Entity.Core.EntityClient.EntityCommand();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -375,98 +385,108 @@
             treeNode20.Text = "รายงานลูกค้าใหม่";
             treeNode21.Name = "Node15";
             treeNode21.Text = "รายงานเปลี่ยนคืนสินค้า";
-            treeNode22.Name = "Node1";
-            treeNode22.Text = "รายงานการขาย";
-            treeNode23.Name = "Node20";
-            treeNode23.Text = "รายงานรับสินค้า";
-            treeNode24.Name = "Node21";
-            treeNode24.Text = "รายงานรายละเอียดรับสินค้า (แยกตามเอกสาร)";
-            treeNode25.Name = "Node22";
-            treeNode25.Text = "รายงานรายละเอียดรับสินค้า (แยกตามเจ้าหนี้)";
-            treeNode26.Name = "Node19";
-            treeNode26.Text = "รายงานการรับ";
-            treeNode27.Name = "Node24";
-            treeNode27.Text = "รายงานสินค้าคงเหลือ แยกตามคลัง";
-            treeNode28.Name = "proc_StockMovement_ByWH";
-            treeNode28.Text = "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสสินค้า";
-            treeNode29.Name = "Node26";
-            treeNode29.Text = "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสบัญชีหน่วยเล็ก";
-            treeNode30.Name = "Node27";
-            treeNode30.Text = "รายงานสรุปยอดเคลื่อนไหว/ยอดส่งเงินประจำวัน";
-            treeNode31.Name = "Node28";
-            treeNode31.Text = "รายงานรายละเอียดโอนสินค้า";
-            treeNode32.Name = "Node29";
-            treeNode32.Text = "รายงานรายละเอียดทำลายสินค้า";
-            treeNode33.Name = "NodeRLSumm";
-            treeNode33.Text = "รายงานสรุป RL รายแวน";
-            treeNode34.Name = "Node23";
-            treeNode34.Text = "รายงานสินค้าคงคลัง";
-            treeNode35.Name = "Node31";
-            treeNode35.Text = "รายงานสรุปจำนวนร้านค้าทั้งหมด (ตามคลังรถ)";
-            treeNode36.Name = "Node32";
-            treeNode36.Text = "รายงานลูกค้าจัดกลุ่มตามตำบล";
-            treeNode37.Name = "Node33";
-            treeNode37.Text = "รายงานยอดขาย DSR";
-            treeNode38.Name = "Node34_Bath";
-            treeNode38.Text = "รายงานยอดขาย DSR (Bath)";
-            treeNode39.Name = "Node34_Carton";
-            treeNode39.Text = "รายงานยอดขาย DSR (Carton)";
-            treeNode40.Name = "Node34_Unit";
-            treeNode40.Text = "รายงานยอดขาย DSR (Unit)";
-            treeNode41.Name = "Node34";
-            treeNode41.Text = "รายงานยอดขาย DSR (SKU)";
-            treeNode42.Name = "Node35";
-            treeNode42.Text = "รายงาน Effective Call";
-            treeNode43.Name = "Node36";
-            treeNode43.Text = "รายงาน Effective Call (นับทุกบิล)";
-            treeNode44.Name = "Node37";
-            treeNode44.Text = "รายงาน Effective Call (วัด KPI)";
-            treeNode45.Name = "Node38";
-            treeNode45.Text = "รายงาน Effective Call (Product)";
-            treeNode46.Name = "Rep_BillDuplicate";
-            treeNode46.Text = "รายงานบิลซ้ำ";
-            treeNode47.Name = "Node40";
-            treeNode47.Text = "รายงาน Product Hero แยกตามวัน";
-            treeNode48.Name = "Node41";
-            treeNode48.Text = "รายงาน Distribution";
-            treeNode49.Name = "Node42";
-            treeNode49.Text = "รายงานยอดขายแยกตามลูกค้า";
-            treeNode50.Name = "Node43";
-            treeNode50.Text = "รายงานร้านค้าตาม Customer List";
-            treeNode51.Name = "Node44";
-            treeNode51.Text = "รายงานจำนวนร้านค้า ตามรอบการขาย";
-            treeNode52.Name = "Node45";
-            treeNode52.Text = "รายงานร้านเยี่ยมเฉลี่ย/วัน";
-            treeNode53.Name = "Node46";
-            treeNode53.Text = "รายงานการกระจายสินค้า (SKU/Invoice)";
-            treeNode54.Name = "Node47";
-            treeNode54.Text = "รายงาน KPI วัดผลการกระจาย";
-            treeNode55.Name = "Node55";
-            treeNode55.Text = "รายงานสรุป Shelf สินค้า (รายวัน)";
-            treeNode56.Name = "Node48";
-            treeNode56.Text = "รายงานสรุป Shelf สินค้า";
-            treeNode57.Name = "Node49";
-            treeNode57.Text = "รายงานรายละเอียด Shelf";
-            treeNode58.Name = "Node30";
-            treeNode58.Text = "Distribution";
-            treeNode59.Name = "Node50_2";
-            treeNode59.Text = "รายงานสัดส่วน(SKU)";
-            treeNode60.Name = "Node50";
-            treeNode60.Text = "รายงานสัดส่วน";
-            treeNode61.Name = "Node51";
-            treeNode61.Text = "รายงาน Eff.Call (KPI)";
-            treeNode62.Name = "Node52";
-            treeNode62.Text = "รายงานสรุปยอดขาย";
-            treeNode63.Name = "Node53";
-            treeNode63.Text = "รายงานสัดส่วน(KPI)";
-            treeNode64.Name = "Node49";
-            treeNode64.Text = "DSR";
+            treeNode22.Name = "Rep_Sales_By_VanType";
+            treeNode22.Text = "รายงานยอดขายแยกตามประเภทแวน";
+            treeNode23.Name = "Node1";
+            treeNode23.Text = "รายงานการขาย";
+            treeNode24.Name = "Node20";
+            treeNode24.Text = "รายงานรับสินค้า";
+            treeNode25.Name = "Node21";
+            treeNode25.Text = "รายงานรายละเอียดรับสินค้า (แยกตามเอกสาร)";
+            treeNode26.Name = "Node22";
+            treeNode26.Text = "รายงานรายละเอียดรับสินค้า (แยกตามเจ้าหนี้)";
+            treeNode27.Name = "Node19";
+            treeNode27.Text = "รายงานการรับ";
+            treeNode28.Name = "Node24";
+            treeNode28.Text = "รายงานสินค้าคงเหลือ แยกตามคลัง";
+            treeNode29.Name = "proc_StockMovement_ByWH";
+            treeNode29.Text = "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสสินค้า";
+            treeNode30.Name = "proc_StockMovement_ByWH_RefCode";
+            treeNode30.Text = "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสบัญชีหน่วยเล็ก";
+            treeNode31.Name = "Node27";
+            treeNode31.Text = "รายงานสรุปยอดเคลื่อนไหว/ยอดส่งเงินประจำวัน";
+            treeNode32.Name = "Node28";
+            treeNode32.Text = "รายงานรายละเอียดโอนสินค้า";
+            treeNode33.Name = "Node29";
+            treeNode33.Text = "รายงานรายละเอียดทำลายสินค้า";
+            treeNode34.Name = "NodeRLSumm";
+            treeNode34.Text = "รายงานสรุป RL รายแวน";
+            treeNode35.Name = "Node23";
+            treeNode35.Text = "รายงานสินค้าคงคลัง";
+            treeNode36.Name = "Node31";
+            treeNode36.Text = "รายงานสรุปจำนวนร้านค้าทั้งหมด (ตามคลังรถ)";
+            treeNode37.Name = "Node32";
+            treeNode37.Text = "รายงานลูกค้าจัดกลุ่มตามตำบล";
+            treeNode38.Name = "Node33";
+            treeNode38.Text = "รายงานยอดขาย DSR";
+            treeNode39.Name = "Node34_Bath";
+            treeNode39.Text = "รายงานยอดขาย DSR (Bath)";
+            treeNode40.Name = "Node34_Carton";
+            treeNode40.Text = "รายงานยอดขาย DSR (Carton)";
+            treeNode41.Name = "Node34_Unit";
+            treeNode41.Text = "รายงานยอดขาย DSR (Unit)";
+            treeNode42.Name = "Node34";
+            treeNode42.Text = "รายงานยอดขาย DSR (SKU)";
+            treeNode43.Name = "Node35";
+            treeNode43.Text = "รายงาน Effective Call";
+            treeNode44.Name = "Node36";
+            treeNode44.Text = "รายงาน Effective Call (นับทุกบิล)";
+            treeNode45.Name = "Node37";
+            treeNode45.Text = "รายงาน Effective Call (วัด KPI)";
+            treeNode46.Name = "Node38";
+            treeNode46.Text = "รายงาน Effective Call (Product)";
+            treeNode47.Name = "Rep_BillDuplicate";
+            treeNode47.Text = "รายงานบิลซ้ำ";
+            treeNode48.Name = "Node40";
+            treeNode48.Text = "รายงาน Product Hero แยกตามวัน";
+            treeNode49.Name = "Node41";
+            treeNode49.Text = "รายงาน Distribution";
+            treeNode50.Name = "Node42-1";
+            treeNode50.Text = "รายงานยอดขายแยกตามลูกค้า(Brick)";
+            treeNode51.Name = "Node42-2";
+            treeNode51.Text = "รายงานยอดขายแยกตามลูกค้า(Carton)";
+            treeNode52.Name = "Node42-3";
+            treeNode52.Text = "รายงานยอดขายแยกตามลูกค้า(Bath)";
+            treeNode53.Name = "Node42";
+            treeNode53.Text = "รายงานยอดขายแยกตามลูกค้า";
+            treeNode54.Name = "Node43";
+            treeNode54.Text = "รายงานร้านค้าตาม Customer List";
+            treeNode55.Name = "Node44";
+            treeNode55.Text = "รายงานจำนวนร้านค้า ตามรอบการขาย";
+            treeNode56.Name = "Node45";
+            treeNode56.Text = "รายงานร้านเยี่ยมเฉลี่ย/วัน";
+            treeNode57.Name = "Node46";
+            treeNode57.Text = "รายงานการกระจายสินค้า (SKU/Invoice)";
+            treeNode58.Name = "Node47";
+            treeNode58.Text = "รายงาน KPI วัดผลการกระจาย";
+            treeNode59.Name = "Node55";
+            treeNode59.Text = "รายงานสรุป Shelf สินค้า (รายวัน)";
+            treeNode60.Name = "Node48";
+            treeNode60.Text = "รายงานสรุป Shelf สินค้า";
+            treeNode61.Name = "Node49";
+            treeNode61.Text = "รายงานรายละเอียด Shelf";
+            treeNode62.Name = "Rep_PreOrder_POStatus_XSLT";
+            treeNode62.Text = "รายงานสถานะ (Pre-Order)";
+            treeNode63.Name = "Node30";
+            treeNode63.Text = "Distribution";
+            treeNode64.Name = "Node50_2";
+            treeNode64.Text = "รายงานสัดส่วน(SKU)";
+            treeNode65.Name = "Node50";
+            treeNode65.Text = "รายงานสัดส่วน";
+            treeNode66.Name = "Node51";
+            treeNode66.Text = "รายงาน Eff.Call (KPI)";
+            treeNode67.Name = "Node52";
+            treeNode67.Text = "รายงานสรุปยอดขาย";
+            treeNode68.Name = "Node53";
+            treeNode68.Text = "รายงานสัดส่วน(KPI)";
+            treeNode69.Name = "Node49";
+            treeNode69.Text = "DSR";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode22,
-            treeNode26,
-            treeNode34,
-            treeNode58,
-            treeNode64});
+            treeNode23,
+            treeNode27,
+            treeNode35,
+            treeNode63,
+            treeNode69});
             this.treeView1.PathSeparator = "";
             this.treeView1.Size = new System.Drawing.Size(350, 642);
             this.treeView1.TabIndex = 165;

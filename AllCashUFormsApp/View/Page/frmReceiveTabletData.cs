@@ -19,6 +19,7 @@ namespace AllCashUFormsApp.View.Page
         MenuBU menuBU = new MenuBU();
         SendData bu = new SendData();
         List<Control> searchBranchWarehouseControls = new List<Control>();
+        public static bool confirmDelete = false;
 
         public frmReceiveTabletData()
         {
@@ -33,14 +34,14 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -129,17 +130,25 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindTLGridview()
         {
+            grdList.ClearSelection();
+
             var dt = bu.GetTLData(dtpSendDate.Value);
             if (dt != null && dt.Rows.Count > 0)
             {
                 grdList.DataSource = dt;
 
-                grdList.CreateCheckBoxHeaderColumn("colSelect");
+                try
+                {
+                    grdList.CreateCheckBoxHeaderColumn("colSelect");
+                }
+                catch { }
+
             }
             else
                 grdList.DataSource = null;
 
-            FormHelper.CheckOverStok1000(dtpSendDate.Value); //Check Over Stock in main stock(1000)
+            var dtOverStck = bu.GetOverStockPreOrderData(dtpSendDate.Value); //Check Over Stock in main stock(1000)
+            //FormHelper.CheckOverStok1000(dtpSendDate.Value); //Check Over Stock in main stock(1000)
         }
 
         private void Save(DataGridViewCellEventArgs e, DataGridView grid, int _event, string whid)
@@ -220,6 +229,8 @@ namespace AllCashUFormsApp.View.Page
             InitPage();
 
             InitialData();
+
+            btnSearch.PerformClick();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -309,35 +320,56 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else if (e.ColumnIndex == 7) //ลบ
                 {
-                    string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+                    string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
                     string title = "ทำการยืนยัน!!";
 
-                    if (!cfMsg.ConfirmMessageBox(title))
+                    if (!cfMsg.WarnningMessageBox(title))
                         return;
 
-                    bu = new SendData();
+                    confirmDelete = false; //adisorn 29-04-2022
+                    frmConfirmTabletData frm = new frmConfirmTabletData();
+                    frm.ShowDialog();
 
-                    int ret = 0;
+                    if (confirmDelete == false)
+                        return;
 
-                    var datesend = Convert.ToDateTime(sendDate.Value).ToShortDateString();
-
-                    List<tbl_SendData> tbl_SendDatas = new List<tbl_SendData>();
-                    tbl_SendDatas = bu.GetSendData(x => x.WHID == _whid && x.DateSend.ToShortDateString() == datesend);
-
-                    ret = bu.RemoveData(tbl_SendDatas.First());
-
-                    if (ret == 1)
+                    try
                     {
-                        ret = bu.ClearTLdata(_whid);
+                        Cursor.Current = Cursors.WaitCursor;
 
-                        if (ret != 0)
+                        bu = new SendData();
+
+                        int ret = 0;
+
+                        var datesend = Convert.ToDateTime(sendDate.Value).ToShortDateString();
+
+                        List<tbl_SendData> tbl_SendDatas = new List<tbl_SendData>();
+                        tbl_SendDatas = bu.GetSendData(x => x.WHID == _whid && x.DateSend.ToShortDateString() == datesend);
+
+                        ret = bu.RemoveData(tbl_SendDatas.First());
+
+                        if (ret == 1)
                         {
-                            string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
-                            msg.ShowInfoMessage();
+                            ret = bu.ClearTLdata(_whid);
 
-                            BindSendData();
+                            if (ret != 0)
+                            {
+                                string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
+                                msg.ShowInfoMessage();
+
+                                BindSendData();
+                            }
+                        }
+                        else
+                        {
+                            this.ShowProcessErr();
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        ex.Message.ShowErrorMessage();
+                    }
+                    Cursor.Current = Cursors.Default;
                 }
             }
         }
@@ -345,6 +377,24 @@ namespace AllCashUFormsApp.View.Page
         private void grdCalendar_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdCalendar.SetRowPostPaint(sender, e, this.Font);
+
+            try
+            {
+                var row = grdCalendar.Rows[e.RowIndex];
+                var cDate = DateTime.Now;
+                var tmpDate = new DateTime(1900, 1, 1);
+                var _dateSend = Convert.ToDateTime(row.Cells["colDateSend"].Value);
+
+                if (_dateSend != tmpDate)
+                {
+                    if (_dateSend.ToShortDateString() != cDate.ToShortDateString())
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightYellow;
+                        row.DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                }
+            }
+            catch { }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -364,13 +414,19 @@ namespace AllCashUFormsApp.View.Page
                     foreach (DataGridViewRow row in grdList.Rows)
                     {
                         var sel = grdList.Rows[row.Index].Cells["colSelect"].EditedFormattedValue;
-                        var docdate = grdList.Rows[row.Index].Cells["colDocDate2"].Value;
+                        var docdate = grdList.Rows[row.Index].Cells["colDocDate2"].EditedFormattedValue;
 
                         if (sel != null)
                         {
-                            if (docdate != null && !string.IsNullOrEmpty(docdate.ToString()))
+                            if ((bool)sel == true && docdate != null && !string.IsNullOrEmpty(docdate.ToString()))
                                 checkList.Add(row.Index);
                         }
+                    }
+
+                    if (checkList.Count == 0)
+                    {
+                        FlexibleMessageBox.Show("กรุณาเลือกแวนที่ต้องการดึงข้อมูล!!!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        return;
                     }
 
                     if (checkList.Count > 0)
@@ -384,7 +440,7 @@ namespace AllCashUFormsApp.View.Page
                             var chk = (bool)sel;
                             if (chk)
                                 whids.Add(whid, Convert.ToDateTime(grdList.Rows[rowIndex].Cells["colDocDate2"].Value));
-                                //docDate = Convert.ToDateTime(grdList.Rows[rowIndex].Cells["colDocDate2"].Value); 
+                            //docDate = Convert.ToDateTime(grdList.Rows[rowIndex].Cells["colDocDate2"].Value); 
                         }
 
                         if (whids.Count > 0) //(!string.IsNullOrEmpty(whid))
@@ -401,11 +457,6 @@ namespace AllCashUFormsApp.View.Page
                             return;
                         }
                     }
-                    else
-                    {
-                        FlexibleMessageBox.Show("ไม่พบข้อมูลการขาย!!!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        return;
-                    }
                 }
             }
             catch (Exception ex)
@@ -417,7 +468,7 @@ namespace AllCashUFormsApp.View.Page
                 FlexibleMessageBox.Show("ไม่พบข้อมูลการขาย!!!", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
-           
+
         }
 
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -499,6 +550,24 @@ namespace AllCashUFormsApp.View.Page
         private void frmReceiveTabletData_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void grdList_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (grdList.DataSource != null && grdList.RowCount > 0)
+            {
+                grdList.CreateCheckBoxHeaderColumn("colSelect");
+            }
+        }
+
+        private void grdList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            grdList.ClearSelection();
+            if (grdList.Rows.Count > 0)
+            {
+                grdList.Rows[0].Cells[0].Selected = false;
+                grdList.Rows[0].Cells[1].Selected = true;
+            }
         }
     }
 }

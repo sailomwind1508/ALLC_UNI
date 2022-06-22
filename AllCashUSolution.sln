@@ -9,6 +9,8 @@ Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report Project", "Report Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateU-ForceApp", "UpdateU-ForceApp\UpdateU-ForceApp.csproj", "{E3BE1466-BCCA-496E-91F1-60159A56B51B}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "U-Force", "U-Force\U-Force.vdproj", "{FCB22520-6CE6-4F38-9086-04FBF18C5E70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,15 @@ Global
 		{E3BE1466-BCCA-496E-91F1-60159A56B51B}.Release|x64.Build.0 = Release|Any CPU
 		{E3BE1466-BCCA-496E-91F1-60159A56B51B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E3BE1466-BCCA-496E-91F1-60159A56B51B}.Release|x86.Build.0 = Release|Any CPU
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Debug|Any CPU.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Debug|x64.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Debug|x86.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.DebugLocal|Any CPU.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.DebugLocal|x64.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.DebugLocal|x86.ActiveCfg = Debug
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Release|Any CPU.ActiveCfg = Release
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Release|x64.ActiveCfg = Release
+		{FCB22520-6CE6-4F38-9086-04FBF18C5E70}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -92,6 +92,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="AxShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
     <Reference Include="ClosedXML">
@@ -131,6 +132,7 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -286,6 +288,12 @@
     <Compile Include="Dal\UserDao.cs" />
     <Compile Include="Dal\VanTypeDao.cs" />
     <Compile Include="Dal\ZoneDao.cs" />
+    <Compile Include="Model\AllSaleEmployeeView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ArCustomerView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\BranchEmployeeModel.cs" />
     <Compile Include="Model\CustomerInfo.cs" />
     <Compile Include="Model\DBModel.Context.cs">
@@ -304,16 +312,61 @@
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Model\EndDayPOInfoModel.cs" />
+    <Compile Include="Model\GetBranchWarehouse.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetCust_Routing.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetProduct.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetPromotion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetProvinceAndDistrict.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetSetting.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetTotalBill.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetTwoBill.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\GetTwoStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\ProductMovementModel.cs" />
     <Compile Include="Model\ProductPromotionModel.cs" />
+    <Compile Include="Model\ProductView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\PromotionHitTempModel.cs" />
     <Compile Include="Model\PromotionRuleModel.cs" />
     <Compile Include="Model\PromotionUseModel.cs" />
-    <Compile Include="Model\SearchAddressModel.cs" />
-    <Compile Include="Model\tblStMoveReport.cs">
+    <Compile Include="Model\ReceiveTabletDataView.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_AdmAuthorize.cs">
+    <Compile Include="Model\ReceiveTabletDataView_Lastest.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Rpt_DSR.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Rpt_DSR_KPI.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SaleEmployeeView.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SearchAddressModel.cs" />
+    <Compile Include="Model\tblStMoveReport.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_AdmControlList.cs">
@@ -349,31 +402,13 @@
     <Compile Include="Model\tbl_ArCustomerType.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_Banknote.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_Branch.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_BranchGroup.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_BranchLog.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_BranchRental.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_BranchSupervisor.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_BranchTerritory.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_BranchWarehouse.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_BranchWarehouseData.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_BranchWarehouseMapping.cs">
@@ -403,7 +438,7 @@
     <Compile Include="Model\tbl_Company.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_DelArCustomer.cs">
+    <Compile Include="Model\tbl_CustQA.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Department.cs">
@@ -433,13 +468,7 @@
     <Compile Include="Model\tbl_Employee.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_ErrorLog.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_error_logs.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_Expense.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_HQ_Promotion.cs">
@@ -476,51 +505,6 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_IVMaster.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LtyQuestion.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytAnswer.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytChoice.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytCustTypeReward.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytMember.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointBonus.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointByProduct.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointCycle.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointMovement.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointType.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytPointTypePerBill.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytRedeem.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytReportGroup.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytReportMenu.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_LytReward.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_MstArea.cs">
@@ -592,37 +576,13 @@
     <Compile Include="Model\tbl_ProductBrand.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_ProductChanged.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductCompany.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductCostHistory.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductCostSupplier.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_ProductFlavour.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_ProductGroup.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_ProductPriceBranch.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductPriceCustomer.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_ProductPriceGroup.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductPriceHistory.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_ProductPromotionBom.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_ProductRemarkReject.cs">
@@ -640,28 +600,10 @@
     <Compile Include="Model\tbl_ProductUomSet.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_Promotion.cs">
+    <Compile Include="Model\tbl_Questionnaire.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_PromotionBranch.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionCustomer.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionPack.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionProduct.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionReward.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionVan.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_PromotionVanProduct.cs">
+    <Compile Include="Model\tbl_QuestionnaireDetails.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_RemainingStock.cs">
@@ -676,9 +618,6 @@
     <Compile Include="Model\tbl_Roles.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_RouteOnsite.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_SalArea.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -688,25 +627,13 @@
     <Compile Include="Model\tbl_SalAreaVisit.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_SaleBranchDaily.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_SaleBranchSummary.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SaleExpenseDetail.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SaleExpenseMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_SalesTrace.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_SaleType.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SaleYearTarget.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_SendData.cs">
@@ -716,21 +643,6 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_ShopTypeGroup.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SimCustomer.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SimOrder.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_SimOrderItem.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_TargetDetail.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_TargetMaster.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TLDetail.cs">
@@ -755,6 +667,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_CustomerCode_HIS.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_TL_CustQA.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_TL_PODetail.cs">
@@ -823,23 +738,38 @@
     <Compile Include="Model\tbl_VisitStock.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\tbl_VMIDetail.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_VMIMaster.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_VMISafety.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\tbl_VMISetting.cs">
-      <DependentUpon>DBModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\tbl_Zone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Temp_Rep_Visit_Per_Day_PO.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ValidateRL.cs" />
     <Compile Include="Model\V_BankNote.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CountVisit_UBON.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CUSTOMERDT.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_CUSTOMERHD.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_GetVanStock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL_Get.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_SummaryRL_Stock.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\V_UBNDashboard.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -853,6 +783,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Form_IV.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_IV1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_IV1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_IV1_Copy.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_IV1_Copy.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Form_OD.cs">
@@ -873,11 +815,29 @@
       <DependentUpon>Form_RL.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Form_RL_Summary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Form_RL_Summary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Form_TR.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Form_TR.rpt</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Form_V_Copy.cs">
+      <DependentUpon>Form_V_Copy.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Reports\Form_V_Credity.cs">
+      <DependentUpon>Form_V_Credity.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Reports\Form_V.cs">
       <AutoGen>True</AutoGen>
@@ -885,10 +845,10 @@
       <DependentUpon>Form_V.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Form_V_Copy.cs">
+    <Compile Include="Reports\Form_V_Copy_Credit.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Form_V_Copy.rpt</DependentUpon>
+      <DependentUpon>Form_V_Copy_Credit.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\From_RE.cs">
@@ -935,6 +895,12 @@
     </Compile>
     <Compile Include="View\Page\frmCompany.designer.cs">
       <DependentUpon>frmCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerMap.designer.cs">
+      <DependentUpon>frmCustomerMap.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmDataMigration.cs">
       <SubType>Form</SubType>
@@ -1002,6 +968,12 @@
     <Compile Include="View\Page\frmProductInfo.designer.cs">
       <DependentUpon>frmProductInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmProductSlip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmProductSlip.designer.cs">
+      <DependentUpon>frmProductSlip.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmProductTable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1026,6 +998,12 @@
     <Compile Include="View\Page\frmReceiveTabletData.Designer.cs">
       <DependentUpon>frmReceiveTabletData.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmRefreshMasterData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmRefreshMasterData.designer.cs">
+      <DependentUpon>frmRefreshMasterData.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1037,6 +1015,12 @@
     </Compile>
     <Compile Include="View\Page\frmRLSummary.Designer.cs">
       <DependentUpon>frmRLSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSalesArea.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSalesArea.designer.cs">
+      <DependentUpon>frmSalesArea.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmSalesUnit.cs">
       <SubType>Form</SubType>
@@ -1098,6 +1082,12 @@
     <Compile Include="View\Page\frmCyCle.Designer.cs">
       <DependentUpon>frmCyCle.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmVerifyDNS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmVerifyDNS.designer.cs">
+      <DependentUpon>frmVerifyDNS.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\AddButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1155,11 +1145,23 @@
     <Compile Include="View\UControl\frmAppVersion.Designer.cs">
       <DependentUpon>frmAppVersion.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\frmCancelPO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmCancelPO.Designer.cs">
+      <DependentUpon>frmCancelPO.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\frmConfirmSendData.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\UControl\frmConfirmSendData.Designer.cs">
       <DependentUpon>frmConfirmSendData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmTabletData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmTabletData.designer.cs">
+      <DependentUpon>frmConfirmTabletData.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmCrystalReport.cs">
       <SubType>Form</SubType>
@@ -1172,6 +1174,12 @@
     </Compile>
     <Compile Include="View\UControl\frmCrystalReportEx.Designer.cs">
       <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSignaturePicture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSignaturePicture.designer.cs">
+      <DependentUpon>frmSignaturePicture.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmCustomerPicture.cs">
       <SubType>Form</SubType>
@@ -1396,6 +1404,12 @@
     <Compile Include="View\UControl\frmSearchAddress.designer.cs">
       <DependentUpon>frmSearchAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\UControl\frmSearchProvince.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchProvince.designer.cs">
+      <DependentUpon>frmSearchProvince.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UControl\frmSearchSalArea.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1482,6 +1496,16 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_IV.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_IV1.rdlc" />
+    <EmbeddedResource Include="Reports\Form_IV1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_IV1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_IV1_Copy.rdlc" />
+    <EmbeddedResource Include="Reports\Form_IV1_Copy.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_IV1_Copy.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Form_OD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_OD.cs</LastGenOutput>
@@ -1494,6 +1518,12 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_RL.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_RL_Report2.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RL_Report2_AllWh.rdlc" />
+    <EmbeddedResource Include="Reports\Form_RL_Summary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_RL_Summary.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Form_RT.rdlc" />
     <EmbeddedResource Include="Reports\Form_IV.rdlc" />
     <EmbeddedResource Include="Reports\Form_OD.rdlc" />
@@ -1502,24 +1532,37 @@
     <EmbeddedResource Include="Reports\Form_RE.rdlc" />
     <EmbeddedResource Include="Reports\Form_RL.rdlc" />
     <EmbeddedResource Include="Reports\Form_TR.rdlc" />
+    <None Include="App.config" />
     <None Include="Reports\Form_IV.-OLDrdlc" />
     <EmbeddedResource Include="Reports\Form_TR.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_TR.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_V_Copy.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_V_Copy.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Form_V_Credity.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Form_V_Credity.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Form_V.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Form_V.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Form_V_Copy.rpt">
+    <EmbeddedResource Include="Reports\Form_V_Copy_Credit.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Form_V_Copy.cs</LastGenOutput>
+      <LastGenOutput>Form_V_Copy_Credit.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\From_RE.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>From_RE.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\From_V_Copy_Credit.rdlc" />
+    <EmbeddedResource Include="Reports\From_V_Credit.rdlc" />
     <EmbeddedResource Include="Reports\From_V.rdlc" />
+    <EmbeddedResource Include="Reports\proc_PreOrder_Cust_Ctrl_Report2.rdlc" />
+    <EmbeddedResource Include="Reports\proc_PreOrder_POStatus_Report.rdlc" />
     <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1537,6 +1580,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmCustomerInfo.resx">
       <DependentUpon>frmCustomerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCustomerMap.resx">
+      <DependentUpon>frmCustomerMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmDataMigration.resx">
       <DependentUpon>frmDataMigration.cs</DependentUpon>
@@ -1589,6 +1635,9 @@
     <EmbeddedResource Include="View\Page\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmProductSlip.resx">
+      <DependentUpon>frmProductSlip.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmProductTable.resx">
       <DependentUpon>frmProductTable.cs</DependentUpon>
     </EmbeddedResource>
@@ -1608,6 +1657,9 @@
     <EmbeddedResource Include="View\Page\frmReceiveTabletData.resx">
       <DependentUpon>frmReceiveTabletData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmRefreshMasterData.resx">
+      <DependentUpon>frmRefreshMasterData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmReport.resx">
       <DependentUpon>frmReport.cs</DependentUpon>
     </EmbeddedResource>
@@ -1622,6 +1674,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmRT.resx">
       <DependentUpon>frmRT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSalesArea.resx">
+      <DependentUpon>frmSalesArea.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSalesUnit.resx">
       <DependentUpon>frmSalesUnit.cs</DependentUpon>
@@ -1674,6 +1729,9 @@
     <EmbeddedResource Include="View\Page\frmCyCle.resx">
       <DependentUpon>frmCyCle.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmVerifyDNS.resx">
+      <DependentUpon>frmVerifyDNS.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\BunttonCtrlBC.resx">
       <DependentUpon>BunttonCtrlBC.cs</DependentUpon>
     </EmbeddedResource>
@@ -1689,14 +1747,23 @@
     <EmbeddedResource Include="View\UControl\frmAppVersion.resx">
       <DependentUpon>frmAppVersion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmCancelPO.resx">
+      <DependentUpon>frmCancelPO.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmConfirmSendData.resx">
       <DependentUpon>frmConfirmSendData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmConfirmTabletData.resx">
+      <DependentUpon>frmConfirmTabletData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCrystalReport.resx">
       <DependentUpon>frmCrystalReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCrystalReportEx.resx">
       <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSignaturePicture.resx">
+      <DependentUpon>frmSignaturePicture.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCustomerPicture.resx">
       <DependentUpon>frmCustomerPicture.cs</DependentUpon>
@@ -1740,6 +1807,9 @@
     <EmbeddedResource Include="View\UControl\frmPromotion.resx">
       <DependentUpon>frmPromotion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchProvince.resx">
+      <DependentUpon>frmSearchProvince.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmSearchSalArea.resx">
       <DependentUpon>frmSearchSalArea.cs</DependentUpon>
     </EmbeddedResource>
@@ -1770,7 +1840,6 @@
     <EmbeddedResource Include="View\UControl\ToolStripMenu.resx">
       <DependentUpon>ToolStripMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config" />
     <EntityDeploy Include="Model\DBModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>DBModel.Designer.cs</LastGenOutput>
@@ -1800,6 +1869,31 @@
     <Content Include="facebook_post_940x788_px__1__12T_icon.ico" />
     <Content Include="Images\back-endLogo.png" />
     <Content Include="Images\Hourglass.gif" />
+    <Content Include="Map.html" />
+    <Content Include="MarkerImages\pin_mark1.png" />
+    <Content Include="MarkerImages\pin_mark10.png" />
+    <Content Include="MarkerImages\pin_mark11.png" />
+    <Content Include="MarkerImages\pin_mark12.png" />
+    <Content Include="MarkerImages\pin_mark13.png" />
+    <Content Include="MarkerImages\pin_mark14.png" />
+    <Content Include="MarkerImages\pin_mark15.png" />
+    <Content Include="MarkerImages\pin_mark16.png" />
+    <Content Include="MarkerImages\pin_mark17.png" />
+    <Content Include="MarkerImages\pin_mark18.png" />
+    <Content Include="MarkerImages\pin_mark19.png" />
+    <Content Include="MarkerImages\pin_mark2.png" />
+    <Content Include="MarkerImages\pin_mark20.png" />
+    <Content Include="MarkerImages\pin_mark21.png" />
+    <Content Include="MarkerImages\pin_mark22.png" />
+    <Content Include="MarkerImages\pin_mark23.png" />
+    <Content Include="MarkerImages\pin_mark24.png" />
+    <Content Include="MarkerImages\pin_mark3.png" />
+    <Content Include="MarkerImages\pin_mark4.png" />
+    <Content Include="MarkerImages\pin_mark5.png" />
+    <Content Include="MarkerImages\pin_mark6.png" />
+    <Content Include="MarkerImages\pin_mark7.png" />
+    <Content Include="MarkerImages\pin_mark8.png" />
+    <Content Include="MarkerImages\pin_mark9.png" />
     <Content Include="Model\DBModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DBModel.edmx</DependentUpon>
@@ -1834,16 +1928,23 @@
     <Content Include="XSLT\proc_ActualSalesByBill.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\proc_GetCustomerDataToExcel.xslt" />
     <Content Include="XSLT\proc_GetProductDataToExcel.xslt" />
     <Content Include="XSLT\proc_RPTStock_Morning.xslt" />
+    <Content Include="XSLT\proc_StockMovement_ByWH_RefCode.xslt" />
     <Content Include="XSLT\ProductMovement_Details.xslt" />
     <Content Include="XSLT\ProductMovement_Summary.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Bath.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Brick.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Carton.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Province.xslt" />
     <Content Include="XSLT\Rep_BankNote_TotalSalePerMonth.xslt" />
     <Content Include="XSLT\Rep_Bank_Note.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_Bakn_Note.xslt" />
     <Content Include="XSLT\Rep_Cust_Sale_By_Root.xslt" />
+    <Content Include="XSLT\Rep_Daily_Sales_OLD.xslt" />
     <Content Include="XSLT\Rep_Distribution.xslt" />
     <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI.xslt">
       <SubType>Designer</SubType>
@@ -1872,7 +1973,9 @@
     <Content Include="XSLT\Rep_Customer_By_Cycle.xslt" />
     <Content Include="XSLT\Rep_Customer_By_Sequence.xslt" />
     <Content Include="XSLT\Rep_Customer_List_By_WH.xslt" />
-    <Content Include="XSLT\Rep_Daily_Sales.xslt" />
+    <Content Include="XSLT\Rep_Daily_Sales.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Rep_Detail_Sales_By_Cust.xslt" />
     <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Bath.xslt" />
     <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Carton.xslt" />
@@ -1880,6 +1983,7 @@
     <Content Include="XSLT\Rep_IV_Sales2.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_PreOrder_POStatus.xslt" />
     <Content Include="XSLT\Rep_ProductHero_ByDate_XSLT.xslt" />
     <Content Include="XSLT\Rep_Product_Transfer.xslt">
       <SubType>Designer</SubType>
@@ -1897,6 +2001,7 @@
     <Content Include="XSLT\Rep_Sales_Per_Emp.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_Sales_By_VanType.xslt" />
     <Content Include="XSLT\Rep_Sum_Shelf.xslt" />
     <Content Include="XSLT\Rep_Sum_Shelf_Daily.xslt">
       <SubType>Designer</SubType>

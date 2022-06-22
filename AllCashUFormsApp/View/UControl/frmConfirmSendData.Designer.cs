@@ -126,7 +126,7 @@ namespace AllCashUFormsApp.View.UControl
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(80, 37);
             this.btnSubmit.TabIndex = 13;
-            this.btnSubmit.Text = "ตกลง";
+            this.btnSubmit.Text = "ยืนยัน";
             this.btnSubmit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);

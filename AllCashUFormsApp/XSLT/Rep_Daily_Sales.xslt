@@ -88,6 +88,20 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					font-size: 10pt;
 					width: 100px;
 					}
+					.SearchResultItem1 {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 200px;
+					}
+					.SearchResultItem2 {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 500px;
+					}
 					.SearchResultAltItem {
 					background-color: #99CCFF;
 					color: Black;
@@ -146,7 +160,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 							Date :
 						</TD>
 						<TD colspan="4" class="SearchResultItem" style="text-align: center;">
-							<xsl:value-of select="Rep_Daily_Sales_XSLT/VisitDate" />
+							<xsl:value-of select="Rep_Daily_Sales_XSLT/DocDate" />
 						</TD>						
 					</TR>
 					<TR>
@@ -154,16 +168,17 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					</TR>
 					<thead>
 						<th class="SearchResultItem">แวน</th>
-						<th class="SearchResultItem">ชื่อพนักงาน</th>
+						<th class="SearchResultItem1">ชื่อพนักงาน</th>
 						<th class="SearchResultItem">รหัส</th>
-						<th class="SearchResultItem">ชื่อร้านค้า</th>
-						<th class="SearchResultItem">ที่อยู่</th>
+						<th class="SearchResultItem1">ชื่อร้านค้า</th>
+						<th class="SearchResultItem2">ที่อยู่</th>
 						<th class="SearchResultItem">วันที่</th>
-						<th class="SearchResultItem">เลขที่เอกสาร</th>
+						<th class="SearchResultItem1">เลขที่เอกสาร</th>
 						<th class="SearchResultItem">รหัสลูกค้า</th>
 						<th class="SearchResultItem">ตลาดที่</th>
 						<th class="SearchResultItem">เวลาในการเยี่ยม</th>
 						<th class="SearchResultItem">เวลาในการเปิดบิล</th>
+						<th class="SearchResultItem">เวลาในการยกเลิกบิล</th>
 						<th class="SearchResultItem">สถานะบิล</th>
 						<xsl:apply-templates select="$prdIds"/>
 						<th class="SearchResultItem">SKU</th>
@@ -209,7 +224,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="WHID"/>
 			</td>
-			<td class="SearchResultItem">
+			<td class="SearchResultItem1">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="Name"/>
 			</td>
@@ -217,11 +232,11 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="EmpIDCard"/>
 			</td>
-			<td class="SearchResultItem">
+			<td class="SearchResultItem1">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="CustName"/>
 			</td>
-			<td class="SearchResultItem">
+			<td class="SearchResultItem2">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="BillTo"/>
 			</td>
@@ -229,7 +244,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="VisitDate"/>
 			</td>
-			<td class="SearchResultItem">
+			<td class="SearchResultItem1">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="DocNo"/>
 			</td>	
@@ -248,6 +263,10 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			<td class="SearchResultItem">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="CustPOTime"/>
+			</td>
+			<td class="SearchResultItem">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+				<xsl:value-of select="CCCustPOTime"/>
 			</td>
 			<td class="SearchResultItem">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>

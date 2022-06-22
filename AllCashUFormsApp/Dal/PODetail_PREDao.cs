@@ -509,26 +509,32 @@ namespace AllCashUFormsApp
 
             try
             {
-                var table = tbl_PODetail_PREs.ToDataTable();
-                if (table != null && table.Rows.Count > 0)
-                {
-                    using (var conn = new SqlConnection(Connection.ConnectionString))
-                    {
-                        if (conn.State == ConnectionState.Closed)
-                        {
-                            conn.Open();
-                        }
+                //var table = tbl_PODetail_PREs.ToDataTable();
+                //if (table != null && table.Rows.Count > 0)
+                //{
+                //    using (var conn = new SqlConnection(Connection.ConnectionString))
+                //    {
+                //        if (conn.State == ConnectionState.Closed)
+                //        {
+                //            conn.Open();
+                //        }
 
-                        string sql = " SELECT * FROM tbl_PODetail_PRE ";
-                        var cmd = new SqlCommand(sql, conn);
-                        var ad = new SqlDataAdapter(cmd);
-                        SqlCommandBuilder cmdb = new SqlCommandBuilder(ad);
-                        ad.Update(table);
-                        table.AcceptChanges();
+                //        string sql = " SELECT * FROM tbl_PODetail_PRE ";
+                //        var cmd = new SqlCommand(sql, conn);
+                //        var ad = new SqlDataAdapter(cmd);
+                //        SqlCommandBuilder cmdb = new SqlCommandBuilder(ad);
+                //        ad.Update(table);
+                //        table.AcceptChanges();
 
-                        ret = 1;
-                    }
-                }
+                //        ret = 1;
+                //    }
+                //}
+
+                string sql = " DELETE FROM tbl_PODetail_PRE WHERE DocNo = '" + tbl_PODetail_PREs.FirstOrDefault().DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_PODetail_PREs.BulkInsert();
             }
             catch (Exception ex)
             {

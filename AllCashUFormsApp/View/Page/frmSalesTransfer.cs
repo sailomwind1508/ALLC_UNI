@@ -15,6 +15,7 @@ namespace AllCashUFormsApp.View.Page
     public partial class frmSalesTransfer : Form
     {
         Employee bu = new Employee();
+        SaleArea buSaleArea = new SaleArea();
         BranchWarehouse bbu = new BranchWarehouse();
         MenuBU menuBU = new MenuBU();
         List<Control> FromBranchWHControls = new List<Control>();
@@ -78,11 +79,6 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void grdSaleEmp_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdSaleEmp.SetRowPostPaint(sender, e, this.Font);
-        }
-
         private void rdoPreOrder_Click(object sender, EventArgs e)
         {
             BindEmpData(7); //7 - PreSale
@@ -114,30 +110,29 @@ namespace AllCashUFormsApp.View.Page
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
-                return;
             }
-
         }
 
         #endregion
 
-        #region #--Method--#
+        #region Method
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
+
         private void BindBranchWHDefault()
         {
             var BranchWH = new List<tbl_BranchWarehouse>();
@@ -150,37 +145,33 @@ namespace AllCashUFormsApp.View.Page
             try
             {
                 lsbSale.ClearListBoxItem(); //new method
-
+                ListWHID.Clear();
                 EmployeeID = "";
 
                 var dtSaleEmp = bu.GetSaleEmployee(PositionID);
 
-                ListWHID.Clear();
+                if (dtSaleEmp.Rows.Count == 0)
+                    return;
 
-
-                if (dtSaleEmp.Rows.Count > 0)
+                foreach (DataRow r in dtSaleEmp.Rows)
                 {
-                    foreach (DataRow r in dtSaleEmp.Rows)
+                    string WHID = r["WHID"].ToString();
+                    if (!string.IsNullOrEmpty(WHID))
                     {
-                        string WHID = r["WHID"].ToString();
-                        if (!string.IsNullOrEmpty(WHID))
-                        {
-                            ListWHID.Add(WHID);
-                        }
+                        ListWHID.Add(WHID);
                     }
+                }
 
-                    var SaleEmp = dtSaleEmp.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHID") is null);
-                    if (SaleEmp != null)
-                    {
-                        lsbSale.Items.Add(SaleEmp.Field<string>("EmpName").ToString());
-                        EmployeeID = SaleEmp.Field<string>("EmpID").ToString();
-                    }
+                var SaleEmp = dtSaleEmp.AsEnumerable().FirstOrDefault(x => x.Field<string>("WHID") is null);
+                if (SaleEmp != null)
+                {
+                    lsbSale.Items.Add(SaleEmp.Field<string>("EmpName").ToString());
+                    EmployeeID = SaleEmp.Field<string>("EmpID").ToString();
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ShowWarningMessage();
-                return;
             }
         }
 
@@ -188,7 +179,7 @@ namespace AllCashUFormsApp.View.Page
         {
             var BranchWH = new List<tbl_BranchWarehouse>();
             BranchWH.Add(new tbl_BranchWarehouse { SaleEmpID = "", WHCode = "==เลือก==" });
-            BranchWH.AddRange(bu.GetAllBranchWarehouse(x => x.WHType == 1 && ListWHID.Contains(x.WHID)));
+            BranchWH.AddRange(bu.GetAllBranchWarehouse(x => x.WHType != 0 && ListWHID.Contains(x.WHID))); // edit by sailom .k 03/03/2022 for support pre-order
 
             if (BranchWH.Count > 0)
             {
@@ -200,38 +191,90 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
+        private void SetSalAreaData()
+        {
+            ListSalAreaID.Clear();
+
+            var data = new List<tbl_SalArea>();
+
+            if (!string.IsNullOrEmpty(cbbBranchWareHouse.Text) && cbbBranchWareHouse.Text.Length == 6)
+            {
+                var listSalArea = buSaleArea.GetSalAreaByWHID(cbbBranchWareHouse.Text);
+
+                if (listSalArea.Count == 24) //มีครบ 24 ตลาด
+                {
+                    var listSaleArea = listSalArea.OrderBy(x => x.Seq).ToList();
+                    data.AddRange(listSaleArea);
+                }
+                else
+                {
+                    string _WHID = cbbBranchWareHouse.Text.Substring(3, 3);
+                    var SalAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(_WHID) && x.Seq != 0);
+
+                    for (int i = 0; i < listSalArea.Count; i++) //ในกรณีที่ตลาด เปลี่ยนชื่อ 
+                    {
+                        var row = SalAreaList.Where(x => x.SalAreaID == listSalArea[i].SalAreaID).ToList();
+                        if (row.Count == 0)
+                        {
+                            SalAreaList.Add(listSalArea[i]);
+                        }
+                    }
+
+                    var _SalAreaID = SalAreaList.OrderBy(x => x.Seq).ToList();
+                    data.AddRange(_SalAreaID);
+                }
+
+            }
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                if (data[i].Seq == 0)
+                {
+                    lsbTransferTo.Items.Add(data[i].SalAreaName);
+                }
+                else
+                {
+                    lsbTransferFr.Items.Add(data[i].SalAreaName);
+                }
+                ListSalAreaID.Add(data[i].SalAreaID);
+            }
+        }
+
         private void BindSalArea()
         {
-            var AllSalAreaID = bu.GetSaleAreaDistrict(x => x.WHID.Contains(cbbBranchWareHouse.Text));
+            //var AllSalAreaID = bu.GetSaleAreaDistrict(x => x.WHID.Contains(cbbBranchWareHouse.Text));
 
-            ListSalAreaID.Clear(); //
+            //ListSalAreaID.Clear(); //
 
-            if (AllSalAreaID.Count > 0)
-            {
-                ListSalAreaID = AllSalAreaID.Select(x => x.SalAreaID).Distinct().ToList();
+            //var SalAreaList = new List<tbl_SalArea>();
 
-                var allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false).OrderBy(x => x.Seq).ToList();
+            //if (AllSalAreaID.Count > 0)
+            //{
+            //    ListSalAreaID = AllSalAreaID.Select(x => x.SalAreaID).Distinct().ToList();
 
-                for (int i = 0; i < allSalArea.Count; i++)
-                {
-                    lsbTransferFr.Items.Add(allSalArea[i].SalAreaName);
-                }
-            }
-            else //ไม่มีข้อมูล SalAreaDistrict
-            {
-                if (!string.IsNullOrEmpty(cbbBranchWareHouse.Text))
-                {
-                    string WHID = cbbBranchWareHouse.Text.Substring(3, 3);
+            //    SalAreaList = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false).OrderBy(x => x.Seq).ToList();
+            //}
+            //else //ไม่มีข้อมูล SalAreaDistrict
+            //{
+            //    if (!string.IsNullOrEmpty(cbbBranchWareHouse.Text))
+            //    {
+            //        string WHID = cbbBranchWareHouse.Text.Substring(3, 3);
+            //        SalAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(WHID) && x.FlagDel == false).OrderBy(x => x.Seq).ToList();
+            //    }
+            //}
 
-                    var allSalArea = bu.GetSaleArea(x => x.SalAreaName.Contains(WHID) && x.FlagDel == false).OrderBy(x => x.Seq).ToList();
-
-                    for (int i = 0; i < allSalArea.Count; i++)
-                    {
-                        lsbTransferFr.Items.Add(allSalArea[i].SalAreaName);
-                        ListSalAreaID.Add(allSalArea[i].SalAreaID);
-                    }
-                }
-            }
+            //for (int i = 0; i < SalAreaList.Count; i++)
+            //{
+            //    if (SalAreaList[i].Seq == 0)
+            //    {
+            //        lsbTransferTo.Items.Add(SalAreaList[i].SalAreaName);
+            //    }
+            //    else
+            //    {
+            //        lsbTransferFr.Items.Add(SalAreaList[i].SalAreaName);
+            //    }
+            //    ListSalAreaID.Add(SalAreaList[i].SalAreaID);
+            //}
         }
 
         private void PrePareBranchWH()
@@ -243,77 +286,72 @@ namespace AllCashUFormsApp.View.Page
             txtSaleEmpID.Clear();
             txtFirstName.Clear();
 
-            if (cbbBranchWareHouse.SelectedIndex > 0)
+            string SaleEmpID = cbbBranchWareHouse.SelectedValue.ToString();
+           
+            if (!string.IsNullOrEmpty(SaleEmpID))
             {
-                string SaleEmpID = cbbBranchWareHouse.SelectedValue.ToString();
-                string VanName = "";
-
-                if (!string.IsNullOrEmpty(SaleEmpID))
+                try
                 {
+                    Cursor.Current = Cursors.WaitCursor;
                     var Emp = bu.GetEmployee(x => x.EmpID == SaleEmpID && x.FlagDel == false);
-
-                    VanName = Emp[0].TitleName + " " + Emp[0].FirstName;
-                    lsbVan.Items.Add(VanName);
+                    if (Emp != null && Emp.Count > 0)
+                    {
+                        string VanName = "";
+                        VanName = Emp[0].TitleName + " " + Emp[0].FirstName;
+                        lsbVan.Items.Add(VanName);
+                        txtSaleEmpID.Text = SaleEmpID;
+                        txtFirstName.Text = VanName;
+                        //BindSalArea();
+                        SetSalAreaData(); //20-06-2022 adisorn
+                    }
+                    Cursor.Current = Cursors.Default;
                 }
-
-                txtSaleEmpID.Text = SaleEmpID;
-                txtFirstName.Text = VanName;
-
-                BindSalArea();
+                catch (Exception ex)
+                {
+                    ex.Message.ShowErrorMessage();
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
 
         public void lsbSelected(ListBox TransferFr, ListBox TransferTo)
         {
-            string SalAreaName = TransferFr.SelectedItem.ToString();
+            try
+            {
+                string SalAreaName = TransferFr.SelectedItem.ToString();
 
-            TransferTo.Items.Add(SalAreaName);
+                TransferTo.Items.Add(SalAreaName);
 
-            TransferFr.Items.RemoveAt(TransferFr.SelectedIndex);
+                TransferFr.Items.RemoveAt(TransferFr.SelectedIndex);
+
+                if (TransferTo.Items.Count > 0)
+                {
+                    TransferTo.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         public void lsbSelectedAll(ListBox TransferFr, ListBox TransferTo)
         {
-            if (TransferFr.Items.Count > 0 && TransferFr != null)
+            try
             {
-                for (int i = 0; i < TransferFr.Items.Count; i++)
+                if (TransferFr.Items.Count > 0 && TransferFr != null)
                 {
-                    string SalAreaName = TransferFr.Items[i].ToString();
-
-                    TransferTo.Items.Add(SalAreaName);
-                }
-
-                TransferFr.Items.Clear();
-            }
-        }
-
-        private void SelectItemToTop()
-        {
-            if (lsbTransferFr.SelectedItem != null)
-            {
-                int OldIndex = lsbTransferFr.SelectedIndex;
-
-                if (lsbTransferFr.Items.Count > 0 && OldIndex != 0)
-                {
-                    lsbTransferFr.Items.Insert(OldIndex - 1, lsbTransferFr.SelectedItem); // Add
-                    lsbTransferFr.SelectedIndex = OldIndex - 1;
-                    lsbTransferFr.Items.RemoveAt(OldIndex + 1);
+                    for (int i = 0; i < TransferFr.Items.Count; i++)
+                    {
+                        string SalAreaName = TransferFr.Items[i].ToString();
+                        TransferTo.Items.Add(SalAreaName);
+                    }
+                    TransferFr.Items.Clear();
                 }
             }
-        }
-
-        private void SelectMoveItemDown()
-        {
-            if (lsbTransferFr.SelectedItem != null)
+            catch (Exception ex)
             {
-                int OldIndex = lsbTransferFr.SelectedIndex;
-
-                if (lsbTransferFr.Items.Count > 0)
-                {
-                    lsbTransferFr.Items.Insert(OldIndex + 2, lsbTransferFr.SelectedItem); // Add
-                    lsbTransferFr.SelectedIndex = OldIndex + 2;
-                    lsbTransferFr.Items.RemoveAt(OldIndex);
-                }
+                ex.Message.ShowErrorMessage();
             }
         }
 
@@ -372,138 +410,6 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void SaveSaleEmp()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(txtFullName.Text) && string.IsNullOrEmpty(EmployeeID))
-                {
-                    string msg = "กรุณาเลือกพนักงานขายที่ต้องการเปลี่ยน !!";
-                    msg.ShowWarningMessage();
-                    return;
-                }
-                else
-                {
-                    string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                    string title = "ยืนยันการบันทึก!!";
-
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
-
-                    int ret = 0;
-
-                    var branchWH = bu.GetBranchWarehouse(x => x.WHID == cbbBranchWareHouse.Text);
-                    if (branchWH != null)
-                    {
-                        branchWH.SaleEmpID = EmployeeID;
-                        ret = bu.UpdateBranchWareHouseData(branchWH);
-                        if (ret == 1)
-                        {
-                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                            msg.ShowInfoMessage();
-
-                            BindEmpData(4);
-                            BindBranchWareHouse();
-
-                            SwapEmployee();
-                        }
-                        else
-                        {
-                            this.ShowProcessErr();
-                            return;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-                return;
-            }
-        }
-
-        private void DeleteSalArea()
-        {
-            try //ลบตลาด ต้องไม่มีข้อมูลลูกค้า
-            {
-                if (lsbTransferTo.Items.Count == 0)
-                {
-                    string msg = "กรุณาเลือกตลาดที่ต้องการลบ !!";
-                    msg.ShowWarningMessage();
-                    return;
-                }
-                else
-                {
-                    string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
-                    string title = "ทำการยืนยัน!!";
-
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
-
-                    var SalAreaData = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID));
-
-                    List<string> SaleAreaID = new List<string>();
-
-                    for (int i = 0; i < lsbTransferTo.Items.Count; i++)
-                    {
-                        var SaleArea = new tbl_SalArea();
-
-                        SaleArea = SalAreaData.FirstOrDefault(x => x.SalAreaName == lsbTransferTo.Items[i].ToString());
-
-                        var cData = bu.GetCustomerSalArea(SaleArea.SalAreaID);
-
-                        if (cData.Count == 0)
-                        {
-                            SaleAreaID.Add(SaleArea.SalAreaID);
-                        }
-                    }
-
-                    if (SaleAreaID.Count > 0)
-                    {
-                        int ret = 0;
-
-                        var SalArea = bu.GetSaleArea(x => SaleAreaID.Contains(x.SalAreaID));
-
-                        for (int i = 0; i < SalArea.Count; i++)
-                        {
-                            SalArea[i].FlagDel = true;
-                            SalArea[i].EdDate = DateTime.Now;
-                            SalArea[i].EdUser = Helper.tbl_Users.Username;
-                        }
-
-                        foreach (var data in SalArea)
-                        {
-                            ret = bu.UpdateSalAreaData(data);
-                        }
-
-                        if (ret == 1)
-                        {
-                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                            msg.ShowInfoMessage();
-
-                            PrePareBranchWH();
-                        }
-                        else
-                        {
-                            this.ShowProcessErr();
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        string msg = "ไม่สามารถลบตลาดที่มีลูกค้าได้ !!";
-                        msg.ShowErrorMessage();
-                        return;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-                return;
-            }
-        }
-
         private void SaveBranchWH()
         {
             try
@@ -547,7 +453,7 @@ namespace AllCashUFormsApp.View.Page
 
                             OldEmpID = grdSaleEmp.Rows[i].Cells["colSaleEmpID"].Value.ToString();
 
-                            var BranchWH = bu.GetBranchWarehouse(x => x.SaleEmpID == NewEmpID && x.WHType == 1);
+                            var BranchWH = bu.GetBranchWarehouse(x => x.SaleEmpID == NewEmpID && x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
 
                             if (BranchWH != null)
                             {
@@ -588,7 +494,6 @@ namespace AllCashUFormsApp.View.Page
                         else
                         {
                             this.ShowProcessErr();
-                            return;
                         }
                     }
                 }
@@ -596,13 +501,11 @@ namespace AllCashUFormsApp.View.Page
                 {
                     string msg = "เลือกพนักงานขายที่ต้องการเปลี่ยน !!";
                     msg.ShowWarningMessage();
-                    return;
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
-                return;
             }
         }
 
@@ -679,11 +582,6 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void grdSpecialVan_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdSpecialVan.SetRowPostPaint(sender, e, this.Font);
-        }
-
         private void Save()
         {
             string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
@@ -693,22 +591,18 @@ namespace AllCashUFormsApp.View.Page
                 return;
 
             if (!ValidateSave())
-            {
                 return;
-            }
 
-            var AllBranchWH = bu.GetAllBranchWarehouse(x => x.WHType == 1);
+            List<int> ret = new List<int>();
+
+            var AllBranchWH = bu.GetAllBranchWarehouse(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
 
             if (!ValidateDupplicate(AllBranchWH))
-            {
                 return;
-            }
-
 
             try
             {
                 var branchWHMapList = new List<tbl_BranchWarehouseMapping>();
-
                 for (int i = 0; i < grdSpecialVan.RowCount; i++)
                 {
                     var branchWHMap = new tbl_BranchWarehouseMapping();
@@ -740,19 +634,17 @@ namespace AllCashUFormsApp.View.Page
 
                 }
 
-                int retBranchWHMap = 0;
-                int retBranchWH = 0;
                 if (branchWHMapList.Count > 0)
                 {
-                    retBranchWHMap = bu.SaveWithStore(branchWHMapList);
+                    ret.Add(bu.SaveWithStore(branchWHMapList));
                 }
 
                 if (BranchWH.Count > 0)
                 {
-                    retBranchWH = bbu.SaveWithStore(BranchWH);
+                    ret.Add(bbu.SaveWithStore(BranchWH));
                 }
 
-                if (retBranchWHMap > 0 && retBranchWH > 0)
+                if (ret.All(x=>x == 1))
                 {
                     string msg = "บันทึกข้อมูลเรียบร้อยแล้ว";
                     msg.ShowInfoMessage();
@@ -768,7 +660,6 @@ namespace AllCashUFormsApp.View.Page
                 else
                 {
                     this.ShowProcessErr();
-                    return;
                 }
             }
             catch (Exception ex)
@@ -878,13 +769,9 @@ namespace AllCashUFormsApp.View.Page
                 if (e != null)
                 {
                     if (e.RowIndex == -1)
-                    {
                         return;
-                    }
                     else
-                    {
                         grdRows = grdSpecialVan.Rows[e.RowIndex];
-                    }
                 }
                 else
                 {
@@ -913,78 +800,6 @@ namespace AllCashUFormsApp.View.Page
             SelectDetails(null);
         }
 
-        private void RemoveVan()
-        {
-            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
-            string title = "ทำการยืนยัน!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            try
-            {
-                var BranchWarehouseMP = new tbl_BranchWarehouseMapping();
-                BranchWarehouseMP.WHIDFrom = grdSpecialVan.CurrentRow.Cells["colWHIDFrom"].Value.ToString();
-                BranchWarehouseMP.WHIDTo = grdSpecialVan.CurrentRow.Cells["colWHIDTo"].Value.ToString();
-
-                var bwh = bu.GetAllBranchWarehouse(x => x.WHType == 1);
-
-                var bwhList = new List<tbl_BranchWarehouse>();
-
-                var bwhFr = bwh.FirstOrDefault(x => x.WHID == BranchWarehouseMP.WHIDFrom);
-                if (bwhFr != null)
-                {
-                    bwhFr.SaleTypeID = 1;
-                    bwhList.Add(bwhFr);
-                }
-
-                var bwhTo = bwh.FirstOrDefault(x => x.WHID == BranchWarehouseMP.WHIDTo);
-                if (bwhTo != null)
-                {
-                    bwhTo.SaleTypeID = 1;
-                    bwhList.Add(bwhTo);
-                }
-
-                int ret = 0;
-                int retBranchWH = 0;
-
-                if (bwhList.Count > 0)
-                {
-                    ret = bu.DeleteWithStore(BranchWarehouseMP);
-                    retBranchWH = bbu.SaveWithStore(bwhList);
-                }
-
-                if (ret > 0 && retBranchWH > 0)
-                {
-                    string msg = "ลบข้อมูลเรียบร้อยแล้ว";
-                    msg.ShowInfoMessage();
-
-                    btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-                    btnAdd.Enabled = true;
-                    btnEdit.Enabled = true;
-                    btnSave.Enabled = false;
-                    btnCancel.Enabled = false;
-
-                    BindVan();
-
-                    txtFromWHCode.DisableTextBox(true);
-                    txtToWHCode.DisableTextBox(true);
-
-                    btnSearchFromWHCode.Enabled = false;
-                    btnSearchToWHCode.Enabled = false;
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-            }
-        }
-
         private void frmSalesTransfer_Load(object sender, EventArgs e)
         {
             InitPage();
@@ -996,8 +811,7 @@ namespace AllCashUFormsApp.View.Page
             btnCancel.Enabled = false;
         }
 
-        #region #-----ButtonEvent-----#
-
+        #region Button_Event
         private void btnEdit_Click(object sender, EventArgs e)
         {
             string tabName = tabPage.SelectedTab.Text.ToString();
@@ -1079,79 +893,208 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnDeleteSalArea_Click(object sender, EventArgs e)
         {
-            DeleteSalArea();
+            try //ลบตลาด ต้องไม่มีข้อมูลลูกค้า
+            {
+                if (lsbTransferTo.Items.Count == 0)
+                {
+                    string msg = "กรุณาเลือกตลาดที่ต้องการลบ !!";
+                    msg.ShowWarningMessage();
+                    return;
+                }
+
+                string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
+                string title = "ทำการยืนยัน!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                Cursor.Current = Cursors.WaitCursor;
+
+                var SalAreaData = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID));
+
+                List<string> SaleAreaID = new List<string>();
+
+                for (int i = 0; i < lsbTransferTo.Items.Count; i++)
+                {
+                    var SaleArea = new tbl_SalArea();
+                    SaleArea = SalAreaData.FirstOrDefault(x => x.SalAreaName == lsbTransferTo.Items[i].ToString());
+
+                    var cData = bu.GetCustomerSalArea(SaleArea.SalAreaID);
+                    if (cData.Count == 0)
+                    {
+                        SaleAreaID.Add(SaleArea.SalAreaID);
+                    }
+                }
+
+                if (SaleAreaID.Count == 0)
+                {
+                    string msg = "ไม่สามารถลบตลาดที่มีลูกค้าได้ !!";
+                    msg.ShowErrorMessage();
+                    return;
+                }
+
+                int ret = 0;
+
+                var SalArea = bu.GetSaleArea(x => SaleAreaID.Contains(x.SalAreaID));
+
+                for (int i = 0; i < SalArea.Count; i++)
+                {
+                    SalArea[i].FlagDel = true;
+                    SalArea[i].EdDate = DateTime.Now;
+                    SalArea[i].EdUser = Helper.tbl_Users.Username;
+                }
+
+                foreach (var data in SalArea)
+                {
+                    ret = bu.UpdateSalAreaData(data);
+                }
+
+                if (ret == 1)
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    PrePareBranchWH();
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void btnSaveSaleEmp_Click(object sender, EventArgs e)
         {
-            SaveSaleEmp();
-        }
-
-        private void btnSaveSalAreaSeq_Click(object sender, EventArgs e)
-        {
-            //เปลี่ยนลำดับ SalArea
             try
             {
-                if (lsbTransferFr.Items.Count == 0)
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (string.IsNullOrEmpty(txtFullName.Text) && string.IsNullOrEmpty(EmployeeID))
                 {
-                    string msg = "กรุณาเลือก Van ที่ต้องการโอนย้ายตลาด !!";
+                    string msg = "กรุณาเลือกพนักงานขายที่ต้องการเปลี่ยน !!";
                     msg.ShowWarningMessage();
                     return;
                 }
+
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                int ret = 0;
+
+                var branchWH = bu.GetBranchWarehouse(x => x.WHID == cbbBranchWareHouse.Text);
+                if (branchWH != null)
+                {
+                    branchWH.SaleEmpID = EmployeeID;
+                    ret = bu.UpdateBranchWareHouseData(branchWH);
+                }
+
+                if (ret == 1)
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    BindEmpData(4);
+                    BindBranchWareHouse();
+                    SwapEmployee();
+                }
                 else
                 {
-                    string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                    string title = "ยืนยันการบันทึก!!";
-
-                    if (!cfMsg.ConfirmMessageBox(title))
-                        return;
-
-                    int ret = 0;
-
-                    var allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false);
-
-                    var ListSalArea = new List<tbl_SalArea>();
-
-                    short Seq = 1;
-
-                    for (int i = 0; i < lsbTransferFr.Items.Count; i++)
-                    {
-                        var SaleArea = new tbl_SalArea();
-
-                        SaleArea = allSalArea.FirstOrDefault(x => x.SalAreaName == lsbTransferFr.Items[i].ToString());
-
-                        if (SaleArea != null)
-                        {
-                            SaleArea.Seq = Seq++;
-                            ListSalArea.Add(SaleArea);
-                        }
-                    }
-
-                    foreach (var data in ListSalArea)
-                    {
-                        ret = bu.UpdateSalAreaData(data);
-                    }
-
-                    if (ret == 1)
-                    {
-                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                        msg.ShowInfoMessage();
-
-                        PrePareBranchWH();
-                    }
-                    else
-                    {
-                        this.ShowProcessErr();
-                        return;
-                    }
+                    this.ShowProcessErr();
                 }
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
-                return;
             }
+
+            Cursor.Current = Cursors.Default;
         }
+
+        private void btnSaveSalAreaSeq_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                string msg = "";
+
+                if (lsbTransferFr.Items.Count == 0)
+                {
+                    msg = "กรุณาเลือก Van ที่ต้องการโอนย้ายตลาด !!";
+                    msg.ShowWarningMessage();
+                    return;
+                }
+
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                int ret = 0;
+
+                var allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID) && x.FlagDel == false);
+                var ListSalArea = new List<tbl_SalArea>();
+
+                short _Seq = 1;
+
+                for (int i = 0; i < lsbTransferFr.Items.Count; i++)
+                {
+                    string saleName = lsbTransferFr.Items[i].ToString();
+                    var data = allSalArea.FirstOrDefault(x => x.SalAreaName == lsbTransferFr.Items[i].ToString());
+
+                    if (data != null)
+                    {
+                        data.Seq = _Seq;
+                        data.EdDate = DateTime.Now;
+                        data.EdUser = Helper.tbl_Users.Username;
+                        ListSalArea.Add(data);
+                        _Seq++;
+                    }
+                }
+
+                for (int i = 0; i < lsbTransferTo.Items.Count; i++)
+                {
+                    var data = allSalArea.FirstOrDefault(x => x.SalAreaName == lsbTransferTo.Items[i].ToString());
+
+                    if (data != null)
+                    {
+                        data.Seq = 0;
+                        data.EdDate = DateTime.Now;
+                        data.EdUser = Helper.tbl_Users.Username;
+                        ListSalArea.Add(data);
+                    }
+                }
+
+                foreach (var data in ListSalArea)
+                {
+                    ret = bu.UpdateSalAreaData(data);
+                }
+
+                if (ret == 1)
+                {
+                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    PrePareBranchWH();
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+            Cursor.Current = Cursors.Default;
+        }//เปลี่ยนลำดับ SalArea
 
         private void btnClearGrdData_Click(object sender, EventArgs e)
         {
@@ -1172,20 +1115,19 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchFromWHCode_Click(object sender, EventArgs e)
         {
-            this.OpenBranchWarehousePopup(FromBranchWHControls, "เลือกคลังสินค้า", x => x.WHType == 1);
+            this.OpenBranchWarehousePopup(FromBranchWHControls, "เลือกคลังสินค้า", x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
         }
 
         private void btnSearchToWHCode_Click(object sender, EventArgs e)
         {
-            this.OpenBranchWarehousePopup(ToBranchWHControls, "เลือกคลังสินค้า", x => x.WHType == 1);
+            this.OpenBranchWarehousePopup(ToBranchWHControls, "เลือกคลังสินค้า", x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
         }
 
         private void btnAddTransferTo_Click(object sender, EventArgs e)
         {
+            
             if (lsbTransferFr.Items.Count > 0)
             {
-                lsbTransferFr.SelectedIndex = 0;
-
                 lsbSelected(lsbTransferFr, lsbTransferTo);
             }
         }
@@ -1194,8 +1136,6 @@ namespace AllCashUFormsApp.View.Page
         {
             if (lsbTransferTo.Items.Count > 0)
             {
-                lsbTransferTo.SelectedIndex = 0;
-
                 lsbSelected(lsbTransferTo, lsbTransferFr);
             }
         }
@@ -1212,24 +1152,131 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnTrasferFrToTop_Click(object sender, EventArgs e)
         {
-            SelectItemToTop();
+            try
+            {
+                if (lsbTransferFr.SelectedItem != null)
+                {
+                    int OldIndex = lsbTransferFr.SelectedIndex;
+
+                    if (lsbTransferFr.Items.Count > 0 && OldIndex != 0)
+                    {
+                        lsbTransferFr.Items.Insert(OldIndex - 1, lsbTransferFr.SelectedItem); // Add
+                        lsbTransferFr.SelectedIndex = OldIndex - 1;
+                        lsbTransferFr.Items.RemoveAt(OldIndex + 1);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            string tabName = tabPage.SelectedTab.Text;
-
-            if (tabName == "ผ่าแวน")
+            try
             {
-                RemoveVan();
+                string tabName = tabPage.SelectedTab.Text;
+                if (tabName == "ผ่าแวน")
+                {
+                    string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
+                    string title = "ทำการยืนยัน!!";
+
+                    if (!cfMsg.ConfirmMessageBox(title))
+                        return;
+
+                    var data = new tbl_BranchWarehouseMapping();
+                    data.WHIDFrom = grdSpecialVan.CurrentRow.Cells["colWHIDFrom"].Value.ToString();
+                    data.WHIDTo = grdSpecialVan.CurrentRow.Cells["colWHIDTo"].Value.ToString();
+
+                    var bwh = bu.GetAllBranchWarehouse(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
+
+                    var bwhList = new List<tbl_BranchWarehouse>();
+
+                    var bwhFr = bwh.FirstOrDefault(x => x.WHID == data.WHIDFrom);
+                    if (bwhFr != null)
+                    {
+                        bwhFr.SaleTypeID = 1;
+                        bwhList.Add(bwhFr);
+                    }
+
+                    var bwhTo = bwh.FirstOrDefault(x => x.WHID == data.WHIDTo);
+                    if (bwhTo != null)
+                    {
+                        bwhTo.SaleTypeID = 1;
+                        bwhList.Add(bwhTo);
+                    }
+
+                    int ret = 0;
+                    int retBranchWH = 0;
+
+                    if (bwhList.Count > 0)
+                    {
+                        ret = bu.DeleteWithStore(data);
+                        retBranchWH = bbu.SaveWithStore(bwhList);
+                    }
+
+                    if (ret > 0 && retBranchWH > 0)
+                    {
+                        string msg = "ลบข้อมูลเรียบร้อยแล้ว";
+                        msg.ShowInfoMessage();
+
+                        btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                        btnAdd.Enabled = true;
+                        btnEdit.Enabled = true;
+                        btnSave.Enabled = false;
+                        btnCancel.Enabled = false;
+
+                        BindVan();
+
+                        txtFromWHCode.DisableTextBox(true);
+                        txtToWHCode.DisableTextBox(true);
+
+                        btnSearchFromWHCode.Enabled = false;
+                        btnSearchToWHCode.Enabled = false;
+                    }
+                    else
+                    {
+                        this.ShowProcessErr();
+                    }
+
+                }
             }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+            
+
+            
         }
 
         private void btnMoveItemDown_Click(object sender, EventArgs e)
         {
-            SelectMoveItemDown();
+            if (lsbTransferFr.SelectedItem != null)
+            {
+                int OldIndex = lsbTransferFr.SelectedIndex;
+
+                if (lsbTransferFr.Items.Count > 0)
+                {
+                    lsbTransferFr.Items.Insert(OldIndex + 2, lsbTransferFr.SelectedItem); // Add
+                    lsbTransferFr.SelectedIndex = OldIndex + 2;
+                    lsbTransferFr.Items.RemoveAt(OldIndex);
+                }
+            }
         }
 
         #endregion
+
+
+        private void grdSaleEmp_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdSaleEmp.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdSpecialVan_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdSpecialVan.SetRowPostPaint(sender, e, this.Font);
+        }
     }
 }

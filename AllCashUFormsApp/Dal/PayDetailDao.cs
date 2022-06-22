@@ -11,6 +11,54 @@ namespace AllCashUFormsApp
 {
     public static class PayDetailDao
     {
+        public static List<tbl_PayDetail> GetPayDetailSingle(this tbl_PayDetail tbl_PayDetail, string _DocNo, int _FlagDel)
+        {
+            string msg = "start PayDetailDao=>GetPayDetailSingle";
+            msg.WriteLog(null);
+
+            var list = new List<tbl_PayDetail>();
+            try
+            {
+                string sql = "SELECT *  FROM tbl_PayDetail";
+                sql += " WHERE FlagDel = " + _FlagDel;
+                if (!string.IsNullOrEmpty(_DocNo))
+                {
+                    sql += " AND DocNo = '" + _DocNo.Trim() + "'";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PayDetail), sql);
+                list = dynamicListReturned.Cast<tbl_PayDetail>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PayDetail != null ? tbl_PayDetail.GetType() : null);
+            }
+
+            msg = "end PayDetailDao=>GetPayDetailSingle";
+            msg.WriteLog(null);
+
+            return list;
+        }
+
+        public static int SelectPayDetail_MaxID(this tbl_PayDetail tbl_PayDetail)
+        {
+            int MaxID = 0;
+            try
+            {
+                string sql = "SELECT TOP 1 MAX(AutoID) FROM tbl_PayDetail";
+                var dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    MaxID = dt.Rows[0].Field<int>(0) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PayDetail.GetType());
+            }
+            return MaxID;
+        }
+
         public static List<tbl_PayDetail> Select(this tbl_PayDetail tbl_PayDetail, Func<tbl_PayDetail, bool> predicate)
         {
             List<tbl_PayDetail> list = new List<tbl_PayDetail>();

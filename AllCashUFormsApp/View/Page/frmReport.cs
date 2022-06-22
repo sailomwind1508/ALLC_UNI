@@ -174,13 +174,13 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -504,15 +504,16 @@ namespace AllCashUFormsApp.View.Page
                 lblReportHeader.Text = e.Node.Text;
 
                 List<string> set1 = new List<string>() { "Node2", "Node3", "Node20", "Node34", "Node50_2" };
-                List<string> set2 = new List<string>() { "Node56", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton", "Node43", "Node44", "Node55" };
-                List<string> set3 = new List<string>() { "Node45", "Node49", "Node51", "Node53", "Node11", "Node29" };
-                List<string> set4 = new List<string>() { "Node4", "Node5", "Node8", "Node9", "proc_StockMovement_ByWH", "NodeRLSumm", "Rep_BillDuplicate" };
-                List<string> set5 = new List<string>() { "Node34_Bath", "Node34_Carton", "Node34_Unit", "Node48", "Node40" };
+                List<string> set2 = new List<string>() { "Node56", "Node12", "Node43", "Node44", "Node55" };
+                List<string> set3 = new List<string>() { "Node45", "Node49", "Node51", "Node53", "Node11", "Node29", "Rep_PreOrder_POStatus_XSLT" };
+                List<string> set4 = new List<string>() { "Node4", "Node5", "Node8", "Node9", "proc_StockMovement_ByWH", "NodeRLSumm", "Rep_BillDuplicate", "proc_StockMovement_ByWH_RefCode" };
+                List<string> set5 = new List<string>() { "Node34_Bath", "Node34_Carton", "Node34_Unit", "Node48", "Node40", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton", };
                 List<string> set6 = new List<string>() { "Node50", "Node52" };
                 List<string> set7 = new List<string>() { "Rpt_ActualSalesByBill", "Node7", "Node21", "Node22", "Rpt_ActualSalesByVan", "Node24" };
-                List<string> set8 = new List<string>() { "Node41" };
+                List<string> set8 = new List<string>() { "Node41", "Node42-1", "Node42-2", "Node42-3" };
                 List<string> set9 = new List<string>() { "Node31" };
                 List<string> set10 = new List<string>() { "Node28" };
+                List<string> set11 = new List<string>() { "Rep_Sales_By_VanType" };
 
                 //Node1 = Main menu การขาย report
                 //Node2 = อย่างย่อ
@@ -532,7 +533,9 @@ namespace AllCashUFormsApp.View.Page
                 {
                     EnableDailyCycleCtrl(true, false, true, false, false, true, true);
                     EnableDistribution(true, true);
-                    if (new List<string>() { "Node56", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton" }.Contains(e.Node.Name)) //Disable Rang
+
+                    //if (new List<string>() { "Node56", "Node12", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton" }.Contains(e.Node.Name)) //Disable Rang
+                    if (new List<string>() { "Node56", "Node12" }.Contains(e.Node.Name)) //Disable Rang
                     {
                         EnableDailyCycleCtrl(true, false, true, false, false, true, false);
                     }
@@ -541,6 +544,11 @@ namespace AllCashUFormsApp.View.Page
                 {
                     EnableDailyCycleCtrl(true, true, true, true, true, true, true);
                     EnableDistribution(true, true);
+
+                    if (e.Node.Name == "Rep_PreOrder_POStatus_XSLT") //Disable Rang
+                    {
+                        EnableDailyCycleCtrl(true, true, true, true, true, true, false);
+                    }
                 }
                 else if (set4.Contains(e.Node.Name))//Set 4 รายวัน+DocType+Dis+WHID+S+R-------------
                 {
@@ -552,11 +560,11 @@ namespace AllCashUFormsApp.View.Page
                     {
                         EnableDocType(true, true, true, false);
                     }
-                    if (e.Node.Name == "proc_StockMovement_ByWH" || e.Node.Name == "Rep_BillDuplicate") //Hide DocType
+                    if (e.Node.Name == "proc_StockMovement_ByWH" || e.Node.Name == "Rep_BillDuplicate" || e.Node.Name == "proc_StockMovement_ByWH_RefCode") //Hide DocType
                     {
                         EnableDocType(false, false, false, false);
                     }
-                    if (e.Node.Name == "proc_StockMovement_ByWH" || e.Node.Name == "NodeRLSumm") //Hide DocType
+                    if (e.Node.Name == "proc_StockMovement_ByWH" || e.Node.Name == "NodeRLSumm" || e.Node.Name == "proc_StockMovement_ByWH_RefCode") //Hide DocType
                     {
                         EnableBranchWarehouse(true, true, true);
                     }
@@ -567,6 +575,11 @@ namespace AllCashUFormsApp.View.Page
                     EnableDistribution(true, true);
                     EnableProductSubGroup(true, true);
                     EnableProductID(true, true);
+
+                    if (new List<string>() { "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton" }.Contains(e.Node.Name)) //Disable Rang
+                    {
+                        EnableDailyCycleCtrl(true, false, true, false, false, true, true);
+                    }
                 }
                 else if (set6.Contains(e.Node.Name))//Set 6 รายวัน/รายรอบ+Dis+PG+P+S+R---------------
                 {
@@ -620,6 +633,16 @@ namespace AllCashUFormsApp.View.Page
                     EnableDistribution(true, true);
                     EnableFromWarehouse(true, true);
                     EnableToWarehouse(true, true);
+                }
+                else if (set11.Contains(e.Node.Name))//Set11 รายวัน รายรอบ จุดกระจาย 
+                {
+                    EnableDailyCycleCtrl(true, true, true, true, true, true, true);
+                    EnableDistribution(true, true);
+                    EnableBranchWarehouse(true, true, false);
+                    EnableProductSubGroup(true, true);
+                    EnableProductID(true, true);
+                    chkProSubGroup.Enabled = true;
+                    chkProID.Enabled = true;
                 }
                 else
                 {
@@ -761,7 +784,7 @@ namespace AllCashUFormsApp.View.Page
                     }
                     else
                     {
-                        whList = bu.GetAllBranchWarehouse(x => x.WHType == 1);
+                        whList = bu.GetAllBranchWarehouse(x => x.WHType != 0); // == 1); // edit by sailom .k 03/03/2022 for support pre-order
                     }
 
                     if (whList.Count > 0)
@@ -813,14 +836,15 @@ namespace AllCashUFormsApp.View.Page
                     _params.Add("@ShopTypeID", Convert.ToInt32(txtShopType.Text));
                 //ShopTypeID--------------------------------------
 
-                if (reportNameTxt == "รายงานสรุป RL รายแวน")
-                {
-                    _params = new Dictionary<string, object>();
-                    _params.Add("@DocDate", dtpFromToD.Value);
-                    _params.Add("@WHID", txtWHCode.Text);
-                    _params.Add("@BranchID", txtBranchCode.Text);
-                }
-                else if (reportNameTxt == "รายงานสัดส่วน(SKU)")
+                //if (reportNameTxt == "รายงานสรุป RL รายแวน")
+                //{
+                //    _params = new Dictionary<string, object>();
+                //    _params.Add("@DocDate", dtpFromToD.Value);
+                //    _params.Add("@WHID", txtWHCode.Text);
+                //    _params.Add("@BranchID", txtBranchCode.Text);
+                //}
+                //else 
+                if (reportNameTxt == "รายงานสัดส่วน(SKU)")
                 {
                     _params = new Dictionary<string, object>();
 
@@ -882,6 +906,7 @@ namespace AllCashUFormsApp.View.Page
                     case "รายงานสรุปจำนวนร้านค้าทั้งหมด (ตามคลังรถ)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Customer_List_By_WH.xslt", "Rep_Customer_List_By_WH_XSLT", _params, true); } break;
                     case "รายงานร้านค้าตาม Customer List": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Customer_By_Sequence.xslt", "Rep_Customer_By_Sequence_XSLT", _params, true); } break;
                     case "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสสินค้า": { this.OpenExcelReportsPopup(reportNameTxt, "proc_StockMovement_ByWH.xslt", "proc_StockMovement_ByWH_XSLT", _params, true); } break;
+                    case "สรุปยอดเคลื่อนไหวสินค้า เรียงตามรหัสบัญชีหน่วยเล็ก": { this.OpenExcelReportsPopup(reportNameTxt, "proc_StockMovement_ByWH_RefCode.xslt", "proc_StockMovement_ByWH_RefCode_XSLT", _params, true); } break;
                     case "รายงานยอดขาย DSR (SKU)": { this.OpenExcelReportsPopup(reportNameTxt, "", "", _params, true); } break;
                     case "รายงานยอดขาย DSR (Bath)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_DSR_Sales_By_Sku_Bath.xslt", "Rep_DSR_Sales_By_Sku_Bath_XSLT", _params, true); } break;
                     case "รายงานยอดขาย DSR (Carton)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_DSR_Sales_By_Sku_Carton.xslt", "Rep_DSR_Sales_By_Sku_Carton_XSLT", _params, true); } break;
@@ -889,6 +914,13 @@ namespace AllCashUFormsApp.View.Page
                     case "รายงานบิลซ้ำ": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_BillDuplicate.xslt", "Rep_BillDuplicate", _params, true); } break;
                     case "รายงานร้านซื้อแยกตามตลาด": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Cust_Sale_By_Root.xslt", "Rep_Cust_Sale_By_Root_XSLT", _params, true); } break;
                     case "รายงานรายละเอียดทำลายสินค้า": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_RJ_By_Doc_Detail.xslt", "Rep_RJ_By_Doc_Detail_XSLT", _params, true); } break;
+                    case "รายงานยอดขายตามจังหวัด (บาท)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_ActualSale_By_Province.xslt", "Rep_ActualSale_By_Province_XSLT", _params, true); } break;
+                    
+                    case "รายงานยอดขายแยกตามลูกค้า(Brick)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_ActualSale_By_Customer_Brick.xslt", "Rep_ActualSale_By_Customer_Brick_XSLT", _params, true); } break;
+                    case "รายงานยอดขายแยกตามลูกค้า(Carton)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_ActualSale_By_Customer_Carton.xslt", "Rep_ActualSale_By_Customer_Carton_XSLT", _params, true); } break;
+                    case "รายงานยอดขายแยกตามลูกค้า(Bath)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_ActualSale_By_Customer_Bath.xslt", "Rep_ActualSale_By_Customer_Bath_XSLT", _params, true); } break;
+                    case "รายงานสถานะ (Pre-Order)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_PreOrder_POStatus.xslt", "Rep_PreOrder_POStatus_XSLT", _params, true); } break;
+                    case "รายงานยอดขายแยกตามประเภทแวน": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Sales_By_VanType.xslt", "Rep_SaleTarget_XSLT", _params, true); } break;
 
                     default:
                         break;
@@ -911,7 +943,6 @@ namespace AllCashUFormsApp.View.Page
         private void frmReport_Load(object sender, EventArgs e)
         {
             InitPage();
-
             InitialData();
         }
 
@@ -923,8 +954,6 @@ namespace AllCashUFormsApp.View.Page
             {
                 txtWHCode.Text = _txtBW;
             }
-
-
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -1148,7 +1177,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    whList = bu.GetAllBranchWarehouse(x => x.WHType == 1);
+                    whList = bu.GetAllBranchWarehouse(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order // == 1);
                 }
 
                 if (whList.Count > 0)

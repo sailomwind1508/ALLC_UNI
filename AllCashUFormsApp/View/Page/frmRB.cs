@@ -23,7 +23,7 @@ namespace AllCashUFormsApp.View.Page
 
         List<tbl_ProductUom> uoms = new List<tbl_ProductUom>();
         bool validateNewRow = true;
-        string docTypeCode = "";
+        public string docTypeCode = "";
         int runDigit = 0;
         List<Control> searchBranchControls = new List<Control>();
         List<Control> searchFromBWHControls = new List<Control>();
@@ -73,7 +73,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "RB");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "RB");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -94,7 +94,7 @@ namespace AllCashUFormsApp.View.Page
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnPrintCrys.Enabled = btnPrint.Enabled;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -109,7 +109,7 @@ namespace AllCashUFormsApp.View.Page
             dtpDocDate.SetDateTimePickerFormat();
             //dtpDueDate.SetDateTimePickerFormat();
 
-            allUOM = bu.GetUOM();
+            allUOM = bu.tbl_ProductUom;
 
             uoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
             //Func<tbl_ProductUom, bool> tbl_ProductUomPre = (x => uomList.Contains(x.ProductUomID));
@@ -119,12 +119,16 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
 
-            allProduct = bu.GetProduct();
-            allUomSet = bu.GetUOMSet();
+            allProduct = bu.tbl_Product;
+            allUomSet = bu.tbl_ProductUomSet;
 
-            //allProductPrice = bu.GetProductPriceGroup();
-            allProdGroup = bu.GetProductGroup();
-            allProdSubGroup = bu.GetProductSubGroup();
+            //allProductPrice = bu.tbl_ProductPriceGroup;
+            allProdGroup = bu.tbl_ProductGroup;
+            allProdSubGroup = bu.tbl_ProductSubGroup;
+
+            var bw = bu.GetAllBranchWarehouse();
+            if (bw.Count > 0)
+                pnlPODocNo.Visible = bw.Any(x => x.WHType == 2);
         }
 
         private void AddNewRow(DataGridView grd, int rowIndex)
@@ -137,6 +141,242 @@ namespace AllCashUFormsApp.View.Page
             grd.Rows.Add(1);
             //InitRowData("", rowIndex);
             grd.InitRowData(this, initDataGridList, 0, "", rowIndex, allProduct, uoms, bu, 0);
+        }
+
+        //public void BindRBWithPo(string poDocNo)
+        //{
+        //    string rbDocNo = "";
+        //    var refRB = bu.GetRefRB(poDocNo);
+        //    if (refRB != null && refRB.Rows.Count > 0)
+        //    {
+        //        var _docNo = refRB.Rows[0]["DocNo"].ToString();
+        //        if (!string.IsNullOrEmpty(_docNo))
+        //        {
+        //            rbDocNo = _docNo;
+        //        }
+        //    }
+
+        //    bu.GetDocData(rbDocNo, docTypeCode);
+
+        //    var pr = bu.tbl_PRMaster;
+        //    var prDts = bu.tbl_PRDetails;
+
+        //    if (string.IsNullOrEmpty(pr.DocNo))
+        //    {
+        //        string msg = "ไม่พบข้อมูลเลขที่เอกสาร!!!";
+        //        msg.ShowWarningMessage();
+
+        //        btnCancel.PerformClick();
+
+        //        return;
+        //    }
+
+        //    if (pr != null)
+        //    {
+        //        BindPRMaster(pr);
+        //    }
+        //    if (prDts != null && prDts.Count > 0)
+        //    {
+        //        BindPRDetail(prDts);
+        //    }
+
+        //    this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
+
+        //    btnSearchDoc.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+        //    btnPrintCrys.Enabled = btnPrint.Enabled;
+
+        //    txdDocNo.DisableTextBox(false);
+        //    txdDocNo.BackColor = Color.Turquoise; // Translator.FromHtml("#7FFFD4");
+
+        //    grdList.CellContentClick -= grdList_CellContentClick;
+
+        //    //CheckCancelDoc(po.DocStatus);
+        //    bool checkEditMode = bu.CheckExistsPR(rbDocNo);
+        //    pr.DocStatus.CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
+        //}
+
+        public void BindRBFromPOData(string poDocNo, string _docTypeCode, bool isOtherForm = true)
+        {
+            if (isOtherForm)
+                btnAdd.PerformClick();
+
+            bu.GetDocData(poDocNo, _docTypeCode);
+
+            var po = bu.tbl_POMaster;
+            var poDts = bu.tbl_PODetails;
+
+            if (string.IsNullOrEmpty(po.DocNo))
+            {
+                string msg = "ไม่พบข้อมูลเลขที่เอกสาร!!!";
+                msg.ShowWarningMessage();
+
+                btnCancel.PerformClick();
+
+                return;
+            }
+
+            if (po != null)
+            {
+                BindPOMaster(po);
+            }
+            if (poDts != null && poDts.Count > 0)
+            {
+                BindPODetail(poDts);
+            }
+
+            pnlPODocNo.Visible = false;
+            bool checkPreOrder = false;
+
+            if (string.IsNullOrEmpty(txtFromWHCode.Text))
+            {
+                var bw = bu.GetAllBranchWarehouse();
+                if (bw.Count > 0)
+                    checkPreOrder = bw.Any(x => x.WHType == 2);
+            }
+            else
+            {
+                var bw = bu.GetBranchWarehouse(txtFromWHCode.Text);
+                if (bw != null)
+                    checkPreOrder = bw.WHType == 2;
+            }
+
+            if (checkPreOrder)
+            {
+                pnlPODocNo.Visible = true;
+                foreach (Control item in pnlPODocNo.Controls)
+                {
+                    item.Enabled = true;
+                }
+            }
+            else
+            {
+                pnlPODocNo.Visible = false;
+            }
+
+            //CheckCancelDoc(po.DocStatus);
+            //bool checkEditMode = bu.CheckExistsPR(rbDocNo);
+            //pr.DocStatus.CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
+        }
+
+        private void BindPOMaster(tbl_POMaster pr)
+        {
+            txtPODoc.Text = pr.DocNo;
+            dtpDocDate.Value = pr.DocDate.ToDateTimeFormat();
+
+            var branch = bu.tbl_Branchs;
+            if (branch != null && branch.Count > 0)
+            {
+                txtBranchCode.Text = branch[0].BranchID;
+                txtBranchName.Text = branch[0].BranchName;
+            }
+
+            var bwh = bu.GetAllBranchWarehouse();
+            Func<tbl_BranchWarehouse, bool> bwhPredicate_From = (x => x.WHID == pr.WHID);
+            var frombwh = bwh.Where(bwhPredicate_From).ToList();
+            if (frombwh != null && frombwh.Count > 0)
+            {
+                txtFromWHCode.Text = frombwh[0].WHCode;
+                txtFromWHName.Text = frombwh[0].WHName;
+            }
+
+            Func<tbl_BranchWarehouse, bool> bwhPredicate_To = (x => x.WHCode == "1000");
+            var tobwh = bwh.Where(bwhPredicate_To).ToList();
+            if (tobwh != null && tobwh.Count > 0)
+            {
+                txtToWHCode.Text = tobwh[0].WHCode;
+                txtToWHName.Text = tobwh[0].WHName;
+            }
+
+            var emp = bu.GetEmployee(pr.SaleEmpID);
+            if (emp != null)
+            {
+                txtEmpCode.Text = pr.SaleEmpID;
+                txtEmpName.Text = string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName);
+            }
+
+            if (ddlDocStatus.DataSource == null)
+            {
+                var allDocStatus = bu.GetDocStatus().Where(x => x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList();
+                ddlDocStatus.BindDropdownList(allDocStatus, "DocStatusName", "DocStatusCode", 0);
+            }
+
+            var user = bu.GetEmployeeByUserName(pr.CrUser); //edit by sailom 22/03/2022 //bu.GetEmployeeByUserName(pr.EmpID);
+            if (user != null)
+                txtCrUser.Text = string.Join(" ", user.TitleName, user.FirstName, user.LastName);
+            else
+                txtCrUser.Text = pr.CrUser;
+
+            txtComment.Text = pr.Comment  + (!string.IsNullOrEmpty(pr.DocNo) ? (" บิลขายเลขที่ : " + pr.DocNo) : "");
+        }
+
+        private void BindPODetail(List<tbl_PODetail> prDts)
+        {
+            grdList.Rows.Clear();
+
+            //Last edit by sailom.k 14/09/2021 tunning performance-------------------------
+            isAdd = false;
+            allPRDetails = new List<tbl_PRDetail>();
+            foreach (var item in prDts)
+            {
+                var prDt = new tbl_PRDetail();
+                prDt.DocNo = "";
+                prDt.ProductID = item.ProductID;
+                prDt.Line = item.Line;
+                prDt.ProductName = item.ProductName;
+
+                var prdUOM = allUOM.FirstOrDefault(x => x.ProductUomName == item.OrderUom.ToString());
+                if (prdUOM != null)
+                    prDt.OrderUom = prdUOM.ProductUomID;
+
+                var cell5Value = Convert.ToDecimal(item.OrderQty);
+                prDt.OrderQty = cell5Value;
+                prDt.SendQty = cell5Value;
+                prDt.ReceivedQty = cell5Value;
+                prDt.RejectedQty = 0;
+                prDt.StockedQty = 0;
+                prDt.UnitCost = 0;
+                prDt.UnitPrice = 0;
+                prDt.VatType = 0;
+                prDt.LineTotal = 0;
+                prDt.LineRemark = "";
+                allPRDetails.Add(prDt);
+            }
+
+            var listPrdID = prDts.Select(x => x.ProductID).ToList();
+            prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
+
+            for (int i = 0; i < prDts.Count; i++)
+            {
+                grdList.Rows.Add(1);
+
+                grdList.Rows[i].Cells[0].Value = prDts[i].ProductID;
+
+                string productName = string.Empty;
+                if (!string.IsNullOrEmpty(prDts[i].ProductName))
+                {
+                    productName = prDts[i].ProductName;
+                }
+                else
+                {
+                    var data = allProduct.FirstOrDefault(x => x.ProductID == prDts[i].ProductID);
+                    if (data != null)
+                    {
+                        productName = data.ProductName;
+                    }
+                }
+
+                grdList.Rows[i].Cells[2].Value = productName;
+                grdList.BindComboBoxCell(allProduct, grdList.Rows[i], i, false, 3, uoms, this, bu, 0);
+                grdList.Rows[i].Cells[3].Value = prDts[i].OrderUom; //edit by sailom 25-05-2021 about order uom 
+
+                Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.ProductID == prDts[i].ProductID && x.UomSetID == prDts[i].OrderUom);
+                var productUOMSet = allUomSet.Where(tbl_ProductUomSetPre).ToList(); // bu.GetUOMSet(tbl_ProductUomSetPre);
+                if (productUOMSet != null && productUOMSet.Count > 0)
+                {
+                    grdList.Rows[i].Cells[4].Value = "1*" + productUOMSet[0].BaseQty;
+                }
+                grdList.Rows[i].Cells[5].Value = prDts[i].OrderQty;
+            }
         }
 
         public void BindRBData(string rbDocNo)
@@ -225,13 +465,17 @@ namespace AllCashUFormsApp.View.Page
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == pr.DocStatus; };
             ddlDocStatus.SelectedValueDropdownList(condition);
 
-            var user = bu.GetEmployeeByUserName(pr.EmpID);
+            var user = bu.GetEmployeeByUserName(pr.CrUser); //edit by sailom 22/03/2022 //bu.GetEmployeeByUserName(pr.EmpID);
             if (user != null)
                 txtCrUser.Text = string.Join(" ", user.TitleName, user.FirstName, user.LastName);
             else
                 txtCrUser.Text = pr.CrUser;
 
             txtComment.Text = pr.Comment;
+
+            //var comment = "";
+            //comment = string.Join(", ", (!string.IsNullOrEmpty(pr.ApprovedBy) ? "RB = " + pr.ApprovedBy : ""), pr.Comment);
+            //txtComment.Text = comment;
         }
 
         private void BindPRDetail(List<tbl_PRDetail> prDts)
@@ -246,8 +490,8 @@ namespace AllCashUFormsApp.View.Page
             prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
             //Last edit by sailom.k 14/09/2021 tunning performance--------------------
 
-            //var allUOM = bu.GetUOM();
-            //var allProduct = bu.GetProduct();
+            //var allUOM = bu.tbl_ProductUom;
+            //var allProduct = bu.tbl_Product;
 
             for (int i = 0; i < prDts.Count; i++)
             {
@@ -1058,7 +1302,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret) //validate data grid
             {
-                var allProduct = bu.GetProduct();
+                var allProduct = bu.tbl_Product;
                 var whid = txtFromWHCode.Text;
                 //var allBwh = bu.GetAllBranchWarehouse();
                 //var bwh = allBwh.FirstOrDefault(x => x.WHCode == whid);
@@ -1240,7 +1484,7 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
             //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rpt", "Form_RB", _params);
 
-            this.OpenTestCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rdlc", "Form_RB", _params); //Reporting service by sailom 30/11/2021
+            this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rdlc", "Form_RB", _params); //Reporting service by sailom 30/11/2021
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)
@@ -1516,5 +1760,15 @@ namespace AllCashUFormsApp.View.Page
             MemoryManagement.FlushMemory();
         }
 
+        private void btnPODoc_Click(object sender, EventArgs e)
+        {
+            this.OpenIVDocPopup("ใบกำกับสินค้า/กำกับภาษี", "IVPreRB");
+        }
+
+        private void txtPODoc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                BindRBFromPOData(txtPODoc.Text, "IV", false);
+        }
     }
 }

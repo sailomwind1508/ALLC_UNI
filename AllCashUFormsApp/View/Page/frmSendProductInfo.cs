@@ -22,14 +22,14 @@ namespace AllCashUFormsApp.View.Page
         #region #private_method
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -52,57 +52,77 @@ namespace AllCashUFormsApp.View.Page
             btnSendData.Enabled = false;
             btnCancelSend.Enabled = false;
 
+            if (Helper.BranchName != "CENTER")
+            {
+                string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
+                msg.ShowWarningMessage();
+                return;
+            }
+
             BindBranchData();
             BindProductData();
-
-            string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
-            msg.ShowWarningMessage();
         }
 
         private void BindBranchData()
         {
-            DataTable dtBranch = new DataTable();
-
-            bu.GetSendProductInfoPrepareData();
-
-            dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
-
-            DataTable newTable = new DataTable();
-
-            newTable.Columns.Add("ChkBranch", typeof(bool));
-            newTable.Columns.Add("BranchID", typeof(string));
-            newTable.Columns.Add("BranchRefCode", typeof(string));
-            newTable.Columns.Add("BranchName", typeof(string));
-            newTable.Columns.Add("Pic", typeof(Bitmap));
-            newTable.Columns.Add("OnlineStatus", typeof(bool));
-
-            Bitmap wifi_Img = new Bitmap(Properties.Resources.wifi); // new Resource Image
-            Bitmap power_off_lmg = new Bitmap(Properties.Resources.closeBtn);
-
-            foreach (DataRow r in dtBranch.Rows)
+            try
             {
-                Bitmap colPic = Convert.ToBoolean(r["OnlineStatus"]) == true ? wifi_Img : power_off_lmg;
-                newTable.Rows.Add(false
-                    , r["BranchID"].ToString()
-                    , r["BranchRefCode"].ToString()
-                    , r["BranchName"].ToString()
-                    , colPic
-                    , r["OnlineStatus"]);
-            }
+                Cursor.Current = Cursors.WaitCursor;
 
-            grdBranch.DataSource = newTable;
+                chkBoxSelectBranch.Checked = false;
 
-            for (int i = 0; i < grdBranch.Rows.Count; i++)
-            {
-                bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-                // OnlineStatus = true คือ แก้ไขได้
-                if (OnlineStatus == false)
+                DataTable newTable = new DataTable();
+                newTable.Columns.Add("ChkBranch", typeof(bool));
+                newTable.Columns.Add("BranchID", typeof(string));
+                newTable.Columns.Add("BranchRefCode", typeof(string));
+                newTable.Columns.Add("BranchName", typeof(string));
+                newTable.Columns.Add("Pic", typeof(Bitmap));
+                newTable.Columns.Add("OnlineStatus", typeof(bool));
+
+                //bu.GetSendProductInfoPrepareData();
+                bu.proc_GetDNS_Data(); //ดึงข้อมูล DNS ที่ออนไลน์ เฉพาะ ศูนย์ U-Force Edit By Adisorn 31/05/2022
+
+                var dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
+
+                Bitmap wifi_Img = new Bitmap(Properties.Resources.wifi); // new Resource Image
+                Bitmap power_off_lmg = new Bitmap(Properties.Resources.closeBtn);
+
+                foreach (DataRow r in dtBranch.Rows)
                 {
-                    grdBranch.Rows[i].Cells["colChkBranch"].ReadOnly = true;
-                }
-            }
+                    //Bitmap colPic = null; //adisorn 31/05/2022
+                    //if (Convert.ToBoolean(r["OnlineStatus"]) == true && r["db_name"].ToString().Contains("DB_ALL_CASH_UNI"))
+                    //    colPic = wifi_Img;
+                    //else
+                    //    colPic = power_off_lmg;
 
-            lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
+                    Bitmap colPic = Convert.ToBoolean(r["OnlineStatus"]) == true ? wifi_Img : power_off_lmg;
+                    newTable.Rows.Add(false
+                        , r["BranchID"].ToString()
+                        , r["BranchRefCode"].ToString()
+                        , r["BranchName"].ToString()
+                        , colPic
+                        , r["OnlineStatus"]);
+                }
+
+                grdBranch.DataSource = newTable;
+
+                for (int i = 0; i < grdBranch.Rows.Count; i++)
+                {
+                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
+                    // OnlineStatus = true คือ แก้ไขได้
+                    if (OnlineStatus == false)
+                    {
+                        grdBranch.Rows[i].Cells["colChkBranch"].ReadOnly = true;
+                    }
+                }
+
+                lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void PrePareDataTable_Product(DataTable newTable)
@@ -128,36 +148,51 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindProductData()
         {
-            int flagDel = rdoN.Checked ? 0 : 1;
-
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@flagDel", flagDel);
-            _params.Add("@Search", txtSearch.Text);
-
-            DataTable dt = new DataTable();
-            dt = bu.GetSendData_Product(_params);
-
-            DataTable newTable = new DataTable();
-
-            PrePareDataTable_Product(newTable);
-
-            foreach (DataRow r in dt.Rows)
+            try
             {
-                newTable.Rows.Add(false, r["ProductID"], r["ProductName"], r["ProductRefCode"], r["ProductShortName"]
-                  , r["ProductGroupID"], r["ProductGroupName"], r["ProductSubGroupID"], r["ProductSubGroupName"]
-                  , r["SaleUomID"], r["ProductUomName"], r["Seq"], r["FlagDel"], r["ProductTypeName"]);
+                Cursor.Current = Cursors.WaitCursor;
+
+                DataTable newTable = new DataTable();
+                PrePareDataTable_Product(newTable);
+
+                if (grdBranch.RowCount == 0)
+                {
+                    grdPro.DataSource = newTable;
+                    Cursor.Current = Cursors.Default;
+                    return;
+                }
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@flagDel", rdoN.Checked ? 0 : 1);
+                _params.Add("@Search", txtSearch.Text);
+
+                DataTable dt = new DataTable();
+                dt = bu.GetSendData_Product(_params);
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    newTable.Rows.Add(false, r["ProductID"], r["ProductName"], r["ProductRefCode"], r["ProductShortName"]
+                      , r["ProductGroupID"], r["ProductGroupName"], r["ProductSubGroupID"], r["ProductSubGroupName"]
+                      , r["SaleUomID"], r["ProductUomName"], r["Seq"], r["FlagDel"], r["ProductTypeName"]);
+                }
+
+                grdPro.DataSource = newTable;
+                lbl_qty_Product.Text = newTable.Rows.Count.ToNumberFormat();
+
+                btnSendData.Enabled = false;
+                btnCancelSend.Enabled = false;
+
+                if (dt.Rows.Count > 0)
+                {
+                    btnSendData.Enabled = true;
+                    btnCancelSend.Enabled = true;
+                }
+
+                Cursor.Current = Cursors.Default;
             }
-
-            grdPro.DataSource = newTable;
-            lbl_qty_Product.Text = newTable.Rows.Count.ToNumberFormat();
-
-            btnSendData.Enabled = false;
-            btnCancelSend.Enabled = false;
-
-            if (dt.Rows.Count > 0)
+            catch (Exception ex)
             {
-                btnSendData.Enabled = true;
-                btnCancelSend.Enabled = true;
+                ex.Message.ShowErrorMessage();
             }
         }
 
@@ -233,13 +268,7 @@ namespace AllCashUFormsApp.View.Page
 
         #endregion
 
-        #region #event_method
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        #region Method
         private void btnSendData_Click(object sender, EventArgs e)
         {
             string msg = "";
@@ -264,16 +293,14 @@ namespace AllCashUFormsApp.View.Page
 
             bool ret = false;
 
+            Cursor.Current = Cursors.WaitCursor;
+
             List<string> selectList_Branch = new List<string>();
-
             PrePare_BranchID(selectList_Branch);
-
             var joinString_Branch = string.Join(",", selectList_Branch);
 
             List<string> selectList_Product = new List<string>();
-
             PrePare_Product(selectList_Product);
-
             string joinString_Product = string.Join(",", selectList_Product);
 
             Dictionary<string, object> _params = new Dictionary<string, object>();
@@ -284,6 +311,7 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret == true)
             {
+                Cursor.Current = Cursors.Default;
                 msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
                 msg.ShowInfoMessage();
 
@@ -292,6 +320,7 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
+                Cursor.Current = Cursors.Default;
                 msg = "ส่งข้อมูลล้มเหลว!!";
                 msg.ShowErrorMessage();
             }
@@ -319,54 +348,54 @@ namespace AllCashUFormsApp.View.Page
 
         private void chkBoxSelectPro_Click(object sender, EventArgs e)
         {
-            if (grdPro.Rows.Count > 0)
+            try
             {
-                for (int i = 0; i < grdPro.Rows.Count; i++)
+                if (grdPro.Rows.Count > 0)
                 {
-                    if (Convert.ToBoolean(grdPro.Rows[i].Cells["colChkPro"].Value) == false)
-                        grdPro.Rows[i].Cells["colChkPro"].Value = true;
-                    else
-                        grdPro.Rows[i].Cells["colChkPro"].Value = false;
+                    for (int i = 0; i < grdPro.Rows.Count; i++)
+                    {
+                        if (Convert.ToBoolean(grdPro.Rows[i].Cells["colChkPro"].Value) == false)
+                            grdPro.Rows[i].Cells["colChkPro"].Value = true;
+                        else
+                            grdPro.Rows[i].Cells["colChkPro"].Value = false;
+                    }
+                }
+                else
+                {
+                    chkBoxSelectPro.Checked = false;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                chkBoxSelectPro.Checked = false;
+                ex.Message.ShowErrorMessage();
             }
         }
 
         private void chkBoxSelectBranch_Click(object sender, EventArgs e)
         {
-            if (grdBranch.Rows.Count > 0)
+            try
             {
-                for (int i = 0; i < grdBranch.Rows.Count; i++)
+                if (grdBranch.Rows.Count > 0)
                 {
-                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-                    if (Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value) == false && OnlineStatus == true)
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
-                    else
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
+                    for (int i = 0; i < grdBranch.Rows.Count; i++)
+                    {
+                        bool _OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
+                        bool _ChkBranch = Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value);
+                        if (_ChkBranch == false && _OnlineStatus == true)
+                            grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
+                        else
+                            grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
+                    }
+                }
+                else
+                {
+                    chkBoxSelectBranch.Checked = false;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                chkBoxSelectBranch.Checked = false;
+                ex.Message.ShowErrorMessage();
             }
-        }
-
-        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdBranch.SetRowPostPaint(sender, e, this.Font);
-        }
-
-        private void grdPro_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdPro.SetRowPostPaint(sender, e, this.Font);
-        }
-
-        private void frmSendProductInfo_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            MemoryManagement.FlushMemory();
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
@@ -383,5 +412,25 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void frmSendProductInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
+
+        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdBranch.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdPro_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdPro.SetRowPostPaint(sender, e, this.Font);
+        }
     }
 }

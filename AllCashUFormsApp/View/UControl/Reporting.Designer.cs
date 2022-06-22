@@ -52,7 +52,7 @@ namespace AllCashUFormsApp.View.UControl
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TestReport";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.TestReport_Load);
+            this.Load += new System.EventHandler(this.Reporting_Load);
             this.ResumeLayout(false);
 
         }

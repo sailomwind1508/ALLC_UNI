@@ -43,6 +43,33 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static List<tbl_PODetail> SelectPODTEndDay(this tbl_PODetail tbl_PODetail, DateTime docDate)
+        {
+            List<tbl_PODetail> list = new List<tbl_PODetail>();
+            try
+            {
+                string _docDate = docDate.ToString("yyyyMMdd", new CultureInfo("en-US"));
+
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT t1.* ";
+                sql += " FROM [dbo].[tbl_PODetail] t1 ";
+                sql += " INNER JOIN dbo.tbl_POMaster t2 ON t1.DocNo = t2.DocNo ";
+                sql += " WHERE t1.FlagDel = 0 AND t2.DocStatus = '4' ";
+                sql += " AND CAST(t2.DocDate AS DATE) = '" + _docDate + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PODetail), sql);
+                list = dynamicListReturned.Cast<tbl_PODetail>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PODetail.GetType());
+            }
+
+            return list;
+        }
+
         public static List<tbl_PODetail> Select(this tbl_PODetail tbl_PODetail, DateTime docDate)
         {
             List<tbl_PODetail> list = new List<tbl_PODetail>();

@@ -461,5 +461,46 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static List<tbl_PayMaster> GetPayMasterSingle(this tbl_PayMaster tbl_PayMaster, string _DocNo, int _FlagDel)
+        {
+            List<tbl_PayMaster> list = new List<tbl_PayMaster>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "SELECT * FROM tbl_PayMaster WHERE FlagDel = " + _FlagDel;
+                if (!string.IsNullOrEmpty(_DocNo))
+                {
+                    sql += " AND DocNo = '" + _DocNo + "'";
+                }
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PayMaster), sql);
+                list = dynamicListReturned.Cast<tbl_PayMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PayMaster.GetType());
+            }
+
+            return list;
+        }
+
+        public static int SelectPayMaster_MaxID(this tbl_PayMaster tbl_PayMaster)
+        {
+            int MaxID = 0;
+            try
+            {
+                string sql = "SELECT TOP 1 MAX(AutoID) FROM tbl_PayMaster";
+                var dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                if (dt.Rows.Count > 0)
+                {
+                    MaxID = dt.Rows[0].Field<int>(0) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PayMaster.GetType());
+            }
+            return MaxID;
+        }
     }
 }

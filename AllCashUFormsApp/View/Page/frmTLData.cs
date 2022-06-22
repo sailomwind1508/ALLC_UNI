@@ -23,14 +23,14 @@ namespace AllCashUFormsApp.View.Page
         }
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -53,7 +53,7 @@ namespace AllCashUFormsApp.View.Page
                 txtBranchName.Text = b[0].BranchName;
             }
 
-            var allWH = bu.GetAllBranchWarehouse(x=>x.WHType == 1);
+            var allWH = bu.GetAllBranchWarehouse(x=>x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
             ddlWH.BindDropdownList(allWH,"WHCode","WHID",0);
         }
         private void frmTLData_Load(object sender, EventArgs e)

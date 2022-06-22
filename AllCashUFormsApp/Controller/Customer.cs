@@ -78,9 +78,9 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_ArCustomer().SelectAllEntity();
         }
 
-        public List<tbl_ArCustomer> GetSelectCustomerID(string CustomerID,int flagDel)
+        public List<tbl_ArCustomer> GetSelectCustomerID(string CustomerID, int flagDel)
         {
-            return new tbl_ArCustomer().SelectCustomerID(CustomerID,flagDel);
+            return new tbl_ArCustomer().SelectCustomerID(CustomerID, flagDel);
         }
 
         public DataTable GetCustDetails(Func<tbl_ArCustomer, bool> func)
@@ -151,6 +151,11 @@ namespace AllCashUFormsApp.Controller
         public int UpdateData(tbl_ArCustomer tbl_ArCustomer)
         {
             return tbl_ArCustomer.Update();
+        }
+
+        public int UpdateListData(List<tbl_ArCustomer> tbl_ArCustomers)
+        {
+            return tbl_ArCustomers.Update();
         }
 
         public int RemoveData(tbl_ArCustomer tbl_ArCustomer)
@@ -308,7 +313,7 @@ namespace AllCashUFormsApp.Controller
 
         public DataTable GetCustomerImage(Dictionary<string, object> _params)
         {
-            return (new tbl_ArCustomer()).GetCustomerImage (_params);
+            return (new tbl_ArCustomer()).GetCustomerImage(_params);
         }
 
         public DataTable GetTransferCustomerData(Dictionary<string, object> _params)
@@ -326,5 +331,34 @@ namespace AllCashUFormsApp.Controller
             return new tbl_ArCustomer().SelectMaxCustomerID(FormatCustomerID);
         }
 
+        public List<tbl_ArCustomer> GetCustomerByWHID(string WHID)
+        {
+            return (new tbl_ArCustomer()).GetCustomerByWHID(WHID);
+        }
+
+        public DataTable GetCustomerByWHID_DataTable(string WHID)
+        {
+            return (new tbl_ArCustomer()).GetCustomerByWHID_DataTable(WHID);
+        }
+
+        public DataTable GetCustomerByWHID_DataTable(string WHID, string SalAreaID)
+        {
+            return (new tbl_ArCustomer()).GetCustomerByWHID_DataTable(WHID, SalAreaID);
+        }
+
+        public DataTable GetCountCustomer()
+        {
+            return (new tbl_ArCustomer()).GetCountCustomer();
+        }
+
+        public DataTable GetServerImagePath(string BranchID)
+        {
+            return (new tbl_ArCustomer()).GetServerImagePath(BranchID);
+        }
+
+        public bool ManualUpdateCustomerImage()
+        {
+            return new tbl_ArCustomer().ManualUpdateCustomerImage();
+        }
     }
 }

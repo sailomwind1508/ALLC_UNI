@@ -34,19 +34,24 @@ namespace UpdateU_ForceApp
                 string localPath1 = ConfigurationManager.AppSettings["LocalPathD"].ToString();
                 string localPath2 = ConfigurationManager.AppSettings["LocalPathE"].ToString();
                 string localPath3 = ConfigurationManager.AppSettings["LocalPathC"].ToString();
+                string localPath4 = ConfigurationManager.AppSettings["LocalPathF"].ToString();
                 string _localPath = "";
 
-                if (Directory.Exists(localPath1)) //D
+                if (Directory.Exists(localPath3)) //C
                 {
-                    _localPath = localPath1;
+                    _localPath = localPath3;
                 }
                 else if (Directory.Exists(localPath2)) //E
                 {
                     _localPath = localPath2;
                 }
-                else if (Directory.Exists(localPath3)) //C
+                else if (Directory.Exists(localPath4)) //F
                 {
-                    _localPath = localPath3;
+                    _localPath = localPath4;
+                }
+                else if (Directory.Exists(localPath1)) //D
+                {
+                    _localPath = localPath1;
                 }
 
 

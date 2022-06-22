@@ -179,6 +179,7 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
         public static DataTable Get_proc_SendProductInfo_GetDataTable(this tbl_Branch tbl_Branch)
         {
             try
@@ -196,6 +197,7 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+
         public static DataTable GetSendProductInfoPrepareData(this tbl_Branch tbl_Branch)
         {
             try
@@ -210,6 +212,21 @@ namespace AllCashUFormsApp
             }
             catch (Exception)
             {
+                return null;
+            }
+        }
+
+        public static DataTable proc_GetDNS_Data(this tbl_Branch tbl_Branch)
+        {
+            try
+            {
+                string sql = "proc_GetDNS_Data"; //DNS For U-Force
+                var dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Branch.GetType());
                 return null;
             }
         }

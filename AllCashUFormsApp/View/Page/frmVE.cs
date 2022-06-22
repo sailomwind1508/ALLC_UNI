@@ -28,7 +28,7 @@ namespace AllCashUFormsApp.View.Page
         Dictionary<string, decimal> listDiscount = new Dictionary<string, decimal>();
 
         bool validateNewRow = true;
-        string docTypeCode = "";
+        public string docTypeCode = "";
         int runDigit = 0;
         static bool isCyrsRpt = false;
 
@@ -84,14 +84,14 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "V");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "V");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -113,7 +113,7 @@ namespace AllCashUFormsApp.View.Page
             btnCancel.Enabled = false;
             btnAdd.Enabled = false;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -128,13 +128,13 @@ namespace AllCashUFormsApp.View.Page
             dtpDocDate.SetDateTimePickerFormat();
             dtpDueDate.SetDateTimePickerFormat();
 
-            allUOM = bu.GetUOM();
+            allUOM = bu.tbl_ProductUom;
 
             uoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
             uoms.AddRange(allUOM);
 
-            saleAreaList.AddRange(bu.GetAllSaleArea());
-            salAreaDistrictList.AddRange(bu.GetAllSaleAreaDistrict());
+            saleAreaList.AddRange(bu.tbl_SalArea);
+            salAreaDistrictList.AddRange(bu.tbl_SalAreaDistrict);
 
             //data gridview
             grdList.SetDataGridViewStyle();
@@ -142,12 +142,12 @@ namespace AllCashUFormsApp.View.Page
 
             CreatePrintBtnList();
 
-            allProduct = bu.GetProduct();
-            //allUomSet = bu.GetUOMSet();
+            allProduct = bu.tbl_Product;
+            //allUomSet = bu.tbl_ProductUomSet;
 
-            allProductPrice = bu.GetProductPriceGroup();
-            //allProdGroup = bu.GetProductGroup();
-            //allProdSubGroup = bu.GetProductSubGroup();
+            allProductPrice = bu.tbl_ProductPriceGroup;
+            //allProdGroup = bu.tbl_ProductGroup;
+            //allProdSubGroup = bu.tbl_ProductSubGroup;
 
             if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
                 btnPrint.Enabled = ddlDocStatus.SelectedValue.ToString() == "4"; //Last edit by sailom.k 03/11/2021 request by admin UBN
@@ -258,27 +258,98 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
+                var wh = bu.GetBranchWarehouse(txtWHCode.Text);
                 if (frmText == "พิมพ์ทั้งหมด")
                 {
                     _params = new Dictionary<string, object>();
                     _params.Add("@DocNo", txdDocNo.Text);
-                    _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
 
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", txdDocNo.Text);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
+                    
                     _params = new Dictionary<string, object>();
                     _params.Add("@DocNo", txdDocNo.Text);
-                    _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", txdDocNo.Text);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    } 
                 }
                 else if (frmText == "พิมพ์ต้นฉบับ")
                 {
-                    _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", txdDocNo.Text);
+
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", txdDocNo.Text);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
                 }
                 else if (frmText == "พิมพ์สำเนา")
                 {
-                    _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                    this.OpenTestCrystalReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", txdDocNo.Text);
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", txdDocNo.Text);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
                 }
                 else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
                 {
@@ -286,7 +357,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         _params = new Dictionary<string, object>();
                         _params.Add("@DocNo", txtCustPONo.Text);
-                        this.OpenTestCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+                        this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
                     }
                     else
                     {
@@ -336,9 +407,10 @@ namespace AllCashUFormsApp.View.Page
 
             grdList.CellContentClick -= grdList_CellContentClick;
 
-
+            btnShowIV.Enabled = !string.IsNullOrEmpty(txtCustPONo.Text);
             btnUpdateAddress.Enabled = true;
             btnCopy.Enabled = false;
+            btnCustInfo.Enabled = !string.IsNullOrEmpty(txtCustomerID.Text);
             //btnGenCustIVNo.Enabled = true;
 
             if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
@@ -412,8 +484,8 @@ namespace AllCashUFormsApp.View.Page
         {
             grdList.Rows.Clear();
 
-            //var allUOM = bu.GetUOM();
-            //var allProduct = bu.GetProduct();
+            //var allUOM = bu.tbl_ProductUom;
+            //var allProduct = bu.tbl_Product;
             //var allPrdPriceList = bu.GetProductPriceGroup();
             //var allUOMSet = bu.GetUOMSet();
 
@@ -435,7 +507,7 @@ namespace AllCashUFormsApp.View.Page
             }
 
             List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
-            disTypeList = bu.GetDiscountType();
+            disTypeList = bu.tbl_DiscountType;
 
             
             prodUOMs = new List<tbl_ProductUom>();
@@ -986,10 +1058,17 @@ namespace AllCashUFormsApp.View.Page
                     poDt.StockedQty = 0;
 
                     decimal unitCost = 0;
-                    Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDt.OrderUom && x.ProductID == poDt.ProductID);
-                    var prdPriceGroup = allProductPrice.Where(tbl_ProductPriceGroupPre).ToList(); //bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
-                    if (prdPriceGroup != null && prdPriceGroup.Count > 0)
-                        unitCost = prdPriceGroup[0].BuyPrice.Value;
+                    //Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == poDt.OrderUom && x.ProductID == poDt.ProductID);
+                    //var prdPriceGroup = allProductPrice.Where(tbl_ProductPriceGroupPre).ToList(); //bu.GetProductPriceGroup(tbl_ProductPriceGroupPre);
+                    //if (prdPriceGroup != null && prdPriceGroup.Count > 0)
+                    //    unitCost = prdPriceGroup[0].BuyPrice.Value;
+
+                    //for support pre-order-------------------------
+                    var _uom = allUomSet.FirstOrDefault(x => x.UomSetID == poDt.OrderUom && x.ProductID == poDt.ProductID);
+                    if (_uom != null)
+                    {
+                        unitCost = _uom.BaseQty;
+                    }
 
                     poDt.LineTotal = Convert.ToDecimal(lineAmt.EditedFormattedValue);
                     poDt.UnitCost = unitCost.ToDecimalN5();
@@ -1342,7 +1421,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else //validate data grid
                 {
-                    //var allProduct = bu.GetProduct();
+                    //var allProduct = bu.tbl_Product;
                     ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, bu, "", false);
                 }
             }
@@ -1434,7 +1513,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "V");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "V");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -1515,6 +1594,37 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnCustInfo_Click(object sender, EventArgs e)
         {
+            string _custID = txtCustomerID.Text;
+
+            if (!string.IsNullOrEmpty(_custID))
+            {
+                MainForm mfrm = null;
+                frmCustomerInfo frm = new frmCustomerInfo();
+                bool isActive = false;
+
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f.Name.ToLower() == "mainform")
+                    {
+                        mfrm = (MainForm)f;
+                    }
+
+                    if (f.Name.ToLower() == frm.Name.ToLower())
+                    {
+                        f.Activate();
+                        isActive = true;
+                    }
+                }
+
+                if (!isActive)
+                {
+                    frm.MdiParent = mfrm;
+                    frm.StartPosition = FormStartPosition.CenterParent;
+                    frm.WindowState = FormWindowState.Maximized;
+                    frm.Show();
+                    frm.BindCustomerInfo(_custID);
+                }
+            }
         }
 
         private void btnReCalc_Click(object sender, EventArgs e)
@@ -1774,8 +1884,6 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetCellClick(sender, e, cellEdit, 0);
         }
 
-        #endregion
-
         private void btnUpdateAddress_Click(object sender, EventArgs e)
         {
             bool checkEditMode = bu.CheckExistsIV(txdDocNo.Text);
@@ -1825,6 +1933,138 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
+        private void btnShowIV_Click(object sender, EventArgs e)
+        {
+            string _custPONo = txtCustPONo.Text;
+            string _whid = txtWHCode.Text;
+
+            if (!string.IsNullOrEmpty(_custPONo))
+            {
+                MainForm mfrm = null;
+                var frmList = Application.OpenForms;
+                if (frmList != null && frmList.Count > 0)
+                {
+                    foreach (Form f in frmList)
+                    {
+                        if (f.Name.ToLower() == "mainform")
+                        {
+                            mfrm = (MainForm)f;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(_whid))
+                    {
+                        var wh = bu.GetBranchWarehouse(_whid);
+                        if (wh != null)
+                        {
+                            if (wh.WHType == 2) //Pre-Order
+                            {
+                                if (_custPONo.Contains("M"))
+                                {
+                                    frm1000SalesPre frm = new frm1000SalesPre();
+                                    bool isActive = false;
+                                    foreach (Form f in frmList)
+                                    {
+                                        if (f.Name.ToLower() == frm.Name.ToLower())
+                                        {
+                                            f.Activate();
+                                            isActive = true;
+                                        }
+                                    }
+
+                                    if (!isActive)
+                                    {
+                                        frm.docTypeCode = docTypeCode;
+                                        frm.MdiParent = mfrm;
+                                        frm.StartPosition = FormStartPosition.CenterParent;
+                                        frm.WindowState = FormWindowState.Maximized;
+                                        frm.Show();
+                                        frm.BindVanSalesData(_custPONo);
+                                    }
+                                }
+                                else
+                                {
+                                    frmTabletSalesPre frm = new frmTabletSalesPre();
+                                    bool isActive = false;
+                                    foreach (Form f in frmList)
+                                    {
+                                        if (f.Name.ToLower() == frm.Name.ToLower())
+                                        {
+                                            f.Activate();
+                                            isActive = true;
+                                        }
+                                    }
+
+                                    if (!isActive)
+                                    {
+                                        frm.docTypeCode = docTypeCode;
+                                        frm.MdiParent = mfrm;
+                                        frm.StartPosition = FormStartPosition.CenterParent;
+                                        frm.WindowState = FormWindowState.Maximized;
+                                        frm.Show();
+                                        frm.BindTabletSalesData(_custPONo);
+                                    }
+                                }
+                            }
+                            else //Cash VAN
+                            {
+                                if (_custPONo.Contains("M"))
+                                {
+                                    frmVanSales frm = new frmVanSales();
+                                    bool isActive = false;
+                                    foreach (Form f in frmList)
+                                    {
+                                        if (f.Name.ToLower() == frm.Name.ToLower())
+                                        {
+                                            f.Activate();
+                                            isActive = true;
+                                        }
+                                    }
+
+                                    if (!isActive)
+                                    {
+                                        frm.docTypeCode = docTypeCode;
+                                        frm.MdiParent = mfrm;
+                                        frm.StartPosition = FormStartPosition.CenterParent;
+                                        frm.WindowState = FormWindowState.Maximized;
+                                        frm.Show();
+                                        frm.BindVanSalesData(_custPONo);
+                                    }
+                                }
+                                else
+                                {
+                                    frmTabletSales frm = new frmTabletSales();
+                                    bool isActive = false;
+                                    foreach (Form f in frmList)
+                                    {
+                                        if (f.Name.ToLower() == frm.Name.ToLower())
+                                        {
+                                            f.Activate();
+                                            isActive = true;
+                                        }
+                                    }
+
+                                    if (!isActive)
+                                    {
+                                        frm.docTypeCode = docTypeCode;
+                                        frm.MdiParent = mfrm;
+                                        frm.StartPosition = FormStartPosition.CenterParent;
+                                        frm.WindowState = FormWindowState.Maximized;
+                                        frm.Show();
+                                        frm.BindTabletSalesData(_custPONo);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
 
     }
 }

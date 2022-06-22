@@ -34,7 +34,7 @@ namespace AllCashUFormsApp.Controller
                 DataTable newTable = new DataTable(); // tbl_POMaster.ToDataTable();
 
                 Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
-                sqlParmas.Add("@WHID", whid);
+                sqlParmas.Add("@WHIDs", whid);
 
                 string sql = "proc_SendData_From_Tablet_PRE";
 
@@ -140,6 +140,11 @@ namespace AllCashUFormsApp.Controller
         public int UpdateData(tbl_SendData tbl_SendData)
         {
             return tbl_SendData.Update();
+        }
+
+        public DataTable GetWHID_FromSendData()
+        {
+            return (new tbl_SendData()).GetWHID_FromSendData();
         }
     }
 }

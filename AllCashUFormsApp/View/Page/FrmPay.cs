@@ -27,12 +27,340 @@ namespace AllCashUFormsApp.View.Page
             searchBranchControls = new List<Control>() { txtBranchCode, txtBranchName };
         }
 
-        private void EditGrd(DataGridView grd, bool mode)
+        #region Event
+        private void FrmPay_Load(object sender, EventArgs e)
         {
-            grd.Columns["colWHID"].ReadOnly = mode;
-            grd.Columns["colSend"].ReadOnly = mode;
-            grd.Columns["colCheque"].ReadOnly = mode;
-            grd.Columns["colTransfer"].ReadOnly = mode;
+            InitPage();
+            InitialData();
+        }
+
+        private void btnSearchBranchCode_Click(object sender, EventArgs e)
+        {
+            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            BindBankNote();
+
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
+
+            if (gridPayment.Rows.Count > 0)
+            {
+                btnEdit.Enabled = true;
+                btnRemove.Enabled = true;
+                btnPrint.Enabled = true;
+                SetReadOnlyGridView(true);
+                gridPayment.Columns["colWHID"].ReadOnly = true;
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnSave.Enabled = false;
+            btnCancel.Enabled = false;
+
+            btnSave.Enabled = true;
+            btnCancel.Enabled = true;
+
+            gridPayment.Enabled = true;
+
+            SetReadOnlyGridView(false);
+            gridPayment.Columns["colWHID"].ReadOnly = true;
+            LockPanel(true);
+
+            gridPayment.Focus();
+
+            txtRemark.DisableTextBox(false);
+
+        }
+
+        private void btnCalculateSales_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            BindBankNote();
+            CalDiv(gridPayment, true);
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                int ret = 0;
+                Cursor.Current = Cursors.WaitCursor;
+
+                //string _date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
+                //var payMastersList = bu.GetPayMasterSingle(_date); // 05-05-2022 adisorn
+
+                string DocNumber = gridPayment.Rows[0].Cells["colDocNo"].Value.ToString();
+                var payMastersList = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false);
+                if (payMastersList.Count == 0) // Insert
+                {
+                    var payMaster = new tbl_PayMaster();
+                    PrePareSave_PayMaster(payMaster);
+
+                    var payDetailList = new List<tbl_PayDetail>();
+                    PrePareSave_PayDetail(payDetailList, payMaster.DocNo);
+
+                    ret = bu.UpdateDataPayMaster(payMaster);
+                    if (ret == 1)
+                    {
+                        //bu.tbl_PayMasters = new List<tbl_PayMaster>();
+                        bu.tbl_PayDetails = payDetailList;
+                        ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022
+                        //ret = bu.UpdateDataPayDetail(payDetailList);
+                    }
+                }
+                else //Update
+                {
+                    var _PayMaster = new tbl_PayMaster();
+                    _PayMaster = payMastersList[0];
+                    _PayMaster.FlagDel = true;
+                    _PayMaster.EdDate = DateTime.Now;
+                    _PayMaster.EdUser = Helper.tbl_Users.Username;
+                    ret = bu.UpdateDataPayMaster(_PayMaster); //Remove PayMaster Old Data
+
+                    if (ret == 1)
+                    {
+                        var PayMaster = new tbl_PayMaster();
+                        PayMaster = payMastersList[0];
+                        PayMaster.AutoID = bu.SelectPayMaster_MaxID();
+                        PayMaster.CrDate = DateTime.Now;
+                        PayMaster.CrUser = Helper.tbl_Users.Username;
+                        PayMaster.EdDate = null;
+                        PayMaster.EdUser = null;
+                        PayMaster.FlagDel = false;
+                        PayMaster.FlagSend = false;
+                        PayMaster.TotalSend = Convert.ToDecimal(txtTotalSend.Text);
+                        PayMaster.Remark = txtRemark.Text; //adisorn 27-04-2022
+                        ret = bu.UpdateDataPayMaster(PayMaster);
+                    }
+
+                    var payDetailsOld = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);//ข้อมูลเก่า
+                    //var payDetailsOld = bu.GetPayDetailSingle(DocNumber, 0);//ข้อมูลเก่า // 2022-04-21 adisorn 
+
+                    for (int i = 0; i < payDetailsOld.Count; i++)
+                    {
+                        payDetailsOld[i].EdDate = DateTime.Now;
+                        payDetailsOld[i].EdUser = Helper.tbl_Users.Username;
+                        payDetailsOld[i].FlagDel = true;
+                    }
+
+                    bu.tbl_PayMasters = new List<tbl_PayMaster>();
+                    bu.tbl_PayDetails = payDetailsOld;
+                    ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022
+                    //ret = bu.UpdateDataPayDetail(payDetailsOld); //Remove PayDetail Old Data
+
+                    if (ret == 1)
+                    {
+                        var payDetailsNew = new List<tbl_PayDetail>(); //ข้อมูลใหม่
+
+                        PrePareSave_PayDetail(payDetailsNew, DocNumber);
+
+                        bu.tbl_PayMasters = new List<tbl_PayMaster>();
+                        bu.tbl_PayDetails = payDetailsNew;
+                        ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022 //700ms
+                        //ret = bu.UpdateDataPayDetail(payDetailsNew);
+                    }
+                }
+
+                if (ret == 1)
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    Cursor.Current = Cursors.Default;
+
+                    SendEmailToHQ();//Send mail to HQ //edit by sailom .k 07/01/2022
+
+                    BindBankNote();
+
+                    CalDiv(gridPayment, true);
+
+                    btnSave.Enabled = false;
+                    btnCancel.Enabled = true;
+                    btnEdit.Enabled = true;
+                    btnPrint.Enabled = true;
+                    btnRemove.Enabled = true;
+                    SetReadOnlyGridView(true);
+                    txtRemark.DisableTextBox(true);
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ex.Message.ShowErrorMessage();
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void txtBranchCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                var branch = bu.GetBranch();
+                if (branch.Count > 0)
+                    txtBranchName.Text = branch[0].BranchName;
+                else
+                    txtBranchName.Text = "";
+            }
+
+        }
+
+        private void gridPayment_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            try
+            {
+                DataGridViewTextBoxEditingControl _grd = (DataGridViewTextBoxEditingControl)sender;
+                DataGridView grd = _grd.EditingControlDataGridView;
+                if (grd.CurrentCell.ColumnIndex > 0 && e.KeyCode == Keys.Enter)
+                {
+                    int currentRowIndex = grd.CurrentCell.RowIndex;
+                    int curentColIndex = grd.CurrentCell.ColumnIndex;
+                    grd.ClearSelection();
+                    grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 1];
+                }
+                //if (e.KeyCode == Keys.Enter)
+                //{
+                //    int _columnIndex = gridPayment.CurrentCell.ColumnIndex;
+                //    gridPayment.CurrentCell = gridPayment.CurrentRow.Cells[_columnIndex + 1];//
+                //}
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void gridPayment_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    SendKeys.Send("{TAB}");
+                    //int _columnIndex = gridPayment.CurrentCell.ColumnIndex;
+                    //gridPayment.CurrentCell = gridPayment.CurrentRow.Cells[_columnIndex + 1];
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void gridPayment_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            try
+            {
+                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
+                tb.KeyPress -= gridPayment_KeyPress;
+                tb.KeyPress += gridPayment_KeyPress;
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+
+        private void gridPayment_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                DataGridView grd = sender as DataGridView;
+                if (grd != null && grd.CurrentRow != null)
+                {
+
+                    if (e.ColumnIndex == 1 ||
+                        e.ColumnIndex == 3 ||
+                        e.ColumnIndex == 4)
+                    {
+                        int currentRowIndex = grd.CurrentCell.RowIndex;
+
+                        CalculateRow(gridPayment, currentRowIndex);
+
+                        CalDiv(gridPayment);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            if (dtBankNote.Rows.Count > 0)
+            {
+                FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocDate", dtpDocDate.Value);
+                this.OpenExcelReportsPopup("รายงานส่งเงินประจำวัน", "Rep_Bank_Note.xslt", "Rep_Bank_Note", _params, true);
+                //this.OpenCrystalReportsPopup("รายงานส่งเงินประจำวัน", "V_Bank_Note.rpt", "Rep_Bakn_Note", _params);
+            }
+            else
+            {
+                FlexibleMessageBox.Show("ไม่พบยอดขายของวันที่ " + dtpDocDate.Value.ToString("dd/MM/yyyy"), "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        private void gridPayment_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            string _value = gridPayment.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+            if (string.IsNullOrEmpty(_value))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (gridPayment.Rows.Count != 0)
+            {
+                RemoveData();
+                BindBankNote();
+                CalDiv(gridPayment, true);
+                txtTotalGetMoney.Text = "0.00";
+                gridPayment.Enabled = false;
+
+                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+                btnEdit.Enabled = true;
+                btnPrint.Enabled = true;
+
+                btnAdd.Enabled = false;
+                btnRemove.Enabled = true;
+                btnSave.Enabled = false;
+                btnCancel.Enabled = false;
+                btnCopy.Enabled = false;
+            }
+
+        }
+
+        #endregion
+
+        #region Method
+        private void SetReadOnlyGridView(bool flag)
+        {
+            gridPayment.Columns["colWHID"].ReadOnly = flag;
+            gridPayment.Columns["colSend"].ReadOnly = flag;
+            gridPayment.Columns["colCheque"].ReadOnly = flag;
+            gridPayment.Columns["colTransfer"].ReadOnly = flag;
 
             //for (int i = 0; i < gridPayment.Rows.Count; i++)
             //{
@@ -52,33 +380,16 @@ namespace AllCashUFormsApp.View.Page
             btnCalculateSales.Enabled = !Lock;
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-
-            btnEdit.Enabled = false;
-            btnRemove.Enabled = false;
-            btnCopy.Enabled = false;
-            btnPrint.Enabled = false;
-            gridPayment.Enabled = true;
-
-            EditGrd(gridPayment, false);
-
-            LockPanel(true);
-
-            gridPayment.Focus();
-        }
-
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -93,21 +404,16 @@ namespace AllCashUFormsApp.View.Page
         {
             gridPayment.AutoGenerateColumns = false;
 
-            var b = bu.GetBranch();
-
-            if (b != null)
-            {
-                this.BindData("FromBranchID", searchBranchControls, b[0].BranchID);
-            }
+            this.BindData("FromBranchID", searchBranchControls, bu.tbl_Branchs[0].BranchID);
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-
             btnEdit.Enabled = false;
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
             btnPrint.Enabled = false;
 
-            FixTxt();
+            SetZeroToTextBox();
+            SetDisableTextBox();
         }
 
         private void SetZeroToTextBox()
@@ -122,12 +428,9 @@ namespace AllCashUFormsApp.View.Page
             txtTotalGetMoney.Text = "0.00";
         }
 
-        private void FixTxt()
+        private void SetDisableTextBox()
         {
-            SetZeroToTextBox();
-
             txtBranchName.DisableTextBox(true);
-
             txtTotalSend.DisableTextBox(true);
             txtTotalCheque.DisableTextBox(true);
             txtTotalTransfer.DisableTextBox(true);
@@ -136,26 +439,14 @@ namespace AllCashUFormsApp.View.Page
             txtSumPOMaster.DisableTextBox(true);
             txtSumDiv.DisableTextBox(true);
             txtTotalGetMoney.DisableTextBox(true);
-        }
-
-        private void FrmPay_Load(object sender, EventArgs e)
-        {
-            InitPage();
-
-            InitialData();
-        }
-
-        private void btnSearchBranchCode_Click(object sender, EventArgs e)
-        {
-            this.OpenFromBranchIDPopup(searchBranchControls, "เลือกเดโป้/สาขา");
+            txtRemark.DisableTextBox(true);
         }
 
         private void BindBankNote()
         {
+            txtRemark.Text = "";
             dtBankNote = new DataTable();
-
             dtBankNote = bu.GetBankNoteTable(dtpDocDate.Value);
-
             if (dtBankNote.Rows.Count > 0)
             {
                 DataTable dt = new DataTable();
@@ -170,96 +461,92 @@ namespace AllCashUFormsApp.View.Page
 
                 foreach (DataRow r in dtBankNote.Rows)
                 {
-                    dt.Rows.Add(r["DocNo"].ToString(), r["WHID"].ToString(), Convert.ToDecimal(r["Send"]).ToDecimalN2(), Convert.ToDecimal(r["Cheque"]).ToDecimalN2()
-                        , Convert.ToDecimal(r["Transfer"]).ToDecimalN2(), Convert.ToDecimal(r["Deposit"]).ToDecimalN2()
-                        , Convert.ToDecimal(r["TotalSend"]).ToDecimalN2(), Convert.ToDecimal(r["Total"]).ToDecimalN2());
+                    dt.Rows.Add(r["DocNo"].ToString()
+                        , r["WHID"].ToString()
+                        , Convert.ToDecimal(r["Send"]).ToDecimalN2()
+                        , Convert.ToDecimal(r["Cheque"]).ToDecimalN2()
+                        , Convert.ToDecimal(r["Transfer"]).ToDecimalN2()
+                        , Convert.ToDecimal(r["Deposit"]).ToDecimalN2()
+                        , Convert.ToDecimal(r["TotalSend"]).ToDecimalN2()
+                        , Convert.ToDecimal(r["Total"]).ToDecimalN2());
                 }
 
                 gridPayment.DataSource = dt;
                 CalDiv(gridPayment, true);
 
                 txtTotalGetMoney.DisableTextBox(false);
+
+                string date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
+                var list = bu.GetPayMaster(x => x.Docdate.ToString("yyyyMMdd", new CultureInfo("en-US")) == date && x.FlagDel == false);
+                if (list.Count > 0)
+                    txtRemark.Text = list[0].Remark;
             }
             else
             {
-                txtTotalGetMoney.DisableTextBox(true);
-
                 gridPayment.DataSource = dtBankNote;
-
+                txtTotalGetMoney.DisableTextBox(true);
                 SetZeroToTextBox();
 
-                FlexibleMessageBox.Show("ไม่พบยอดขายของวันที่ " + dtpDocDate.Value.ToShortDateString(), "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
-            }
-        }
-
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            BindBankNote();
-
-            if (gridPayment.Rows.Count > 0)
-            {
-                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-                btnEdit.Enabled = true;
-                btnAdd.Enabled = false;
-                btnRemove.Enabled = true;
-                btnSave.Enabled = false;
-                btnCancel.Enabled = false;
-                btnCopy.Enabled = false;
-                btnPrint.Enabled = true;
-
-                //EditGrd(gridPayment, false);
+                string msg = "ไม่พบยอดขายของวันที่ " + dtpDocDate.Value.ToShortDateString();
+                FlexibleMessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
         private void CalDiv(DataGridView grd, bool flag = false)
         {
-            decimal totalSend = 0;
-            decimal totalCheque = 0;
-            decimal totalTransfer = 0;
-            decimal TotalDeposit = 0;
-
-            decimal sumtotalsend = 0; // cell 5 รวมส่งเงินทั้งหมด
-            decimal sumPoMaster = 0; // cell5 รวมยอดขาย
-            decimal sumDiv = 0; // cell6 เกินขาด
-
-            for (int i = 0; i < gridPayment.Rows.Count; i++)
+            try
             {
-                totalSend += Convert.ToDecimal(grd.Rows[i].Cells["colSend"].Value);
-                totalCheque += Convert.ToDecimal(grd.Rows[i].Cells["colCheque"].Value);
-                totalTransfer += Convert.ToDecimal(grd.Rows[i].Cells["colTransfer"].Value);
-                TotalDeposit += Convert.ToDecimal(grd.Rows[i].Cells["colDeposit"].Value);
+                decimal totalSend = 0;
+                decimal totalCheque = 0;
+                decimal totalTransfer = 0;
+                decimal TotalDeposit = 0;
 
-                decimal divTotal = 0;
-                if (Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2() > 0)
+                decimal sumtotalsend = 0; // cell 5 รวมส่งเงินทั้งหมด
+                decimal sumPoMaster = 0; // cell5 รวมยอดขาย
+                decimal sumDiv = 0; // cell6 เกินขาด
+
+                for (int i = 0; i < gridPayment.Rows.Count; i++)
                 {
+                    totalSend += Convert.ToDecimal(grd.Rows[i].Cells["colSend"].Value);
+                    totalCheque += Convert.ToDecimal(grd.Rows[i].Cells["colCheque"].Value);
+                    totalTransfer += Convert.ToDecimal(grd.Rows[i].Cells["colTransfer"].Value);
+                    TotalDeposit += Convert.ToDecimal(grd.Rows[i].Cells["colDeposit"].Value);
+
+                    decimal divTotal = 0;
+
+                    //รวมยอดขาย - รวมส่งเงิน 30/05/2022 adisorn
                     divTotal = Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2() - Convert.ToDecimal(grd.Rows[i].Cells["colTotal"].Value).ToDecimalN2();
+
+                    //if (Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2() > 0)
+                    //    divTotal = Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2() - Convert.ToDecimal(grd.Rows[i].Cells["colTotal"].Value).ToDecimalN2();
+                    //else
+                    //    divTotal = Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2();
+
+                    grd.Rows[i].Cells["colMoneyDiff"].Value = divTotal.ToDecimalN2(); //เกินขาด
+
+                    sumtotalsend += Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value); // รวมส่งเงินทั้งหมด
+                    sumPoMaster += Convert.ToDecimal(grd.Rows[i].Cells["colTotal"].Value); // รวมยอดขายทั้งหมด
+                    sumDiv += Convert.ToDecimal(grd.Rows[i].Cells["colMoneyDiff"].Value);// รวมส่งเกินขาดทั้งหมด
                 }
-                else
+
+                txtTotalSend.Text = totalSend.ToStringN2();
+                txtTotalCheque.Text = totalCheque.ToStringN2();
+                txtTotalTransfer.Text = totalTransfer.ToStringN2();
+                txtTotalDeposit.Text = TotalDeposit.ToStringN2();
+                txtSumTotalSend.Text = sumtotalsend.ToStringN2(); //รวมส่งเงินทั้งหมด
+                txtSumPOMaster.Text = sumPoMaster.ToStringN2(); //รวมยอดขายทั้งหมด
+                txtSumDiv.Text = sumDiv.ToStringN2();
+
+                if (flag == true) // ส่งเงินจริงทั้งหมด = false จะคิดแค่ตอน กดค้นหาเท่านั้น
                 {
-                    divTotal = Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value).ToDecimalN2();
+                    //decimal totalDue = sumPoMaster + sumDiv;
+                    txtTotalGetMoney.Text = txtSumTotalSend.Text; // totalDue.ToStringN2();
                 }
-                grd.Rows[i].Cells["colMoneyDiff"].Value = divTotal.ToDecimalN2(); //เกินขาด
-
-                sumtotalsend += Convert.ToDecimal(grd.Rows[i].Cells["colTotalSend"].Value); // รวมส่งเงินทั้งหมด
-                sumPoMaster += Convert.ToDecimal(grd.Rows[i].Cells["colTotal"].Value); // รวมยอดขายทั้งหมด
-                sumDiv += Convert.ToDecimal(grd.Rows[i].Cells["colMoneyDiff"].Value);// รวมส่งเกินขาดทั้งหมด
             }
-
-            txtTotalSend.Text = totalSend.ToStringN2();
-            txtTotalCheque.Text = totalCheque.ToStringN2();
-            txtTotalTransfer.Text = totalTransfer.ToStringN2();
-            txtTotalDeposit.Text = TotalDeposit.ToStringN2();
-            txtSumTotalSend.Text = sumtotalsend.ToStringN2(); //รวมส่งเงินทั้งหมด
-            txtSumPOMaster.Text = sumPoMaster.ToStringN2(); //รวมยอดขายทั้งหมด
-            txtSumDiv.Text = sumDiv.ToStringN2();
-
-            if (flag == true) // ส่งเงินจริงทั้งหมด = false จะคิดแค่ตอน กดค้นหาเท่านั้น
+            catch (Exception ex)
             {
-                //decimal totalDue = sumPoMaster + sumDiv;
-                txtTotalGetMoney.Text = txtSumTotalSend.Text; // totalDue.ToStringN2();
+                ex.Message.ShowErrorMessage();
             }
-
         }
 
         private void CalculateRow(DataGridView grd, int rowIndex)
@@ -296,60 +583,14 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void btnCalculateSales_Click(object sender, EventArgs e)
-        {
-            BindBankNote();
-            CalDiv(gridPayment, true);
-        }
-
-        private string NewDocNoPayMaster()
-        {
-            //string dateF = DateTime.Now.ToString("yyyyMMdd", new CultureInfo("en-US"));
-            string _DocDate = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US")); //แก้DocNo Run by DocDate //Adisorn 22/12/2564 
-            string DocNo = txtBranchCode.Text + _DocDate;
-            return DocNo;
-        }
-
-        private int ForMatAutoIDPayMaster()
-        {
-            int autoID = 0;
-            var allPayMaster = bu.GetPayMaster();
-            if (allPayMaster != null && allPayMaster.Count > 0)
-            {
-                int payMasterMaxID = allPayMaster.Max(x => x.AutoID);
-                autoID = payMasterMaxID + 1;
-            }
-            else //ไม่เจอ
-            {
-                autoID = 1;
-            }
-            return autoID;
-        }
-
-        private int ForMatautoIDPayDetail()
-        {
-            int autoID = 0;
-            var allPayDetail = bu.GetPayDetail();
-            if (allPayDetail != null && allPayDetail.Count > 0)
-            {
-                int payDetailMaxID = allPayDetail.Max(x => x.AutoID);
-                autoID = payDetailMaxID + 1;
-            }
-            else //ไม่เจอ
-            {
-                autoID = 1;
-            }
-            return autoID;
-        }
-
         private void PrePareSave_PayMaster(tbl_PayMaster payMaster)
         {
-            var poMaster = bu.GetAllPOMaster("IV", x => x.DocTypeCode == "IV" && x.DocStatus == "4" && x.DocDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString());
+            //var poMaster = bu.GetAllPOMaster("IV", x => x.DocTypeCode == "IV" && x.DocStatus == "4" && x.DocDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString());
+            var poMaster = bu.GetPOMasterSingle("IV", "4", dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"))); //2022-05-04 adisorn
 
-            payMaster.AutoID = ForMatAutoIDPayMaster();
-
-            string DocNoFormat = NewDocNoPayMaster();
-            payMaster.DocNo = DocNoFormat;
+            payMaster.AutoID = bu.SelectPayMaster_MaxID();
+            //แก้DocNo Run by DocDate //Adisorn 22/12/2564 
+            payMaster.DocNo = txtBranchCode.Text + dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
 
             var branch = bu.GetBranch();
             payMaster.BranchID = branch[0].BranchCode;
@@ -357,7 +598,6 @@ namespace AllCashUFormsApp.View.Page
 
             payMaster.CrDate = DateTime.Now;
             payMaster.CrUser = Helper.tbl_Users.Username;
-
             payMaster.EdDate = null;
             payMaster.EdUser = null;
 
@@ -365,11 +605,12 @@ namespace AllCashUFormsApp.View.Page
             payMaster.FlagSend = false;
 
             payMaster.TotalSend = Convert.ToDecimal(txtTotalSend.Text);
+            payMaster.Remark = txtRemark.Text; //adisorn 27/04/2022
         }
 
         private void PrePareSave_PayDetail(List<tbl_PayDetail> payDetailList, string DocNo)
         {
-            int _AutoID = ForMatautoIDPayDetail();
+            int _AutoID = bu.SelectPayDetail_MaxID();
 
             for (int i = 0; i < gridPayment.Rows.Count; i++)
             {
@@ -382,138 +623,124 @@ namespace AllCashUFormsApp.View.Page
                 paydetail.Transfer = Convert.ToDecimal(gridPayment.Rows[i].Cells["colTransfer"].Value);
                 paydetail.Deposit = Convert.ToDecimal(gridPayment.Rows[i].Cells["colDeposit"].Value);
                 paydetail.TotalSale = Convert.ToDecimal(gridPayment.Rows[i].Cells["colTotal"].Value);
-                paydetail.CrDate = DateTime.Now;
-                paydetail.CrUser = Helper.tbl_Users.Username;
-
                 paydetail.FlagDel = false;
                 paydetail.FlagSend = false;
-
+                paydetail.CrDate = DateTime.Now;
+                paydetail.CrUser = Helper.tbl_Users.Username;
                 paydetail.EdDate = null;
                 paydetail.EdUser = null;
-
                 payDetailList.Add(paydetail);
             }
         }
 
-        private void SaveBankNote_New()
+        private void SendEmailToHQ()
         {
+            if (dtBankNote.Rows.Count > 0)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                FormHelper.PrintingReportName = new List<string>();
+
+                FormHelper.ShowPrintingReportName = false;
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocDate", dtpDocDate.Value);
+                this.OpenExcelReportsPopup("รายงานส่งเงินประจำวัน", "Rep_Bank_Note.xslt", "Rep_Bank_Note", _params, true);
+                this.OpenExcelReportsPopup("รายงานสรุปส่งเงินประจำวัน", "Rep_BankNote_TotalSalePerMonth.xslt", "Rep_BankNote_TotalSalePerMonth", _params, true);
+
+                var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
+
+                FormHelper.CreateAndSendMailWithAttachFile("พบการบันทึกข้อมูลในหน้า Bank Note", bu.tbl_Branchs[0].BranchName, cdate);
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void RemoveData()
+        {
+            string cfMsg = "คุณต้องการลบข้อมูลรายการนี้ใช่หรือไม่ ?";
+            string title = "ยืนยันการลบ !!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
             try
             {
-                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                string title = "ยืนยันการบันทึก!!";
-
-                if (!cfMsg.ConfirmMessageBox(title))
-                    return;
-
                 int ret = 0;
-
-                List<int> result = new List<int>();
-
-                string DocNumber = gridPayment.Rows[0].Cells["colDocNo"].Value.ToString();
-
-                var payMastersList = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false);
-
-                if (payMastersList.Count == 0) // New Insert
+                string DocNumber = gridPayment.Rows[0].Cells[8].Value.ToString();
+                var payMastersListOld = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false); //ลบอันเก่า
+                if (payMastersListOld.Count > 0)
                 {
-                    var poMaster = bu.GetAllPOMaster("IV", x => x.DocTypeCode == "IV" && x.DocStatus == "4" && x.DocDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString());
-
-                    var payMaster = new tbl_PayMaster();
-
-                    PrePareSave_PayMaster(payMaster);
-
-                    var payDetailList = new List<tbl_PayDetail>();
-
-                    PrePareSave_PayDetail(payDetailList, payMaster.DocNo);
-
-                    ret = bu.UpdateDataPayMaster(payMaster);
-
-                    if (ret == 1)
-                    {
-                        bu.tbl_PayMasters = new List<tbl_PayMaster>();
-                        bu.tbl_PayDetails = payDetailList;
-                        ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022
-                        //ret = bu.UpdateDataPayDetail(payDetailList);
-                    }
+                    //PayMaster buOld = new PayMaster(); //อันเก่า
+                    payMastersListOld[0].FlagDel = true;
+                    payMastersListOld[0].EdDate = DateTime.Now;
+                    payMastersListOld[0].EdUser = Helper.tbl_Users.Username;
+                    ret = bu.UpdateDataPayMaster(payMastersListOld);
                 }
-                else
-                {  //Update
-                    var paymaster_old = new tbl_PayMaster();
-                    paymaster_old = payMastersList[0];
-                    paymaster_old.FlagDel = true;
-                    paymaster_old.EdDate = DateTime.Now;
-                    paymaster_old.EdUser = Helper.tbl_Users.Username;
 
-                    ret = bu.UpdateDataPayMaster(paymaster_old); //Remove PayMaster Old Data
+                var payMastersListNew = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false);
+                if (payMastersListNew.Count > 0)
+                {
+                    //PayMaster buNew = new PayMaster();
+                    //payMastersListNew[0].AutoID = ForMatAutoIDPayMaster();
+                    payMastersListNew[0].AutoID = bu.SelectPayMaster_MaxID();
+                    payMastersListNew[0].CrDate = DateTime.Now;
+                    payMastersListNew[0].FlagDel = false;
+                    payMastersListNew[0].CrUser = Helper.tbl_Users.Username;
+                    decimal totalS = 0;
+                    payMastersListNew[0].TotalSend = totalS;
+                    ret = bu.UpdateDataPayMaster(payMastersListNew);
+                }
 
-                    if (ret == 1)
+                //bu.tbl_PayMasters.Clear();
+                //bu.tbl_PayMasters.AddRange(payMastersListOld);
+
+                //bu.tbl_PayMasters.Clear();
+                //bu.tbl_PayMasters.AddRange(payMastersListNew);
+
+                //Reset ยอดส่งเงินสด,ชำระบิลเครดิต,ยอดโอน,ค่าธรรมเนียม,รวมส่งเงิน,เกินขาด = 0
+                //PayDetail buDetailOld = new PayDetail();
+
+                //เก่า
+                //var payDetailsOld = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);
+                var payDetailsOld = bu.GetPayDetailSingle(DocNumber, 0);
+                if (payDetailsOld.Count > 0)
+                {
+                    for (int i = 0; i < gridPayment.Rows.Count; i++)
                     {
-                        var PayMaster = new tbl_PayMaster();
-                        PayMaster = payMastersList[0];
-                        PayMaster.AutoID = ForMatAutoIDPayMaster();
-                        PayMaster.CrDate = DateTime.Now;
-                        PayMaster.CrUser = Helper.tbl_Users.Username;
-                        PayMaster.EdDate = null;
-                        PayMaster.EdUser = null;
-                        PayMaster.FlagDel = false;
-                        PayMaster.FlagSend = false;
-                        PayMaster.TotalSend = Convert.ToDecimal(txtTotalSend.Text);
-
-                        ret = bu.UpdateDataPayMaster(PayMaster); //Save New PayMaster Data
-                    }
-
-                    var payDetailsOld = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);//ข้อมูลเก่า
-
-                    for (int i = 0; i < payDetailsOld.Count; i++)
-                    {
+                        payDetailsOld[i].FlagDel = true;
                         payDetailsOld[i].EdDate = DateTime.Now;
                         payDetailsOld[i].EdUser = Helper.tbl_Users.Username;
-                        payDetailsOld[i].FlagDel = true;
                     }
+                    ret = bu.RemoveDataPayDetail(payDetailsOld);
+                }
 
-                    bu.tbl_PayMasters = new List<tbl_PayMaster>();
-                    bu.tbl_PayDetails = payDetailsOld;
-                    ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022
-                    //ret = bu.UpdateDataPayDetail(payDetailsOld); //Remove PayDetail Old Data
-
-                    if (ret == 1)
+                //เพิ่มแถวใหม่ 
+                //var payDetailsNew = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);
+                var payDetailsNew = bu.GetPayDetailSingle(DocNumber, 0);
+                if (payDetailsNew.Count > 0)
+                {
+                    decimal num = 0;
+                    for (int i = 0; i < gridPayment.Rows.Count; i++)
                     {
-                        var payDetailsNew = new List<tbl_PayDetail>(); //ข้อมูลใหม่
+                        payDetailsNew[i].AutoID = bu.SelectPayDetail_MaxID();
+                        payDetailsNew[i].Send = num.ToDecimalN2();
+                        payDetailsNew[i].Cheque = num.ToDecimalN2();
+                        payDetailsNew[i].Transfer = num.ToDecimalN2();
+                        payDetailsNew[i].Deposit = num.ToDecimalN2();
 
-                        PrePareSave_PayDetail(payDetailsNew, DocNumber);
-
-                        bu.tbl_PayMasters = new List<tbl_PayMaster>();
-                        bu.tbl_PayDetails = payDetailsNew;
-                        ret = bu.PerformUpdateData(); //edit by sailom .k 10/01/2022
-                        //ret = bu.UpdateDataPayDetail(payDetailsNew);
+                        payDetailsNew[i].FlagDel = false;
+                        payDetailsNew[i].CrDate = DateTime.Now;
+                        payDetailsNew[i].CrUser = Helper.tbl_Users.Username;
                     }
+
+                    ret = bu.UpdateDataPayDetail(payDetailsNew);
                 }
 
                 if (ret == 1)
                 {
                     string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
-
-                    //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
-                    if (dtBankNote.Rows.Count > 0)
-                    {
-                        FormHelper.PrintingReportName = new List<string>();
-
-                        FormHelper.ShowPrintingReportName = false;
-                        Dictionary<string, object> _params = new Dictionary<string, object>();
-                        _params.Add("@DocDate", dtpDocDate.Value);
-                        this.OpenExcelReportsPopup("รายงานส่งเงินประจำวัน", "Rep_Bank_Note.xslt", "Rep_Bank_Note", _params, true);
-                        this.OpenExcelReportsPopup("รายงานสรุปส่งเงินประจำวัน", "Rep_BankNote_TotalSalePerMonth.xslt", "Rep_BankNote_TotalSalePerMonth", _params, true);
-
-                        var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
-
-                        FormHelper.CreateAndSendMailWithAttachFile("พบการบันทึกข้อมูลในหน้า Bank Note", bu.tbl_Branchs[0].BranchName, cdate);
-                    }
-                    //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
                 }
                 else
                 {
                     this.ShowProcessErr();
-                    return;
                 }
             }
             catch (Exception ex)
@@ -521,6 +748,78 @@ namespace AllCashUFormsApp.View.Page
                 ex.WriteLog(this.GetType());
                 ex.Message.ShowErrorMessage();
             }
+        }
+
+        #endregion
+
+        private void gridPayment_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try
+            {
+                if (gridPayment.CurrentCell.ColumnIndex <= 4)
+                {
+                    gridPayment.SetCellNumberOnly(sender, e, numberCell.ToList());
+                }
+            }
+            catch
+            {
+
+            }
+
+        }
+
+        private void txtTotalGetMoney_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void gridPayment_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            gridPayment.SetRowPostPaint(sender, e, this.Font);
+
+            try
+            {
+                var row = gridPayment.Rows[e.RowIndex];
+                decimal _diff = 0;
+
+                if (decimal.TryParse(row.Cells["colMoneyDiff"].Value.ToString(), out _diff))
+                {
+                    if (_diff < 0)
+                    {
+                        row.Cells["colMoneyDiff"].Style.BackColor = Color.LightYellow;
+                        row.Cells["colMoneyDiff"].Style.ForeColor = Color.Red;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            LockPanel(false);
+
+            btnCancel.Enabled = false;
+            btnEdit.Enabled = true;
+            btnPrint.Enabled = true;
+            btnRemove.Enabled = true;
+            btnSave.Enabled = false;
+            BindBankNote();
+            CalDiv(gridPayment, true);
+            SetReadOnlyGridView(true);
+            txtRemark.DisableTextBox(true);
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void FrmPay_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
         }
 
         //private void SaveBankNote()
@@ -670,387 +969,5 @@ namespace AllCashUFormsApp.View.Page
         //        msg.ShowErrorMessage();
         //    }
         //}
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            Save();
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Save()
-        {
-            try
-            {
-                if (gridPayment.Rows.Count != 0)
-                {
-                    if (string.IsNullOrEmpty(txtBranchCode.Text))
-                    {
-                        MessageBox.Show("ไม่พบข้อมูล --> เดโป้/สาขา", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        return;
-                    }
-
-                    var branchList = bu.GetBranch(x => x.BranchCode == txtBranchCode.Text);
-
-                    if (branchList.Count != 0)
-                    {
-                        SaveBankNote_New();//11.11.2564 A
-
-                        //SaveBankNote();
-
-                        BindBankNote();
-
-                        CalDiv(gridPayment, true);
-
-                        btnSave.Enabled = false;
-                        btnCancel.Enabled = true;
-                        btnEdit.Enabled = true;
-                        btnPrint.Enabled = true;
-                        btnRemove.Enabled = true;
-                        gridPayment.Enabled = false;
-                    }
-                    else
-                    {
-                        MessageBox.Show("รหัสคลังไม่ถูกต้อง --> เดโป้/สาขา", "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        return;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        private void Remove()
-        {
-            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
-            string title = "ยืนยันการลบ!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            try
-            {
-                int ret = 0;
-
-                //ลบอันเก่า
-                string DocNumber = gridPayment.Rows[0].Cells[8].Value.ToString();
-
-                var payMastersListOld = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false);
-
-                if (payMastersListOld.Count > 0)
-                {
-                    //PayMaster buOld = new PayMaster(); //อันเก่า
-                    payMastersListOld[0].FlagDel = true;
-                    payMastersListOld[0].EdDate = DateTime.Now;
-                    payMastersListOld[0].EdUser = Helper.tbl_Users.Username;
-
-                    ret = bu.UpdateDataPayMaster(payMastersListOld);
-                }
-
-                var payMastersListNew = bu.GetPayMaster(x => x.DocNo == DocNumber && x.FlagDel == false);
-                if (payMastersListNew.Count > 0)
-                {
-                    //PayMaster buNew = new PayMaster();
-                    payMastersListNew[0].AutoID = ForMatAutoIDPayMaster();
-                    payMastersListNew[0].CrDate = DateTime.Now;
-                    payMastersListNew[0].FlagDel = false;
-                    payMastersListNew[0].CrUser = Helper.tbl_Users.Username;
-                    decimal totalS = 0;
-                    payMastersListNew[0].TotalSend = totalS;
-                    ret = bu.UpdateDataPayMaster(payMastersListNew);
-                }
-
-                //bu.tbl_PayMasters.Clear();
-                //bu.tbl_PayMasters.AddRange(payMastersListOld);
-
-                //bu.tbl_PayMasters.Clear();
-                //bu.tbl_PayMasters.AddRange(payMastersListNew);
-
-                //Reset ยอดส่งเงินสด,ชำระบิลเครดิต,ยอดโอน,ค่าธรรมเนียม,รวมส่งเงิน,เกินขาด = 0
-                //PayDetail buDetailOld = new PayDetail();
-
-                //เก่า
-                var payDetailsOld = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);
-                if (payDetailsOld.Count > 0)
-                {
-                    for (int i = 0; i < gridPayment.Rows.Count; i++)
-                    {
-                        payDetailsOld[i].FlagDel = true;
-                        payDetailsOld[i].EdDate = DateTime.Now;
-                        payDetailsOld[i].EdUser = Helper.tbl_Users.Username;
-                    }
-
-                    ret = bu.RemoveDataPayDetail(payDetailsOld);
-                }
-
-
-                //เพิ่มแถวใหม่ 
-                var payDetailsNew = bu.GetPayDetail(x => x.DocNo == DocNumber && x.FlagDel == false);
-                if (payDetailsNew.Count > 0)
-                {
-                    decimal num = 0;
-                    for (int i = 0; i < gridPayment.Rows.Count; i++)
-                    {
-                        payDetailsNew[i].AutoID = ForMatautoIDPayDetail();
-                        payDetailsNew[i].Send = num.ToDecimalN2();
-                        payDetailsNew[i].Cheque = num.ToDecimalN2();
-                        payDetailsNew[i].Transfer = num.ToDecimalN2();
-                        payDetailsNew[i].Deposit = num.ToDecimalN2();
-
-                        payDetailsNew[i].FlagDel = false;
-                        payDetailsNew[i].CrDate = DateTime.Now;
-                        payDetailsNew[i].CrUser = Helper.tbl_Users.Username;
-                    }
-
-                    ret = bu.UpdateDataPayDetail(payDetailsNew);
-                }
-
-                if (ret == 1)
-                {
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-                ex.Message.ShowErrorMessage();
-            }
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            if (gridPayment.Rows.Count != 0)
-            {
-                Remove();
-                BindBankNote();
-                CalDiv(gridPayment, true);
-                txtTotalGetMoney.Text = "0.00";
-                gridPayment.Enabled = false;
-
-                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-                btnEdit.Enabled = true;
-                btnPrint.Enabled = true;
-
-                btnAdd.Enabled = false;
-                btnRemove.Enabled = true;
-                btnSave.Enabled = false;
-                btnCancel.Enabled = false;
-                btnCopy.Enabled = false;
-            }
-
-        }
-
-        private void txtBranchCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (txtBranchCode.Text != "")
-                {
-                    List<tbl_Branch> BranchWareHouseList = bu.GetBranch(x => x.BranchCode == txtBranchCode.Text);
-                    if (BranchWareHouseList.Count != 0)
-                    {
-                        txtBranchName.Text = BranchWareHouseList[0].BranchName;
-                    }
-                    else
-                    {
-                        txtBranchCode.Clear();
-                        txtBranchName.Clear();
-                    }
-                }
-                else
-                {
-                    txtBranchCode.Clear();
-                    txtBranchName.Clear();
-                }
-            }
-
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            LockPanel(false);
-
-            btnCancel.Enabled = false;
-            btnEdit.Enabled = true;
-            btnPrint.Enabled = true;
-            btnRemove.Enabled = true;
-            btnSave.Enabled = false;
-            BindBankNote();
-            CalDiv(gridPayment, true);
-            gridPayment.Enabled = false;
-        }
-
-        private void gridPayment_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            gridPayment.SetRowPostPaint(sender, e, this.Font);
-        }
-
-        private void gridPayment_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            try
-            {
-                DataGridViewTextBoxEditingControl _grd = (DataGridViewTextBoxEditingControl)sender;
-                DataGridView grd = _grd.EditingControlDataGridView;
-                if (grd.CurrentCell.ColumnIndex > 0)
-                {
-
-
-                    if (e.KeyCode == Keys.Enter)
-                    {
-                        int currentRowIndex = grd.CurrentCell.RowIndex;
-                        int curentColIndex = grd.CurrentCell.ColumnIndex;
-                        grd.ClearSelection();
-                        grd.CurrentCell = grd.Rows[currentRowIndex].Cells[curentColIndex + 1];
-                    }
-                }
-                //if (e.KeyCode == Keys.Enter)
-                //{
-                //    int _columnIndex = gridPayment.CurrentCell.ColumnIndex;
-                //    gridPayment.CurrentCell = gridPayment.CurrentRow.Cells[_columnIndex + 1];//
-                //}
-            }
-            catch
-            {
-
-
-            }
-
-
-        }
-
-        private void gridPayment_KeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.KeyCode == Keys.Enter)
-                {
-                    SendKeys.Send("{TAB}");
-                    //int _columnIndex = gridPayment.CurrentCell.ColumnIndex;
-                    //gridPayment.CurrentCell = gridPayment.CurrentRow.Cells[_columnIndex + 1];
-                }
-            }
-            catch
-            {
-
-            }
-
-        }
-
-        private void gridPayment_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            try
-            {
-                if (gridPayment.CurrentCell.ColumnIndex <= 4)
-                {
-                    gridPayment.SetCellNumberOnly(sender, e, numberCell.ToList());
-                }
-            }
-            catch
-            {
-
-            }
-
-        }
-
-        private void gridPayment_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            try
-            {
-                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
-
-                tb.KeyPress -= gridPayment_KeyPress;
-                tb.KeyPress += gridPayment_KeyPress;
-
-            }
-            catch
-            {
-
-
-            }
-
-        }
-
-        private void gridPayment_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                DataGridView grd = sender as DataGridView;
-                if (grd != null && grd.CurrentRow != null)
-                {
-
-                    if (e.ColumnIndex == 1 ||
-                        e.ColumnIndex == 3 ||
-                        e.ColumnIndex == 4)
-                    {
-                        int currentRowIndex = grd.CurrentCell.RowIndex;
-
-                        CalculateRow(gridPayment, currentRowIndex);
-
-                        CalDiv(gridPayment);
-                    }
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void btnPrint_Click(object sender, EventArgs e)
-        {
-            if (dtBankNote.Rows.Count > 0)
-            {
-                FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
-
-                Dictionary<string, object> _params = new Dictionary<string, object>();
-                _params.Add("@DocDate", dtpDocDate.Value);
-                this.OpenExcelReportsPopup("รายงานส่งเงินประจำวัน", "Rep_Bank_Note.xslt", "Rep_Bank_Note", _params, true);
-                //this.OpenCrystalReportsPopup("รายงานส่งเงินประจำวัน", "V_Bank_Note.rpt", "Rep_Bakn_Note", _params);
-            }
-            else
-            {
-                FlexibleMessageBox.Show("ไม่พบยอดขายของวันที่ " + dtpDocDate.Value.ToString("dd/MM/yyyy"), "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                return;
-            }
-
-        }
-
-        private void txtTotalGetMoney_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != '.'))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void FrmPay_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            MemoryManagement.FlushMemory();
-        }
-
-        private void gridPayment_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            string _value = gridPayment.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
-            if (string.IsNullOrEmpty(_value))
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void gridPayment_CellErrorTextNeeded(object sender, DataGridViewCellErrorTextNeededEventArgs e)
-        {
-
-        }
     }
 }

@@ -132,7 +132,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
@@ -154,7 +154,7 @@ namespace AllCashUFormsApp.View.Page
 
             gbDepoAddOn.Visible = Helper.tbl_Users.RoleID == 5; //***********************
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -316,7 +316,7 @@ namespace AllCashUFormsApp.View.Page
             ddlZoneID.BindDropdownList(zoneList, "ZoneName", "ZoneID", 0);
 
             var vanList = new List<tbl_BranchWarehouse>();
-            Func<tbl_BranchWarehouse, bool> tbl_BranchWarehouseFunc = (x => x.VanType == 1);
+            Func<tbl_BranchWarehouse, bool> tbl_BranchWarehouseFunc = (x => x.VanType != 0);
             vanList.Add(new tbl_BranchWarehouse { WHID = "-1", WHName = "==เลือก==" });
             vanList.AddRange(bu.GetAllBranchWarehouse(tbl_BranchWarehouseFunc));
             ddlWHID.BindDropdownList(vanList, "WHName", "WHID");

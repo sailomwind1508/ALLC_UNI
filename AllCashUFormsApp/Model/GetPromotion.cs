@@ -42,5 +42,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public string CreateBy { get; set; }
         public string UpdateBy { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -25,6 +26,65 @@ namespace AllCashUFormsApp.Controller
         {
             this.tbl_IVMaster = new tbl_IVMaster();
             this.tbl_IVDetails = new List<tbl_IVDetail>();
+        }
+
+        public string GenerateRL(DateTime docdate, DateTime podate, string whid, string userName, string docNos)
+        {
+            string ret = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocDate", docdate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                sqlParmas.Add("@PODate", podate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                sqlParmas.Add("@WHID", whid);
+                sqlParmas.Add("@LoginUser", userName);
+                sqlParmas.Add("@DocNos", docNos);
+
+                string sql = "proc_PreOrder_GenerateRL";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString();
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return "";
+            }
+        }
+
+        public string GenerateCancelRL(DateTime docdate, string whid, string userName, string docNos)
+        {
+            string ret = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocDate", docdate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                sqlParmas.Add("@WHID", whid);
+                sqlParmas.Add("@LoginUser", userName);
+                sqlParmas.Add("@DocNos", docNos);
+
+                string sql = "proc_PreOrder_GenerateCanelRL";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString();
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return "";
+            }
         }
 
         public bool UpdateCustomerAddress(string docNo)
@@ -56,6 +116,34 @@ namespace AllCashUFormsApp.Controller
                 return false;
             }
 
+        }
+
+        public DataTable GetRefRB(string docNo)
+        {
+            DataTable ret = new DataTable();
+            try
+            {
+                //Check Doc Pre Order
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_PreOrder_GetRefRB";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@PODocNo", docNo);
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable;
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
         }
 
         public List<tbl_SalArea> GetAllSaleArea()

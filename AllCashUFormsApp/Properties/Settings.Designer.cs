@@ -55,5 +55,25 @@ namespace AllCashUFormsApp.Properties {
                 return ((string)(this["DB_ALL_CASH_UNI_SNKConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.200;Initial Catalog=DB_ALL_CASH_UNI_TKM;User ID=sa")]
+        public string DB_ALL_CASH_UNI_TKMConnectionString {
+            get {
+                return ((string)(this["DB_ALL_CASH_UNI_TKMConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.200;Initial Catalog=DB_ALL_CASH_UNI_TKM_TEST;User ID=sa")]
+        public string DB_ALL_CASH_UNI_TKM_TESTConnectionString {
+            get {
+                return ((string)(this["DB_ALL_CASH_UNI_TKM_TESTConnectionString"]));
+            }
+        }
     }
 }

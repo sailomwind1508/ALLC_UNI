@@ -465,10 +465,6 @@
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </RightBorder>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -510,10 +506,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -561,10 +553,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -607,10 +595,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -652,10 +636,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -698,10 +678,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -752,10 +728,6 @@
                           <Width>1pt</Width>
                         </RightBorder>
                         <FontFamily />
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -763,7 +735,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.20385in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1075,7 +1047,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.20385in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1387,7 +1359,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.21704in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1699,7 +1671,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.21704in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -2011,7 +1983,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.21044in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -2323,7 +2295,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.20385in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -2635,7 +2607,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.25in</Height>
+              <Height>0.23022in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -4967,7 +4939,7 @@
         <DataSetName>DataSet1</DataSetName>
         <Top>0.03175cm</Top>
         <Left>0.21697cm</Left>
-        <Height>3.7218in</Height>
+        <Height>3.45809in</Height>
         <Width>7.61356in</Width>
         <Style>
           <Border>
@@ -4996,7 +4968,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>3.7343in</Height>
+    <Height>3.6718in</Height>
     <Style />
   </Body>
   <Width>7.80618in</Width>
@@ -5417,9 +5389,9 @@
               </Paragraphs>
               <rd:DefaultName>DocDate1</rd:DefaultName>
               <Top>0.01514in</Top>
-              <Left>5.75733in</Left>
+              <Left>5.22039in</Left>
               <Height>0.28624in</Height>
-              <Width>1.71916in</Width>
+              <Width>2.04918in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -5452,9 +5424,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.01514in</Top>
-              <Left>4.95548in</Left>
+              <Left>4.53048in</Left>
               <Height>0.28624in</Height>
-              <Width>0.78241in</Width>
+              <Width>0.66404in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -5488,9 +5460,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.30694in</Top>
-              <Left>4.96934in</Left>
+              <Left>4.53867in</Left>
               <Height>0.27491in</Height>
-              <Width>0.76852in</Width>
+              <Width>0.65015in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -5523,9 +5495,9 @@
               </Paragraphs>
               <rd:DefaultName>DocNo1</rd:DefaultName>
               <Top>0.30694in</Top>
-              <Left>5.75731in</Left>
+              <Left>5.22037in</Left>
               <Height>0.27491in</Height>
-              <Width>1.70793in</Width>
+              <Width>2.03795in</Width>
               <ZIndex>3</ZIndex>
               <Style>
                 <Border>
@@ -5558,9 +5530,9 @@
               </Paragraphs>
               <rd:DefaultName>DocRef1</rd:DefaultName>
               <Top>0.58741in</Top>
-              <Left>5.75733in</Left>
+              <Left>5.22039in</Left>
               <Height>0.31075in</Height>
-              <Width>1.70792in</Width>
+              <Width>2.03794in</Width>
               <ZIndex>4</ZIndex>
               <Style>
                 <Border>
@@ -5594,9 +5566,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.58741in</Top>
-              <Left>4.96934in</Left>
+              <Left>4.54434in</Left>
               <Height>0.31075in</Height>
-              <Width>0.76855in</Width>
+              <Width>0.66596in</Width>
               <ZIndex>5</ZIndex>
               <Style>
                 <Border>
@@ -5629,9 +5601,9 @@
               </Paragraphs>
               <rd:DefaultName>EmpName1</rd:DefaultName>
               <Top>0.89821in</Top>
-              <Left>5.7629in</Left>
+              <Left>5.22596in</Left>
               <Height>0.26389in</Height>
-              <Width>1.70419in</Width>
+              <Width>2.34891in</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border>
@@ -5665,9 +5637,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.90053in</Top>
-              <Left>4.96367in</Left>
+              <Left>4.53867in</Left>
               <Height>0.29943in</Height>
-              <Width>0.76852in</Width>
+              <Width>0.67611in</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
@@ -5700,9 +5672,9 @@
               </Paragraphs>
               <rd:DefaultName>EmpIDCard1</rd:DefaultName>
               <Top>1.17447in</Top>
-              <Left>5.7629in</Left>
+              <Left>5.22596in</Left>
               <Height>0.25in</Height>
-              <Width>1.70235in</Width>
+              <Width>2.03237in</Width>
               <ZIndex>8</ZIndex>
               <Style>
                 <Border>
@@ -5735,9 +5707,9 @@
               </Paragraphs>
               <rd:DefaultName>SalAreaName1</rd:DefaultName>
               <Top>1.42957in</Top>
-              <Left>5.75733in</Left>
+              <Left>5.22039in</Left>
               <Height>0.29535in</Height>
-              <Width>1.70234in</Width>
+              <Width>2.03236in</Width>
               <ZIndex>9</ZIndex>
               <Style>
                 <Border>
@@ -5771,9 +5743,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>1.42725in</Top>
-              <Left>4.95547in</Left>
+              <Left>4.53047in</Left>
               <Height>0.29943in</Height>
-              <Width>0.76852in</Width>
+              <Width>0.67382in</Width>
               <ZIndex>10</ZIndex>
               <Style>
                 <Border>
@@ -5804,7 +5776,7 @@
               </Paragraphs>
               <rd:DefaultName>TaxIDCust1</rd:DefaultName>
               <Top>1.42549in</Top>
-              <Left>3.28774in</Left>
+              <Left>3.01274in</Left>
               <Height>0.30236in</Height>
               <Width>1.40645in</Width>
               <ZIndex>11</ZIndex>
@@ -5841,7 +5813,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>1.42549in</Top>
-              <Left>1.65651in</Left>
+              <Left>1.38151in</Left>
               <Height>0.29943in</Height>
               <Width>1.63123in</Width>
               <ZIndex>12</ZIndex>
@@ -5876,9 +5848,9 @@
               </Paragraphs>
               <rd:DefaultName>Address1</rd:DefaultName>
               <Top>0.68108in</Top>
-              <Left>0.84907in</Left>
-              <Height>0.60589in</Height>
-              <Width>3.84512in</Width>
+              <Left>0.57407in</Left>
+              <Height>0.51888in</Height>
+              <Width>3.72012in</Width>
               <ZIndex>13</ZIndex>
               <Style>
                 <Border>
@@ -5909,7 +5881,7 @@
               </Paragraphs>
               <rd:DefaultName>ContactTel1</rd:DefaultName>
               <Top>1.42549in</Top>
-              <Left>0.84907in</Left>
+              <Left>0.57407in</Left>
               <Height>0.29943in</Height>
               <Width>0.80466in</Width>
               <ZIndex>14</ZIndex>
@@ -5946,9 +5918,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>1.42549in</Top>
-              <Left>0.16881in</Left>
+              <Left>0.04381in</Left>
               <Height>0.29943in</Height>
-              <Width>0.65597in</Width>
+              <Width>0.49814in</Width>
               <ZIndex>15</ZIndex>
               <Style>
                 <Border>
@@ -5983,9 +5955,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.68499in</Top>
-              <Left>0.15492in</Left>
+              <Left>0.02992in</Left>
               <Height>0.32464in</Height>
-              <Width>0.66986in</Width>
+              <Width>0.51203in</Width>
               <ZIndex>16</ZIndex>
               <Style>
                 <Border>
@@ -6018,7 +5990,7 @@
               </Paragraphs>
               <rd:DefaultName>CustName1</rd:DefaultName>
               <Top>0.3694in</Top>
-              <Left>0.84907in</Left>
+              <Left>0.57407in</Left>
               <Height>0.31168in</Height>
               <Width>3.31632in</Width>
               <ZIndex>17</ZIndex>
@@ -6055,9 +6027,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.3694in</Top>
-              <Left>0.15492in</Left>
+              <Left>0.02992in</Left>
               <Height>0.31168in</Height>
-              <Width>0.66986in</Width>
+              <Width>0.51203in</Width>
               <ZIndex>18</ZIndex>
               <Style>
                 <Border>
@@ -6090,7 +6062,7 @@
               </Paragraphs>
               <rd:DefaultName>CustomerID1</rd:DefaultName>
               <Top>0.0783in</Top>
-              <Left>0.84907in</Left>
+              <Left>0.57407in</Left>
               <Height>0.2911in</Height>
               <Width>3.31632in</Width>
               <ZIndex>19</ZIndex>
@@ -6127,9 +6099,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
               <Top>0.0783in</Top>
-              <Left>0.15492in</Left>
+              <Left>0.02992in</Left>
               <Height>0.2911in</Height>
-              <Width>0.66986in</Width>
+              <Width>0.51203in</Width>
               <ZIndex>20</ZIndex>
               <Style>
                 <Border>
@@ -6142,7 +6114,7 @@
               </Style>
             </Textbox>
             <Line Name="Line33">
-              <Left>4.7542in</Left>
+              <Left>4.5042in</Left>
               <Height>1.79353in</Height>
               <Width>0in</Width>
               <ZIndex>21</ZIndex>
@@ -6157,7 +6129,7 @@
           <Top>0.92169in</Top>
           <Left>0.08691in</Left>
           <Height>1.79353in</Height>
-          <Width>7.61207in</Width>
+          <Width>7.61575in</Width>
           <ZIndex>12</ZIndex>
           <Style>
             <Border>
@@ -6249,11 +6221,126 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>4.09677in</Height>
+      <Height>3.87802in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
         <Rectangle Name="Rectangle4">
+          <ReportItems>
+            <Textbox Name="Textbox39">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>วันที่   ___/____/______</Value>
+                      <Style>
+                        <FontFamily>AngsanaUPC</FontFamily>
+                        <FontSize>13pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox11</rd:DefaultName>
+              <Top>1.46553in</Top>
+              <Left>4.56413cm</Left>
+              <Height>0.31591in</Height>
+              <Width>1.61438in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox38">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>ผู้รับสินค้า</Value>
+                      <Style>
+                        <FontFamily>AngsanaUPC</FontFamily>
+                        <FontSize>13pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox11</rd:DefaultName>
+              <Top>1.26629in</Top>
+              <Left>4.56413cm</Left>
+              <Height>0.29924in</Height>
+              <Width>1.61438in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Line Name="Line6">
+              <Top>0.34172in</Top>
+              <Left>1.7594in</Left>
+              <Height>1.57541in</Height>
+              <Width>0in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>Solid</Style>
+                </Border>
+              </Style>
+            </Line>
+            <Line Name="Line7">
+              <Top>0.31394in</Top>
+              <Left>1.7594in</Left>
+              <Height>1.60319in</Height>
+              <Width>0in</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>Solid</Style>
+                </Border>
+              </Style>
+            </Line>
+            <Image Name="Image1">
+              <Source>Database</Source>
+              <Value>=First(Fields!Signature.Value, "DataSet1")</Value>
+              <MIMEType>image/png</MIMEType>
+              <Sizing>FitProportional</Sizing>
+              <Top>0.41116in</Top>
+              <Left>0.11273in</Left>
+              <Height>0.86581in</Height>
+              <Width>1.57722in</Width>
+              <ZIndex>4</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
+          </ReportItems>
           <KeepTogether>true</KeepTogether>
           <Top>1.70076in</Top>
           <Left>4.22838in</Left>
@@ -7123,7 +7210,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>ผู้รับสินค้า</Value>
+                  <Value>ผู้สั่งสินค้า</Value>
                   <Style>
                     <FontFamily>AngsanaUPC</FontFamily>
                     <FontSize>13pt</FontSize>
@@ -7141,7 +7228,7 @@
           <Top>3.04718in</Top>
           <Left>10.95756cm</Left>
           <Height>0.29924in</Height>
-          <Width>3.34778in</Width>
+          <Width>1.61438in</Width>
           <ZIndex>26</ZIndex>
           <Style>
             <Border>
@@ -7178,7 +7265,7 @@
           <Top>3.24642in</Top>
           <Left>10.95756cm</Left>
           <Height>0.31591in</Height>
-          <Width>3.34778in</Width>
+          <Width>1.61438in</Width>
           <ZIndex>27</ZIndex>
           <Style>
             <Border>
@@ -7323,12 +7410,12 @@
             </Border>
           </Style>
         </Line>
-        <Rectangle Name="Rectangle2">
+        <Rectangle Name="Rectangle3">
           <KeepTogether>true</KeepTogether>
           <Top>1.70076in</Top>
-          <Left>0.08691in</Left>
+          <Left>2.09084in</Left>
           <Height>1.91713in</Height>
-          <Width>2.00393in</Width>
+          <Width>2.13753in</Width>
           <ZIndex>37</ZIndex>
           <Style>
             <Border>
@@ -7336,12 +7423,12 @@
             </Border>
           </Style>
         </Rectangle>
-        <Rectangle Name="Rectangle3">
+        <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
           <Top>1.70076in</Top>
-          <Left>2.09084in</Left>
+          <Left>0.08691in</Left>
           <Height>1.91713in</Height>
-          <Width>2.13753in</Width>
+          <Width>2.00393in</Width>
           <ZIndex>38</ZIndex>
           <Style>
             <Border>
@@ -7510,10 +7597,14 @@
           <DataField>ReportHeader</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Signature">
+          <DataField>Signature</DataField>
+          <rd:TypeName>System.Byte[]</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>DB_ALL_CASH_UNI_UBN_TESTDataSet2</rd:DataSetName>
-        <rd:SchemaPath>D:\United Foods\SC_22112021\ALLC_UNI\AllCashUFormsApp\DB_ALL_CASH_UNI_UBN_TESTDataSet2.xsd</rd:SchemaPath>
+        <rd:DataSetName>DB_ALL_CASH_UNI_TKMDataSet1</rd:DataSetName>
+        <rd:SchemaPath>D:\United Foods\SC_23-03-2022\ALLC_UNI\AllCashUFormsApp\DB_ALL_CASH_UNI_TKMDataSet1.xsd</rd:SchemaPath>
         <rd:TableName>Form_V</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>

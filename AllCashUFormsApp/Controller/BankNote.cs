@@ -64,5 +64,29 @@ namespace AllCashUFormsApp.Controller
             return rets.All(x => x == 1) ? 1 : 0;
         }
 
+        public List<tbl_PayMaster> GetPayMasterSingle(string _DocNo, int _FlagDel)
+        {
+            return (new tbl_PayMaster()).GetPayMasterSingle(_DocNo, _FlagDel);
+        }
+
+        public List<tbl_POMaster> GetPOMasterSingle(string _DocTypeCode, string _DocStatus, string _DocDate)
+        {
+            return (new tbl_POMaster()).GetPOMasterSingle(_DocTypeCode, _DocStatus, _DocDate);
+        }
+
+        public List<tbl_PayDetail> GetPayDetailSingle(string _DocNo, int _FlagDel)
+        {
+            return (new tbl_PayDetail()).GetPayDetailSingle(_DocNo, _FlagDel);
+        }
+
+        public int SelectPayMaster_MaxID()
+        {
+            return (new tbl_PayMaster()).SelectPayMaster_MaxID();
+        }
+
+        public int SelectPayDetail_MaxID()
+        {
+            return (new tbl_PayDetail()).SelectPayDetail_MaxID();
+        }
     }
 }

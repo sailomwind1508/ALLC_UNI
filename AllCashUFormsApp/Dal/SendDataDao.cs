@@ -5,6 +5,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Globalization;
+using System.Data;
 
 namespace AllCashUFormsApp
 {
@@ -28,7 +30,8 @@ namespace AllCashUFormsApp
             }
 
             return list;
-        } 
+        }
+
         public static List<tbl_SendData> SelectAll(this tbl_SendData tbl_SendData)
         {
             List<tbl_SendData> list = new List<tbl_SendData>();
@@ -53,6 +56,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
         public static int Insert(this tbl_SendData tbl_SendData)
         {
             int ret = 0;
@@ -72,6 +76,7 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
         public static int Update(this tbl_SendData tbl_SendData)
         {
             int ret = 0;
@@ -114,6 +119,7 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
         public static int Delete(this tbl_SendData tbl_SendData)
         {
             int ret = 0;
@@ -133,5 +139,84 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static DataTable GetWHID_FromSendData(this tbl_SendData tbl_SendData)
+        {
+            var dt = new DataTable();
+            try
+            {
+                string sql = "";
+
+                //sql = @"SELECT t2.BranchID,T2.WHName ,t1.WHID FROM tbl_SendData t1
+                //               INNER JOIN tbl_BranchWarehouse t2 ON t1.WHID = T2.WHID
+                //               WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DocDate AS DATE)) FROM tbl_POMaster)";
+
+                //sql += @"SELECT DISTINCT t2.BranchID,T2.WHName ,t1.WHID FROM tbl_ArCustomer t1
+                //        INNER JOIN tbl_BranchWarehouse t2 ON t1.WHID = T2.WHID
+                //        INNER JOIN 
+                //        (
+                //         SELECT DISTINCT t3.SalAreaName, t1.SalAreaID, t1.WHID  
+                //         FROM tbl_ArCustomer t1
+                //         INNER JOIN ( SELECT WHID FROM tbl_SendData 
+                //          WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DocDate AS DATE)) FROM tbl_POMaster)
+                //         )t2 ON t1.WHID = t2.WHID 
+                //         INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+                //         WHERE T1.FlagDel = 0
+                //        )T3 on t1.WHID = t3.WHID
+                //        WHERE t1.FlagDel = 0
+                //        ORDER BY WHID";
+
+                //sql += @"SELECT DISTINCT t2.BranchID,T2.WHName ,t1.WHID FROM tbl_ArCustomer t1
+                //        INNER JOIN tbl_BranchWarehouse t2 ON t1.WHID = T2.WHID
+                //        INNER JOIN 
+                //        (
+                //         SELECT DISTINCT t3.SalAreaName, t1.SalAreaID, t1.WHID  
+                //         FROM tbl_ArCustomer t1
+                //         INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+                //         WHERE T1.FlagDel = 0
+                //        )T3 on t1.WHID = t3.WHID
+                //        WHERE t1.FlagDel = 0
+                //        ORDER BY WHID";
+
+                sql += @" SELECT DISTINCT t2.BranchID,T2.WHName, t2.WHID 
+						FROM tbl_BranchWarehouse t2
+                        INNER JOIN 
+                        (
+	                        SELECT DISTINCT t3.SalAreaName, t1.SalAreaID, t1.WHID  
+	                        FROM tbl_ArCustomer t1
+	                        INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+	                        WHERE T1.FlagDel = 0
+                        ) T3 on t2.WHID = t3.WHID
+                        WHERE t2.FlagDel = 0
+						AND t2.WHType <> 0
+                        ORDER BY WHID ";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SendData.GetType());
+            }
+
+            return dt;
+        }
+        //public static DataTable GetWHID_FromSendData(this tbl_SendData tbl_SendData)
+        //{
+        //    var dt = new DataTable();
+        //    try
+        //    {
+        //        string sql = @"SELECT t2.BranchID,T2.WHName ,t1.WHID FROM tbl_SendData t1
+        //                       INNER JOIN tbl_BranchWarehouse t2 ON t1.WHID = T2.WHID
+        //                       WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DateSend AS DATE)) FROM tbl_SendData)";
+
+        //        dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.WriteLog(tbl_SendData.GetType());
+        //    }
+
+        //    return dt;
+        //}
     }
 }

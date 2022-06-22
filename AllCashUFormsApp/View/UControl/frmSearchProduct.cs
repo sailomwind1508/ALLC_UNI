@@ -62,7 +62,11 @@ namespace AllCashUFormsApp.View.UControl
 
             grdList.DataSource = dtPrd;
 
-            grdList.CreateCheckBoxHeaderColumn("colSelect");
+            try
+            {
+                grdList.CreateCheckBoxHeaderColumn("colSelect");
+            }
+            catch { }
 
             lblgridCount.Text = dtPrd.Rows.Count.ToNumberFormat();
         }

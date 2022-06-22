@@ -229,7 +229,7 @@
             dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.colRewardName.DefaultCellStyle = dataGridViewCellStyle7;
             this.colRewardName.FillWeight = 200F;
-            this.colRewardName.HeaderText = "สิ่งที่ไดรับ";
+            this.colRewardName.HeaderText = "สิ่งที่ได้รับ";
             this.colRewardName.MinimumWidth = 200;
             this.colRewardName.Name = "colRewardName";
             this.colRewardName.ReadOnly = true;

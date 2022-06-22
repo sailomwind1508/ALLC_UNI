@@ -49,6 +49,7 @@ namespace AllCashUFormsApp.View.Page
         List<tbl_PRMaster> allPRMaster = new List<tbl_PRMaster>();
         List<tbl_Employee> allEmployee = new List<tbl_Employee>();
 
+        private ContextMenuStrip printContextMenuStrip;
         public frmEndDay()
         {
             InitializeComponent();
@@ -60,10 +61,183 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #region private methods
+        private void CreatePrintBtnList()
+        {
+            printContextMenuStrip = new ContextMenuStrip();
+
+            printContextMenuStrip.Items.Clear();
+            printContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(cms_Opening);
+
+            btnPrint.ContextMenuStrip = printContextMenuStrip;
+        }
+
+        void cms_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            Control c = printContextMenuStrip.SourceControl as Control;
+            ToolStripDropDownItem tsi = printContextMenuStrip.OwnerItem as ToolStripDropDownItem;
+
+            // Clear the ContextMenuStrip control's Items collection.
+            printContextMenuStrip.Items.Clear();
+
+            // Populate the ContextMenuStrip control with its default items.
+            var printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.printBtn).ImageToByte();
+
+            List<tbl_MstMenu> menuList = new List<tbl_MstMenu>();
+            tbl_MstMenu m = new tbl_MstMenu();
+            m.MenuID = 100;
+            m.MenuName = "VAll";
+            m.MenuText = "พิมพ์ทั้งหมด";
+            m.FormName = "frmCrystalReport";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            m = new tbl_MstMenu();
+            m.MenuID = 101;
+            m.MenuName = "VOriginal";
+            m.MenuText = "พิมพ์ต้นฉบับ";
+            m.FormName = "frmCrystalReport";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            m = new tbl_MstMenu();
+            m.MenuID = 102;
+            m.MenuName = "VCopy";
+            m.MenuText = "พิมพ์สำเนา";
+            m.FormName = "frmCrystalReport";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            //m = new tbl_MstMenu();
+            //m.MenuID = 103;
+            //m.MenuName = "IVOriginal";
+            //m.MenuText = "พิมพ์ใบกำกับภาษีอย่างย่อ";
+            //m.FormName = "frmCrystalReport";
+            //m.MenuImage = printImage;
+            //menuList.Add(m);
+
+            foreach (var item in menuList)
+            {
+                printContextMenuStrip.Items.Add(item.MenuText, item.MenuImage.byteArrayToImage(), ToolStripMenuItem_Click);
+            }
+
+            // Set Cancel to false. 
+            // It is optimized to true based on empty entry.
+            e.Cancel = false;
+        }
+
+        private void ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < grdDailySales.RowCount; i++)
+            {
+                string _DocNo = grdDailySales.Rows[i].Cells["เลขใบกำกับภาษี"].Value.ToString();
+                string _WHID = grdDailySales.Rows[i].Cells["VAN"].Value.ToString();
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", _DocNo);
+
+                string frmText = ((System.Windows.Forms.ToolStripItem)sender).Text;
+
+                var wh = bu.GetBranchWarehouse(_WHID);
+                if (frmText == "พิมพ์ทั้งหมด")
+                {
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", _DocNo);
+
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", _DocNo);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
+
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", _DocNo);
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", _DocNo);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
+                }
+                else if (frmText == "พิมพ์ต้นฉบับ")
+                {
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", _DocNo);
+
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", _DocNo);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
+                }
+                else if (frmText == "พิมพ์สำเนา")
+                {
+                    _params = new Dictionary<string, object>();
+                    _params.Add("@DocNo", _DocNo);
+                    if (wh != null)
+                    {
+                        if (wh.DriverEmpID == "credit")
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+                            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", _DocNo);
+                            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+                            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                        else
+                        {
+                            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+                            this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+                        }
+                    }
+                }
+            }
+
+        }
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
@@ -73,7 +247,7 @@ namespace AllCashUFormsApp.View.Page
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnAdd.Enabled = false;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -90,6 +264,7 @@ namespace AllCashUFormsApp.View.Page
             SetDefaultGridViewEvent(grdRBTotal);
             SetDefaultGridViewEvent(grdODTotal);
 
+            CreatePrintBtnList();
             InitialData();
         }
 
@@ -349,11 +524,11 @@ namespace AllCashUFormsApp.View.Page
                 bu = new EndDay();
                 int ret = 0;
 
-                allUomSet = bu.GetUOMSet();
-                allProduct = bu.GetProduct();
-                allProductPrice = bu.GetProductPriceGroup();
+                allUomSet = bu.tbl_ProductUomSet;
+                allProduct = bu.tbl_Product;
+                allProductPrice = bu.tbl_ProductPriceGroup;
                 allPOMaster = bu.GetAllPOMaster(dtpDocDate.Value);
-                allBranchWH = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType == 1);
+                allBranchWH = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType != 0); // && x.WHType == 1); // edit by sailom .k 03/03/2022 for support pre-order
                 allPODetails = bu.GetAllPODetails(dtpDocDate.Value);
                 allBranch = bu.GetBranch();
                 allPRMaster = bu.GetAllPRMaster(dtpDocDate.Value);
@@ -785,12 +960,12 @@ namespace AllCashUFormsApp.View.Page
                 bu = new EndDay();
                 int ret = 0;
 
-                allUomSet = bu.GetUOMSet();
-                allProduct = bu.GetProduct();
-                allProductPrice = bu.GetProductPriceGroup();
-                allPOMaster = bu.GetAllPOMaster(dtpDocDate.Value);
-                allBranchWH = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType == 1);
-                allPODetails = bu.GetAllPODetails(dtpDocDate.Value);
+                allUomSet = bu.tbl_ProductUomSet;
+                allProduct = bu.tbl_Product;
+                allProductPrice = bu.tbl_ProductPriceGroup;
+                allPOMaster = bu.GetAllPOMaster(dtpDocDate.Value).Where(x => x.DocStatus == "4").ToList();
+                allBranchWH = bu.GetAllBranchWarehouse(x => !x.FlagDel && x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order //  && x.WHType == 1);; 
+                allPODetails = bu.GetAllPODetailsEndDay(dtpDocDate.Value);
                 allBranch = bu.GetBranch();
                 allPRMaster = bu.GetAllPRMaster(dtpDocDate.Value);
 
@@ -1057,8 +1232,6 @@ namespace AllCashUFormsApp.View.Page
 
                     if (ret == 1)
                     {
-                        Cursor.Current = Cursors.Default;
-
                         //update customer SAP code-----------------------
                         List<bool> retCustList = new List<bool>();
                         foreach (var customerID in customerIDList)
@@ -1070,6 +1243,7 @@ namespace AllCashUFormsApp.View.Page
 
                         if (retCustList.All(x => x == true))
                         {
+                            Cursor.Current = Cursors.Default;
                             //show popup close end day success.
                             string msg = "ปิดวันเรียบร้อยแล้ว";
                             msg.ShowInfoMessage();
@@ -1078,7 +1252,7 @@ namespace AllCashUFormsApp.View.Page
 
                             var cdate = dtpDocDate.Value.ToString("dd/MM/yyyy", cultures);
 
-                            //FormHelper.CreateAndSendMail("พบการ ปิดวัน", bu.tbl_Branchs[0].BranchName, cdate);
+                            FormHelper. CreateAndSendMail("พบการ ปิดวัน", bu.tbl_Branchs[0].BranchName, cdate);
 
                             //Send mail to HQ //edit by sailom .k 07/01/2022---------------------------------------
 
@@ -1425,7 +1599,7 @@ namespace AllCashUFormsApp.View.Page
 
                         foreach (var docItem in docNo.Split('|').ToList())
                         {
-                            bu.tbl_POMaster = allPOMaster.FirstOrDefault(x => x.DocNo == docItem); //bu.GetPOMaster(docItem);
+                            bu.tbl_POMaster = allPOMaster.FirstOrDefault(x => x.DocStatus == "4" && x.DocNo == docItem); //bu.GetPOMaster(docItem);
                             var _po = bu.tbl_POMaster;
 
                             if (_po != null)
@@ -1833,6 +2007,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchEndDay_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             BindEndDayData(dtpDocDate.Value, false);
 
             var item = bu.GetSaleBranchSummary(x => !x.FlagDel && x.SaleDate.ToShortDateString() == dtpDocDate.Value.ToShortDateString());
@@ -1841,14 +2016,15 @@ namespace AllCashUFormsApp.View.Page
             else
                 btnEndDay.Enabled = true;
 
+            btnPrint.Enabled = item != null ? true : false; //Adisorn 2022/04/26
             btnCancelEndDay.Enabled = !btnEndDay.Enabled;
-
             if (item == null && grdDailySales.RowCount == 0)
             {
                 btnEndDay.Enabled = false;
                 btnCancelEndDay.Enabled = btnEndDay.Enabled;
             }
 
+            Cursor.Current = Cursors.Default;
             MemoryManagement.FlushMemory();
         }
 
@@ -1864,6 +2040,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnEndDay_Click(object sender, EventArgs e)
         {
+            BindEndDayData(dtpDocDate.Value, false); //for support case when click end-day after create VE on po-form last edit by sailom
+
             CloseEndDay();
             //CloseEndDayNew();
 
@@ -1889,6 +2067,52 @@ namespace AllCashUFormsApp.View.Page
         private void frmEndDay_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+            printContextMenuStrip.Show(btnPrint, new Point(0, btnPrint.Height));
+        }
+
+        private void grdDailySales_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex != -1)
+                {
+                    string _ivDocNo = grdDailySales.Rows[e.RowIndex].Cells[7].Value.ToString();
+
+                    if (!string.IsNullOrEmpty(_ivDocNo))
+                    {
+                        MainForm mfrm = null;
+                        foreach (Form f in Application.OpenForms)
+                        {
+                            if (f.Name.ToLower() == "mainform")
+                            {
+                                mfrm = (MainForm)f;
+                            }
+                        }
+
+                        frmVE frm = new frmVE();
+                        frm.docTypeCode = docTypeCode;
+                        frm.MdiParent = mfrm;
+                        frm.StartPosition = FormStartPosition.CenterParent;
+                        frm.WindowState = FormWindowState.Maximized;
+                        frm.Show();
+                        frm.BindVEData(_ivDocNo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
+            
         }
     }
 }

@@ -138,6 +138,27 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static DataTable SelectAllWithDistrict(this tbl_SalArea tbl_SalArea, string whid)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = @" SELECT t2.* 
+                FROM dbo.tbl_SalAreaDistrict t1 
+                INNER JOIN dbo.tbl_SalArea t2 ON t1.SalAreaID = t2.SalAreaID 
+                WHERE WHID = '" + whid + "' Order By t2.Seq ";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+            }
+
+            return dt;
+        }
+
         /// <summary>
         /// add new data
         /// </summary>
@@ -276,7 +297,7 @@ namespace AllCashUFormsApp
             {
                 string sql = @"SELECT * FROM tbl_SalArea t1 
                             INNER JOIN (SELECT DISTINCT SalAreaID FROM tbl_SalAreaDistrict 
-                            WHERE WHID = '" + _WHID + "' )t2 ON t1.SalAreaID = T2.SalAreaID ";
+                            WHERE WHID = '" + _WHID + "' ) t2 ON t1.SalAreaID = T2.SalAreaID ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
                 list = dynamicListReturned.Cast<tbl_SalArea>().ToList();

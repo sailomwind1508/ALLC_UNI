@@ -21,15 +21,10 @@ namespace AllCashUFormsApp.Dal
             try
             {
                 string d = DateDoc.ToString("yyyyMMdd", new CultureInfo("en-US"));
-                string sql = " ";
-                sql += "select * from V_BankNote where cast(DocDate as DATE) ='" + d + "'";
+                string sql = "select * from V_BankNote ";
+                sql += " where cast(DocDate as DATE) ='" + d + "'";
                 sql += " order by WHID";
-
                 dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
-
-                //SqlDataAdapter da = new SqlDataAdapter(sql, Connection.ConnectionString);
-                //da.Fill(dt);
-
                 return dt;
             }
             catch (Exception ex)
@@ -37,7 +32,7 @@ namespace AllCashUFormsApp.Dal
                 ex.WriteLog(V_BankNote.GetType());
                 return null;
             }
-
         }
+
     }
 }

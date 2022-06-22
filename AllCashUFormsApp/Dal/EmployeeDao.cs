@@ -289,27 +289,21 @@ namespace AllCashUFormsApp
                 cmd.Parameters.AddWithValue("@TitleName", tbl_Employee.TitleName);
                 cmd.Parameters.AddWithValue("@FirstName", tbl_Employee.FirstName);
                 cmd.Parameters.AddWithValue("@LastName", tbl_Employee.LastName);
-
                 cmd.Parameters.AddWithValue("@NickName", tbl_Employee.NickName);
+
                 cmd.Parameters.AddWithValue("@DepartmentID", tbl_Employee.DepartmentID);
                 cmd.Parameters.AddWithValue("@PositionID", tbl_Employee.PositionID);
-                cmd.Parameters.AddWithValue("@MgrID", tbl_Employee.MgrID);
+
                 cmd.Parameters.AddWithValue("@RoleID", tbl_Employee.RoleID);
 
-                if (tbl_Employee.Mobile == null)
-                {
-                    cmd.Parameters.AddWithValue("@Mobile", "");
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Mobile", tbl_Employee.Mobile);
-                }
+                cmd.Parameters.AddWithValue("@MgrID", tbl_Employee.MgrID == null ? "" : tbl_Employee.MgrID);
+                cmd.Parameters.AddWithValue("@Mobile", tbl_Employee.Mobile == null ? "" : tbl_Employee.Mobile);
 
                 cmd.Parameters.AddWithValue("@CrDate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@CrUser", Helper.tbl_Users.Username);
 
                 cmd.Parameters.AddWithValue("@FlagDel", false);
-                cmd.Parameters.AddWithValue("@FlagSend", false);
+                cmd.Parameters.AddWithValue("@FlagSend", true);
                 cmd.Parameters.AddWithValue("@IDCard", tbl_Employee.IDCard);
                 cmd.Parameters.AddWithValue("@EmpIDCard", tbl_Employee.EmpIDCard);
 
@@ -364,7 +358,7 @@ namespace AllCashUFormsApp
             return list;
         }
 
-        public static DataTable proc_GetEmployee_Data(this tbl_Employee tbl_Employee, Dictionary<string, object> _params ,bool flagAllColumns = false)
+        public static DataTable proc_GetEmployee_Data(this tbl_Employee tbl_Employee, Dictionary<string, object> _params, bool flagAllColumns = false)
         {
             try
             {
@@ -409,6 +403,31 @@ namespace AllCashUFormsApp
             {
                 return null;
             }
+        }
+
+        public static bool proc_SendUserData_ToBranch(this tbl_Employee tbl_Employee, Dictionary<string, object> _params)
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_SendUserData_ToBranch";
+                DataTable dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+
+                if (dt != null && dt.Rows.Count != 0)
+                {
+                    if (dt.Rows[0]["Result"].ToString() == "1")
+                    {
+                        ret = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+            }
+
+            return ret;
         }
     }
 }

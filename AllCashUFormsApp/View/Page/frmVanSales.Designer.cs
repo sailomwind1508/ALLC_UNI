@@ -71,6 +71,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlTR = new System.Windows.Forms.Panel();
+            this.btnShowVE = new System.Windows.Forms.Button();
             this.btnGenCustIVNo = new System.Windows.Forms.Button();
             this.txtCustInvNO = new System.Windows.Forms.TextBox();
             this.lblCustInvNO = new System.Windows.Forms.Label();
@@ -501,6 +502,7 @@
             // pnlTR
             // 
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
+            this.pnlTR.Controls.Add(this.btnShowVE);
             this.pnlTR.Controls.Add(this.btnGenCustIVNo);
             this.pnlTR.Controls.Add(this.txtCustInvNO);
             this.pnlTR.Controls.Add(this.lblCustInvNO);
@@ -523,6 +525,22 @@
             this.pnlTR.Name = "pnlTR";
             this.pnlTR.Size = new System.Drawing.Size(355, 232);
             this.pnlTR.TabIndex = 21;
+            // 
+            // btnShowVE
+            // 
+            this.btnShowVE.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnShowVE.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnShowVE.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowVE.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnShowVE.Image = global::AllCashUFormsApp.Properties.Resources.share;
+            this.btnShowVE.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnShowVE.Location = new System.Drawing.Point(317, 133);
+            this.btnShowVE.Name = "btnShowVE";
+            this.btnShowVE.Size = new System.Drawing.Size(35, 23);
+            this.btnShowVE.TabIndex = 158;
+            this.btnShowVE.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnShowVE.UseVisualStyleBackColor = false;
+            this.btnShowVE.Click += new System.EventHandler(this.btnShowVE_Click);
             // 
             // btnGenCustIVNo
             // 
@@ -879,6 +897,7 @@
             this.btnCustInfo.TabIndex = 136;
             this.btnCustInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCustInfo.UseVisualStyleBackColor = false;
+            this.btnCustInfo.Click += new System.EventHandler(this.btnCustInfo_Click);
             // 
             // lblEmpCode
             // 
@@ -1612,5 +1631,6 @@
         private UControl.CancelButton btnCancel;
         private UControl.CopyButton btnCopy;
         private UControl.SaveButton btnSave;
+        private System.Windows.Forms.Button btnShowVE;
     }
 }

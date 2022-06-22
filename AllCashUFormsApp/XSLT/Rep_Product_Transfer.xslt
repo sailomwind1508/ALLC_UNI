@@ -7,7 +7,7 @@
 	<xsl:key name="kCols1" match="ProductID" use="."/>
 	<xsl:key name="kCols2" match="ProductName" use="."/>
 	<xsl:key name="kRows" match="Rep_Product_Transfer_XSLT" use="RefDocNo"/>
-	
+
 	<xsl:variable name="prdIds" select=
       "//ProductID
       [generate-id()
@@ -97,6 +97,27 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					font-size: 10pt;
 					width: 100px;
 					}
+					.SetEmpColumnsSize {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 160px;
+					}
+					.SpecialColumnSize {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 130px;
+					}
+					.ColumnLargeSize {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 260px;
+					}
 					.SearchResultAltItem {
 					background-color: #99CCFF;
 					color: Black;
@@ -132,7 +153,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			<table>
 				<Worksheet Name="รายวัน">
 					<TR>
-						<TD class="stdPageHdr" colspan="5">
+						<TD class="stdPageHdr" colspan="7">
 							<xsl:value-of select="Rep_Product_Transfer_XSLT/CompanyName" />
 						</TD>
 					</TR>
@@ -142,7 +163,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						</TD>
 					</TR>
 					<TR>
-						<TD Colspan="5"></TD>
+						<TD Colspan="9"></TD>
 					</TR>
 					<TR>
 						<TD class="SearchResultItem" style="font-weight: bold;text-align: center;">
@@ -159,31 +180,35 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						</TD>
 					</TR>
 					<TR>
-						<TD Colspan="5"></TD>
+						<TD Colspan="9"></TD>
 					</TR>
 					<TR>
-					<thead>
-						<TH Colspan="5"></TH>
-						<xsl:apply-templates select="$prdIds"/>
-						
-					</thead>
+						<thead>
+							<TH Colspan="9"></TH>
+							<xsl:apply-templates select="$prdIds"/>
+						</thead>
 					</TR>
 					<thead>
 						<th class="SearchResultItem">วันที่</th>
-						<th class="SearchResultItem">เลขที่</th>
+						<th class="SpecialColumnSize">เลขที่</th>
+						<th class="SpecialColumnSize">Last Edited</th>
+						<th class="SetEmpColumnsSize">พนักงาน</th>
+						<th class="SetEmpColumnsSize">ผู้จัดทำ</th>
 						<th class="SearchResultItem">คลังต้นทาง</th>
 						<th class="SearchResultItem">คลังปลายทาง</th>
-						<th class="SearchResultItem">พนักงาน</th>
+						<th class="ColumnLargeSize">หมายเหตุ</th>
+						<th class="SearchResultItem">สถานะเอกสาร</th>
 						<xsl:apply-templates select="$prdNms"/>
 						<th class="SearchResultItem">มูลค่าก่อน Vat</th>
-						<th class="SearchResultItem">สถานะเอกสาร</th>
 					</thead>
 					<tbody>
 						<xsl:apply-templates select=
                 "//Rep_Product_Transfer_XSLT
                 [generate-id() = 
                  generate-id(key('kRows', RefDocNo))]">
-							<xsl:sort select="RefDocNo"/>
+							<xsl:sort select="Date"/>
+							<xsl:sort select="FromWHID"/>
+							<xsl:sort select="ToWHID"/>
 						</xsl:apply-templates>
 
 					</tbody>
@@ -197,7 +222,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			<xsl:value-of select="."/>
 		</th>
 	</xsl:template>
-	
+
 	<xsl:template match="ProductName">
 		<th class="SearchResultItem">
 			<xsl:value-of select="."/>
@@ -208,35 +233,49 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 		<tr>
 			<td class="SearchResultItem">
 				<xsl:if test="Date=88888888 or Date=99999999">
-					 
+
 				</xsl:if>
 				<xsl:if test="Date!=88888888 and Date!=99999999">
 					<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 					<xsl:value-of select="Date"/>
 				</xsl:if>
 			</td>
-			<td class="SearchResultItem">
+			<td class="SpecialColumnSize">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="RefDocNo"/>
 			</td>
 			<td class="SearchResultItem">
+				<xsl:if test="EdDate!=88888888 and EdDate!=99999999">
+					<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+					<xsl:value-of select="EdDate"/>
+				</xsl:if>
+			</td>
+			<td class="SetEmpColumnsSize">
+				<xsl:value-of select="EmpName"/>
+			</td>
+			<td class="SearchResultItem">
+				<xsl:value-of select="FullUserName"/>
+			</td>
+			<td class="SearchResultItem">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="FromWHID"/>
 			</td>
 			<td class="SearchResultItem">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="ToWHID"/>
 			</td>
 			<td class="SearchResultItem">
-				<xsl:value-of select="WHName"/>
+				<xsl:value-of select="Remark"/>
+			</td>
+			<td class="SearchResultItem">
+				<xsl:value-of select="DocStatus"/>
 			</td>
 			<xsl:apply-templates select="$prdIds" mode="row">
-				<xsl:with-param name="nRows" select="key('kRows', RefDocNo)"/>
+					<xsl:with-param name="nRows" select="key('kRows', RefDocNo)"/>
 			</xsl:apply-templates>
 
 			<td class="SearchResultItem">
 				<xsl:value-of select='format-number(AmtBFVAT,"###,###.00")'/>
-			</td>
-			<td class="SearchResultItem">
-				<xsl:value-of select="DocStatus"/>
 			</td>
 		</tr>
 	</xsl:template>

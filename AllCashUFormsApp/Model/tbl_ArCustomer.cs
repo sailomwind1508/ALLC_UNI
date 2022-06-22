@@ -66,5 +66,6 @@ namespace AllCashUFormsApp.Model
         public byte[] CustomerImg { get; set; }
         public bool PromotionVanID { get; set; }
         public string CustImage { get; set; }
+        public string Remark { get; set; }
     }
 }

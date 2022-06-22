@@ -5,6 +5,7 @@ using AllCashUFormsApp.View.UControl.A_UC;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace AllCashUFormsApp.View.Page
     public partial class frmCustomerInfo : Form
     {
         Customer bu = new Customer();
+        SaleArea buSaleArea = new SaleArea();
         MenuBU menuBU = new MenuBU();
         CustomerShelf buShelf = new CustomerShelf();
 
@@ -26,6 +28,7 @@ namespace AllCashUFormsApp.View.Page
         public static SearchAddressModel SAM = new SearchAddressModel();
         List<Control> searchBranchWHControls = new List<Control>();
         List<Control> searchBranchWHControlsEdit = new List<Control>();
+        List<Control> searchBranchControl = new List<Control>();
 
         static DataTable dtCustomer;
         public static string shoptypeID = "";
@@ -37,7 +40,7 @@ namespace AllCashUFormsApp.View.Page
         public static string _CustImage, _CustomerID;
 
         Dictionary<Control, Label> validateSaveCtrls = new Dictionary<Control, Label>();
-        Dictionary<string, string> URLImage = new Dictionary<string, string>();
+        private static string URLPathImage = "";
 
         public frmCustomerInfo()
         {
@@ -45,22 +48,48 @@ namespace AllCashUFormsApp.View.Page
             PanelSearchControls = new string[] { txtBranchName.Name }.ToList();
             PanelEditControls = new string[] { txtBranchName_.Name }.ToList();
 
+            searchBranchControl = new List<Control>() { txtBranchCode, txtBranchName };
             searchBranchWHControls = new List<Control>() { txtBranchCode_, txtBranchName_ };
             searchBranchWHControlsEdit = new List<Control>() { txtWHCode, txtWHName };
 
-            validateSaveCtrls.Add(txtBranchCode_,lbl_Depo);//
-            validateSaveCtrls.Add(txtWHCode, lbl_WH);//
-            validateSaveCtrls.Add(cbbSalArea, lbl_SalArea);//
-            validateSaveCtrls.Add(txtDistrictCode, lblDistrict);//
-            validateSaveCtrls.Add(txtCustName, lbl_CName);//
-            validateSaveCtrls.Add(txtBillTo, lbl_Bill);//
+            validateSaveCtrls.Add(txtBranchCode_,lbl_Depo);
+            validateSaveCtrls.Add(txtWHCode, lbl_WH);
+            validateSaveCtrls.Add(cbbSalArea, lbl_SalArea);
+            validateSaveCtrls.Add(txtDistrictCode, lblDistrict);
+            validateSaveCtrls.Add(txtCustName, lbl_CName);
+            validateSaveCtrls.Add(txtBillTo, lbl_Bill);
 
-            URLImage.Add("404", "http://nma.dnsdojo.net:82/CU");
-            URLImage.Add("412", "http://ubn.dnsdojo.net:82/CU");
-            URLImage.Add("212", "http://lri.dnsdojo.net:82/CU");
+            try
+            {
+                string _BranchID = bu.tbl_Branchs[0].BranchID;
+
+                var _dt = bu.GetServerImagePath(_BranchID);
+
+                string _ServerNameFromCenter = "";
+                string imgPathTmp = "";
+                if (_dt.Rows.Count > 0 && _BranchID != "104")
+                {
+                    _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
+                    imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
+                    imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
+                }
+
+                if (_BranchID == "104") //เป็นศูนย์ที่ใช้ IP
+                {
+                    // ConfigurationManager.AppSettings["ServerName"];
+                    string ServerName = Connection.ConnectionString;
+                    imgPathTmp = ServerName.Split('=')[1].Split(';')[0].ToString();
+                    imgPathTmp = @"http://" + imgPathTmp + @"/CU";
+                }
+                URLPathImage = imgPathTmp;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
-        #region #--Method
+        #region Method
         private void GetBranch(TextBox txtCode, TextBox txtName)
         {
             var b = bu.GetBranch();
@@ -93,7 +122,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
         }
 
-        private void SetDefaultPage()
+        private void InitialData()
         {
             grdList.AutoGenerateColumns = false;
 
@@ -102,24 +131,8 @@ namespace AllCashUFormsApp.View.Page
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
 
-            chkNormal.Visible = false;
-
             txtBranchName.DisableTextBox(true);
             chkBoxPresale.Enabled = false;
-        }
-
-        private void PrePareTitileName(ComboBox cbbTitle)
-        {
-            cbbTitle.Items.Add("บริษัท");
-            cbbTitle.Items.Add("หจก.");
-            cbbTitle.Items.Add("บมจ.");
-            cbbTitle.Items.Add("คุณ");
-            cbbTitle.SelectedIndex = 0;
-        }
-
-        private void InitialData()
-        {
-            SetDefaultPage();
 
             pnlEdit.OpenControl(false, PanelEditControls.ToArray()); //
 
@@ -146,15 +159,30 @@ namespace AllCashUFormsApp.View.Page
             var PriceGroup = bu.GetPriceGroup();
             cbbPriceGroup.BindDropdownList(PriceGroup, "PriceGroupName", "PriceGroupID", 0); // Edit
 
-            PrePareTitileName(cbbTitle);
+            cbbTitle.Items.Add("บริษัท");
+            cbbTitle.Items.Add("หจก.");
+            cbbTitle.Items.Add("บมจ.");
+            cbbTitle.Items.Add("คุณ");
+            cbbTitle.SelectedIndex = 0;
 
             chkSaleAreaEdit.Enabled = false;
+        }
+
+        public void BindCustomerInfo(string customerID)
+        {
+            InitPage();
+            InitialData();
+
+            txtSearch.Text = customerID;
+
+            BindData();
         }
 
         private void SelectDetails(DataGridViewCellEventArgs e)
         {
             try
             {
+               
                 DataGridViewRow grdRows = null;
 
                 if (e != null)
@@ -162,7 +190,12 @@ namespace AllCashUFormsApp.View.Page
                     if (e.RowIndex == -1)
                         return;
                     else
-                        grdRows = grdList.Rows[e.RowIndex];
+                    {
+                        if (grdList.CurrentCell.ColumnIndex == 2)
+                            return;
+                        else
+                            grdRows = grdList.Rows[e.RowIndex];
+                    } 
                 }
                 else
                 {
@@ -190,31 +223,21 @@ namespace AllCashUFormsApp.View.Page
                         txtCustomerRefCode.Text = r["CustomerRefCode"].ToString().Trim();
                         txtCustShortName.Text = r["CustShortName"].ToString().Trim();
 
-                        txtLatitude.Clear();
+                        txtLatitude.Text = "";
                         if (!string.IsNullOrEmpty(r["Latitude"].ToString()))
-                        {
                             txtLatitude.Text = r["Latitude"].ToString().Trim();
-                        }
 
-                        txtLongitude.Clear();
+                        txtLongitude.Text = "";
                         if (!string.IsNullOrEmpty(r["Longitude"].ToString()))
-                        {
                             txtLongitude.Text = r["Longitude"].ToString().Trim();
-                        }
 
                         chkRequestTaxBill.Checked = false;
-
                         if (!string.IsNullOrEmpty(r["FlagBill"].ToString()) && Convert.ToBoolean(r["FlagBill"]) == true)
-                        {
                             chkRequestTaxBill.Checked = true;
-                        }
 
-                        chkNormal.Checked = true;
-
-                        if (Convert.ToBoolean(r["FlagDel"]) == true) //ยกเลิก
-                        {
-                            chkNormal.Checked = false;
-                        }
+                        rdoNormal.Checked = true;
+                        if (Convert.ToBoolean(r["FlagDel"]) == true)
+                            rdoCancel.Checked = true;
 
                         dtpCrDate.Text = r["CrDate"].ToString();
                         txtBillTo.Text = r["BillTo"].ToString().Trim();
@@ -237,50 +260,42 @@ namespace AllCashUFormsApp.View.Page
                         txtTaxId.Text = "";
                         string TaxID = r["TaxID"].ToString().Trim(); //Trim ตัดช่องว่างทิ้ง
                         if (!string.IsNullOrEmpty(TaxID))
-                        {
                             txtTaxId.Text = TaxID;
-                        }
 
                         txtFax.Text = r["Fax"].ToString().Trim();
 
                         txtEmail.Text = r["Email"].ToString().Trim();
                         cbbPriceGroup.SelectedValue = Convert.ToInt32(r["PriceGroupID"]);
 
+                        if (r["BillTo"].ToString().Contains("ม")) //08/04/2022 Adisorn
+                        {
+                            string _Moo = "ม" + r["BillTo"].ToString().Split('ม')[1].Split(' ')[0].ToString();
+                            SAM.Moo = _Moo;
+                        }
+
                         SAM.AddressNo = r["AddressNo"].ToString();
                         SAM.lane = r["lane"].ToString();
                         SAM.Street = r["Street"].ToString();
                         SAM.AreaID = Convert.ToInt32(r["AreaID"]);
                         SAM.ProvinceID = Convert.ToInt32(r["ProvinceID"]);
+                        SAM.PostalCode = r["PostalCode"].ToString();
+                        SAM.Moo = r["Moo"].ToString();
 
                         SAM.DistrictID = 0;
-
-                        SAM.PostalCode = r["PostalCode"].ToString();
-
                         if (!string.IsNullOrEmpty(r["DistrictID"].ToString()))
-                        {
                             SAM.DistrictID = Convert.ToInt32(r["DistrictID"]);
-                        }
 
                         PrePareAddShelf(CustomerID);
 
-                        picCustomerImg.Image = null; // 
-
-                        string CustImage = r["CustImage"].ToString();
-
-                        _CustImage = CustImage;
-
-                        GetImageFromUrl(CustImage, CustomerID);
-
-                        //if (!string.IsNullOrEmpty(r["CustImage"].ToString()))
-                        //{
-                        //    Byte[] data = new Byte[0];
-                        //    data = (Byte[])r["CustImage"];
-                        //    picCustomerImg.Image = data.byteArrayToImage();
-                        //}
+                        picCustomerImg.Image = null;
+                        _CustImage = ""; //ส่งURLไปยังหน้าโชว์รูปภาพร้านค้า
+                        GetImageFromUrl(r["CustImage"].ToString(), CustomerID);
 
                         GetBranch(txtBranchCode_, txtBranchName_); //
 
                         txtCustomerRefCode.Text = txtBranchCode_.Text; //
+
+                        txtRemark.Text = r["Remark"].ToString().Trim();
                     }
                 }
             }
@@ -292,38 +307,33 @@ namespace AllCashUFormsApp.View.Page
 
         private void GetImageFromUrl(string CustImage, string CustomerID)
         {
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@CustomerID", CustomerID);
-            var dt = bu.GetCustomerImage(_params);
-            if (dt.Rows.Count > 0 && dt.Rows[0]["CustomerImg"] != DBNull.Value)
+            //if (!string.IsNullOrEmpty(r["CustImage"].ToString()))
+            //{
+            //    Byte[] data = new Byte[0];
+            //    data = (Byte[])r["CustImage"];
+            //    picCustomerImg.Image = data.byteArrayToImage();
+            //}
+
+            if (!string.IsNullOrEmpty(CustImage) && CustImage.Contains("Images"))
             {
-                var img = (byte[])dt.Rows[0]["CustomerImg"];
+                CustImage = CustImage + " ";
+                string CustImagePath = CustImage.Split('~')[1].Split(' ')[0].ToString();
+                string Src2 = URLPathImage + CustImagePath;
+                _CustImage = Src2;
                 picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
-                picCustomerImg.Image = img.byteArrayToImage();
+                picCustomerImg.ImageLocation = Src2;
             }
             else
             {
-                //string URL = "http://ubn.dnsdojo.net:82/CU";
-                //URL = "http://192.168.1.10/CU";
-                //string URLCenter = "http://192.168.1.10/CU";
-
-                var chkList = CustImage.ToCharArray().ToList();
-                string CustImagePath = "";
-
-                for (int i = 0; i < chkList.Count; i++)
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@CustomerID", CustomerID);
+                var dt = bu.GetCustomerImage(_params);
+                if (dt.Rows.Count > 0 && dt.Rows[0]["CustomerImg"] != DBNull.Value)
                 {
-                    if (chkList[i].ToString() != "~")
-                    {
-                        CustImagePath += chkList[i].ToString();
-                    }
+                    var img = (byte[])dt.Rows[0]["CustomerImg"];
+                    picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
+                    picCustomerImg.Image = img.byteArrayToImage();
                 }
-                var URL2 = URLImage.Where(x => x.Key == txtBranchCode.Text).ToList();
-                string Src2 = URL2[0].Value.ToString() + CustImagePath;
-
-                //string Src = URL + CustImagePath;
-                picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
-                picCustomerImg.ImageLocation = Src2;
-                //picCustomerImg.Load(Src);
             }
         }
 
@@ -344,7 +354,7 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void SetFlagMemberOnGridView()
+        private void SetGridView()
         {
             for (int i = 0; i < grdList.Rows.Count; i++)
             {
@@ -352,6 +362,19 @@ namespace AllCashUFormsApp.View.Page
                 {
                     grdList.Rows[i].Cells["colFlagMember"].Value = true;
                 }
+
+                var cells = grdList.Rows[i].Cells["colImageCustomer"];
+
+                int _select = 0;
+                bool flagColor = false;
+                if (int.TryParse(cells.Value.ToString(), out _select))
+                {
+                    if (_select == 1)
+                        flagColor = true;
+                }
+
+                cells.Value = flagColor;
+                cells.Style.BackColor = flagColor == true ? Color.LightGreen : Color.Red;
             }
         }
 
@@ -362,29 +385,17 @@ namespace AllCashUFormsApp.View.Page
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
 
-            chkNormal.Visible = false;
-
             if (grdList.Rows.Count > 0)
             {
+                btnPrint.Enabled = true;
                 btnEdit.Enabled = true;
                 btnChangeSeq.Enabled = true;
-            }
-
-            if (rdoN.Checked && grdList.Rows.Count > 0)
-            {
-                btnRemove.Enabled = true;
                 btnCopy.Enabled = true;
             }
-
+            if (rdoN.Checked && grdList.Rows.Count > 0)
+                btnRemove.Enabled = true;
             if (rdoC.Checked == true)
-            {
                 btnAdd.Enabled = false;
-            }
-
-            if (rdoC.Checked && grdList.Rows.Count > 0)
-            {
-                chkNormal.Visible = true;
-            }
         }
 
         private void BindData()
@@ -392,21 +403,15 @@ namespace AllCashUFormsApp.View.Page
             pnlEdit.ClearControl();
             pnlEdit.OpenControl(false, PanelEditControls.ToArray());
 
-            int flagDel = rdoN.Checked ? 0 : 1;
-
             string WHID = ddlWH.SelectedIndex == 0 ? "" : ddlWH.SelectedValue.ToString();
-
-            string SalAreaID = "";
-
-            if (ddlSalArea.SelectedItem != null)
-            {
-                SalAreaID = ddlSalArea.SelectedValue.ToString() == "-1" ? "" : ddlSalArea.SelectedValue.ToString();
-            }
-
             int shoptypeID = ddlShopType.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlShopType.SelectedValue);
 
+            string SalAreaID = "";
+            if (ddlSalArea.SelectedItem != null)
+                SalAreaID = ddlSalArea.SelectedValue.ToString() == "-1" ? "" : ddlSalArea.SelectedValue.ToString();
+
             Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@FlagDel", flagDel);
+            _params.Add("@FlagDel", rdoN.Checked ? 0 : 1);
             _params.Add("@WHID", WHID);
             _params.Add("@SalAreaID", SalAreaID);
             _params.Add("@ShopTypeID", shoptypeID);
@@ -416,18 +421,13 @@ namespace AllCashUFormsApp.View.Page
             dtCustomer = bu.GetCustomerData(_params);
 
             if (dtCustomer.Rows.Count > 0)
-            {
                 dtCustomer.Columns["Seq"].ReadOnly = false; //last edit by adisorn 02/02/2022
-            }
 
             grdList.DataSource = dtCustomer;
+            lblQtyCount.Text = dtCustomer.Rows.Count.ToNumberFormat();
 
-            lblQtyCount.Text = dtCustomer.Rows.Count.ToString();
-
-            SetFlagMemberOnGridView();
-
+            SetGridView(); //SetFlagMember and ImageCustomer
             SetButtonAfterBindGridView();
-
             SelectDetails(null);
         }
 
@@ -440,30 +440,24 @@ namespace AllCashUFormsApp.View.Page
                 if (BranchWH.Count > 0)
                 {
                     txtWHName.Text = BranchWH[0].WHName;
-
                     string WHID = txtWHCode.Text.Substring(3, 3);
 
                     var allSalArea = new List<tbl_SalArea>();
                     allSalArea = bu.GetSaleArea(x => x.SalAreaName.Contains(WHID));
-
                     if (allSalArea.Count > 0 && flagChange == false)
                     {
                         cbbSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID");
                     }
                     else
                     {
-
                         var AllSalAreaID = bu.GetSaleAreaDistrict(x => x.WHID.Contains(txtWHCode.Text));
-
                         if (AllSalAreaID.Count > 0 && flagChange == true)
                         {
                             var ListSalAreaID = AllSalAreaID.Select(x => x.SalAreaID).Distinct().ToList();
-
                             var _allSalArea = bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID));
                             cbbSalArea.BindDropdownList(_allSalArea, "SalAreaName", "SalAreaID");
                         }
                     }
-
                 }
             }
             else
@@ -478,13 +472,9 @@ namespace AllCashUFormsApp.View.Page
         {
             //allow edit sapcode for Admin and Superadmin
             if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
-            {
                 txtCustomerSAPCode.DisableTextBox(false);
-            }
             else
-            {
                 txtCustomerSAPCode.DisableTextBox(true);
-            }
 
             txtBranchCode_.DisableTextBox(true);
             txtWHName.DisableTextBox(true);
@@ -492,36 +482,31 @@ namespace AllCashUFormsApp.View.Page
 
             txtDistrictCode.DisableTextBox(true);
             txtDistrictName.DisableTextBox(true);
-
             txtCustomerRefCode.DisableTextBox(true);
-
-            txtNoSequence.DisableTextBox(true);
             txtCustomerID.DisableTextBox(true);
             txtBillTo.DisableTextBox(true);
-
             txtEmpID.DisableTextBox(true);
             txtFirstName.DisableTextBox(true);
-            txtTextBox3.DisableTextBox(true);
-            txtTextBox4.DisableTextBox(true);
-            txtTextBox5.DisableTextBox(true);
 
             btnSaleEmp.Enabled = false;
-            btnDriverEmp.Enabled = false;
 
-            cbbComboBox1.Enabled = false;
-            cbbPromotion.Enabled = false;
-        }
-
-        private void PrePareKeyPress(KeyPressEventArgs e)
-        {
-            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8))
+            //edit Superadmin Only 
+            if (Helper.tbl_Users.RoleID == 10)  //adisorn 17-06-2022
             {
-                e.Handled = true;
+                txtLatitude.DisableTextBox(false);
+                txtLongitude.DisableTextBox(false);
             }
             else
             {
-                return;
+                txtLatitude.DisableTextBox(true);
+                txtLongitude.DisableTextBox(true);
             }
+        }
+
+        private void SetKeyPress(KeyPressEventArgs e)
+        {
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8))
+                e.Handled = true;
         }
 
         private bool ValidateSave()
@@ -545,9 +530,7 @@ namespace AllCashUFormsApp.View.Page
         private void SetCustomerID()
         {
             string _formatCustomerID = txtBranchCode_.Text + txtDistrictCode.Text;
-
             var allCust = bu.SelectMaxCustomerID(_formatCustomerID);
-
             if (allCust.Count > 0)
             {
                 string MaxID = allCust.Max(x => x.CustomerID);
@@ -566,8 +549,12 @@ namespace AllCashUFormsApp.View.Page
             Customer.ShopTypeID = Convert.ToInt32(cbbShopType.SelectedValue);
             Customer.CustTitle = cbbTitle.Text;
             Customer.PriceGroupID = Convert.ToInt32(cbbPriceGroup.SelectedValue);
-            Customer.Seq = Convert.ToSByte(txtSeq.Text);
-
+            Customer.Seq = Convert.ToInt16(txtSeq.Text); //Adisorn 05/04/2022 ลำดับร้านค้า 
+            if (Customer.BillTo.Contains("ม")) //08/04/2022 Adisorn
+            {
+                string _Moo = "ม" + Customer.BillTo.Split('ม')[1].Split(' ')[0].ToString();
+                Customer.Moo = _Moo;
+            }
             Customer.AddressNo = SAM.AddressNo;
             Customer.lane = SAM.lane;
             Customer.Street = SAM.Street;
@@ -575,150 +562,15 @@ namespace AllCashUFormsApp.View.Page
             Customer.ProvinceID = SAM.ProvinceID;
             Customer.PostalCode = SAM.PostalCode;
             Customer.DistrictID = SAM.DistrictID;
-
             Customer.FlagBill = chkRequestTaxBill.Checked ? true : false;
-        }
-
-        private void Save() 
-        {
-            if (!ValidateSave())
-            {
-                return;
-            }
-
-            var branchWarehouse = bu.GetAllBranchWarehouse(x => x.WHName == txtWHName.Text);
-
-            if (branchWarehouse.Count == 0)
-            {
-                string msg = "--> รหัส Van ไม่ถูกต้อง !!";
-                msg.ShowWarningMessage();
-                return;
-            }
-
-            try
-            {
-                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                string title = "ยืนยันการบันทึก!!";
-
-                if (!cfMsg.ConfirmMessageBox(title))
-                    return;
-
-                int ret = 0;
-
-                var Customer = new tbl_ArCustomer();
-
-                int flagDel = rdoN.Checked ? 0 : 1;
-
-                var CustomerList = bu.GetSelectCustomerID(txtCustomerID.Text, flagDel);
-
-                if (CustomerList.Count > 0)
-                {
-                    Customer = CustomerList[0];
-
-                    pnlEdit.Controls.SetObjectFromControl(Customer);
-
-                    Customer.WHID = branchWarehouse[0].WHID;
-
-                    PrePareSave(Customer);
-
-                    Customer.FlagDel = chkNormal.Checked ? false : true;
-                    Customer.FlagNew = false;
-                    Customer.FlagEdit = true;
-                    Customer.FlagSend = false; //last edit by sailom .k 27/10/2021
-
-                    if (string.IsNullOrEmpty(Customer.CrUser))
-                    {
-                        Customer.CrUser = "";
-                    }
-
-                    Customer.EdUser = Helper.tbl_Users.Username;
-                    Customer.EdDate = DateTime.Now;
-                }
-                else
-                {
-                    SetCustomerID(); //รันรหัส ลูกค้าใหม่ให้หา 4 หลักล่าสุดเจอ Edit By Adisorn 20/12/2564 
-
-                    pnlEdit.Controls.SetObjectFromControl(Customer);
-
-                    Customer.CustomerCode = txtCustomerID.Text;
-
-                    var custType = bu.GetAllCustomerType();
-
-                    if (custType.Count > 0)
-                    {
-                        Customer.CustomerTypeID = custType[0].ArCustomerTypeID;
-                    }
-
-                    PrePareSave(Customer);
-
-                    Customer.WHID = txtWHCode.Text;
-                    Customer.CrDate = DateTime.Now;
-                    Customer.CrUser = Helper.tbl_Users.Username;
-
-                    Customer.EdDate = null;
-                    Customer.EdUser = null;
-
-                    Customer.GPSDate = null;
-                    Customer.IsNewMember = null;
-
-                    Customer.FlagNew = false;
-                    Customer.FlagSend = false;
-                    Customer.FlagMember = false;
-                    Customer.FlagEdit = false;
-                    Customer.FlagDel = false;
-
-                    Customer.NetPoint = 0;
-                    Customer.PromotionVanID = false;
-
-                    Customer.CustomerImg = null;
-                    Customer.CustImage = null;
-                }
-
-                ret = bu.UpdateData(Customer);
-
-                if (ret == 1)
-                {
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-
-                    pnlEdit.OpenControl(false, PanelEditControls.ToArray());
-
-                    pnlSearch.OpenControl(true, PanelSearchControls.ToArray());
-                    grdList.Enabled = true;
-
-                    btnSearch.PerformClick();
-
-                    chkSaleAreaEdit.Checked = false;
-                    chkSaleAreaEdit.Enabled = false;
-                    chkChangeSaleArea.Enabled = true;
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-            }
-        }
-
-        #endregion
-
-        #region #--EventPage
-
-        private void frmCustomer_Load(object sender, EventArgs e)
-        {
-            InitPage();
-            InitialData();
+            Customer.Remark = txtRemark.Text;
         }
 
         private void BindSaleAreaPanelSearch(bool flagChange = false)
         {
-            if (ddlWH.SelectedIndex > 0)
+            try
             {
-                if (!string.IsNullOrEmpty(ddlWH.SelectedValue.ToString()))
+                if (!string.IsNullOrEmpty(ddlWH.SelectedValue.ToString()) && ddlWH.SelectedValue.ToString() != "-1")
                 {
                     string WHID = ddlWH.SelectedValue.ToString().Substring(3, 3);
 
@@ -743,6 +595,12 @@ namespace AllCashUFormsApp.View.Page
                             allSalArea.AddRange(bu.GetSaleArea(x => ListSalAreaID.Contains(x.SalAreaID)));
                             ddlSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID");
                         }
+                        else //ชื่อใน SalAreaName ตั้งตามตลาด ไม่ได้เป็น V01
+                        {
+                            var _SalArea = new List<tbl_SalArea>();
+                            _SalArea.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
+                            ddlSalArea.BindDropdownList(_SalArea, "SalAreaName", "SalAreaID", 0);
+                        }
                     }
                 }
                 else
@@ -752,35 +610,121 @@ namespace AllCashUFormsApp.View.Page
                     ddlSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID", 0);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var allSalArea = new List<tbl_SalArea>();
-                allSalArea.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
-                ddlSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID", 0);
+                ex.Message.ShowErrorMessage();
             }
+        }
+
+        private void SetSalAreaData(ComboBox combobox, string _WHID, bool flagSearch = true)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                var data = new List<tbl_SalArea>();
+                if (flagSearch) //หน้าค้นหา
+                {
+                    data.Add(new tbl_SalArea { SalAreaID = "-1", SalAreaName = "==เลือก==" });
+                }
+               
+                if (!string.IsNullOrEmpty(_WHID) && _WHID.Length == 6)
+                {
+                    //var list = bu.GetSaleAreaDistrict(x => x.WHID.Contains(_WHID));
+
+                    //var listSalAreaID = new List<string>();
+
+                    //if (list.Count > 0)
+                    //{
+                    //    listSalAreaID = list.Select(x => x.SalAreaID).Distinct().ToList();
+                    //}
+
+                    //var listSalArea = bu.GetSaleArea(x => listSalAreaID.Contains(x.SalAreaID) && x.Seq != 0);
+
+                    //if (listSalAreaID.Count >= 15)
+                    //{
+                    //    data.AddRange(listSalArea);
+                    //}
+                    //else
+                    //{
+                    //    _WHID = _WHID.Substring(3, 3);
+                    //    var SalArea = bu.GetSaleArea(x => x.SalAreaName.Contains(_WHID) && x.Seq != 0);
+                    //    data.AddRange(SalArea);
+                    //}
+                   
+                    var listSalArea = buSaleArea.GetSalAreaByWHID(_WHID);
+
+                    if (listSalArea.Count == 24) //มีครบ 24 ตลาด
+                    {
+                        var listSaleArea = listSalArea.OrderBy(x => x.Seq).ToList();
+                        data.AddRange(listSaleArea);
+                    }
+                    else
+                    {
+                        _WHID = _WHID.Substring(3, 3);
+                        var SalAreaList = bu.GetSaleArea(x => x.SalAreaName.Contains(_WHID) && x.Seq != 0);
+
+                        for (int i = 0; i < listSalArea.Count; i++)  //20-06-2022 adisorn //ในกรณีที่ตลาด เปลี่ยนชื่อ 
+                        {
+                            var row = SalAreaList.Where(x => x.SalAreaID == listSalArea[i].SalAreaID).ToList();
+                            if (row.Count == 0)
+                            {
+                                SalAreaList.Add(listSalArea[i]);
+                            }
+                        }
+
+                        var _SalAreaID = SalAreaList.OrderBy(x => x.Seq).ToList();
+                        data.AddRange(_SalAreaID);
+                    }
+                    
+                }
+                if (data.Count == 0)
+                {
+                    data.Add(new tbl_SalArea { SalAreaID = "-1", SalAreaName = "" });
+                }
+                combobox.BindDropdownList(data, "SalAreaName", "SalAreaID");
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        #endregion
+
+        #region Method
+        private void frmCustomer_Load(object sender, EventArgs e)
+        {
+            InitPage();
+            InitialData();
         }
 
         private void ddlWH_SelectedIndexChanged(object sender, EventArgs e)
         {
             //PrePareWareHouseData(); --Old
             //Edit 29/7/2564
-            
-            BindSaleAreaPanelSearch();
+
+            //BindSaleAreaPanelSearch();
+            string _whid = "";
+            if (!string.IsNullOrEmpty(ddlWH.SelectedValue.ToString()) && ddlWH.SelectedValue.ToString() != "-1" )
+            {
+                 _whid = ddlWH.SelectedValue.ToString();
+            }
+            SetSalAreaData(ddlSalArea, _whid);//16-06-2022 adisorn
         }
 
         private void txtWHCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                var flagChange = chkSaleAreaEdit.Checked ? true : false;
-                PrePareSaleArea(flagChange);
-            }
-        }
+                //var flagChange = chkSaleAreaEdit.Checked ? true : false;
+                //PrePareSaleArea(flagChange);
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            dtCustomer = new DataTable();
-            this.Close();
+                SetSalAreaData(cbbSalArea, txtWHCode.Text, false);//16-06-2022 adisorn
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -788,24 +732,15 @@ namespace AllCashUFormsApp.View.Page
             BindData();
         }
 
-        private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdList.SetRowPostPaint(sender, e, this.Font);
-        }
-
         private void grdList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             SelectDetails(e);
         }
 
-        private void grdList_SelectionChanged(object sender, EventArgs e)
-        {
-            //SelectDetails(null); //edit by sailom 24/10/2021
-        }
-
         private void txtWHCode_TextChanged(object sender, EventArgs e)
         {
-            PrePareSaleArea();
+            SetSalAreaData(cbbSalArea, txtWHCode.Text, false);//16-06-2022 adisorn
+            //PrePareSaleArea();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -886,13 +821,14 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchShopType_Click(object sender, EventArgs e)
         {
+            if (cbbShopType.SelectedValue is int)
+                shoptypeID = cbbShopType.SelectedValue.ToString();
+
             frmShopType frm = new frmShopType(); //ประเภทร้านค้า
             frm.ShowDialog();
 
             if (!string.IsNullOrEmpty(shoptypeID))
-            {
                 cbbShopType.SelectedValue = Convert.ToInt32(shoptypeID);
-            }
         }
 
         private void btnSearchAddress_Click(object sender, EventArgs e)
@@ -929,53 +865,146 @@ namespace AllCashUFormsApp.View.Page
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
 
             txtCustomerID.Text = "";
-
+            txtEmpID.Text = "";
+            txtFirstName.Text = "";
             txtWHCode.Focus();
 
-            pnlSearch.OpenControl(false, PanelSearchControls.ToArray());
             grdList.Enabled = false;
-
+            pnlSearch.OpenControl(false, PanelSearchControls.ToArray());
             pnlEdit.OpenControl(true, PanelEditControls.ToArray());
-
             PanelEditControlsNotUse();
 
             btnAddShelf.Enabled = false;
             btnRemoveShelf.Enabled = false;
-
             chkSaleAreaEdit.Enabled = true;
-
-            txtEmpID.Text = "";
-            txtFirstName.Text = "";
         }
 
         private void txtSeq_KeyPress(object sender, KeyPressEventArgs e)
         {
-            PrePareKeyPress(e);
+            SetKeyPress(e);
         }
 
         private void txtCreditDay_KeyPress(object sender, KeyPressEventArgs e)
         {
-            PrePareKeyPress(e);
+            SetKeyPress(e);
         }
 
         private void txtTelephone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            PrePareKeyPress(e);
+            SetKeyPress(e);
         }
 
         private void txtLatitude_KeyPress(object sender, KeyPressEventArgs e)
         {
-            PrePareKeyPress(e);
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != '.'))
+                e.Handled = true;
         }
 
         private void txtLongitude_KeyPress(object sender, KeyPressEventArgs e)
         {
-            PrePareKeyPress(e);
+            if ((e.KeyChar < 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != '.'))
+                e.Handled = true;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Save();
+            if (!ValidateSave())
+                return;
+
+            var branchWarehouse = bu.GetAllBranchWarehouse(x => x.WHName == txtWHName.Text);
+            if (branchWarehouse.Count == 0)
+            {
+                string msg = "--> รหัส Van ไม่ถูกต้อง !!";
+                msg.ShowWarningMessage();
+                txtWHCode.ErrorTextBox();
+                txtWHName.ErrorTextBox();
+                return;
+            }
+
+            try
+            {
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                int ret = 0;
+                var Customer = new tbl_ArCustomer();
+                int flagDel = rdoN.Checked ? 0 : 1;
+                var CustomerList = bu.GetSelectCustomerID(txtCustomerID.Text, flagDel);
+                if (CustomerList.Count > 0)
+                {
+                    Customer = CustomerList[0];
+                    pnlEdit.Controls.SetObjectFromControl(Customer);
+                    Customer.WHID = branchWarehouse[0].WHID;
+                    PrePareSave(Customer);
+                    Customer.FlagDel = rdoNormal.Checked ? false : true;
+                    Customer.FlagNew = false;
+                    Customer.FlagEdit = true;
+                    Customer.FlagSend = false; //last edit by sailom .k 27/10/2021
+
+                    if (string.IsNullOrEmpty(Customer.CrUser))
+                        Customer.CrUser = "";
+
+                    Customer.EdUser = Helper.tbl_Users.Username;
+                    Customer.EdDate = DateTime.Now;
+                }
+                else
+                {
+                    SetCustomerID(); //รันรหัส ลูกค้าใหม่ให้หา 4 หลักล่าสุดเจอ Edit By Adisorn 20/12/2564 
+                    pnlEdit.Controls.SetObjectFromControl(Customer);
+                    Customer.CustomerCode = txtCustomerID.Text;
+
+                    var custType = bu.GetAllCustomerType();
+                    if (custType.Count > 0)
+                        Customer.CustomerTypeID = custType[0].ArCustomerTypeID;
+
+                    PrePareSave(Customer);
+
+                    Customer.WHID = txtWHCode.Text;
+                    Customer.CrDate = DateTime.Now;
+                    Customer.CrUser = Helper.tbl_Users.Username;
+
+                    Customer.EdDate = null;
+                    Customer.EdUser = null;
+                    Customer.GPSDate = null;
+                    Customer.IsNewMember = null;
+                    Customer.CustomerImg = null;
+                    Customer.CustImage = null;
+
+                    Customer.FlagNew = false;
+                    Customer.FlagSend = false;
+                    Customer.FlagMember = false;
+                    Customer.FlagEdit = false;
+                    Customer.FlagDel = false;
+
+                    Customer.NetPoint = 0;
+                    Customer.PromotionVanID = false;
+                }
+
+                ret = bu.UpdateData(Customer);
+
+                if (ret == 1)
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    pnlSearch.OpenControl(true, PanelSearchControls.ToArray());
+                    grdList.Enabled = true;
+                    btnSearch.PerformClick();
+                    chkSaleAreaEdit.Checked = false;
+                    chkSaleAreaEdit.Enabled = false;
+                    chkChangeSaleArea.Enabled = true;
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void txtSeq_TextChanged(object sender, EventArgs e)
@@ -1062,22 +1091,17 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnRemoveShelf_Click(object sender, EventArgs e)
         {
-            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการ Shelf นี้?";
+            string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการ Shelf นี้?";
             string title = "ทำการยืนยัน!!";
-
             if (!cfMsg.ConfirmMessageBox(title))
                 return;
 
             if (listBox_Shelf.SelectedIndex != -1)
             {
                 int ret = 0;
-
                 var Shelf_List = new List<tbl_ArCustomerShelf>();
-
                 string shelf_id = listBox_Shelf.SelectedItem.ToString();
-
                 Shelf_List = buShelf.GetCustomerShelf(x => x.ShelfID == shelf_id && x.CustomerID == txtCustomerID.Text && x.FlagDel == false);
-
                 if (Shelf_List.Count > 0)
                 {
                     Shelf_List[0].FlagDel = true;
@@ -1094,44 +1118,36 @@ namespace AllCashUFormsApp.View.Page
                 {
                     string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
-
                     listBox_Shelf.Items.RemoveAt(listBox_Shelf.Items.IndexOf(listBox_Shelf.SelectedItem));
                 }
                 else
                 {
                     this.ShowProcessErr();
-                    return;
                 }
             }
             else
             {
                 string msg = "กรุณาเลือกเลข Shelf ที่ต้องการลบ !!";
                 msg.ShowWarningMessage();
-                return;
             }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            string cfMsg = "คุณแน่ใจมั้ยที่จะลบข้อมูลรายการนี้?";
+            string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
             string title = "ทำการยืนยัน!!";
-
             if (!cfMsg.ConfirmMessageBox(title))
                 return;
 
             int ret = 0;
-
             var cData = new tbl_ArCustomer();
 
             int flagDel = rdoN.Checked ? 0 : 1;
             var custList = bu.GetSelectCustomerID(txtCustomerID.Text, flagDel);
-
             if (custList.Count > 0)
             {
                 cData = custList[0];
-
                 cData.FlagDel = true;
-
                 cData.EdDate = DateTime.Now;
                 cData.EdUser = Helper.tbl_Users.Username;
             }
@@ -1142,7 +1158,6 @@ namespace AllCashUFormsApp.View.Page
             {
                 string msg = "บันทึกข้อมูลเรียบร้อยแล้ว !!";
                 msg.ShowInfoMessage();
-
                 grdList.Enabled = true;
                 txtSearch.Focus();
                 btnSearch.PerformClick();
@@ -1150,7 +1165,6 @@ namespace AllCashUFormsApp.View.Page
             else
             {
                 this.ShowProcessErr();
-                return;
             }
         }
 
@@ -1158,7 +1172,7 @@ namespace AllCashUFormsApp.View.Page
         {
             if (e.KeyCode == Keys.Enter)
             {
-                BindData();
+                btnSearch.PerformClick();
             }
         }
 
@@ -1179,112 +1193,53 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void frmCustomerInfo_FormClosed(object sender, FormClosedEventArgs e)
+        private void btnChangeSeq_Click(object sender, EventArgs e)
         {
-            MemoryManagement.FlushMemory();
-        }
+            string msg = "start frmCustomerInfo=>btnChangeSeq_Click";
+            msg.WriteLog(this.GetType());
 
-        private void SaveChangeSeq()
-        {
-            //บันทึกลำดับ
-            //edit by sailom 24/10/2021
-
-            //int ret = 0;
-            //List<int> editSeq = new List<int>();
-            //for (int i = 0; i < grdList.RowCount; i++)
-            //{
-            //    if (!string.IsNullOrEmpty(grdList.Rows[i].Cells["colCustomerID"].Value.ToString()))
-            //    {
-            //        var Customer = new tbl_ArCustomer();
-            //        short seq = !string.IsNullOrEmpty(grdList.Rows[i].Cells["colSeq"].EditedFormattedValue.ToString()) ? Convert.ToInt16(grdList.Rows[i].Cells["colSeq"].EditedFormattedValue) : Convert.ToInt16(0);
-            //        string custID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
-            //        var CustomerList = bu.GetSelectCustomerID(custID, 0);
-            //        if (CustomerList.Count > 0)
-            //        {
-            //            Customer = CustomerList[0];
-            //            Customer.Seq = seq;
-            //            Customer.EdUser = Helper.tbl_Users.Username;
-            //            Customer.EdDate = DateTime.Now;
-
-            //            ret = bu.UpdateData(Customer);
-            //            editSeq.Add(ret);
-            //        }
-            //    }
-            //}
-
-
-            //if (editSeq.All(x => x == 1))
-            //{
-            //    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-            //    msg.ShowInfoMessage();
-
-            //    pnlEdit.OpenControl(false, PanelEditControls.ToArray());
-
-            //    pnlSearch.OpenControl(true, PanelSearchControls.ToArray());
-            //    grdList.Enabled = true;
-
-            //    btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-            //    btnAdd.Enabled = true;
-            //    btnSave.Enabled = false;
-            //    btnCancel.Enabled = false;
-
-            //    btnSearch.PerformClick();
-            //}
-        }
-
-        private void SaveSeq_New()
-        {
             int ret = 0;
-
             try
             {
-                if (grdList.RowCount > 0)
+                if (grdList.RowCount == 0)
+                    return;
+
+                var ListCustomerID = new List<string>();
+                for (int i = 0; i < grdList.RowCount; i++)
                 {
-                    var ListCustomerID = new List<string>();
+                    string _CustomerID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
+                    ListCustomerID.Add(_CustomerID);
+                }
 
-                    for (int i = 0; i < grdList.RowCount; i++)
+                var allCustomerID = string.Join(",", ListCustomerID);
+                var cData = bu.SelectCustomerList(allCustomerID);
+                if (cData.Count > 0)
+                {
+                    var dt = (DataTable)grdList.DataSource;
+                    for (int i = 0; i < cData.Count; i++)
                     {
-                        string _CustomerID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
-                        ListCustomerID.Add(_CustomerID);
+                        string _CustID = cData[i].CustomerID;
+                        DataRow r = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("CustomerID") == _CustID);
+                        if (r != null)
+                        {
+                            cData[i].Seq = Convert.ToInt16(r["Seq"]);
+                            cData[i].EdDate = DateTime.Now;
+                            cData[i].EdUser = Helper.tbl_Users.Username;
+                        }
                     }
-
-                    var allCustomerID = string.Join(",", ListCustomerID);
-
-                    var cData = bu.SelectCustomerList(allCustomerID);
-
-                    if (cData.Count > 0)
+                    foreach (var data in cData)
                     {
-                        var dt = (DataTable)grdList.DataSource;
-
-                        for (int i = 0; i < cData.Count; i++)
-                        {
-                            string _CustID = cData[i].CustomerID;
-                            DataRow r = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("CustomerID") == _CustID);
-                            if (r != null)
-                            {
-                                cData[i].Seq = Convert.ToInt16(r["Seq"]);
-                                cData[i].EdDate = DateTime.Now;
-                                cData[i].EdUser = Helper.tbl_Users.Username;
-                            }
-                        }
-
-                        foreach (var data in cData)
-                        {
-                            ret = bu.UpdateData(data);
-                        }
-
-                        if (ret == 1)
-                        {
-                            string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                            msg.ShowInfoMessage();
-
-                            btnSearch.PerformClick();
-                        }
-                        else
-                        {
-                            this.ShowProcessErr();
-                            return;
-                        }
+                        ret = bu.UpdateData(data);
+                    }
+                    if (ret == 1)
+                    {
+                        msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                        msg.ShowInfoMessage();
+                        btnSearch.PerformClick();
+                    }
+                    else
+                    {
+                        this.ShowProcessErr();
                     }
                 }
             }
@@ -1292,15 +1247,6 @@ namespace AllCashUFormsApp.View.Page
             {
                 ex.Message.ShowErrorMessage();
             }
-        }
-
-        private void btnChangeSeq_Click(object sender, EventArgs e)
-        {
-            string msg = "start frmCustomerInfo=>btnChangeSeq_Click";
-            msg.WriteLog(this.GetType());
-
-            //SaveChangeSeq();
-            SaveSeq_New();
 
             msg = "end frmCustomerInfo=>btnChangeSeq_Click";
             msg.WriteLog(this.GetType());
@@ -1308,8 +1254,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void chkSaleAreaEdit_Click(object sender, EventArgs e)
         {
-            var flagChange = chkSaleAreaEdit.Checked ? true : false;
-            PrePareSaleArea(flagChange);
+            //var flagChange = chkSaleAreaEdit.Checked ? true : false;
+            //PrePareSaleArea(flagChange);
         }
 
         private void chkChangeSaleArea_Click(object sender, EventArgs e)
@@ -1328,11 +1274,11 @@ namespace AllCashUFormsApp.View.Page
 
         private void picCustomerImg_DoubleClick(object sender, EventArgs e)
         {
-            if (picCustomerImg.Image != null)
-            {
-                frmCustomerPicture frm = new frmCustomerPicture();
-                frm.ShowDialog();
-            }
+            //if (picCustomerImg.Image != null)
+            //{
+            //    frmCustomerPicture frm = new frmCustomerPicture();
+            //    frm.ShowDialog();
+            //}
         }
 
         private void cbbSalArea_SelectedIndexChanged(object sender, EventArgs e)
@@ -1343,31 +1289,124 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            string msg = "start frmCustomerInfo=>btnPrint_Click";
+            msg.WriteLog(this.GetType());
+           
+            var dtCust = new DataTable("proc_GetCustomerData_New");
+            dtCust.Columns.Add("CustomerID", typeof(string));
+            dtCust.Columns.Add("CustName", typeof(string));
+            dtCust.Columns.Add("ImageCustomer", typeof(bool));
+            dtCust.Columns.Add("ShopTypeName", typeof(string));
+            dtCust.Columns.Add("SalAreaID", typeof(string));
+            dtCust.Columns.Add("SalAreaName", typeof(string));
+            dtCust.Columns.Add("WHID", typeof(string));
+            dtCust.Columns.Add("Seq", typeof(short));
+            dtCust.Columns.Add("FlagMember", typeof(bool));
+
+            var dt = (DataTable)grdList.DataSource;
+
+            foreach (DataRow r in dt.Rows)
+            {
+                dtCust.Rows.Add(r["CustomerID"], r["CustName"], r["ImageCustomer"]
+                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"]
+                    , r["WHID"], r["Seq"], r["FlagMember"]);
+            }
+
+            this.OpenExcelReportsPopup("รายงานร้านค้าทั้งหมด", "proc_GetCustomerDataToExcel.xslt", dtCust, true);
+            
+            msg = "end frmCustomerInfo=>btnPrint_Click";
+            msg.WriteLog(this.GetType());
+        }
+
         #endregion
 
-        //private void PrePareWareHouseData()
-        //{
-        //    if (ddlWH.SelectedIndex > 0)
-        //    {
-        //        string WHID = "";
+        private void frmCustomerInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
+        }
 
-        //        if (!string.IsNullOrEmpty(ddlWH.SelectedValue.ToString()))
-        //        {
-        //            WHID = ddlWH.SelectedValue.ToString().Substring(3, 3);
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            dtCustomer = new DataTable();
+            this.Close();
+        }
 
-        //            var allSalArea = new List<tbl_SalArea>();
-        //            allSalArea.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
-        //            allSalArea.AddRange(bu.GetSaleArea(x => x.SalAreaName.Contains(WHID)));
-        //            ddlSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var allSalArea = new List<tbl_SalArea>();
-        //        allSalArea.Add(new tbl_SalArea { SalAreaID = "", SalAreaName = "==เลือก==" });
-        //        ddlSalArea.BindDropdownList(allSalArea, "SalAreaName", "SalAreaID", 0);
-        //    }
-        //}
+        private void grdList_SelectionChanged(object sender, EventArgs e)
+        {
+            //SelectDetails(null); //edit by sailom 24/10/2021
+        }
 
+        private void picCustomerImg_Click(object sender, EventArgs e)
+        {
+            if (picCustomerImg.Image != null)
+            {
+                frmCustomerPicture frm = new frmCustomerPicture();
+                frm.ShowDialog();
+            }
+        }
+
+        private void btnSearchBranch_Click(object sender, EventArgs e)
+        {
+            this.OpenFromBranchIDPopup(searchBranchControl, "เลือกเดโป้/สาขา");
+        }
+
+        private void btnUpdateImage_Click(object sender, EventArgs e)
+        {
+            string cfMsg = "ต้องการปรับปรุงข้อมูลรูปภาพใช่หรือไม่?";
+            string title = "ยืนยัน!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                bool ret = false;
+                ret = bu.ManualUpdateCustomerImage();
+
+                if (ret == true)
+                {
+                    cfMsg = "ปรับปรุงข้อมูลรูปภาพ เรียบร้อยแล้ว!!";
+                    cfMsg.ShowInfoMessage();
+                }
+                else
+                {
+                    cfMsg = "ปรับปรุงข้อมูลรูปภาพ ล้มเหลว!!";
+                    cfMsg.ShowErrorMessage();
+                }
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdList.SetRowPostPaint(sender, e, this.Font);
+
+            //var cells = grdList.Rows[e.RowIndex].Cells["colImageCustomer"];
+
+            //int _select = 0;
+            //bool flagColor = false;
+            //if (int.TryParse(cells.Value.ToString(), out _select))
+            //{
+            //    if (_select == 1)
+            //    {
+            //        flagColor = true;
+            //    }
+            //}
+
+            //if (flagColor)
+            //{
+            //    cells.Style.BackColor = Color.LightGreen;
+            //}
+            //else
+            //    cells.Style.BackColor = Color.Red;
+
+        }
     }
 }

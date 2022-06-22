@@ -14,6 +14,41 @@ namespace AllCashUFormsApp
     {
         private static List<tbl_ProductPriceGroup> tbl_ProductPriceGroups = new List<tbl_ProductPriceGroup>();
 
+        public static List<tbl_ProductPriceGroup> SelectAllEX(this tbl_ProductPriceGroup tbl_ProductPriceGroup)
+        {
+            List<tbl_ProductPriceGroup> list = new List<tbl_ProductPriceGroup>();
+            try
+            {
+                if (tbl_ProductPriceGroups.Count == 0)
+                {
+                    DataTable dt = new DataTable();
+                    string sql = @"SELECT [PriceGroupID] 
+                    ,[ProductID] 
+                    ,[ProductUomID] 
+                    ,[SellPrice] 
+                    ,[BuyPrice] 
+                    ,[SellPriceVat] 
+                    ,[BuyPriceVat] 
+                    FROM [dbo].[tbl_ProductPriceGroup] ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductPriceGroup), sql);
+                    list = dynamicListReturned.Cast<tbl_ProductPriceGroup>().ToList();
+
+                    tbl_ProductPriceGroups = list;
+                }
+                else
+                {
+                    list = tbl_ProductPriceGroups;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+            return list;
+        }
+
         /// <summary>
         /// select all data
         /// </summary>

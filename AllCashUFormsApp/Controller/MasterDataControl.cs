@@ -351,6 +351,7 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_HQ_SKUGroup.Update();
         }
+        
         public int UpdateSKUGroup(tbl_HQ_SKUGroup tbl_HQ_SKUGroup, string OldSKU_ID)
         {
             return tbl_HQ_SKUGroup.UpdateSKUGroup(OldSKU_ID);
@@ -428,6 +429,7 @@ namespace AllCashUFormsApp.Controller
         {
             return new tbl_SaleType().SelectAll();
         }
+        
         public DataTable proc_Employee_Data(Dictionary<string, object> _params)
         {
             try
@@ -471,5 +473,31 @@ namespace AllCashUFormsApp.Controller
         {
             return tbl_Users.InsertUser(db_name, db_server);
         }//20-12-2564 adisorn
+
+        public void proc_GetDNS_Data()
+        {
+            try
+            {
+                new tbl_Branch().proc_GetDNS_Data();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+        }//adisorn 31/05/2022
+
+        public bool proc_SendUserData_ToBranch(Dictionary<string, object> _params)
+        {
+            bool ret = false;
+            try
+            {
+                return new tbl_Employee().proc_SendUserData_ToBranch(_params);
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+            }
+            return ret;
+        }
     }
 }

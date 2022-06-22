@@ -27,5 +27,6 @@ namespace AllCashUFormsApp.Model
         public string Password { get; set; }
         public string POSNo { get; set; }
         public string EmpIDCard { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

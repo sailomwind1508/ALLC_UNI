@@ -10217,11 +10217,82 @@
                 </Border>
               </Style>
             </Line>
+            <Textbox Name="Textbox16">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>วันที่พิมพ์</Value>
+                      <Style>
+                        <FontFamily>AngsanaUPC</FontFamily>
+                        <FontSize>12pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox11</rd:DefaultName>
+              <Top>0.59277in</Top>
+              <Left>5.38901in</Left>
+              <Height>0.28624in</Height>
+              <Width>0.74837in</Width>
+              <ZIndex>11</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox1">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=First(Fields!PrintDate.Value, "DataSet1")</Value>
+                      <Style>
+                        <FontFamily>AngsanaUPC</FontFamily>
+                        <FontSize>12pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Left</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Top>0.59277in</Top>
+              <Left>6.1585in</Left>
+              <Height>0.25in</Height>
+              <Width>1.42238in</Width>
+              <ZIndex>12</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
           </ReportItems>
           <KeepTogether>true</KeepTogether>
           <Top>0.945in</Top>
           <Left>0.08839in</Left>
-          <Height>0.86134in</Height>
+          <Height>0.87901in</Height>
           <Width>7.65745in</Width>
           <ZIndex>4</ZIndex>
           <Style>
@@ -12047,10 +12118,14 @@
           <DataField>Comment</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PrintDate">
+          <DataField>PrintDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>DB_ALL_CASH_UNI_LRI_TESTDataSet1</rd:DataSetName>
-        <rd:SchemaPath>C:\AllCashUSolution\ALLC_UNI\AllCashUFormsApp\DB_ALL_CASH_UNI_LRI_TESTDataSet1.xsd</rd:SchemaPath>
+        <rd:DataSetName>DB_ALL_CASH_UNI_TKMDataSet2</rd:DataSetName>
+        <rd:SchemaPath>C:\AllCashUSolution\ALLC_UNI\AllCashUFormsApp\DB_ALL_CASH_UNI_TKMDataSet2.xsd</rd:SchemaPath>
         <rd:TableName>Form_RL</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>

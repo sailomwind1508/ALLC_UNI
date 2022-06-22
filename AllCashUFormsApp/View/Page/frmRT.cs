@@ -72,7 +72,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "RT");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "RT");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -91,7 +91,7 @@ namespace AllCashUFormsApp.View.Page
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnPrintCrys.Enabled = btnPrint.Enabled;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -105,24 +105,24 @@ namespace AllCashUFormsApp.View.Page
 
             dtpDocDate.SetDateTimePickerFormat();
 
-            allUOM = bu.GetUOM();
+            allUOM = bu.tbl_ProductUom;
 
             uoms.Add(new tbl_ProductUom { ProductUomID = -1, ProductUomName = "เลือก" });
             uoms.AddRange(allUOM);
 
-            saleAreaList.AddRange(bu.GetAllSaleArea());
-            salAreaDistrictList.AddRange(bu.GetAllSaleAreaDistrict());
+            saleAreaList.AddRange(bu.tbl_SalArea);
+            salAreaDistrictList.AddRange(bu.tbl_SalAreaDistrict);
 
             //data gridview
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
 
-            allProduct = bu.GetProduct();
-            //allUomSet = bu.GetUOMSet();
+            allProduct = bu.tbl_Product;
+            //allUomSet = bu.tbl_ProductUomSet;
 
-            allProductPrice = bu.GetProductPriceGroup();
-            //allProdGroup = bu.GetProductGroup();
-            //allProdSubGroup = bu.GetProductSubGroup();
+            allProductPrice = bu.tbl_ProductPriceGroup;
+            //allProdGroup = bu.tbl_ProductGroup;
+            //allProdSubGroup = bu.tbl_ProductSubGroup;
         }
 
         public void BindRTData(string odDocNo)
@@ -239,7 +239,7 @@ namespace AllCashUFormsApp.View.Page
         {
             grdList.Rows.Clear();
 
-            var allUOM = bu.GetUOM();
+            var allUOM = bu.tbl_ProductUom;
 
 
             for (int i = 0; i < poDts.Count; i++)
@@ -1042,7 +1042,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else //validate data grid
                 {
-                    //var allProduct = bu.GetProduct();
+                    //var allProduct = bu.tbl_Product;
                     ret = grdList.ValiadteDataGridView(allProduct, 0, 3, 4, 5, bu, "", false);
                 }
             }
@@ -1170,7 +1170,7 @@ namespace AllCashUFormsApp.View.Page
             Dictionary<string, object> _params = new Dictionary<string, object>();
             _params.Add("@DocNo", txdDocNo.Text);
 
-            this.OpenTestCrystalReportsPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
+            this.OpenReportingReportsPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)

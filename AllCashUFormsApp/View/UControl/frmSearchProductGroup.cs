@@ -19,7 +19,11 @@ namespace AllCashUFormsApp.View.AControl
 
             grdList.DataSource = dt;
 
-            grdList.CreateCheckBoxHeaderColumn("colSelect");
+            try
+            {
+                grdList.CreateCheckBoxHeaderColumn("colSelect");
+            }
+            catch { }
 
             lblCountList.Text = dt.Rows.Count.ToNumberFormat();
         }

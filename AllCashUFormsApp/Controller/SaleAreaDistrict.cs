@@ -143,5 +143,14 @@ namespace AllCashUFormsApp.Controller
             return new tbl_SalAreaDistrict().GetSalAreaDistrictByWHID(_WHID);
         }
 
+        public DataTable GetSalAreaDistrictByProvince(int _ProvinceID, string _WHID)
+        {
+            return new tbl_SalAreaDistrict().GetSalAreaDistrictByProvince(_ProvinceID, _WHID);
+        }
+
+        public DataTable GetSalAreaDistrict_BySendData()
+        {
+            return new tbl_SalAreaDistrict().GetSalAreaDistrict_BySendData();
+        }
     }
 }

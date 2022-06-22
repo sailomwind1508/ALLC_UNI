@@ -33,7 +33,7 @@ namespace AllCashUFormsApp.Controller
             {
                 bool ret = false;
                 int checkManualUpdate = 0;
-         
+
                 try
                 {
                     string checkDate = DateTime.Now.ToString("yyyyMMdd", new CultureInfo("en-US"));
@@ -84,7 +84,7 @@ namespace AllCashUFormsApp.Controller
                 ex.WriteLog(this.GetType());
                 return false;
             }
-            
+
         }
 
         public virtual DataTable GetDataTable(bool isPopup = true)
@@ -182,6 +182,31 @@ namespace AllCashUFormsApp.Controller
             }
 
             return dt;
+        }
+
+        public virtual DataTable proc_GetRLData(Dictionary<string, object> _params, bool flagAllWHID = false)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+                string sql = "";
+
+                if (flagAllWHID == true)
+                    sql = "Form_RL_PRE_WH";
+                else
+                    sql = "proc_PreOrder_GetRLData";
+
+                //string sql = "proc_PreOrder_GetRLData_Test";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
         }
     }
 }

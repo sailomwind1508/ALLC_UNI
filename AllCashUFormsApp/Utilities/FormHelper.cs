@@ -330,10 +330,13 @@ namespace AllCashUFormsApp
                 string msgError = "";
                 foreach (DataRow row in dtOverStck.Rows)
                 {
-                    msgError += "แวน : " + row["WHID"].ToString() + " สินค้า : " + row["ProductID"].ToString() + ":" + row["ProductShortName"].ToString() + " ใน Stock เหลือ "
-                        + Convert.ToDecimal(row["Diff"]).ToStringN2() + " (หน่วยเล็ก) \n"; // "กรุณาเลือกตลาดที่ต้องการย้ายลูกค้าไป\n";
+                    if (Convert.ToInt32(row["Diff"]) < 0)
+                    {
+                        msgError += "แวน : " + row["WHID"].ToString() + " สินค้า : " + row["ProductID"].ToString() + ":" + row["ProductShortName"].ToString() + " ใน Stock เหลือ "
+                            + Convert.ToDecimal(row["Diff"]).ToStringN2() + " (หน่วยเล็ก) \n"; // "กรุณาเลือกตลาดที่ต้องการย้ายลูกค้าไป\n";
 
-                    isOverStock = true;
+                        isOverStock = true;
+                    }
                 }
 
                 if (msgError != "")
@@ -1246,11 +1249,19 @@ namespace AllCashUFormsApp
             _frm.ShowDialog();
         }
 
-        public static void OpenTestCrystalReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        public static void OpenReportingReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
 
             Reporting _frm = new Reporting();
             _frm.PrepareReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
+            _frm.ShowDialog();
+        }
+
+        public static void OpenManyReportingReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+
+            Reporting _frm = new Reporting();
+            _frm.PrepareManyReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             _frm.ShowDialog();
         }
 
@@ -1479,8 +1490,15 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "CrUser", HeaderText = "ผู้จัดทำ", Name = "CrUser", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
             colList.Add(new DataGridColumn() { DataPropertyName = "Remark", HeaderText = "หมายเหตุ", Name = "Remark", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet });
 
+            if (docTypeCode == "PreOrder")
+            {
+                colList.Add(new DataGridColumn() { DataPropertyName = "EdUser", HeaderText = "ผู้แก้ไข", Name = "EdUser", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Visibility = false });
+                colList.Add(new DataGridColumn() { DataPropertyName = "EdDate", HeaderText = "แก้ไขเมื่อ", Name = "EdDate", Width = 120, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Visibility = false });
+            }
+
+
             string[] _conditionString = null;
-            if (docTypeCode == "IV")
+            if (docTypeCode == "IV" || docTypeCode == "IVPre" || docTypeCode == "IVPreRB")
                 _conditionString = isShowAll ? new string[] { "19000101" } : null; //edit by sailom .k 14/12/2021
             else
                 _conditionString = null;
@@ -2174,6 +2192,7 @@ namespace AllCashUFormsApp
             foreach (Button item in btns)
             {
                 item.Enabled = mode;
+                //item.FlatStyle = FlatStyle.Standard;
             }
 
             var rdos = GetAll(frm, typeof(RadioButton));
@@ -2185,10 +2204,94 @@ namespace AllCashUFormsApp
             var ddls = GetAll(frm, typeof(ComboBox));
             foreach (ComboBox item in ddls)
             {
-                item.Enabled = false;
+                item.Enabled = mode;
             }
 
             var grds = GetAll(frm, typeof(DataGridView));
+            foreach (DataGridView item in grds)
+            {
+                bool isEdit = true;
+                if (item.Tag != null && item.Tag.ToString() == "ReadOnly")
+                    isEdit = false;
+
+                if (isEdit)
+                {
+                    if (item.RowCount > 0)
+                    {
+                        for (int i = 0; i < item.RowCount; i++)
+                        {
+                            for (int j = 0; j < item.ColumnCount; j++)
+                            {
+                                if (editCols.Contains(item.Rows[i].Cells[j].ColumnIndex))
+                                {
+                                    Color c = mode ? Color.White : ColorTranslator.FromHtml("#E3E3E3");
+                                    item.Rows[i].Cells[j].Style.BackColor = c;
+                                    item.Rows[i].Cells[j].ReadOnly = !mode;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void OpenControl(this Panel pnl, bool mode, string[] tagName, int[] editCols)
+        {
+            var textboxs = GetAll(pnl, typeof(TextBox));
+            foreach (TextBox item in textboxs)
+            {
+                if (item.Name.Contains("txt"))
+                {
+                    item.DisableTextBox(!mode);
+                }
+                else if (item.Name.Contains("txd"))
+                {
+                    item.DisableTextBox(!mode);
+                    item.BackColor = Color.Turquoise;
+                }
+                else if (item.Name.Contains("txn"))
+                {
+                    item.DisableTextBox(true);
+                }
+
+                if (tagName.Contains(item.Name))
+                {
+                    item.DisableTextBox(true);
+                }
+            }
+
+            var dtps = GetAll(pnl, typeof(DateTimePicker));
+            foreach (DateTimePicker item in dtps)
+            {
+                item.Enabled = mode;
+            }
+
+            var nuds = GetAll(pnl, typeof(NumericUpDown));
+            foreach (NumericUpDown item in nuds)
+            {
+                item.Enabled = mode;
+            }
+
+            var btns = GetAll(pnl, typeof(Button));
+            foreach (Button item in btns)
+            {
+                item.Enabled = mode;
+                //item.FlatStyle = FlatStyle.Standard;
+            }
+
+            var rdos = GetAll(pnl, typeof(RadioButton));
+            foreach (RadioButton item in rdos)
+            {
+                item.Enabled = mode;
+            }
+
+            var ddls = GetAll(pnl, typeof(ComboBox));
+            foreach (ComboBox item in ddls)
+            {
+                item.Enabled = false;
+            }
+
+            var grds = GetAll(pnl, typeof(DataGridView));
             foreach (DataGridView item in grds)
             {
                 bool isEdit = true;
@@ -2257,6 +2360,7 @@ namespace AllCashUFormsApp
             foreach (Button item in btns)
             {
                 item.Enabled = mode;
+                //item.FlatStyle = FlatStyle.Standard;
             }
 
             var rdos = GetAll(ctrls, typeof(RadioButton));
@@ -2417,7 +2521,103 @@ namespace AllCashUFormsApp
                 string digitStr2 = "";
                 if (docTypeCode == "IM" || docTypeCode == "V")
                 {
-                    var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                    var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                    if (documentType != null)
+                    {
+                        docTypeCode = documentType.DocTypeCode;
+                        int runDigit = 0;
+
+                        runDigit = (documentType.DocFormat.Length - documentType.RunLength.Value);// - 1; //edit by sailom .k 10/12/2021
+
+                        for (int i = 0; i < runDigit; i++)
+                        {
+                            digitStr += "0";
+                        }
+
+                        int len = documentType.RunLength.Value;
+                        if (docTypeCode == "V")
+                        {
+                            len = len + 3;
+                        }
+
+                        for (int i = 0; i < len; i++)
+                        {
+                            digitStr2 += "0";
+                        }
+                    }
+                }
+
+                string realDocTypeCode = "";
+                realDocTypeCode = docTypeCode;
+
+                if (docTypeCode == "IM")
+                {
+                    item.Mask = digitStr.Substring(0, 11) + "M" + digitStr2;
+                }
+                else if (docTypeCode == "V")
+                {
+                    //item.Mask = "V" + digitStr2;
+                    //item.Mask = "##" + digitStr2; //edit by sailom .k 10/12/2021
+                }
+                else
+                {
+                    item.Mask = realDocTypeCode + digitStr;
+                }
+
+                item.BackColor = Color.Turquoise;
+            }
+
+            var dtps = GetAll(frm, typeof(DateTimePicker));
+            foreach (DateTimePicker item in dtps)
+            {
+                item.Value = DateTime.Now;
+            }
+
+            var nuds = GetAll(frm, typeof(NumericUpDown));
+            foreach (NumericUpDown item in nuds)
+            {
+                item.Value = 0;
+            }
+
+            var grds = GetAll(frm, typeof(DataGridView));
+            foreach (DataGridView item in grds)
+            {
+                item.DataSource = null;
+                item.Rows.Clear();
+                item.Refresh();
+            }
+
+        }
+
+        public static void ClearControl(this Panel frm, BaseControl bu, string docTypeCode, int digit)
+        {
+            var textboxs = GetAll(frm, typeof(TextBox));
+            foreach (TextBox item in textboxs)
+            {
+                if (item.Name.Contains("txt"))
+                {
+                    item.ClearTextBox();
+                }
+                else if (item.Name.Contains("txd"))
+                {
+                    item.ClearTextBox();
+                    item.BackColor = Color.Turquoise;
+                }
+                else if (item.Name.Contains("txn"))
+                {
+                    item.DefaultNumber();
+                }
+            }
+
+            var mTextBoxs = GetAll(frm, typeof(MaskedTextBox));
+            foreach (MaskedTextBox item in mTextBoxs)
+            {
+                item.ClearTextBox();
+                string digitStr = "";
+                string digitStr2 = "";
+                if (docTypeCode == "IM" || docTypeCode == "V")
+                {
+                    var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
                     if (documentType != null)
                     {
                         docTypeCode = documentType.DocTypeCode;
@@ -2486,6 +2686,116 @@ namespace AllCashUFormsApp
         }
 
         public static void ClearControl(this Form frm, string docTypeCode, int digit)
+        {
+            var textboxs = GetAll(frm, typeof(TextBox));
+            foreach (TextBox item in textboxs)
+            {
+                if (item.Name.Contains("txt"))
+                {
+                    item.ClearTextBox();
+                }
+                else if (item.Name.Contains("txd"))
+                {
+                    item.ClearTextBox();
+                    item.BackColor = Color.Turquoise;
+                }
+                else if (item.Name.Contains("txn"))
+                {
+                    item.DefaultNumber();
+                }
+            }
+
+            var mTextBoxs = GetAll(frm, typeof(MaskedTextBox));
+            foreach (MaskedTextBox item in mTextBoxs)
+            {
+                item.ClearTextBox();
+                string digitStr = "";
+
+                if (docTypeCode == "RL") //for RL from teblet pattern
+                    digit += 2;
+
+                for (int i = 0; i < digit; i++)
+                {
+                    digitStr += "0";
+                }
+
+                string realDocTypeCode = "";
+                if (docTypeCode.Contains("L") || docTypeCode == "IV")
+                {
+                    char[] temp = new char[docTypeCode.Length];
+                    temp = docTypeCode.ToCharArray();
+                    List<string> _char = new List<string>();
+                    foreach (char chrItem in temp)
+                    {
+                        if (chrItem == 'L')
+                        {
+                            realDocTypeCode += "\\" + chrItem;
+                        }
+                        else
+                        {
+                            realDocTypeCode += chrItem;
+                        }
+                    }
+                }
+                else
+                {
+                    realDocTypeCode = docTypeCode;
+                }
+
+                if (docTypeCode != "IV")
+                {
+                    if (docTypeCode == "RL")
+                    {
+                        string _digitStr = "";
+                        var tmp = digitStr.ToCharArray();
+                        for (int i = 0; i < tmp.Count(); i++)
+                        {
+                            //if (i == 3)
+                            //{
+                            //    tmp[i] = 'V';
+                            //}
+                            _digitStr += "C";
+                        }
+
+                        item.Mask = realDocTypeCode + _digitStr;
+                    }
+                    else
+                        item.Mask = realDocTypeCode + digitStr;
+                }
+                else
+                    item.Mask = digitStr;
+
+                item.BackColor = Color.Turquoise;
+            }
+
+            var dtps = GetAll(frm, typeof(DateTimePicker));
+            foreach (DateTimePicker item in dtps)
+            {
+                item.Value = DateTime.Now;
+            }
+
+            var nuds = GetAll(frm, typeof(NumericUpDown));
+            foreach (NumericUpDown item in nuds)
+            {
+                item.Value = 0;
+            }
+
+            var grds = GetAll(frm, typeof(DataGridView));
+            foreach (DataGridView item in grds)
+            {
+                item.DataSource = null;
+                item.Rows.Clear();
+                item.Refresh();
+            }
+
+            //Control[] tbxs = frm.Controls.Find("txt", true);
+            //if (tbxs != null && tbxs.Length > 0)
+            //{
+            //    tbxs[0].Text = "Found!";
+            //}
+        }
+
+        public static void ClearControl(this Panel frm, string docTypeCode, int digit)
         {
             var textboxs = GetAll(frm, typeof(TextBox));
             foreach (TextBox item in textboxs)
@@ -2839,6 +3149,12 @@ namespace AllCashUFormsApp
         public static bool ConfirmMessageBox(this string msg, string title)
         {
             var confirmResult = FlexibleMessageBox.Show(msg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            return (confirmResult == DialogResult.Yes);
+        }
+
+        public static bool WarnningMessageBox(this string msg, string title)
+        {
+            var confirmResult = FlexibleMessageBox.Show(msg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
             return (confirmResult == DialogResult.Yes);
         }
 

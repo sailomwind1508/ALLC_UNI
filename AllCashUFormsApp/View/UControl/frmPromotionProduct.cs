@@ -20,6 +20,7 @@ namespace AllCashUFormsApp.View.UControl
         private static List<Control> controlList = new List<Control>();
         private static string[] conditionString = null;
         public static Dictionary<string, int> mmchProList = new Dictionary<string, int>();
+        private static List<tbl_HQ_Promotion_Hit_Temp> mmchPro = new List<tbl_HQ_Promotion_Hit_Temp>();
 
         PromotionTemp bu = new PromotionTemp();
         Promotion pro = new Promotion();
@@ -75,42 +76,44 @@ namespace AllCashUFormsApp.View.UControl
 
         private void InitData(DataTable _dt)
         {
-
-            var proInfo = pro.GetHQPromotion(a => bu.tbl_HQ_Promotion_Hit_Temps.Select(x => x.PromotionID).Contains(a.PromotionID));
-            if (proInfo.Count > 0)
+            if (mmchPro.Count > 0)
             {
-                var item = proInfo.FirstOrDefault(x => x.PromotionType == "mmch");
+                var item = mmchPro.FirstOrDefault();
                 if (item != null)
                 {
-
                     var pro = bu.tbl_HQ_Promotion_Hit_Temps.FirstOrDefault(x => x.PromotionID == item.PromotionID);
                     if (pro != null)
                     {
                         int totalAmt = pro.SKUGroupRewardAmt2.Value > 0 ? pro.SKUGroupRewardAmt2.Value : pro.SKUGroupRewardAmt.Value;
-                        lblCountList.Text = "/0" + totalAmt.ToNumberFormat(); //_dt.Rows.Count.ToNumberFormat();
+                        if (pro.SKUGroupRewardAmt2.Value > 0 && pro.SKUGroupRewardAmt.Value > 0)
+                        {
+                            totalAmt = pro.SKUGroupRewardAmt2.Value + pro.SKUGroupRewardAmt.Value;
+                        }
 
-                        //if (pro.SKUGroupRewardAmt != null && pro.SKUGroupRewardAmt2 != null)
-                        //{
-                        //    for (int i = 0; i < _dt.Rows.Count; i++)
-                        //    {
-                        //        var cell0 = grdList.Rows[i].Cells[0];
-                        //        var collID = _dt.Rows[i]["ProductID"].ToString();
-                        //        var prod = bu.GetHQ_SKUGroup(x => x.SKUGroupID == pro.SKUGroupRewardID);
-                        //        if (collID == prod.First().SKU_ID)
-                        //        {
-                        //            grdList.Rows[i].Cells[2].Value = pro.SKUGroupRewardAmt.Value;
+                        lblCountList.Text = "0/" + totalAmt.ToNumberFormat(); //_dt.Rows.Count.ToNumberFormat();
+                    }
+                }
+            }
+            else
+            {
+                var proInfo = pro.GetHQPromotion(a => bu.tbl_HQ_Promotion_Hit_Temps.Select(x => x.PromotionID).Contains(a.PromotionID));
 
-                        //            DataGridViewCheckBoxCell chkchecking = cell0 as DataGridViewCheckBoxCell;
-                        //            chkchecking.Value = true;
-                        //            //grdList.Rows[i].ReadOnly = true;
+                if (proInfo.Count > 0)
+                {
+                    var item = proInfo.FirstOrDefault(x => x.PromotionType == "mmch");
+                    if (item != null)
+                    {
+                        var pro = bu.tbl_HQ_Promotion_Hit_Temps.FirstOrDefault(x => x.PromotionID == item.PromotionID);
+                        if (pro != null)
+                        {
+                            int totalAmt = pro.SKUGroupRewardAmt2.Value > 0 ? pro.SKUGroupRewardAmt2.Value : pro.SKUGroupRewardAmt.Value;
+                            if (pro.SKUGroupRewardAmt2.Value > 0 && pro.SKUGroupRewardAmt.Value > 0)
+                            {
+                                totalAmt = pro.SKUGroupRewardAmt2.Value + pro.SKUGroupRewardAmt.Value;
+                            }
 
-                        //            chkchecking.ReadOnly = true;
-                        //            grdList.Rows[i].Cells[2].ReadOnly = true;
-
-                        //        }
-                        //    }
-                        //}
-
+                            lblCountList.Text = "0/" + totalAmt.ToNumberFormat(); //_dt.Rows.Count.ToNumberFormat();
+                        }
                     }
                 }
             }
@@ -199,10 +202,11 @@ namespace AllCashUFormsApp.View.UControl
             }
         }
 
-        public void PreparePopupForm(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, string[] _conditionString = null)
+        public void PreparePopupForm(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, List<tbl_HQ_Promotion_Hit_Temp> _mmchPro, int? _rowIndex = null, List<Control> _controls = null, string[] _conditionString = null)
         {
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             conditionString = _conditionString;
+            mmchPro = _mmchPro;
         }
 
         private void PreparePopupFactory(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null)
@@ -366,11 +370,15 @@ namespace AllCashUFormsApp.View.UControl
                             var item = proInfo.FirstOrDefault(x => x.PromotionType == "mmch");
                             if (item != null)
                             {
-
                                 var pro = bu.tbl_HQ_Promotion_Hit_Temps.FirstOrDefault(x => x.PromotionID == item.PromotionID);
                                 if (pro != null)
                                 {
                                     int _totalAmt = pro.SKUGroupRewardAmt2.Value > 0 ? pro.SKUGroupRewardAmt2.Value : pro.SKUGroupRewardAmt.Value;
+                                    if (pro.SKUGroupRewardAmt2.Value > 0 && pro.SKUGroupRewardAmt.Value > 0)
+                                    {
+                                        _totalAmt = pro.SKUGroupRewardAmt2.Value + pro.SKUGroupRewardAmt.Value;
+                                    }
+
                                     if (totalAmt > _totalAmt)
                                     {
                                         string msg = "จำนวนของแถมเกินกว่าที่กำหนดไว้!!!";

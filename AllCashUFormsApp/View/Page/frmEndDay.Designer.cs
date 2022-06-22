@@ -247,6 +247,7 @@
             this.grdDailySales.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdDailySales.Size = new System.Drawing.Size(750, 405);
             this.grdDailySales.TabIndex = 22;
+            this.grdDailySales.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdDailySales_CellDoubleClick);
             // 
             // grdDailySalesTotal
             // 
@@ -824,6 +825,7 @@
             this.btnPrint.Text = "พิมพ์";
             this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // btnRemove
             // 

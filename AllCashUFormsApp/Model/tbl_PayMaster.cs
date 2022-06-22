@@ -25,5 +25,6 @@ namespace AllCashUFormsApp.Model
         public bool FlagDel { get; set; }
         public bool FlagSend { get; set; }
         public decimal TotalSend { get; set; }
+        public string Remark { get; set; }
     }
 }

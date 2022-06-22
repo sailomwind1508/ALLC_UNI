@@ -31,5 +31,6 @@ namespace AllCashUFormsApp.Model
         public Nullable<decimal> SellPrice { get; set; }
         public Nullable<decimal> SellPriceVat { get; set; }
         public Nullable<int> PriceGroupID { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

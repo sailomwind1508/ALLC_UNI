@@ -70,7 +70,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "RE");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "RE");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -88,7 +88,7 @@ namespace AllCashUFormsApp.View.Page
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, btnPrintCrys, "");
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -114,8 +114,8 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
 
-            allProduct = bu.GetProduct();
-            allUomSet = bu.GetUOMSet();
+            allProduct = bu.tbl_Product;
+            allUomSet = bu.tbl_ProductUomSet;
             allPrdUOM = bu.GetUOM(); //bu.GetUOM(tbl_ProductUomPre);
             allprdPriceList = bu.GetProductPriceGroup();
             allLineDiscountType = bu.GetDiscountType();
@@ -270,7 +270,7 @@ namespace AllCashUFormsApp.View.Page
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == po.DocStatus; };
             ddlDocStatus.SelectedValueDropdownList(condition);
 
-            var emp = bu.GetEmployeeByUserName(po.EmpID);
+            var emp = bu.GetEmployeeByUserName(po.CrUser); //edit by sailom 22/03/2022 //bu.GetEmployeeByUserName(po.EmpID);
             if (emp != null)
                 txtCrUser.Text = string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName);
             else
@@ -350,7 +350,7 @@ namespace AllCashUFormsApp.View.Page
                 allPODetails = poDts;
 
                 List<tbl_DiscountType> disTypeList = new List<tbl_DiscountType>();
-                disTypeList = bu.GetDiscountType();
+                disTypeList = bu.tbl_DiscountType;
 
                 var listPrdID = allPODetails.Select(x => x.ProductID).ToList();
                 prodUOMs.AddRange(bu.GetProductUOM(listPrdID));
@@ -1581,7 +1581,7 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
             //this.OpenCrystalReportsPopup("ใบรับสินค้า", "From_RE.rpt", "Form_RE", _params);
 
-            this.OpenTestCrystalReportsPopup("ใบรับสินค้า", "Form_RE.rdlc", "Form_RE", _params); //Reporting service by sailom 30/11/2021
+            this.OpenReportingReportsPopup("ใบรับสินค้า", "Form_RE.rdlc", "Form_RE", _params); //Reporting service by sailom 30/11/2021
 
             msg = "end frmRE=>btnPrint_Click";
             msg.WriteLog(this.GetType());

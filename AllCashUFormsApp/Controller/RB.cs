@@ -24,6 +24,34 @@ namespace AllCashUFormsApp.Controller
             _rbDocTypePredicate = (x => x.DocTypeCode.Trim() == "RB");
         }
 
+        public DataTable GetRefRB(string docNo)
+        {
+            DataTable ret = new DataTable();
+            try
+            {
+                //Check Doc Pre Order
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_PreOrder_GetRefRB";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@PODocNo", docNo);
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable;
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
         public virtual DataTable GetDataTable(bool isPopup = true)
         {
             try

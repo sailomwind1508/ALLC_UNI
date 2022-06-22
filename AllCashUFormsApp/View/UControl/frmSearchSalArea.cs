@@ -48,7 +48,11 @@ namespace AllCashUFormsApp.View.UControl
             if (newDT != null && newDT.Rows.Count > 0)
             {
                 grdList.DataSource = newDT;
-                grdList.CreateCheckBoxHeaderColumn("colSelect");
+                try
+                {
+                    grdList.CreateCheckBoxHeaderColumn("colSelect");
+                }
+                catch { }
             }
             else
             {
@@ -65,17 +69,21 @@ namespace AllCashUFormsApp.View.UControl
 
         private void btnAccept_Click(object sender, EventArgs e)
         {
-            List<string> selectList = new List<string>();
-            for (int i = 0; i < grdList.Rows.Count; i++)
+            try
             {
-                if (Convert.ToBoolean(grdList.Rows[i].Cells["colSelect"].Value) == true)
+                List<string> selectList = new List<string>();
+                for (int i = 0; i < grdList.Rows.Count; i++)
                 {
-                    selectList.Add(grdList.Rows[i].Cells["colSalAreaID"].Value.ToString());
+                    if (Convert.ToBoolean(grdList.Rows[i].Cells["colSelect"].Value) == true)
+                    {
+                        selectList.Add(grdList.Rows[i].Cells["colSalAreaID"].Value.ToString());
+                    }
                 }
+                var joinString = string.Join(",", selectList);
+                frmReport._SalArea = joinString;
+                this.Close();
             }
-            var joinString = string.Join(",", selectList);
-            frmReport._SalArea = joinString;
-            this.Close();
+            catch { }
         }
 
         private void frmSearchSalArea_FormClosed(object sender, FormClosedEventArgs e)

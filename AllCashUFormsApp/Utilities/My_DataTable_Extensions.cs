@@ -163,7 +163,24 @@ namespace AllCashUFormsApp
         /// <returns></returns>  
         public static DataTable GetDataTable(string cSql, SqlConnection oCnn)
         {
-            MemoryManagement.FlushMemory();
+            //MemoryManagement.FlushMemory();
+
+            //DataTable dt = new DataTable();
+            ////using (var con = new SqlConnection { ConnectionString = "ConnectionString" })
+            //{
+            //    using (var command = new SqlCommand { Connection = oCnn })
+            //    {
+            //        oCnn.Open();
+            //        command.CommandText = cSql;
+            //        //command.Parameters.AddWithValue("@param", "Param");
+            //        //load the into DataTable
+            //        dt.Load(command.ExecuteReader(), LoadOption.Upsert);
+            //        oCnn.Close();
+            //    }// this will dispose command
+
+            //}// this will dispose and close connection
+
+            //return GetDataTableFast(cSql, oCnn); //last edit by sailom.k 19/04/2022
 
             oCnn.Open();
             using (var command = new SqlCommand(cSql, oCnn, null))
@@ -174,10 +191,10 @@ namespace AllCashUFormsApp
                 try
                 {
                     // CommandBehavior.SingleRow - This is the secret to execute the datareader to return only one row  
+                    command.CommandTimeout = 0;
                     dataReader = command.ExecuteReader(CommandBehavior.Default);
                     resultTable.Load(dataReader);
-                    source.SetResult(resultTable);
-                    command.CommandTimeout = 0;
+                    source.SetResult(resultTable);                  
                 }
                 catch (Exception ex)
                 {
@@ -194,6 +211,48 @@ namespace AllCashUFormsApp
             }
         }
 
+        public static DataTable GetDataTableFast(string cSql, SqlConnection oCnn)
+        {
+            oCnn.Open();
+            DateTime start = DateTime.Now;
+            IDataReader rdr = new SqlCommand(cSql, oCnn).ExecuteReader();
+            DataTable resultTable = GetDataTableFromDataReader(rdr);
+            TimeSpan ts = DateTime.Now.Subtract(start);
+            System.Diagnostics.Trace.Write("Time Elapsed in Custom : " + ts.TotalMilliseconds);
+            oCnn.Close();
+            return resultTable;
+        }
+
+        public static DataTable GetDataTableFromDataReader(IDataReader dataReader)
+        {
+            DataTable schemaTable = dataReader.GetSchemaTable();
+            DataTable resultTable = new DataTable();
+
+            foreach (DataRow dataRow in schemaTable.Rows)
+            {
+                DataColumn dataColumn = new DataColumn();
+                dataColumn.ColumnName = dataRow["ColumnName"].ToString();
+                dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
+                dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
+                dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
+                dataColumn.Unique = (bool)dataRow["IsUnique"];
+
+                resultTable.Columns.Add(dataColumn);
+            }
+
+            while (dataReader.Read())
+            {
+                DataRow dataRow = resultTable.NewRow();
+                for (int i = 0; i < resultTable.Columns.Count - 1; i++)
+                {
+                    dataRow[i] = dataReader[i];
+                }
+                resultTable.Rows.Add(dataRow);
+            }
+
+            return resultTable;
+        }
+
         public static DataTable GetDataTable(string cSql, SqlConnection oCnn, CommandType comType)
         {
             MemoryManagement.FlushMemory();
@@ -207,11 +266,11 @@ namespace AllCashUFormsApp
                 try
                 {
                     command.CommandType = comType;
+                    command.CommandTimeout = 0;
                     // CommandBehavior.SingleRow - This is the secret to execute the datareader to return only one row  
                     dataReader = command.ExecuteReader(CommandBehavior.Default);
                     resultTable.Load(dataReader);
                     source.SetResult(resultTable);
-                    command.CommandTimeout = 0;
                 }
                 catch (Exception ex)
                 {

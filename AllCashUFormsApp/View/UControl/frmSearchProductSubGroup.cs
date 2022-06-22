@@ -42,7 +42,11 @@ namespace AllCashUFormsApp.View.UControl
             {
                 grdList.DataSource = dt;
 
-                grdList.CreateCheckBoxHeaderColumn("colSelect");
+                try
+                {
+                    grdList.CreateCheckBoxHeaderColumn("colSelect");
+                }
+                catch { }
             }
         }
 

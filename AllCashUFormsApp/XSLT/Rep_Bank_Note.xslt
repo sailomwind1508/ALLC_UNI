@@ -157,13 +157,14 @@
 
 							</TD>
 							<TD class="SearchResultItem" align="Right">
-								<xsl:if test="Deposit=0">
+								<xsl:if test="Cheque=0">
 									-
 								</xsl:if>
-								<xsl:if test="Deposit!=0">
-									<xsl:value-of select='format-number(Deposit,"#,##0.00")'/>
+								<xsl:if test="Cheque!=0">
+									<xsl:value-of select='format-number(Cheque,"#,##0.00")'/>
 								</xsl:if>
-				
+
+
 							</TD>
 							<TD class="SearchResultItem" align="Right">
 								<xsl:if test="Transfer=0">
@@ -175,13 +176,12 @@
 			
 							</TD>
 							<TD class="SearchResultItem" align="Right">
-								<xsl:if test="Cheque=0">
+								<xsl:if test="Deposit=0">
 									-
 								</xsl:if>
-								<xsl:if test="Cheque>0">
-									<xsl:value-of select='format-number(Cheque,"#,##0.00")'/>
+								<xsl:if test="Deposit!=0">
+									<xsl:value-of select='format-number(Deposit,"#,##0.00")'/>
 								</xsl:if>
-									
 
 							</TD>
 							<TD class="SearchResultItem" align="Right">
@@ -219,13 +219,13 @@
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Send),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Deposit),"#,##0.00")'/>
+							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Cheque),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Transfer),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Cheque),"#,##0.00")'/>
+							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Deposit),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/TotalSend),"#,##0.00")'/>

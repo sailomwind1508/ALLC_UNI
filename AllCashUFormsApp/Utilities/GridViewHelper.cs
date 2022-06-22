@@ -66,14 +66,16 @@ namespace AllCashUFormsApp
         {
             try
             {
+                grdList = null;
                 grdList = grd;
+
                 CheckBoxColName = colName;
 
                 //Add a CheckBox Column to the DataGridView Header Cell.
 
                 //Find the Location of Header Cell.
-                Point headerCellLocation = grdList.GetCellDisplayRectangle(0, -1, true).Location;
-
+                Point headerCellLocation = grd.GetCellDisplayRectangle(0, -1, true).Location;
+                //headerCheckBox = new CheckBox();
                 //Place the Header CheckBox in the Location of the Header Cell.
                 headerCheckBox.Location = new Point(headerCellLocation.X + 8, headerCellLocation.Y + 2);
                 headerCheckBox.BackColor = Color.White;
@@ -83,29 +85,50 @@ namespace AllCashUFormsApp
 
                 //Assign Click event to the Header CheckBox.
                 headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
-                grdList.Controls.Add(headerCheckBox);
+                grd.Controls.Add(headerCheckBox);
                 //grdList.CurrentCell = grdList.Rows[0].Cells[0];
 
                 //Assign Click event to the DataGridView Cell.
-                grdList.CellContentClick += new DataGridViewCellEventHandler(DataGridView_CellClick);
+                grd.CellContentClick += new DataGridViewCellEventHandler(DataGridView_CellClick);
             }
-            catch(Exception ex)
+            catch
             {
-                return;
+           
             }
         }
 
         private static void HeaderCheckBox_Clicked(object sender, EventArgs e)
         {
-            //Necessary to end the edit mode of the Cell.
+            ////Necessary to end the edit mode of the Cell.
+            ////var grd = (DataGridView)sender;
+            //if (grdList.Name == "grdPO")
+            //{
+            //    CheckBoxColName = "colSelectRowPO";
+            //}
+            //else if (grdList.Name == "grdPOMst")
+            //{
+            //    CheckBoxColName = "colSelectRow";
+            //}
+            //else
+            //{
+            //    CheckBoxColName = "colSelect";
+            //}
+
             grdList.EndEdit();
 
             //Loop and check and uncheck all row CheckBoxes based on Header Cell CheckBox.
             foreach (DataGridViewRow row in grdList.Rows)
             {
-                DataGridViewCheckBoxCell checkBox = (row.Cells[CheckBoxColName] as DataGridViewCheckBoxCell);
-                checkBox.Value = headerCheckBox.Checked;
-
+                //try
+                //{
+                //    DataGridViewCheckBoxCell checkBox = (row.Cells[CheckBoxColName] as DataGridViewCheckBoxCell);
+                //    checkBox.Value = headerCheckBox.Checked;
+                //}
+                //catch
+                {
+                    DataGridViewCheckBoxCell checkBox = (row.Cells[CheckBoxColName] as DataGridViewCheckBoxCell);
+                    checkBox.Value = headerCheckBox.Checked;
+                }
             }
 
             grdList.CurrentCell = null;
@@ -115,12 +138,22 @@ namespace AllCashUFormsApp
 
         private static void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            var grd = (DataGridView)sender;
+            //if (grd.Name == "grdPO")
+            //{
+            //    CheckBoxColName = "colSelectRowPO";
+            //}
+            //else if (grd.Name == "grdPOMst")
+            //{
+            //    CheckBoxColName = "colSelectRow";
+            //}
+
             //Check to ensure that the row CheckBox is clicked.
             if (e.RowIndex >= 0 && e.ColumnIndex == 0)
             {
                 //Loop to verify whether all row CheckBoxes are checked or not.
                 bool isChecked = true;
-                foreach (DataGridViewRow row in grdList.Rows)
+                foreach (DataGridViewRow row in grd.Rows)
                 {
                     if (Convert.ToBoolean(row.Cells[CheckBoxColName].EditedFormattedValue) == false)
                     {
@@ -433,69 +466,77 @@ namespace AllCashUFormsApp
 
         public static void UpdateRow(this DataGridView grd, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow)
         {
-            if (_dt.Rows.Count > 0)
+            try
             {
-                if (!validateNewRow)
+                if (_dt.Rows.Count > 0)
                 {
-                    ShowDupSKUMessage();
-                    grd.InitRowData(initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex);
-                }
-                else
-                {
-                    foreach (var item in dataGridList)
+                    if (!validateNewRow)
                     {
-                        grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[0][item.Value];
+                        ShowDupSKUMessage();
+                        grd.InitRowData(initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex);
+                    }
+                    else
+                    {
+                        foreach (var item in dataGridList)
+                        {
+                            grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[0][item.Value];
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         public static void UpdateRow(this DataGridView grd, List<tbl_Product> allProducts, Form frm, Dictionary<int, string> dataGridList, Dictionary<int, string> initDataGridList, DataTable _dt, int idIndex, int rowIndex, bool validateNewRow, List<tbl_ProductUom> prodUOMs, BaseControl bu, int prdCellIndex, bool isCheckAll = false, int? minUOM = null)
         {
-            if (_dt.Rows.Count > 0)
+            try
             {
-                if (!validateNewRow)
+                if (_dt.Rows.Count > 0)
                 {
-                    ShowDupSKUMessage();
-                    if (isCheckAll)
+                    if (!validateNewRow)
                     {
-                        grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[rowIndex]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
-                    }
-                    else
-                    {
-                        if (minUOM != null)
+                        ShowDupSKUMessage();
+                        if (isCheckAll)
                         {
-                            grd.SetMinUOM(dataGridList, _dt, rowIndex, bu);
+                            grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[rowIndex]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
                         }
                         else
-                            grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
-                    }
-                }
-                else
-                {
-                    if (isCheckAll)
-                    {
-                        foreach (var item in dataGridList)
                         {
-                            grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[rowIndex][item.Value];
+                            if (minUOM != null)
+                            {
+                                grd.SetMinUOM(dataGridList, _dt, rowIndex, bu);
+                            }
+                            else
+                                grd.InitRowData(frm, initDataGridList, idIndex, _dt.Rows[0]["ProductID"].ToString(), rowIndex, allProducts, prodUOMs, bu, prdCellIndex);
                         }
                     }
                     else
                     {
-                        if (minUOM != null)
-                        {
-                            grd.SetMinUOM(dataGridList, _dt, rowIndex, bu);
-                        }
-                        else
+                        if (isCheckAll)
                         {
                             foreach (var item in dataGridList)
                             {
-                                grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[0][item.Value];
+                                grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[rowIndex][item.Value];
+                            }
+                        }
+                        else
+                        {
+                            if (minUOM != null)
+                            {
+                                grd.SetMinUOM(dataGridList, _dt, rowIndex, bu);
+                            }
+                            else
+                            {
+                                foreach (var item in dataGridList)
+                                {
+                                    grd.Rows[rowIndex].Cells[item.Key].Value = _dt.Rows[0][item.Value];
+                                }
                             }
                         }
                     }
                 }
             }
+            catch { }
         }
 
         private static void SetMinUOM(this DataGridView grd, Dictionary<int, string> dataGridList, DataTable _dt, int rowIndex, BaseControl bu)
@@ -803,7 +844,7 @@ namespace AllCashUFormsApp
             {
                 ex.WriteLog(null);
             }
-            
+
         }
 
         public static void InitRowData(this DataGridView grd, Form frm, Dictionary<int, string> dataGridList, int idIndex, string id, int rowIndex, List<tbl_Product> allProducts, List<tbl_ProductUom> prodUOMs, List<tbl_Cause> causeList, BaseControl bu, int prdCellIndex)

@@ -27,7 +27,11 @@ namespace AllCashUFormsApp.View.UControl
             var dt = VerifyFlagBillDT;
             grdList.DataSource = dt;
 
-            grdList.CreateCheckBoxHeaderColumn("colSelect");
+            try
+            {
+                grdList.CreateCheckBoxHeaderColumn("colSelect");
+            }
+            catch { }
             lblgridCount.Text = dt.Rows.Count.ToNumberFormat();
         }
 
@@ -107,12 +111,10 @@ namespace AllCashUFormsApp.View.UControl
                 string _customerID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
                 string docTypeCode = grdList.Rows[i].Cells["colDocTypeCode"].Value.ToString();
                 string docNo = grdList.Rows[i].Cells["colDocNo"].Value.ToString();
+                string _whid = grdList.Rows[i].Cells["colWHID"].Value.ToString(); 
 
                 if (!string.IsNullOrEmpty(_customerID))
                 {
-                    frmTabletSales frm = new frmTabletSales();
-                    frm.docTypeCode = docTypeCode;
-
                     MainForm mfrm = null;
                     foreach (Form f in Application.OpenForms)
                     {
@@ -122,13 +124,63 @@ namespace AllCashUFormsApp.View.UControl
                         }
                     }
 
-                    frm.MdiParent = mfrm;
-                    frm.StartPosition = FormStartPosition.CenterParent;
-                    frm.WindowState = FormWindowState.Maximized;
-                    frm.Show();
-                    frm.BindTabletSalesData(docNo);
+                    if (!string.IsNullOrEmpty(_whid))
+                    {
+                        var wh = bu.GetBranchWarehouse(_whid);
+                        if (wh != null)
+                        {
+                            if (wh.WHType == 2) //Pre-Order
+                            {
+                                if (docNo.Contains("M"))
+                                {
+                                    frm1000SalesPre frm = new frm1000SalesPre();
+                                    frm.docTypeCode = docTypeCode;
+                                    frm.MdiParent = mfrm;
+                                    frm.StartPosition = FormStartPosition.CenterParent;
+                                    frm.WindowState = FormWindowState.Maximized;
+                                    frm.Show();
+                                    frm.BindVanSalesData(docNo);
+                                }
+                                else
+                                {
+                                    frmTabletSalesPre frm = new frmTabletSalesPre();
+                                    frm.docTypeCode = docTypeCode;
+                                    frm.MdiParent = mfrm;
+                                    frm.StartPosition = FormStartPosition.CenterParent;
+                                    frm.WindowState = FormWindowState.Maximized;
+                                    frm.Show();
+                                    frm.BindTabletSalesData(docNo);
+                                }
+                            }
+                            else //Cash VAN
+                            {
+                                if (docNo.Contains("M"))
+                                {
+                                    frmVanSales frm = new frmVanSales();
+                                    frm.docTypeCode = docTypeCode;
+                                    frm.MdiParent = mfrm;
+                                    frm.StartPosition = FormStartPosition.CenterParent;
+                                    frm.WindowState = FormWindowState.Maximized;
+                                    frm.Show();
+                                    frm.BindVanSalesData(docNo);
+                                }
+                                else
+                                {
+                                    frmTabletSales frm = new frmTabletSales();
+                                    frm.docTypeCode = docTypeCode;
+                                    frm.MdiParent = mfrm;
+                                    frm.StartPosition = FormStartPosition.CenterParent;
+                                    frm.WindowState = FormWindowState.Maximized;
+                                    frm.Show();
+                                    frm.BindTabletSalesData(docNo);
+                                }
+                            }
+                            
+                        }
+                    }
                 }
             }
+
             Cursor.Current = Cursors.Default;
             this.Close();
         }

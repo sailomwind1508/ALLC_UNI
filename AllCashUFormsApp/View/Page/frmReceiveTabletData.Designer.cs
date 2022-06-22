@@ -165,7 +165,9 @@
             this.grdList.Name = "grdList";
             this.grdList.Size = new System.Drawing.Size(550, 443);
             this.grdList.TabIndex = 165;
+            this.grdList.DataSourceChanged += new System.EventHandler(this.grdList_DataSourceChanged);
             this.grdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellContentClick);
+            this.grdList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.grdList_DataBindingComplete);
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
             // colSelect
@@ -388,7 +390,7 @@
             // 
             this.chkAddCust.AutoSize = true;
             this.chkAddCust.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.chkAddCust.Location = new System.Drawing.Point(257, 75);
+            this.chkAddCust.Location = new System.Drawing.Point(270, 75);
             this.chkAddCust.Name = "chkAddCust";
             this.chkAddCust.Size = new System.Drawing.Size(152, 20);
             this.chkAddCust.TabIndex = 222;
@@ -423,7 +425,7 @@
             this.btnPullSalesAmt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPullSalesAmt.Location = new System.Drawing.Point(151, 68);
             this.btnPullSalesAmt.Name = "btnPullSalesAmt";
-            this.btnPullSalesAmt.Size = new System.Drawing.Size(100, 33);
+            this.btnPullSalesAmt.Size = new System.Drawing.Size(110, 33);
             this.btnPullSalesAmt.TabIndex = 221;
             this.btnPullSalesAmt.Text = "ดึงยอดขาย";
             this.btnPullSalesAmt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

@@ -30,27 +30,27 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProductInfo));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle358 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle368 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle359 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle360 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle361 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle362 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle363 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle364 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle365 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle366 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle367 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle369 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle378 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle370 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle371 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle372 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle373 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle374 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle375 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle376 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle377 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSaveSeq = new System.Windows.Forms.Button();
             this.ddlPrdSubGroup = new System.Windows.Forms.ComboBox();
@@ -226,7 +226,7 @@
             // 
             this.picProductImg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picProductImg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picProductImg.Location = new System.Drawing.Point(445, 12);
+            this.picProductImg.Location = new System.Drawing.Point(442, 4);
             this.picProductImg.Name = "picProductImg";
             this.picProductImg.Size = new System.Drawing.Size(174, 135);
             this.picProductImg.TabIndex = 216;
@@ -455,7 +455,7 @@
             this.txtProductName.Location = new System.Drawing.Point(174, 180);
             this.txtProductName.MaxLength = 100;
             this.txtProductName.Name = "txtProductName";
-            this.txtProductName.Size = new System.Drawing.Size(298, 23);
+            this.txtProductName.Size = new System.Drawing.Size(443, 23);
             this.txtProductName.TabIndex = 7;
             // 
             // openFileDialog1
@@ -486,14 +486,14 @@
             // 
             this.grdPro.AllowUserToAddRows = false;
             this.grdPro.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdPro.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle358.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle358.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle358.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle358.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle358.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle358.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle358.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdPro.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle358;
             this.grdPro.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.grdPro.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colProductGroupName,
@@ -505,14 +505,14 @@
             this.colSeq,
             this.colProductTypeName,
             this.colProductUomName});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdPro.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle368.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle368.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle368.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle368.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle368.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle368.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle368.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdPro.DefaultCellStyle = dataGridViewCellStyle368;
             this.grdPro.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdPro.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdPro.Location = new System.Drawing.Point(0, 130);
@@ -530,8 +530,8 @@
             // colProductGroupName
             // 
             this.colProductGroupName.DataPropertyName = "ProductGroupName";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductGroupName.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle359.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductGroupName.DefaultCellStyle = dataGridViewCellStyle359;
             this.colProductGroupName.HeaderText = "กลุ่มสินค้า";
             this.colProductGroupName.Name = "colProductGroupName";
             this.colProductGroupName.ReadOnly = true;
@@ -542,8 +542,8 @@
             // colProductID
             // 
             this.colProductID.DataPropertyName = "ProductID";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductID.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle360.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductID.DefaultCellStyle = dataGridViewCellStyle360;
             this.colProductID.HeaderText = "รหัสสินค้า";
             this.colProductID.Name = "colProductID";
             this.colProductID.ReadOnly = true;
@@ -554,8 +554,8 @@
             // colProductName
             // 
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle361.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle361;
             this.colProductName.HeaderText = "ชื่อสินค้า";
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
@@ -565,8 +565,8 @@
             // colProductRefCode
             // 
             this.colProductRefCode.DataPropertyName = "ProductRefCode";
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductRefCode.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle362.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductRefCode.DefaultCellStyle = dataGridViewCellStyle362;
             this.colProductRefCode.HeaderText = "รหัส SAPCode";
             this.colProductRefCode.Name = "colProductRefCode";
             this.colProductRefCode.ReadOnly = true;
@@ -576,8 +576,8 @@
             // colProductShortName
             // 
             this.colProductShortName.DataPropertyName = "ProductShortName";
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductShortName.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle363.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductShortName.DefaultCellStyle = dataGridViewCellStyle363;
             this.colProductShortName.HeaderText = "ชื่อย่อ";
             this.colProductShortName.Name = "colProductShortName";
             this.colProductShortName.ReadOnly = true;
@@ -588,8 +588,8 @@
             // colProductSubGroupName
             // 
             this.colProductSubGroupName.DataPropertyName = "ProductSubGroupName";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductSubGroupName.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle364.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductSubGroupName.DefaultCellStyle = dataGridViewCellStyle364;
             this.colProductSubGroupName.HeaderText = "กลุ่มย่อยสินค้า";
             this.colProductSubGroupName.Name = "colProductSubGroupName";
             this.colProductSubGroupName.ReadOnly = true;
@@ -599,9 +599,9 @@
             // colSeq
             // 
             this.colSeq.DataPropertyName = "Seq";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSeq.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle365.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle365.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSeq.DefaultCellStyle = dataGridViewCellStyle365;
             this.colSeq.HeaderText = "ลำดับ";
             this.colSeq.MaxInputLength = 5;
             this.colSeq.Name = "colSeq";
@@ -613,8 +613,8 @@
             // colProductTypeName
             // 
             this.colProductTypeName.DataPropertyName = "ProductTypeName";
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle366.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle366;
             this.colProductTypeName.HeaderText = "ประเภทสินค้า";
             this.colProductTypeName.Name = "colProductTypeName";
             this.colProductTypeName.ReadOnly = true;
@@ -624,8 +624,8 @@
             // colProductUomName
             // 
             this.colProductUomName.DataPropertyName = "ProductUomName";
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductUomName.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle367.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductUomName.DefaultCellStyle = dataGridViewCellStyle367;
             this.colProductUomName.HeaderText = "หน่วยขาย";
             this.colProductUomName.Name = "colProductUomName";
             this.colProductUomName.ReadOnly = true;
@@ -731,10 +731,10 @@
             // txtProFlavour
             // 
             this.txtProFlavour.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.txtProFlavour.Location = new System.Drawing.Point(388, 229);
+            this.txtProFlavour.Location = new System.Drawing.Point(404, 229);
             this.txtProFlavour.MaxLength = 50;
             this.txtProFlavour.Name = "txtProFlavour";
-            this.txtProFlavour.Size = new System.Drawing.Size(161, 23);
+            this.txtProFlavour.Size = new System.Drawing.Size(213, 23);
             this.txtProFlavour.TabIndex = 10;
             // 
             // panel6
@@ -777,11 +777,11 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label14.Location = new System.Drawing.Point(111, 9);
+            this.label14.Location = new System.Drawing.Point(118, 9);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(61, 16);
+            this.label14.Size = new System.Drawing.Size(53, 16);
             this.label14.TabIndex = 232;
-            this.label14.Text = "สถานะ  : ";
+            this.label14.Text = "สถานะ :";
             // 
             // btnBrowse
             // 
@@ -792,9 +792,9 @@
             this.btnBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
             this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBrowse.Location = new System.Drawing.Point(478, 150);
+            this.btnBrowse.Location = new System.Drawing.Point(483, 142);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(113, 36);
+            this.btnBrowse.Size = new System.Drawing.Size(113, 31);
             this.btnBrowse.TabIndex = 231;
             this.btnBrowse.Text = "เลือกรูปภาพ";
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -841,24 +841,24 @@
             // 
             this.lblTypeTax.AutoSize = true;
             this.lblTypeTax.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblTypeTax.Location = new System.Drawing.Point(78, 383);
+            this.lblTypeTax.Location = new System.Drawing.Point(86, 383);
             this.lblTypeTax.Name = "lblTypeTax";
-            this.lblTypeTax.Size = new System.Drawing.Size(94, 16);
+            this.lblTypeTax.Size = new System.Drawing.Size(82, 16);
             this.lblTypeTax.TabIndex = 229;
-            this.lblTypeTax.Text = "ประเภทภาษี   : ";
+            this.lblTypeTax.Text = "ประเภทภาษี :";
             // 
             // grdPrdUom
             // 
             this.grdPrdUom.AllowUserToAddRows = false;
             this.grdPrdUom.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdPrdUom.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle369.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle369.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle369.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle369.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle369.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle369.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle369.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdPrdUom.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle369;
             this.grdPrdUom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdPrdUom.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colUnit,
@@ -869,16 +869,16 @@
             this.colSellPriceVat,
             this.colComPrice,
             this.colWeight});
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdPrdUom.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle378.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle378.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle378.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle378.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle378.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle378.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle378.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdPrdUom.DefaultCellStyle = dataGridViewCellStyle378;
             this.grdPrdUom.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.grdPrdUom.Location = new System.Drawing.Point(174, 255);
+            this.grdPrdUom.Location = new System.Drawing.Point(172, 255);
             this.grdPrdUom.Name = "grdPrdUom";
             this.grdPrdUom.Size = new System.Drawing.Size(445, 122);
             this.grdPrdUom.TabIndex = 10;
@@ -893,9 +893,9 @@
             // colUnit
             // 
             this.colUnit.DataPropertyName = "UomSetName";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colUnit.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle370.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle370.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colUnit.DefaultCellStyle = dataGridViewCellStyle370;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
             this.colUnit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -904,8 +904,8 @@
             // colProductID2
             // 
             this.colProductID2.DataPropertyName = "ProductID";
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductID2.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle371.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductID2.DefaultCellStyle = dataGridViewCellStyle371;
             this.colProductID2.HeaderText = "ProductID";
             this.colProductID2.Name = "colProductID2";
             this.colProductID2.Visible = false;
@@ -913,9 +913,9 @@
             // colBaseQty
             // 
             this.colBaseQty.DataPropertyName = "BaseQty";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBaseQty.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle372.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle372.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBaseQty.DefaultCellStyle = dataGridViewCellStyle372;
             this.colBaseQty.HeaderText = "จำนวน";
             this.colBaseQty.MaxInputLength = 10;
             this.colBaseQty.Name = "colBaseQty";
@@ -926,9 +926,9 @@
             // colBuyPrice
             // 
             this.colBuyPrice.DataPropertyName = "BuyPrice";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBuyPrice.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle373.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle373.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBuyPrice.DefaultCellStyle = dataGridViewCellStyle373;
             this.colBuyPrice.HeaderText = "ราคาชื้อก่อนภาษี";
             this.colBuyPrice.MaxInputLength = 10;
             this.colBuyPrice.Name = "colBuyPrice";
@@ -939,9 +939,9 @@
             // colSellPrice
             // 
             this.colSellPrice.DataPropertyName = "SellPrice";
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSellPrice.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle374.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle374.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSellPrice.DefaultCellStyle = dataGridViewCellStyle374;
             this.colSellPrice.HeaderText = "ราคาก่อนภาษี";
             this.colSellPrice.MaxInputLength = 10;
             this.colSellPrice.Name = "colSellPrice";
@@ -952,9 +952,9 @@
             // colSellPriceVat
             // 
             this.colSellPriceVat.DataPropertyName = "SellPriceVat";
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle375.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle375.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle375;
             this.colSellPriceVat.HeaderText = "ราคารวมภาษี";
             this.colSellPriceVat.MaxInputLength = 10;
             this.colSellPriceVat.Name = "colSellPriceVat";
@@ -965,9 +965,9 @@
             // colComPrice
             // 
             this.colComPrice.DataPropertyName = "ComPrice";
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colComPrice.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle376.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle376.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colComPrice.DefaultCellStyle = dataGridViewCellStyle376;
             this.colComPrice.HeaderText = "ค่าคอมมิชชั่น";
             this.colComPrice.MaxInputLength = 10;
             this.colComPrice.Name = "colComPrice";
@@ -978,8 +978,8 @@
             // colWeight
             // 
             this.colWeight.DataPropertyName = "Weight";
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colWeight.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle377.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colWeight.DefaultCellStyle = dataGridViewCellStyle377;
             this.colWeight.HeaderText = "น้ำหนัก";
             this.colWeight.MaxInputLength = 10;
             this.colWeight.Name = "colWeight";
@@ -1022,18 +1022,18 @@
             this.txtProductShortName.Location = new System.Drawing.Point(174, 204);
             this.txtProductShortName.MaxLength = 50;
             this.txtProductShortName.Name = "txtProductShortName";
-            this.txtProductShortName.Size = new System.Drawing.Size(298, 23);
+            this.txtProductShortName.Size = new System.Drawing.Size(442, 23);
             this.txtProductShortName.TabIndex = 8;
             // 
             // lblProShortName
             // 
             this.lblProShortName.AutoSize = true;
             this.lblProShortName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProShortName.Location = new System.Drawing.Point(76, 205);
+            this.lblProShortName.Location = new System.Drawing.Point(92, 206);
             this.lblProShortName.Name = "lblProShortName";
-            this.lblProShortName.Size = new System.Drawing.Size(95, 16);
+            this.lblProShortName.Size = new System.Drawing.Size(79, 16);
             this.lblProShortName.TabIndex = 208;
-            this.lblProShortName.Text = "ชื่อย่อสินค้า    : ";
+            this.lblProShortName.Text = "ชื่อย่อสินค้า :";
             // 
             // label7
             // 
@@ -1049,21 +1049,21 @@
             // 
             this.lblProName.AutoSize = true;
             this.lblProName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProName.Location = new System.Drawing.Point(92, 181);
+            this.lblProName.Location = new System.Drawing.Point(109, 182);
             this.lblProName.Name = "lblProName";
-            this.lblProName.Size = new System.Drawing.Size(79, 16);
+            this.lblProName.Size = new System.Drawing.Size(63, 16);
             this.lblProName.TabIndex = 208;
-            this.lblProName.Text = "ชื่อสินค้า    : ";
+            this.lblProName.Text = "ชื่อสินค้า :";
             // 
             // lbl_s1ze
             // 
             this.lbl_s1ze.AutoSize = true;
             this.lbl_s1ze.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_s1ze.Location = new System.Drawing.Point(22, 476);
+            this.lbl_s1ze.Location = new System.Drawing.Point(30, 476);
             this.lbl_s1ze.Name = "lbl_s1ze";
-            this.lbl_s1ze.Size = new System.Drawing.Size(146, 16);
+            this.lbl_s1ze.Size = new System.Drawing.Size(138, 16);
             this.lbl_s1ze.TabIndex = 185;
-            this.lbl_s1ze.Text = "ปริมาณบรรจุ(หน้าซอง)   :";
+            this.lbl_s1ze.Text = "ปริมาณบรรจุ(หน้าซอง) :";
             // 
             // label5
             // 
@@ -1079,11 +1079,11 @@
             // 
             this.lbl_We1ght.AutoSize = true;
             this.lbl_We1ght.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_We1ght.Location = new System.Drawing.Point(78, 453);
+            this.lbl_We1ght.Location = new System.Drawing.Point(86, 453);
             this.lbl_We1ght.Name = "lbl_We1ght";
-            this.lbl_We1ght.Size = new System.Drawing.Size(90, 16);
+            this.lbl_We1ght.Size = new System.Drawing.Size(82, 16);
             this.lbl_We1ght.TabIndex = 185;
-            this.lbl_We1ght.Text = "น้ำหนักบรรจุ   :";
+            this.lbl_We1ght.Text = "น้ำหนักบรรจุ :";
             // 
             // label10
             // 
@@ -1101,7 +1101,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(76, 181);
+            this.label6.Location = new System.Drawing.Point(98, 181);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(16, 16);
             this.label6.TabIndex = 197;
@@ -1112,7 +1112,7 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label13.ForeColor = System.Drawing.Color.Red;
-            this.label13.Location = new System.Drawing.Point(52, 86);
+            this.label13.Location = new System.Drawing.Point(69, 86);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(16, 16);
             this.label13.TabIndex = 197;
@@ -1123,7 +1123,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label11.ForeColor = System.Drawing.Color.Red;
-            this.label11.Location = new System.Drawing.Point(69, 109);
+            this.label11.Location = new System.Drawing.Point(87, 109);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(16, 16);
             this.label11.TabIndex = 197;
@@ -1134,7 +1134,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label9.ForeColor = System.Drawing.Color.Red;
-            this.label9.Location = new System.Drawing.Point(74, 58);
+            this.label9.Location = new System.Drawing.Point(91, 58);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(16, 16);
             this.label9.TabIndex = 197;
@@ -1145,7 +1145,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(75, 33);
+            this.label8.Location = new System.Drawing.Point(88, 33);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(16, 16);
             this.label8.TabIndex = 197;
@@ -1175,37 +1175,37 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label1.Location = new System.Drawing.Point(56, 430);
+            this.label1.Location = new System.Drawing.Point(64, 430);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 16);
+            this.label1.Size = new System.Drawing.Size(104, 16);
             this.label1.TabIndex = 185;
-            this.label1.Text = "ราคาต้นทุนเฉลี่ย   : ";
+            this.label1.Text = "ราคาต้นทุนเฉลี่ย :";
             // 
             // lbl_Min_Point
             // 
             this.lbl_Min_Point.AutoSize = true;
             this.lbl_Min_Point.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Min_Point.Location = new System.Drawing.Point(322, 404);
+            this.lbl_Min_Point.Location = new System.Drawing.Point(326, 408);
             this.lbl_Min_Point.Name = "lbl_Min_Point";
-            this.lbl_Min_Point.Size = new System.Drawing.Size(66, 16);
+            this.lbl_Min_Point.Size = new System.Drawing.Size(62, 16);
             this.lbl_Min_Point.TabIndex = 185;
-            this.lbl_Min_Point.Text = "จุดต่ำสุด  :";
+            this.lbl_Min_Point.Text = "จุดต่ำสุด :";
             // 
             // lbl_OrderPoint
             // 
             this.lbl_OrderPoint.AutoSize = true;
             this.lbl_OrderPoint.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_OrderPoint.Location = new System.Drawing.Point(97, 404);
+            this.lbl_OrderPoint.Location = new System.Drawing.Point(105, 404);
             this.lbl_OrderPoint.Name = "lbl_OrderPoint";
-            this.lbl_OrderPoint.Size = new System.Drawing.Size(75, 16);
+            this.lbl_OrderPoint.Size = new System.Drawing.Size(63, 16);
             this.lbl_OrderPoint.TabIndex = 185;
-            this.lbl_OrderPoint.Text = "จุดสั่งซื้อ   : ";
+            this.lbl_OrderPoint.Text = "จุดสั่งซื้อ :";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label3.Location = new System.Drawing.Point(335, 232);
+            this.label3.Location = new System.Drawing.Point(351, 232);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 16);
             this.label3.TabIndex = 185;
@@ -1215,21 +1215,21 @@
             // 
             this.lblProStructureUom.AutoSize = true;
             this.lblProStructureUom.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProStructureUom.Location = new System.Drawing.Point(30, 256);
+            this.lblProStructureUom.Location = new System.Drawing.Point(41, 256);
             this.lblProStructureUom.Name = "lblProStructureUom";
-            this.lblProStructureUom.Size = new System.Drawing.Size(141, 16);
+            this.lblProStructureUom.Size = new System.Drawing.Size(129, 16);
             this.lblProStructureUom.TabIndex = 185;
-            this.lblProStructureUom.Text = "โครงสร้างหน่วยสินค้า   : ";
+            this.lblProStructureUom.Text = "โครงสร้างหน่วยสินค้า :";
             // 
             // lblProUom
             // 
             this.lblProUom.AutoSize = true;
             this.lblProUom.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProUom.Location = new System.Drawing.Point(72, 230);
+            this.lblProUom.Location = new System.Drawing.Point(88, 231);
             this.lblProUom.Name = "lblProUom";
-            this.lblProUom.Size = new System.Drawing.Size(99, 16);
+            this.lblProUom.Size = new System.Drawing.Size(83, 16);
             this.lblProUom.TabIndex = 185;
-            this.lblProUom.Text = "หน่วยเล็กสุด    : ";
+            this.lblProUom.Text = "หน่วยเล็กสุด :";
             // 
             // ddlProGroup
             // 
@@ -1270,7 +1270,7 @@
             this.ddlProUom.FormattingEnabled = true;
             this.ddlProUom.Location = new System.Drawing.Point(174, 229);
             this.ddlProUom.Name = "ddlProUom";
-            this.ddlProUom.Size = new System.Drawing.Size(144, 24);
+            this.ddlProUom.Size = new System.Drawing.Size(162, 24);
             this.ddlProUom.TabIndex = 9;
             // 
             // ddlProSubGroup
@@ -1332,11 +1332,11 @@
             // 
             this.lblBarCode.AutoSize = true;
             this.lblBarCode.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblBarCode.Location = new System.Drawing.Point(100, 157);
+            this.lblBarCode.Location = new System.Drawing.Point(113, 159);
             this.lblBarCode.Name = "lblBarCode";
-            this.lblBarCode.Size = new System.Drawing.Size(71, 16);
+            this.lblBarCode.Size = new System.Drawing.Size(59, 16);
             this.lblBarCode.TabIndex = 176;
-            this.lblBarCode.Text = "บาร์โค้ด   : ";
+            this.lblBarCode.Text = "บาร์โค้ด :";
             // 
             // txtProductRefCode
             // 
@@ -1353,11 +1353,11 @@
             // 
             this.lblProRefCode.AutoSize = true;
             this.lblProRefCode.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProRefCode.Location = new System.Drawing.Point(90, 58);
+            this.lblProRefCode.Location = new System.Drawing.Point(105, 58);
             this.lblProRefCode.Name = "lblProRefCode";
-            this.lblProRefCode.Size = new System.Drawing.Size(82, 16);
+            this.lblProRefCode.Size = new System.Drawing.Size(66, 16);
             this.lblProRefCode.TabIndex = 176;
-            this.lblProRefCode.Text = "รหัสบัญชี    : ";
+            this.lblProRefCode.Text = "รหัสบัญชี :";
             // 
             // txtProductID
             // 
@@ -1374,41 +1374,41 @@
             // 
             this.lblProID.AutoSize = true;
             this.lblProID.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProID.Location = new System.Drawing.Point(84, 34);
+            this.lblProID.Location = new System.Drawing.Point(102, 34);
             this.lblProID.Name = "lblProID";
-            this.lblProID.Size = new System.Drawing.Size(89, 16);
+            this.lblProID.Size = new System.Drawing.Size(69, 16);
             this.lblProID.TabIndex = 176;
-            this.lblProID.Text = " รหัสสินค้า    : ";
+            this.lblProID.Text = "รหัสสินค้า :";
             // 
             // lblGroupSubPro
             // 
             this.lblGroupSubPro.AutoSize = true;
             this.lblGroupSubPro.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblGroupSubPro.Location = new System.Drawing.Point(60, 131);
+            this.lblGroupSubPro.Location = new System.Drawing.Point(77, 133);
             this.lblGroupSubPro.Name = "lblGroupSubPro";
-            this.lblGroupSubPro.Size = new System.Drawing.Size(111, 16);
+            this.lblGroupSubPro.Size = new System.Drawing.Size(95, 16);
             this.lblGroupSubPro.TabIndex = 172;
-            this.lblGroupSubPro.Text = "กลุ่มย่อยสินค้า    : ";
+            this.lblGroupSubPro.Text = "กลุ่มย่อยสินค้า :";
             // 
             // lblGroupPro
             // 
             this.lblGroupPro.AutoSize = true;
             this.lblGroupPro.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblGroupPro.Location = new System.Drawing.Point(85, 109);
+            this.lblGroupPro.Location = new System.Drawing.Point(101, 109);
             this.lblGroupPro.Name = "lblGroupPro";
-            this.lblGroupPro.Size = new System.Drawing.Size(87, 16);
+            this.lblGroupPro.Size = new System.Drawing.Size(71, 16);
             this.lblGroupPro.TabIndex = 172;
-            this.lblGroupPro.Text = "กลุ่มสินค้า    : ";
+            this.lblGroupPro.Text = "กลุ่มสินค้า :";
             // 
             // lblProType
             // 
             this.lblProType.AutoSize = true;
             this.lblProType.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblProType.Location = new System.Drawing.Point(68, 85);
+            this.lblProType.Location = new System.Drawing.Point(83, 85);
             this.lblProType.Name = "lblProType";
-            this.lblProType.Size = new System.Drawing.Size(104, 16);
+            this.lblProType.Size = new System.Drawing.Size(88, 16);
             this.lblProType.TabIndex = 170;
-            this.lblProType.Text = "ประเภทสินค้า    : ";
+            this.lblProType.Text = "ประเภทสินค้า :";
             // 
             // FormHeader
             // 

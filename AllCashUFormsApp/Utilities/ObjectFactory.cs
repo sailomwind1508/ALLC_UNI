@@ -236,6 +236,11 @@ namespace AllCashUFormsApp
                         obj = new PreOrder();
                     }
                     break;
+                case ObjectType.IVPreRB: //Van Sales Pre-Order
+                    {
+                        obj = new IVPre();
+                    }
+                    break;
                 default:
                     {
                         obj = null;

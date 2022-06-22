@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -276,7 +277,7 @@ namespace AllCashUFormsApp
 
                     tbl_ArCustomers = list;
                 }
-             }
+            }
             catch (Exception ex)
             {
                 ex.WriteLog(null);
@@ -470,6 +471,60 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+
+        /// <summary>
+        /// create by sailom.k 27/05/2022
+        /// </summary>
+        /// <param name="tbl_ArCustomers"></param>
+        /// <returns></returns>
+        public static int Update(this List<tbl_ArCustomer> tbl_ArCustomers)
+        {
+            string msg = "start ArCustomerDaoList=>Update";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString);
+
+                foreach (var _tbl_ArCustomer in tbl_ArCustomers)
+                {
+                    var updateData = db.tbl_ArCustomer.FirstOrDefault(x => x.CustomerID == _tbl_ArCustomer.CustomerID);
+                    if (updateData != null)
+                    {
+                        foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                        {
+                            foreach (PropertyInfo tbl_ArCustomerItem in _tbl_ArCustomer.GetType().GetProperties())
+                            {
+                                if (updateDataItem.Name == tbl_ArCustomerItem.Name)
+                                {
+                                    var value = tbl_ArCustomerItem.GetValue(_tbl_ArCustomer, null);
+
+                                    Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                    object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                    updateDataItem.SetValue(updateData, safeValue, null);
+                                }
+                            }
+                        }
+
+                        db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                    }
+                }
+
+                ret = db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomers.GetType());
+            }
+
+            msg = "end ArCustomerDaoList=>Update";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
         public static int Delete(this tbl_ArCustomer tbl_ArCustomer)
         {
             string msg = "start ArCustomerDao=>Delete";
@@ -571,7 +626,7 @@ namespace AllCashUFormsApp
             return dt;
         }
 
-        public static List<tbl_ArCustomer> SelectMaxCustomerID(this tbl_ArCustomer tbl_ArCustomer,string formatCustomerID)
+        public static List<tbl_ArCustomer> SelectMaxCustomerID(this tbl_ArCustomer tbl_ArCustomer, string formatCustomerID)
         {
             List<tbl_ArCustomer> list = new List<tbl_ArCustomer>();
             try
@@ -599,5 +654,212 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
+        public static List<tbl_ArCustomer> GetCustomerByWHID(this tbl_ArCustomer tbl_ArCustomer, string WHID)
+        {
+            List<tbl_ArCustomer> list = new List<tbl_ArCustomer>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ArCustomer";
+                sql += "  WHERE WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + WHID + "', ','))";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ArCustomer), sql);
+                list = dynamicListReturned.Cast<tbl_ArCustomer>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return list;
+        }
+
+        public static DataTable GetCustomerByWHID_DataTable(this tbl_ArCustomer tbl_ArCustomer, string WHID)
+        {
+            DataTable ret = new DataTable();
+            try
+            {
+                //string sql = "SELECT * FROM tbl_ArCustomer";
+                //sql += "  WHERE WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + WHID + "', ','))";
+
+                string sql = @"SELECT [CustomerID]
+                  ,[CustName]
+                  ,[BillTo]
+                  ,[Telephone] 
+	              ,Latitude
+	              ,Longitude
+	              ,CustomerImg
+	              ,CustImage
+	              ,t2.SalAreaName
+	              ,'pin_mark' + CAST(t2.Seq AS NVARCHAR) + '.png' AS [MarkerImage]
+	              FROM dbo.tbl_ArCustomer t1 
+	              INNER JOIN dbo.tbl_SalArea t2 ON t1.SalAreaID = t2.SalAreaID ";
+                sql += "  WHERE t1.WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + WHID + "', ','))";
+
+                ret = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return ret;
+        }
+
+        public static DataTable GetCustomerByWHID_DataTable(this tbl_ArCustomer tbl_ArCustomer, string _WHID = "", string _SalAreaID = "")
+        {
+            DataTable ret = new DataTable();
+            try
+            {
+                string sql = "";
+                //string sql = "SELECT * FROM tbl_ArCustomer";
+                //sql += "  WHERE WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + WHID + "', ','))";
+
+                // string sql = @"SELECT [CustomerID]
+                //   ,[CustName]
+                //   ,[BillTo]
+                //   ,[Telephone] 
+                //,Latitude
+                //,Longitude
+                //,CustomerImg
+                //,CustImage
+                //,t2.SalAreaName
+                //,'pin_mark' + CAST(t2.Seq AS NVARCHAR) + '.png' AS [MarkerImage]
+                //FROM dbo.tbl_ArCustomer t1 
+                //INNER JOIN dbo.tbl_SalArea t2 ON t1.SalAreaID = t2.SalAreaID ";
+
+                sql = @"SELECT [CustomerID]
+                    ,REPLACE(REPLACE([CustName],',',''), '|', '') AS CustName
+                    ,REPLACE(REPLACE(ISNULL([BillTo],''),',',''), '|', '') AS BillTo
+                    ,REPLACE(REPLACE(ISNULL([Telephone],''),',',''), '|', '') AS Telephone
+                    ,Latitude
+                    ,Longitude
+                    ,t2.SalAreaName ";
+
+                if (_WHID.Length > 6)
+                {
+                    sql += " ,'pin_mark' + CAST(CAST(SUBSTRING(t1.WHID, 5, 2) AS INT) AS NVARCHAR(5))  + '.png' AS [MarkerImage]";
+                }
+                else
+                {
+                    sql += " ,'pin_mark' + CAST(t2.Seq AS NVARCHAR) + '.png' AS [MarkerImage]";
+                }
+
+                sql += @" , IIF([CustomerImg] IS NULL
+                    , (CASE WHEN ISNULL(CAST(t1.CustImage AS NVARCHAR), '') = '' then NULL
+                    ELSE 
+	                    IIF(CAST(t1.CustImage AS NVARCHAR) LIKE '%Images%', t1.CustImage, NULL) 
+                    END), NULL) AS CustImage
+                    , t1.FlagDel
+                    , t1.WHID
+                    FROM tbl_ArCustomer t1 
+                    INNER JOIN tbl_SalArea t2 ON t1.SalAreaID = t2.SalAreaID ";
+
+                //sql += @" INNER JOIN ( SELECT WHID FROM tbl_SendData 
+                //        WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DateSend AS DATE)) FROM tbl_SendData)
+                //    )t3 ON t1.WHID = t3.WHID";
+
+                sql += "  WHERE 1=1";
+                if (!string.IsNullOrEmpty(_SalAreaID))
+                {
+                    sql += " AND t1.SalAreaID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _SalAreaID + "', ','))";
+                }
+                else
+                {
+                    sql += " AND t1.WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _WHID + "', ','))";
+                }
+
+                sql += "  AND t1.FlagDel = 0";
+                sql += @"  AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
+                           AND Latitude <> '0.0' AND Longitude <> '0.0' ";
+
+                ret = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return ret;
+        }
+
+        public static DataTable GetCountCustomer(this tbl_ArCustomer tbl_ArCustomer)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = "";
+
+                //sql += @"SELECT COUNT(CustomerID) AS 'CountCust'
+                //                , WHID, SalAreaID 
+                //                FROM tbl_ArCustomer
+                //                WHERE FlagDel = 0
+                //                GROUP BY WHID,SalAreaID
+                //                ORDER BY WHID,SalAreaID";
+
+                //last edit by sailom .k 07/06/2022
+                sql += @"SELECT COUNT(CustomerID) AS 'CountCust'
+						, ISNULL(WHID, '') AS 'WHID'
+						, ISNULL(SalAreaID, '') AS 'SalAreaID'
+                        FROM tbl_ArCustomer
+                        WHERE FlagDel = 0
+                        AND ISNULL(WHID, '') <> '' AND ISNULL(SalAreaID, '') <> ''
+                        AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
+                        AND Latitude <> '0.0' AND Longitude <> '0.0'
+                        GROUP BY WHID,SalAreaID
+                        ORDER BY WHID, SalAreaID";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetServerImagePath(this tbl_ArCustomer tbl_ArCustomer, string BranchID)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@BranchID", BranchID);
+
+                string sql = "proc_get_customer_serverIMG_path";
+
+                var conStr = ConfigurationManager.AppSettings["CenterConnect"].ToString();
+                var conn = new SqlConnection(conStr);
+                dt = My_DataTable_Extensions.GetDataTable(sql, conn, CommandType.StoredProcedure, _params);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return dt;
+        }
+
+        public static bool ManualUpdateCustomerImage(this tbl_ArCustomer tbl_ArCustomer)
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_manual_update_customer_data_daily";
+                DataTable dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                ret = true;
+
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+            }
+
+            return ret;
+        }
+
     }
 }

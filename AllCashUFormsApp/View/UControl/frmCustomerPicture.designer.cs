@@ -29,6 +29,7 @@ namespace AllCashUFormsApp.View.UControl
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerPicture));
             this.picCustomerImg = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picCustomerImg)).BeginInit();
             this.SuspendLayout();
@@ -49,6 +50,7 @@ namespace AllCashUFormsApp.View.UControl
             this.ClientSize = new System.Drawing.Size(528, 368);
             this.Controls.Add(this.picCustomerImg);
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmCustomerPicture";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

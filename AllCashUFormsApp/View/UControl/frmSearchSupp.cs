@@ -29,6 +29,7 @@ namespace AllCashUFormsApp.View.UControl
         private static Func<tbl_MstDistrict, bool> predicateDistrict = null;  //ดูให้ดี
         private static Func<tbl_Employee, bool> predicateEmp = null;
         private static Func<tbl_ArCustomer, bool> predicateCust = null;
+        private static string DocTypeCode = "";
 
         List<Control> searchCustControls = new List<Control>();
         List<Control> searchBWHControls = new List<Control>();
@@ -73,7 +74,7 @@ namespace AllCashUFormsApp.View.UControl
 
         public void PreparePopupForm(string type, string frmName, string popUPText, List<DataGridColumn> gridColumn, int? _rowIndex = null, List<Control> _controls = null, string[] _conditionString = null, bool isHideExSearch = false)
         {
-
+            DocTypeCode = type;
             PreparePopupFactory(type, frmName, popUPText, gridColumn, _rowIndex, _controls);
             conditionString = _conditionString;
             //predicate = null;
@@ -165,6 +166,7 @@ namespace AllCashUFormsApp.View.UControl
                 case "IV": { _objType = ObjectType.IV; } break;
                 case "CCIV": { _objType = ObjectType.CCIV; } break;
                 case "IVPre": { _objType = ObjectType.IVPre; } break;
+                case "IVPreRB": { _objType = ObjectType.IVPreRB; } break;
                 case "IMPre": { _objType = ObjectType.IMPre; } break;
                 case "PreOrder": { _objType = ObjectType.PreOrder; } break;
                 case "IVPrePO": { _objType = ObjectType.IVPrePO; } break;
@@ -224,7 +226,7 @@ namespace AllCashUFormsApp.View.UControl
             else
             {
                 //edit by sailom .k 14/12/2021-----------------------------------
-                if (_objType == ObjectType.IV)
+                if (_objType == ObjectType.IV || _objType == ObjectType.IVPre || _objType == ObjectType.IVPreRB)
                 {
                     if (conditionString != null)
                     {
@@ -339,6 +341,25 @@ namespace AllCashUFormsApp.View.UControl
             //grid.EnableHeadersVisualStyles = false;
 
             grdList.SetRowPostPaint(sender, e, this.Font);
+
+            //for support pre-order---------------------------------------
+            if (DocTypeCode == "PreOrder")
+            {
+                try
+                {
+                    var row = grdList.Rows[e.RowIndex];
+
+                    var _edDate = row.Cells["EdDate"].Value.ToString();
+                    var _edUser = row.Cells["EdUser"].Value.ToString();
+
+                    if (!string.IsNullOrEmpty(_edDate) && !string.IsNullOrEmpty(_edUser))
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightYellow;
+                        row.DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                }
+                catch { }   
+            }
         }
 
         private void BindDataGrid(DataTable _dt)
@@ -447,6 +468,7 @@ namespace AllCashUFormsApp.View.UControl
                 case ObjectType.IV: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.CCIV: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IVPre: FilterItem(text, ref _dt, ref filteredRows); break;
+                case ObjectType.IVPreRB: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IMPre: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.PreOrder: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IVPrePO: FilterItem(text, ref _dt, ref filteredRows); break;
@@ -688,6 +710,7 @@ namespace AllCashUFormsApp.View.UControl
                                     case ObjectType.IV: ((frmTabletSales)frm).BindTabletSalesData(selectCode); break;
                                     case ObjectType.CCIV: ((frmCancelPOItem)frm).BindTabletSalesData(selectCode); break;
                                     case ObjectType.IVPre: ((frmTabletSalesPre)frm).BindTabletSalesData(selectCode); break;
+                                    case ObjectType.IVPreRB: ((frmRB)frm).BindRBFromPOData(selectCode, "IV"); break;
                                     case ObjectType.IMPre: ((frm1000SalesPre)frm).BindVanSalesData(selectCode); break;
                                     case ObjectType.PreOrder: ((frmPreOrder)frm).BindVanSalesData(selectCode, "IV2"); break;
                                     case ObjectType.IVPrePO: ((frmPreOrder)frm).BindVanSalesPOData(selectCode); break;

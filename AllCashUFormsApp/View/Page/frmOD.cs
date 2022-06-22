@@ -56,7 +56,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "OD");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "OD");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -74,7 +74,7 @@ namespace AllCashUFormsApp.View.Page
 
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, btnPrintCrys, "");
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -93,7 +93,7 @@ namespace AllCashUFormsApp.View.Page
             grdList.SetDataGridViewStyle();
             SetDefaultGridViewEvent(grdList);
 
-            allProduct = bu.GetProduct();
+            allProduct = bu.tbl_Product;
             //allprdUOMSets = bu.GetUOMSet();
         }
 
@@ -161,7 +161,7 @@ namespace AllCashUFormsApp.View.Page
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == po.DocStatus; };
             ddlDocStatus.SelectedValueDropdownList(condition);
 
-            var emp = bu.GetEmployeeByUserName(po.EmpID);
+            var emp = bu.GetEmployeeByUserName(po.CrUser); //edit by sailom 22/03/2022 //bu.GetEmployeeByUserName(po.EmpID);
             if (emp != null)
                 txtCrUser.Text = string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName);
             else
@@ -181,7 +181,7 @@ namespace AllCashUFormsApp.View.Page
         {
             grdList.Rows.Clear();
 
-            var allUOM = bu.GetUOM();
+            var allUOM = bu.tbl_ProductUom;
 
             for (int i = 0; i < poDts.Count; i++)
             {
@@ -1002,7 +1002,7 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
             //this.OpenCrystalReportsPopup("ใบสั่งสินค้า", "Form_OD.rpt", "Form_OD", _params);
 
-            this.OpenTestCrystalReportsPopup("ใบสั่งสินค้า", "Form_OD.rdlc", "Form_OD", _params); //Reporting service by sailom 30/11/2021
+            this.OpenReportingReportsPopup("ใบสั่งสินค้า", "Form_OD.rdlc", "Form_OD", _params); //Reporting service by sailom 30/11/2021
 
             msg = "end frmOD=>btnPrint_Click";
             msg.WriteLog(this.GetType());

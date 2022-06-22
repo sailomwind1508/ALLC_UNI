@@ -232,7 +232,102 @@ namespace AllCashUFormsApp.Controller
                         Int64 temp = 0;
                         if (Int64.TryParse(docNo, out temp))
                         {
-                            ret = (temp + 1).ToString();
+                            ret = (temp + 1).ToString(); //for support pre-order by sailom.k 05/04/2022
+                        }
+                        else
+                        {
+                            ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength);
+                        }
+                    }
+                }
+                else
+                    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength);
+            }
+
+            return ret;
+        }
+
+        private string CheckDocNoPRE(string docTypeCode, tbl_DocumentType tbl_DocumentType, int runLength, string whCode, string docNo)
+        {
+            string ret = "";
+            string _rNoTemp = "0";
+            string dateFormate = "";
+            string tempMonth = "";
+            int startLen = 0;
+
+            if (tbl_DocumentType.DocFormat.Contains("YYMMDD"))
+            {
+                dateFormate = "yyMMdd";
+
+                if (docTypeCode == "PO" || docTypeCode == "PR" || docTypeCode == "SO")
+                    startLen = 2;
+                else
+                    startLen = 5;
+            }
+            else if (tbl_DocumentType.DocFormat.Contains("YYMM"))
+            {
+                dateFormate = "yyMM";
+                startLen = 5;
+            }
+            else if (tbl_DocumentType.DocFormat.Contains("MMYY"))
+            {
+                dateFormate = "MMyy";
+                startLen = 2;
+            }
+            else if (tbl_DocumentType.DocFormat.Contains("YY"))
+            {
+                dateFormate = "yy";
+                startLen = 2;
+            }
+
+            tempMonth = DateTime.Now.ToString(dateFormate, cultures);
+            //tempMonth = Convert.ToDateTime(DateTime.Now, cultures).ToString(dateFormate);
+
+            if (docNo.Substring(startLen, dateFormate.Length) == tempMonth)
+            {
+                _rNoTemp = docNo.Substring(docNo.Length - runLength, runLength);
+                ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+            }
+            else
+            {
+                var _tbl_PRMasters = new List<tbl_PRMaster>();
+                if (docTypeCode.Trim() == "RL")
+                {
+                    //_tbl_PRMasters = (new tbl_PRMaster()).Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim() && !x.DocNo.Contains("V") && x.DocNo.Contains(tempMonth), docTypeCode.Trim());
+                    _tbl_PRMasters = (new tbl_PRMaster()).SelectVMaxAutoID(docTypeCode.Trim()).Where(x => x.DocNo.Contains(tempMonth)).ToList(); //edit by sailom .k 13/12/2021
+                }
+                else
+                {
+                    //_tbl_PRMasters = (new tbl_PRMaster()).Select(x => x.DocTypeCode.Trim() == docTypeCode.Trim() && x.DocNo.Contains(tempMonth), docTypeCode.Trim());
+                    _tbl_PRMasters = (new tbl_PRMaster()).SelectMaxAutoID(docTypeCode.Trim()).Where(x => x.DocNo.Contains(tempMonth)).ToList(); //edit by sailom .k 13/12/2021
+                }
+
+                if (_tbl_PRMasters != null && _tbl_PRMasters.Count > 0)
+                {
+                    int autoID = _tbl_PRMasters.Max(a => a.AutoID);
+                    var tbl_PRMaster = _tbl_PRMasters.FirstOrDefault(x => x.AutoID == autoID);
+                    if (tbl_PRMaster != null)
+                    {
+                        string tmpRunning = tbl_PRMaster.DocNo.Substring(9, tbl_PRMaster.DocNo.Length - 9);
+                        _rNoTemp = tmpRunning;
+                    }
+                }
+
+                if (docTypeCode == "IM" || docTypeCode == "V")  //if (docTypeCode == "IV" || docTypeCode == "IM" || docTypeCode == "V") //for support running docno from tablet request by admin lri  last edit by sailom  02/11/2021
+                    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+                else if (docTypeCode == "H" || docTypeCode == "C" || docTypeCode == "M")
+                    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+                //else if (docTypeCode == "RL")
+                //    ret = GenDocNo(docTypeCode, tbl_DocumentType, _rNoTemp, runLength, whCode);
+                else if (docTypeCode == "IV") //for support running docno from tablet request by admin lri  last edit by sailom  02/11/2021
+                {
+                    if (!string.IsNullOrEmpty(docNo))
+                    {
+                        Int64 temp = 0;
+                        if (Int64.TryParse(docNo, out temp))
+                        {
+                            var tmp = new tbl_POMaster().SelectMaxAutoIDPRE_ReGen(docNo);
+                            ret = (Convert.ToInt64(tmp) + 1).ToString();
                         }
                         else
                         {
@@ -384,6 +479,113 @@ namespace AllCashUFormsApp.Controller
 
 
             return ret;
+        }
+
+        public string GenDocNoPre(string docTypeCode, string whCode = null)
+        {
+            try
+            {
+                string ret = string.Empty;
+                //edit by sailom .k 13/12/2021
+                var tbl_DocumentType = new tbl_DocumentType().Select(docTypeCode.Trim()); //(new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                if (tbl_DocumentType != null) //PO
+                {
+                    int runLength = tbl_DocumentType.RunLength.Value;
+
+                    var tbl_POMasters = new List<tbl_POMaster_PRE>();
+
+                    //Func<tbl_POMaster, bool> tbl_POMasterPre = null;
+                    if (new List<string> { "OD", "RE", "IV", "IM", "RT" }.Contains(docTypeCode))
+                    {
+                        if (docTypeCode != "IM")
+                            tbl_POMasters = new tbl_POMaster_PRE().SelectMaxAutoID(whCode, docTypeCode.Trim());  //tbl_POMasterPre = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());//Last edit by sailom .k 21/10/2021
+                        else if (docTypeCode == "IM")
+                            tbl_POMasters = new tbl_POMaster_PRE().SelectRefMaxAutoID(whCode, docTypeCode.Trim());  //tbl_POMasterPre = (x => x.DocTypeCode.Trim() == "IV" && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Trim() == docTypeCode); //Last edit by sailom .k 21/10/2021
+
+                        //var tbl_POMasters = (new tbl_POMaster()).Select(tbl_POMasterPre, (docTypeCode == "IM" ? "IV" : docTypeCode.Trim()));
+                        if (tbl_POMasters != null && tbl_POMasters.Count > 0)
+                        {
+                            var maxAutoID = tbl_POMasters.Max(x => x.AutoID);
+                            tbl_POMaster_PRE tbl_POMaster = tbl_POMasters.FirstOrDefault(x => x.AutoID == maxAutoID);
+
+                            ret = CheckDocNoPRE(docTypeCode, tbl_DocumentType, runLength, whCode, tbl_POMaster.DocNo);
+                        }
+                    }
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return string.Empty;
+            }
+        }
+
+        public string GenDocNoPreEX(string docTypeCode, string whCode = null)
+        {
+            try
+            {
+                string ret = string.Empty;
+                //edit by sailom .k 13/12/2021
+                var tbl_DocumentType = new tbl_DocumentType().Select(docTypeCode.Trim()); //(new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                if (tbl_DocumentType != null) //PO
+                {
+                    int runLength = tbl_DocumentType.RunLength.Value;
+
+                    var tbl_POMasters = new List<tbl_POMaster_PRE>();
+
+                    Dictionary<int, string> docList = new Dictionary<int, string>();
+                    //Func<tbl_POMaster, bool> tbl_POMasterPre = null;
+                    if (new List<string> { "OD", "RE", "IV", "IM", "RT" }.Contains(docTypeCode))
+                    {
+                        if (docTypeCode != "IM")
+                        {
+                            tbl_POMasters = new tbl_POMaster_PRE().SelectMaxAutoID(whCode, docTypeCode.Trim());  //tbl_POMasterPre = (x => x.DocTypeCode.Trim() == docTypeCode.Trim());//Last edit by sailom .k 21/10/2021
+                            foreach (var item in tbl_POMasters)
+                            {
+                                docList.Add(item.AutoID, item.DocNo);
+                            }
+                            
+                            var tmp = new tbl_POMaster().SelectMaxAutoIDPRE(whCode, docTypeCode.Trim());
+                            foreach (var item2 in tmp)
+                            {
+                                docList.Add(item2.AutoID, item2.DocNo);
+                            }
+                        }
+                        else if (docTypeCode == "IM")
+                        {
+                            tbl_POMasters = new tbl_POMaster_PRE().SelectRefMaxAutoID(whCode, docTypeCode.Trim());  //tbl_POMasterPre = (x => x.DocTypeCode.Trim() == "IV" && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Trim() == docTypeCode); //Last edit by sailom .k 21/10/2021
+                            foreach (var item in tbl_POMasters)
+                            {
+                                docList.Add(item.AutoID, item.DocNo);
+                            }
+
+                            var tmp = new tbl_POMaster().SelectRefMaxAutoIDPRE(whCode, docTypeCode.Trim());
+                            foreach (var item2 in tmp)
+                            {
+                                docList.Add(item2.AutoID, item2.DocNo);
+                            }
+                        }
+
+                        //var tbl_POMasters = (new tbl_POMaster()).Select(tbl_POMasterPre, (docTypeCode == "IM" ? "IV" : docTypeCode.Trim()));
+                        if (docList != null && docList.Count > 0)
+                        {
+                            var maxAutoID = docList.Max(x => x.Key);
+                            var tmpMaxItem = docList.FirstOrDefault(x => x.Key == maxAutoID);
+
+                            ret = CheckDocNoPRE(docTypeCode, tbl_DocumentType, runLength, whCode, tmpMaxItem.Value);
+                        }
+                    }
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return string.Empty;
+            }
         }
     }
 }

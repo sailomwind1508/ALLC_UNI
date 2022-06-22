@@ -152,7 +152,7 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
-                var allWHType = bu.GetWHType(x => x.WHType == 1);
+                var allWHType = bu.GetWHType(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
                 if (allWHType.Count == 0)
                     return;
                 cbbWHTypeVanType.BindDropdownList(allWHType, "Name", "AutoID", 0);
@@ -185,7 +185,40 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Save();
+            try
+            {
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                List<int> ret = new List<int>();
+
+                var BranchWH = PrePareBranchWarehouse();
+                ret.Add(buWH.UpdateData(BranchWH));
+
+                ret.Add(SaveEmployee(BranchWH.SaleEmpID));
+
+                if (ret.All(x => x != 1))
+                {
+                    this.ShowProcessErr();
+                    return;
+                }
+
+                if (tabSaleArea.SelectedIndex == 0) //Tab ตลาด
+                {
+                    Save_TabMarket();
+                }
+                else if (tabSaleArea.SelectedIndex == 1)
+                {
+                    Save_TabSalAreaDistrict();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -259,14 +292,14 @@ namespace AllCashUFormsApp.View.Page
         #region Private_Method
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -322,7 +355,8 @@ namespace AllCashUFormsApp.View.Page
             Dics.Add("2", "Pre Order");
             cbbWHType.BindDropdownList(Dics, "value", "key");
 
-            var allWHType = bu.GetWHType(x => x.WHType == 1);
+            var allWHType = bu.GetWHType(x => x.Name.Contains("CashVan"));
+            //var allWHType = bu.GetWHType(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order
             cbbWHTypeVanType.BindDropdownList(allWHType, "Name", "WHType");
         }
 
@@ -422,12 +456,17 @@ namespace AllCashUFormsApp.View.Page
             if (dt.Rows.Count > 0)
             {
                 btnEdit.Enabled = true;
-
                 txtEmpIDCard.Text = dt.Rows[0].Field<string>("EmpIDCard"); //รหัสบัญชี
                 txtSaleEmpID.Text = dt.Rows[0].Field<string>("SaleEmpID");
                 txtSaleEmpName.Text = dt.Rows[0].Field<string>("TitleName") + " " + dt.Rows[0].Field<string>("FirstName") + " " + dt.Rows[0].Field<string>("LastName");
                 cbbWHType.SelectedIndex = dt.Rows[0].Field<int>("WHType") == 1 ? 0 : 1;
-                cbbWHTypeVanType.SelectedIndex = dt.Rows[0].Field<int>("AutoID");
+                int _autoID = dt.Rows[0].Field<int>("AutoID");
+                int _vantypeIndex = 0; //AutoID 1,3
+                if (cbbWHType.SelectedIndex == 0 && _autoID == 2 || cbbWHType.SelectedIndex == 1 && _autoID == 4)
+                {
+                    _vantypeIndex = 1;
+                }
+                cbbWHTypeVanType.SelectedIndex = _vantypeIndex;
                 txtDriverEmpID.Text = dt.Rows[0].Field<string>("DriverEmpID");
                 txtPOSNo.Text = dt.Rows[0].Field<string>("POSNo");
                 txtLicense.Text = dt.Rows[0].Field<string>("License");
@@ -747,46 +786,7 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
-
             return _dt;
-        }
-
-        private void Save()
-        {
-            try
-            {
-                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                string title = "ยืนยันการบันทึก!!";
-
-                if (!cfMsg.ConfirmMessageBox(title))
-                    return;
-
-                List<int> ret =  new List<int>();
-
-                var BranchWH = PrePareBranchWarehouse();
-                ret.Add(buWH.UpdateData(BranchWH));
-
-                ret.Add(SaveEmployee(BranchWH.SaleEmpID));
-
-                if (ret.All(x=>x != 1))
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
-
-                if (tabSaleArea.SelectedIndex == 0) //Tab ตลาด
-                {
-                    Save_TabMarket();
-                }
-                else if (tabSaleArea.SelectedIndex == 1)
-                {
-                    Save_TabSalAreaDistrict();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-            }
         }
 
         private void SetProvince(DataRow r)

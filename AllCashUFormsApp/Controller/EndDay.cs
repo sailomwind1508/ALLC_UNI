@@ -245,10 +245,10 @@ namespace AllCashUFormsApp.Controller
                                WHID = po.WHID,
                                CustomerID = emp.EmpID,//po.CustomerID,
                                CustName = string.IsNullOrEmpty(po.CustInvNO) ? string.Join(" ", emp.TitleName, emp.FirstName, emp.LastName) : tbl_IVMasters.First(x => x.DocNo == po.CustInvNO).CustName, //last edit by sailom 27/01/2022
-                               BeforeVat = Convert.ToDecimal(((po.Amount - po.ExcVat - po.Discount) * 100) / (100 + po.VatRate)).ToDecimalN2(),
+                               BeforeVat = Convert.ToDecimal(po.IncVat.Value - po.Discount.Value - po.VatAmt.Value - po.ExcVat.Value).ToDecimalN2(), //fix before vat amount value edit by sailom.k 26/04/2022 //Convert.ToDecimal(((po.Amount - po.ExcVat - po.Discount) * 100) / (100 + po.VatRate)).ToDecimalN2(),
                                VatAmt = po.VatAmt.Value.ToDecimalN2(),
                                TotalDue = po.TotalDue.ToDecimalN2(),
-                               CustInvNo = po.CustInvNO
+                               CustInvNo = (string.IsNullOrEmpty(po.CustInvNO) ? "" : po.CustInvNO) //fix error duplicate row. When create deal by back-end and create deal by tablet with the same whid edit by sailom 28/03/2022
                            };
 
                 DataTable newTable = new DataTable();

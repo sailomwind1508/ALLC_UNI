@@ -52,5 +52,6 @@ namespace AllCashUFormsApp.Model
         public int ProductBrandID { get; set; }
         public int ProductLine { get; set; }
         public string Remark { get; set; }
+        public Nullable<int> SaleTypeID { get; set; }
     }
 }

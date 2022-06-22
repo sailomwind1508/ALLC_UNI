@@ -21,35 +21,25 @@ namespace AllCashUFormsApp.View.UControl
 
         private void GetImageFromUrl()
         {
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@CustomerID", frmCustomerInfo._CustomerID);
-            var dt = bu.GetCustomerImage(_params);
-            if (dt.Rows.Count > 0 && dt.Rows[0]["CustomerImg"] != DBNull.Value)
+            picCustomerImg.Image = null;
+
+            if (string.IsNullOrEmpty(frmCustomerInfo._CustImage))
             {
-                var img = (byte[])dt.Rows[0]["CustomerImg"];
-                picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
-                picCustomerImg.Image = img.byteArrayToImage();
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@CustomerID", frmCustomerInfo._CustomerID);
+                var dt = bu.GetCustomerImage(_params);
+
+                if (dt.Rows.Count > 0 && dt.Rows[0]["CustomerImg"] != DBNull.Value)
+                {
+                    var img = (byte[])dt.Rows[0]["CustomerImg"];
+                    picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
+                    picCustomerImg.Image = img.byteArrayToImage();
+                }
             }
             else
             {
-                string URL = "http://ubn.dnsdojo.net:82/CU";
-                //URL = "http://192.168.1.10/CU";
-                //string URLCenter = "http://192.168.1.10/CU";
-                var chkList = frmCustomerInfo._CustImage.ToCharArray().ToList();
-                string CustImagePath = "";
-
-                for (int i = 0; i < chkList.Count; i++)
-                {
-                    if (chkList[i].ToString() != "~")
-                    {
-                        CustImagePath += chkList[i].ToString();
-                    }
-                }
-
-                string Src = URL + CustImagePath;
                 picCustomerImg.SizeMode = PictureBoxSizeMode.StretchImage;
-                picCustomerImg.ImageLocation = Src;
-                //picCustomerImg.Load(Src);
+                picCustomerImg.ImageLocation = frmCustomerInfo._CustImage;
             }
         }
 

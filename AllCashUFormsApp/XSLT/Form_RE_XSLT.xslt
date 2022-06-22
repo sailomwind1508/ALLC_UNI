@@ -142,7 +142,7 @@
 							</TD>
 							
 							<TD class="SearchResultItem">
-								<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+								<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
 								<xsl:value-of  select="ProductID"/>
 							</TD>
 							

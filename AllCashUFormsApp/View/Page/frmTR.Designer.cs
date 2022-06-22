@@ -81,7 +81,6 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
@@ -93,6 +92,9 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.ddlFromUOM = new System.Windows.Forms.ComboBox();
+            this.ddlToUOM = new System.Windows.Forms.ComboBox();
             this.pnlTop.SuspendLayout();
             this.pnlTR.SuspendLayout();
             this.pnlTL.SuspendLayout();
@@ -103,8 +105,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -389,16 +391,17 @@
             // lblUOM
             // 
             this.lblUOM.AutoSize = true;
-            this.lblUOM.Location = new System.Drawing.Point(924, 38);
+            this.lblUOM.Location = new System.Drawing.Point(914, 114);
             this.lblUOM.Name = "lblUOM";
             this.lblUOM.Size = new System.Drawing.Size(33, 16);
             this.lblUOM.TabIndex = 144;
             this.lblUOM.Text = "แพ็ค";
+            this.lblUOM.Visible = false;
             // 
             // lblOrderQty
             // 
             this.lblOrderQty.AutoSize = true;
-            this.lblOrderQty.Location = new System.Drawing.Point(851, 17);
+            this.lblOrderQty.Location = new System.Drawing.Point(760, 17);
             this.lblOrderQty.Name = "lblOrderQty";
             this.lblOrderQty.Size = new System.Drawing.Size(53, 16);
             this.lblOrderQty.TabIndex = 143;
@@ -408,7 +411,7 @@
             // 
             this.txtOrderQty.BackColor = System.Drawing.SystemColors.Window;
             this.txtOrderQty.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOrderQty.Location = new System.Drawing.Point(836, 35);
+            this.txtOrderQty.Location = new System.Drawing.Point(745, 35);
             this.txtOrderQty.MaxLength = 5;
             this.txtOrderQty.Name = "txtOrderQty";
             this.txtOrderQty.Size = new System.Drawing.Size(85, 23);
@@ -418,7 +421,7 @@
             // txtToStock
             // 
             this.txtToStock.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtToStock.Location = new System.Drawing.Point(745, 62);
+            this.txtToStock.Location = new System.Drawing.Point(654, 62);
             this.txtToStock.MaxLength = 5;
             this.txtToStock.Name = "txtToStock";
             this.txtToStock.ReadOnly = true;
@@ -429,7 +432,7 @@
             // txtFromStock
             // 
             this.txtFromStock.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFromStock.Location = new System.Drawing.Point(745, 35);
+            this.txtFromStock.Location = new System.Drawing.Point(654, 35);
             this.txtFromStock.MaxLength = 5;
             this.txtFromStock.Name = "txtFromStock";
             this.txtFromStock.ReadOnly = true;
@@ -440,7 +443,7 @@
             // lblStock
             // 
             this.lblStock.AutoSize = true;
-            this.lblStock.Location = new System.Drawing.Point(757, 17);
+            this.lblStock.Location = new System.Drawing.Point(666, 17);
             this.lblStock.Name = "lblStock";
             this.lblStock.Size = new System.Drawing.Size(62, 16);
             this.lblStock.TabIndex = 139;
@@ -452,7 +455,7 @@
             this.txtToProductName.MaxLength = 200;
             this.txtToProductName.Name = "txtToProductName";
             this.txtToProductName.ReadOnly = true;
-            this.txtToProductName.Size = new System.Drawing.Size(442, 23);
+            this.txtToProductName.Size = new System.Drawing.Size(385, 23);
             this.txtToProductName.TabIndex = 16;
             // 
             // txtToProductCode
@@ -494,7 +497,7 @@
             this.txtFromProductName.MaxLength = 200;
             this.txtFromProductName.Name = "txtFromProductName";
             this.txtFromProductName.ReadOnly = true;
-            this.txtFromProductName.Size = new System.Drawing.Size(442, 23);
+            this.txtFromProductName.Size = new System.Drawing.Size(385, 23);
             this.txtFromProductName.TabIndex = 12;
             // 
             // txtFromProductCode
@@ -545,6 +548,8 @@
             // 
             // grdDetails
             // 
+            this.grdDetails.Controls.Add(this.ddlToUOM);
+            this.grdDetails.Controls.Add(this.ddlFromUOM);
             this.grdDetails.Controls.Add(this.txtBaseQty);
             this.grdDetails.Controls.Add(this.chkFixBaseQty);
             this.grdDetails.Controls.Add(this.txtFromProductCode);
@@ -572,7 +577,7 @@
             this.txtBaseQty.BackColor = System.Drawing.SystemColors.Window;
             this.txtBaseQty.Enabled = false;
             this.txtBaseQty.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBaseQty.Location = new System.Drawing.Point(836, 90);
+            this.txtBaseQty.Location = new System.Drawing.Point(745, 90);
             this.txtBaseQty.MaxLength = 5;
             this.txtBaseQty.Name = "txtBaseQty";
             this.txtBaseQty.Size = new System.Drawing.Size(85, 23);
@@ -583,7 +588,7 @@
             // chkFixBaseQty
             // 
             this.chkFixBaseQty.AutoSize = true;
-            this.chkFixBaseQty.Location = new System.Drawing.Point(724, 92);
+            this.chkFixBaseQty.Location = new System.Drawing.Point(633, 92);
             this.chkFixBaseQty.Name = "chkFixBaseQty";
             this.chkFixBaseQty.Size = new System.Drawing.Size(106, 20);
             this.chkFixBaseQty.TabIndex = 145;
@@ -678,20 +683,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1008, 28);
             this.panel1.TabIndex = 26;
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
-            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.panel2.Controls.Add(this.panel4);
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Location = new System.Drawing.Point(0, 29);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1008, 512);
-            this.panel2.TabIndex = 27;
             // 
             // panel5
             // 
@@ -916,6 +907,40 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
+            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.panel2.Controls.Add(this.panel4);
+            this.panel2.Controls.Add(this.panel3);
+            this.panel2.Location = new System.Drawing.Point(0, 29);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1008, 512);
+            this.panel2.TabIndex = 27;
+            // 
+            // ddlFromUOM
+            // 
+            this.ddlFromUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlFromUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlFromUOM.FormattingEnabled = true;
+            this.ddlFromUOM.Location = new System.Drawing.Point(836, 34);
+            this.ddlFromUOM.Name = "ddlFromUOM";
+            this.ddlFromUOM.Size = new System.Drawing.Size(81, 24);
+            this.ddlFromUOM.TabIndex = 147;
+            // 
+            // ddlToUOM
+            // 
+            this.ddlToUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlToUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlToUOM.FormattingEnabled = true;
+            this.ddlToUOM.Location = new System.Drawing.Point(745, 62);
+            this.ddlToUOM.Name = "ddlToUOM";
+            this.ddlToUOM.Size = new System.Drawing.Size(81, 24);
+            this.ddlToUOM.TabIndex = 149;
+            // 
             // frmTR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -945,8 +970,8 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1016,5 +1041,7 @@
         private UControl.CancelButton btnCancel;
         private UControl.CopyButton btnCopy;
         private UControl.SaveButton btnSave;
+        private System.Windows.Forms.ComboBox ddlToUOM;
+        private System.Windows.Forms.ComboBox ddlFromUOM;
     }
 }

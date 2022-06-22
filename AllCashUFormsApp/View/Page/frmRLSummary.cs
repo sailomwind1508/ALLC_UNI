@@ -55,7 +55,7 @@ namespace AllCashUFormsApp.View.Page
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -100,7 +100,7 @@ namespace AllCashUFormsApp.View.Page
             }
 
             DataTable dtallvan = new DataTable();
-            dtallvan = buWH.GetBranchWareHouseTable(x => x.WHType == 1);
+            dtallvan = buWH.GetBranchWareHouseTable(x => x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order// WHType == 1);
 
             Func<tbl_PRMaster, bool> func = (x => x.DocDate.ToDateTimeFormatString() == dtpDocDate.Value.ToDateTimeFormatString() && x.DocTypeCode == "RL");
 

@@ -95,7 +95,21 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					color: Black;
 					border: solid thin Black;
 					font-size: 10pt;
-					width: 120px;
+					width: 100px;
+					}
+					.ColumnSize1 {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 160px;
+					}
+					.ColumnSize2 {
+					background-color: #FFFFFF;
+					color: Black;
+					border: solid thin Black;
+					font-size: 10pt;
+					width: 600px;
 					}
 					.ResultItem {
 					background-color: #FFFFFF;
@@ -144,18 +158,18 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						</TD>
 					</TR>
 					<TR>
-						<TD class="stdPageHdr" Colspan="17">
+						<TD class="stdPageHdr" Colspan="5">
 							รายงานรายละเอียดขายสินค้า (แยกตามเอกสาร)
 						</TD>
 					</TR>
 					<TR>
-						<TD Colspan="17"></TD>
+						<TD Colspan="5"></TD>
 					</TR>
 					<TR>
 						<TD class="ResultItem" style="font-weight: bold;text-align: center;">
 							Depot :
 						</TD>
-						<TD colspan="3" class="SearchResultItem" style="text-align: center;">
+						<TD colspan="2" class="SearchResultItem" style="text-align: center;">
 							<xsl:value-of select="Rep_RJ_By_Doc_Detail_XSLT/BranchName" />
 						</TD>
 						<TD class="ResultItem" style="font-weight: bold;text-align: center;" align="Center">
@@ -167,22 +181,25 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						
 					</TR>
 					<TR>
-						<TD Colspan="4"></TD>
+						<TD Colspan="8"></TD>
 					</TR>
 					<TR>
 						<thead>
-							<TH Colspan="4"></TH>
+							<TH Colspan="8"></TH>
 							<xsl:apply-templates select="$prdIds"/>
-
 						</thead>
 					</TR>
 					<thead>
 						<th class="SearchResultItem">วันที่</th>
 						<th class="SearchResultItem">เลขที่</th>
+						<th class="ColumnSize1">Last Edited</th>
+						<th class="SearchResultItem">ผู้จัดทำ</th>
 						<th class="SearchResultItem">คลังต้นทาง</th>
 						<th class="SearchResultItem">คลังปลายทาง</th>
-						<xsl:apply-templates select="$prdNms"/>
+						<th class="ColumnSize2">หมายเหตุ</th>
+
 						<th class="SearchResultItem">สถานะเอกสาร</th>
+						<xsl:apply-templates select="$prdNms"/>
 					</thead>
 					<tbody>
 						<xsl:apply-templates select=
@@ -228,6 +245,13 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				</xsl:choose>
 				
 			</td>
+			<td class="ColumnSize1">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+				<xsl:value-of select="EdDate"/>
+			</td>
+			<td class="SearchResultItem">
+				<xsl:value-of select="EmpName"/>
+			</td>
 			<td class="SearchResultItem">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="WHIDFr"/>
@@ -236,16 +260,17 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="WHIDTo"/>
 			</td>
-			<xsl:apply-templates select="$prdIds" mode="row">
-				<xsl:with-param name="nRows" select="key('kRows', DocNo)"/>
-				
-			</xsl:apply-templates>
-
-			
+			<td class="ColumnSize2">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+				<xsl:value-of select="Remark"/>
+			</td>
 			<td class="SearchResultItem">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="Status"/>
 			</td>
+			<xsl:apply-templates select="$prdIds" mode="row">
+				<xsl:with-param name="nRows" select="key('kRows', DocNo)"/>
+			</xsl:apply-templates>
 		</tr>
 	</xsl:template>
 

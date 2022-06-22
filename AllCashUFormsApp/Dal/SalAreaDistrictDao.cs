@@ -78,9 +78,15 @@ namespace AllCashUFormsApp
             try
             {
                 DataTable dt = new DataTable();
-                string sql = "";
-                sql += " SELECT * ";
-                sql += " FROM [dbo].[tbl_SalAreaDistrict] ";
+                string sql = @"SELECT [SalAreaID]
+                              ,[WHID]
+                              ,[DistrictID]
+                              ,[DistrictCode]
+                              ,[DistrictName]
+                              ,[AreaName]
+                              ,[ProvinceName]
+                              ,[PostalCode]
+                        FROM dbo.tbl_SalAreaDistrict ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalAreaDistrict), sql);
                 list = dynamicListReturned.Cast<tbl_SalAreaDistrict>().ToList();
@@ -245,18 +251,21 @@ namespace AllCashUFormsApp
             {
                 DataTable dt = new DataTable();
 
-                string sql = @"SELECT DISTINCT t2.ProvinceID, t2.ProvinceCode, t1.[ProvinceName]
-                                , t3.AreaID, t3.AreaCode, t1.[AreaName]
-                                , [DistrictID], [DistrictCode], [DistrictName]
-                                , t1.WHID
-                                FROM [tbl_SalAreaDistrict] t1
-                                INNER JOIN tbl_MstProvince t2 ON t1.ProvinceName = t2.ProvinceName
-                                INNER JOIN tbl_MstArea t3 ON t1.AreaName = t3.AreaName 
-                                WHERE T1.WHID <> '' ";
+                string sql = "";
+
+                sql = @"SELECT DISTINCT t2.ProvinceID, t2.ProvinceCode, t1.[ProvinceName]
+                            , t3.AreaID, t3.AreaCode, t1.[AreaName]
+                            , [DistrictID], [DistrictCode], [DistrictName]
+                            , t1.WHID 
+                            FROM [tbl_SalAreaDistrict] t1
+                            INNER JOIN tbl_MstProvince t2 ON t1.ProvinceName = t2.ProvinceName
+                            INNER JOIN tbl_MstArea t3 ON t1.AreaName = t3.AreaName 
+                            WHERE T1.WHID <> '' ";
 
                 if (!string.IsNullOrEmpty(_WHID))
                 {
-                    sql += " AND T1.WHID = '" + _WHID + "'";
+                    //sql += " AND T1.WHID = '" + _WHID + "'";
+                    sql += " AND T1.WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _WHID + "'";
                 }
 
                 sql += " ORDER BY t2.ProvinceID";
@@ -414,9 +423,83 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_SalAreaDistrict.GetType());
                 return null;
             }
         }
 
+        public static DataTable GetSalAreaDistrictByProvince(this tbl_SalAreaDistrict tbl_SalAreaDistrict, int _ProvinceID, string _WHID)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+
+                string sql = "";
+
+                sql = @"SELECT DISTINCT t2.ProvinceID, t2.ProvinceCode, t1.ProvinceName
+                        , t3.AreaID, t3.AreaCode, t1.AreaName
+                        , DistrictID, DistrictCode, DistrictName
+                        FROM tbl_SalAreaDistrict t1
+                        INNER JOIN tbl_MstProvince t2 ON t1.ProvinceName = t2.ProvinceName
+                        INNER JOIN tbl_MstArea t3 ON t1.AreaName = t3.AreaName 
+                        WHERE T1.WHID <> '' 
+                        AND t2.ProvinceID = " + _ProvinceID + "";
+
+                //sql += " AND T1.WHID = '" + _WHID + "'";
+
+                sql += " order by t3.AreaID, t1.DistrictID";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalAreaDistrict.GetType());
+                return null;
+            }
+        }
+
+        public static DataTable GetSalAreaDistrict_BySendData(this tbl_SalAreaDistrict tbl_SalAreaDistrict)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+
+                string sql = "";
+
+                //sql = @"SELECT t3.SalAreaName, t1. * FROM tbl_SalAreaDistrict t1
+                //                INNER JOIN ( SELECT WHID FROM tbl_SendData 
+                //                WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DateSend AS DATE)) FROM tbl_SendData)
+                //                )t2 ON t1.WHID = t2.WHID 
+                //                INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+                //                ORDER BY t1.WHID, t1.SalAreaID";
+
+                //sql = @"SELECT DISTINCT t3.SalAreaName, t1.SalAreaID, t1.WHID  FROM tbl_ArCustomer t1
+                //        INNER JOIN ( SELECT WHID FROM tbl_SendData 
+                //        WHERE CAST(DateSend AS DATE) IN (SELECT MAX(CAST(DocDate AS DATE)) FROM tbl_POMaster)
+                //        )t2 ON t1.WHID = t2.WHID 
+                //        INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+                //        WHERE T1.FlagDel = 0
+                //        ORDER BY t1.WHID, t1.SalAreaID";
+
+                //last edit by sailom .k 07/06/2022
+                sql = @" SELECT DISTINCT t3.SalAreaName, t1.SalAreaID, t1.WHID  FROM tbl_ArCustomer t1
+                        INNER JOIN tbl_SalArea t3 ON t1.SalAreaID = t3.SalAreaID
+                        WHERE T1.FlagDel = 0 
+						AND Latitude LIKE '%.%' AND Longitude LIKE '%.%' 
+                        AND Latitude <> '0.0' AND Longitude <> '0.0' 
+                        ORDER BY t1.WHID, t1.SalAreaID ";
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalAreaDistrict.GetType());
+                return null;
+            }
+        }
     }
 }

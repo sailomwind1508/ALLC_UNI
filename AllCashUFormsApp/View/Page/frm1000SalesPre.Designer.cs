@@ -60,6 +60,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCen = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -70,8 +71,8 @@ namespace AllCashUFormsApp.View.Page
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.btnUpdateAddress = new System.Windows.Forms.Button();
-            this.txtRemark = new System.Windows.Forms.TextBox();
             this.pnlTL = new System.Windows.Forms.Panel();
+            this.cboRemark = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtCrUser = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -134,10 +135,12 @@ namespace AllCashUFormsApp.View.Page
             this.label16 = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlTR = new System.Windows.Forms.Panel();
+            this.btnShowVE = new System.Windows.Forms.Button();
+            this.btnRL = new System.Windows.Forms.Button();
+            this.txdDocNo = new System.Windows.Forms.MaskedTextBox();
             this.btnGenCustIVNo = new System.Windows.Forms.Button();
             this.txtCustInvNO = new System.Windows.Forms.TextBox();
             this.lblCustInvNO = new System.Windows.Forms.Label();
-            this.txdDocNo = new System.Windows.Forms.MaskedTextBox();
             this.txtCustPONo = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -382,6 +385,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.btnPrintCrys);
             this.panel5.Controls.Add(this.btnClose);
             this.panel5.Controls.Add(this.btnAdd);
             this.panel5.Controls.Add(this.btnExcel);
@@ -395,7 +399,27 @@ namespace AllCashUFormsApp.View.Page
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 28);
-            this.panel5.TabIndex = 17;
+            this.panel5.TabIndex = 21;
+            // 
+            // btnPrintCrys
+            // 
+            this.btnPrintCrys.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrintCrys.BackColor = System.Drawing.Color.Azure;
+            this.btnPrintCrys.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPrintCrys.FlatAppearance.BorderSize = 0;
+            this.btnPrintCrys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintCrys.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrintCrys.ForeColor = System.Drawing.Color.Black;
+            this.btnPrintCrys.Image = ((System.Drawing.Image)(resources.GetObject("btnPrintCrys.Image")));
+            this.btnPrintCrys.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrintCrys.Location = new System.Drawing.Point(484, 3);
+            this.btnPrintCrys.Name = "btnPrintCrys";
+            this.btnPrintCrys.Size = new System.Drawing.Size(61, 23);
+            this.btnPrintCrys.TabIndex = 26;
+            this.btnPrintCrys.Text = "พิมพ์";
+            this.btnPrintCrys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrintCrys.UseVisualStyleBackColor = false;
+            this.btnPrintCrys.Click += new System.EventHandler(this.btnPrintCrys_Click);
             // 
             // btnClose
             // 
@@ -408,7 +432,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnClose.ForeColor = System.Drawing.Color.Black;
             this.btnClose.Image = global::AllCashUFormsApp.Properties.Resources.power_off;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(600, 3);
+            this.btnClose.Location = new System.Drawing.Point(666, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(57, 23);
             this.btnClose.TabIndex = 17;
@@ -424,7 +448,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9F);
             this.btnAdd.ForeColor = System.Drawing.Color.Black;
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -449,7 +473,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnExcel.ForeColor = System.Drawing.Color.Black;
             this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcel.Location = new System.Drawing.Point(485, 3);
+            this.btnExcel.Location = new System.Drawing.Point(551, 3);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(109, 23);
             this.btnExcel.TabIndex = 17;
@@ -602,19 +626,11 @@ namespace AllCashUFormsApp.View.Page
             this.btnUpdateAddress.UseVisualStyleBackColor = false;
             this.btnUpdateAddress.Click += new System.EventHandler(this.btnUpdateAddress_Click);
             // 
-            // txtRemark
-            // 
-            this.txtRemark.Location = new System.Drawing.Point(81, 179);
-            this.txtRemark.MaxLength = 255;
-            this.txtRemark.Name = "txtRemark";
-            this.txtRemark.Size = new System.Drawing.Size(468, 23);
-            this.txtRemark.TabIndex = 140;
-            // 
             // pnlTL
             // 
             this.pnlTL.BackColor = System.Drawing.Color.Azure;
+            this.pnlTL.Controls.Add(this.cboRemark);
             this.pnlTL.Controls.Add(this.btnUpdateAddress);
-            this.pnlTL.Controls.Add(this.txtRemark);
             this.pnlTL.Controls.Add(this.label5);
             this.pnlTL.Controls.Add(this.txtCrUser);
             this.pnlTL.Controls.Add(this.label6);
@@ -644,6 +660,15 @@ namespace AllCashUFormsApp.View.Page
             this.pnlTL.Name = "pnlTL";
             this.pnlTL.Size = new System.Drawing.Size(631, 232);
             this.pnlTL.TabIndex = 20;
+            // 
+            // cboRemark
+            // 
+            this.cboRemark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboRemark.FormattingEnabled = true;
+            this.cboRemark.Location = new System.Drawing.Point(81, 179);
+            this.cboRemark.Name = "cboRemark";
+            this.cboRemark.Size = new System.Drawing.Size(468, 24);
+            this.cboRemark.TabIndex = 155;
             // 
             // label5
             // 
@@ -1319,10 +1344,12 @@ namespace AllCashUFormsApp.View.Page
             // pnlTR
             // 
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
+            this.pnlTR.Controls.Add(this.btnShowVE);
+            this.pnlTR.Controls.Add(this.btnRL);
+            this.pnlTR.Controls.Add(this.txdDocNo);
             this.pnlTR.Controls.Add(this.btnGenCustIVNo);
             this.pnlTR.Controls.Add(this.txtCustInvNO);
             this.pnlTR.Controls.Add(this.lblCustInvNO);
-            this.pnlTR.Controls.Add(this.txdDocNo);
             this.pnlTR.Controls.Add(this.txtCustPONo);
             this.pnlTR.Controls.Add(this.label4);
             this.pnlTR.Controls.Add(this.label11);
@@ -1342,6 +1369,51 @@ namespace AllCashUFormsApp.View.Page
             this.pnlTR.Size = new System.Drawing.Size(355, 232);
             this.pnlTR.TabIndex = 21;
             // 
+            // btnShowVE
+            // 
+            this.btnShowVE.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnShowVE.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnShowVE.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowVE.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnShowVE.Image = global::AllCashUFormsApp.Properties.Resources.share;
+            this.btnShowVE.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnShowVE.Location = new System.Drawing.Point(317, 133);
+            this.btnShowVE.Name = "btnShowVE";
+            this.btnShowVE.Size = new System.Drawing.Size(35, 23);
+            this.btnShowVE.TabIndex = 156;
+            this.btnShowVE.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnShowVE.UseVisualStyleBackColor = false;
+            this.btnShowVE.Click += new System.EventHandler(this.btnShowVE_Click);
+            // 
+            // btnRL
+            // 
+            this.btnRL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRL.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnRL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnRL.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRL.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnRL.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRL.Image = ((System.Drawing.Image)(resources.GetObject("btnRL.Image")));
+            this.btnRL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRL.Location = new System.Drawing.Point(84, 186);
+            this.btnRL.Name = "btnRL";
+            this.btnRL.Size = new System.Drawing.Size(94, 42);
+            this.btnRL.TabIndex = 155;
+            this.btnRL.Text = "ใบเบิก(RL)";
+            this.btnRL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRL.UseVisualStyleBackColor = false;
+            this.btnRL.Click += new System.EventHandler(this.btnRL_Click);
+            // 
+            // txdDocNo
+            // 
+            this.txdDocNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txdDocNo.BackColor = System.Drawing.Color.Turquoise;
+            this.txdDocNo.Location = new System.Drawing.Point(152, 3);
+            this.txdDocNo.Name = "txdDocNo";
+            this.txdDocNo.Size = new System.Drawing.Size(163, 23);
+            this.txdDocNo.TabIndex = 152;
+            // 
             // btnGenCustIVNo
             // 
             this.btnGenCustIVNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1353,11 +1425,12 @@ namespace AllCashUFormsApp.View.Page
             this.btnGenCustIVNo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnGenCustIVNo.Image = ((System.Drawing.Image)(resources.GetObject("btnGenCustIVNo.Image")));
             this.btnGenCustIVNo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGenCustIVNo.Location = new System.Drawing.Point(152, 186);
+            this.btnGenCustIVNo.Location = new System.Drawing.Point(184, 186);
             this.btnGenCustIVNo.Name = "btnGenCustIVNo";
-            this.btnGenCustIVNo.Size = new System.Drawing.Size(163, 42);
+            this.btnGenCustIVNo.Size = new System.Drawing.Size(131, 42);
             this.btnGenCustIVNo.TabIndex = 151;
             this.btnGenCustIVNo.Text = "ออกใบกำกับภาษี";
+            this.btnGenCustIVNo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnGenCustIVNo.UseVisualStyleBackColor = false;
             this.btnGenCustIVNo.Click += new System.EventHandler(this.btnGenCustIVNo_Click);
             // 
@@ -1379,15 +1452,6 @@ namespace AllCashUFormsApp.View.Page
             this.lblCustInvNO.Size = new System.Drawing.Size(109, 16);
             this.lblCustInvNO.TabIndex = 115;
             this.lblCustInvNO.Text = "เลขใบกำกับภาษี : ";
-            // 
-            // txdDocNo
-            // 
-            this.txdDocNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txdDocNo.BackColor = System.Drawing.Color.Turquoise;
-            this.txdDocNo.Location = new System.Drawing.Point(152, 3);
-            this.txdDocNo.Name = "txdDocNo";
-            this.txdDocNo.Size = new System.Drawing.Size(163, 23);
-            this.txdDocNo.TabIndex = 8;
             // 
             // txtCustPONo
             // 
@@ -1506,18 +1570,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.DataGridViewTextBoxColumn colSellPrice;
         private System.Windows.Forms.Panel pnlCen;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel5;
-        private UControl.CloseButton btnClose;
-        private UControl.AddButton btnAdd;
-        private UControl.ExcelButton btnExcel;
-        private UControl.EditButton btnEdit;
-        private UControl.PrintButton btnPrint;
-        private UControl.RemoveButton btnRemove;
-        private UControl.CancelButton btnCancel;
-        private UControl.CopyButton btnCopy;
-        private UControl.SaveButton btnSave;
         private System.Windows.Forms.Button btnUpdateAddress;
-        private System.Windows.Forms.TextBox txtRemark;
         private System.Windows.Forms.Panel pnlTL;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtCrUser;
@@ -1584,12 +1637,26 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Button btnGenCustIVNo;
         private System.Windows.Forms.TextBox txtCustInvNO;
         private System.Windows.Forms.Label lblCustInvNO;
-        private System.Windows.Forms.MaskedTextBox txdDocNo;
         private System.Windows.Forms.TextBox txtCustPONo;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox ddlDocStatus;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DateTimePicker dtpDueDate;
+        private System.Windows.Forms.Panel panel5;
+        private UControl.PrintButton btnPrintCrys;
+        private UControl.CloseButton btnClose;
+        private UControl.AddButton btnAdd;
+        private UControl.ExcelButton btnExcel;
+        private UControl.EditButton btnEdit;
+        private UControl.PrintButton btnPrint;
+        private UControl.RemoveButton btnRemove;
+        private UControl.CancelButton btnCancel;
+        private UControl.CopyButton btnCopy;
+        private UControl.SaveButton btnSave;
+        private System.Windows.Forms.MaskedTextBox txdDocNo;
+        private System.Windows.Forms.Button btnRL;
+        private System.Windows.Forms.ComboBox cboRemark;
+        private System.Windows.Forms.Button btnShowVE;
     }
 }

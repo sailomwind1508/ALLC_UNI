@@ -41,17 +41,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPay));
-            this.gridPayment = new System.Windows.Forms.DataGridView();
-            this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCheque = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTransfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDeposit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTotalSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMoneyDiff = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDocNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.txtRemark = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.txtTotalGetMoney = new System.Windows.Forms.TextBox();
             this.txtTotalDeposit = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -79,6 +71,16 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.gridPayment = new System.Windows.Forms.DataGridView();
+            this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCheque = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTransfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDeposit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTotalSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMoneyDiff = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDocNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnSearchBranchCode = new System.Windows.Forms.Button();
             this.dtpDocDate = new System.Windows.Forms.DateTimePicker();
@@ -105,11 +107,11 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.gridPayment)).BeginInit();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridPayment)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
@@ -119,6 +121,324 @@
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.txtRemark);
+            this.panel8.Controls.Add(this.label19);
+            this.panel8.Controls.Add(this.txtTotalGetMoney);
+            this.panel8.Controls.Add(this.txtTotalDeposit);
+            this.panel8.Controls.Add(this.label18);
+            this.panel8.Controls.Add(this.label10);
+            this.panel8.Controls.Add(this.txtSumDiv);
+            this.panel8.Controls.Add(this.txtTotalTransfer);
+            this.panel8.Controls.Add(this.label17);
+            this.panel8.Controls.Add(this.label8);
+            this.panel8.Controls.Add(this.txtSumPOMaster);
+            this.panel8.Controls.Add(this.txtTotalCheque);
+            this.panel8.Controls.Add(this.label16);
+            this.panel8.Controls.Add(this.label9);
+            this.panel8.Controls.Add(this.label15);
+            this.panel8.Controls.Add(this.label6);
+            this.panel8.Controls.Add(this.label14);
+            this.panel8.Controls.Add(this.label7);
+            this.panel8.Controls.Add(this.txtSumTotalSend);
+            this.panel8.Controls.Add(this.label13);
+            this.panel8.Controls.Add(this.txtTotalSend);
+            this.panel8.Controls.Add(this.label12);
+            this.panel8.Controls.Add(this.label5);
+            this.panel8.Controls.Add(this.label11);
+            this.panel8.Controls.Add(this.label4);
+            this.panel8.Controls.Add(this.label3);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel8.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.panel8.Location = new System.Drawing.Point(0, 437);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(1225, 143);
+            this.panel8.TabIndex = 246;
+            // 
+            // txtRemark
+            // 
+            this.txtRemark.Location = new System.Drawing.Point(802, 31);
+            this.txtRemark.MaxLength = 500;
+            this.txtRemark.Multiline = true;
+            this.txtRemark.Name = "txtRemark";
+            this.txtRemark.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtRemark.Size = new System.Drawing.Size(399, 96);
+            this.txtRemark.TabIndex = 268;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(800, 12);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(108, 16);
+            this.label19.TabIndex = 269;
+            this.label19.Text = "หมายเหตุเพิ่มเติม :";
+            // 
+            // txtTotalGetMoney
+            // 
+            this.txtTotalGetMoney.BackColor = System.Drawing.SystemColors.Window;
+            this.txtTotalGetMoney.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.txtTotalGetMoney.Location = new System.Drawing.Point(578, 97);
+            this.txtTotalGetMoney.MaxLength = 500;
+            this.txtTotalGetMoney.Name = "txtTotalGetMoney";
+            this.txtTotalGetMoney.Size = new System.Drawing.Size(155, 23);
+            this.txtTotalGetMoney.TabIndex = 267;
+            this.txtTotalGetMoney.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTotalGetMoney.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTotalGetMoney_KeyPress);
+            // 
+            // txtTotalDeposit
+            // 
+            this.txtTotalDeposit.Location = new System.Drawing.Point(138, 97);
+            this.txtTotalDeposit.Name = "txtTotalDeposit";
+            this.txtTotalDeposit.Size = new System.Drawing.Size(156, 23);
+            this.txtTotalDeposit.TabIndex = 266;
+            this.txtTotalDeposit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label18.Location = new System.Drawing.Point(740, 100);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(31, 16);
+            this.label18.TabIndex = 258;
+            this.label18.Text = "บาท";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label10.Location = new System.Drawing.Point(305, 98);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(31, 16);
+            this.label10.TabIndex = 257;
+            this.label10.Text = "บาท";
+            // 
+            // txtSumDiv
+            // 
+            this.txtSumDiv.Location = new System.Drawing.Point(578, 72);
+            this.txtSumDiv.Name = "txtSumDiv";
+            this.txtSumDiv.Size = new System.Drawing.Size(155, 23);
+            this.txtSumDiv.TabIndex = 264;
+            this.txtSumDiv.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtTotalTransfer
+            // 
+            this.txtTotalTransfer.Location = new System.Drawing.Point(138, 71);
+            this.txtTotalTransfer.Name = "txtTotalTransfer";
+            this.txtTotalTransfer.Size = new System.Drawing.Size(156, 23);
+            this.txtTotalTransfer.TabIndex = 262;
+            this.txtTotalTransfer.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label17.Location = new System.Drawing.Point(739, 74);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(31, 16);
+            this.label17.TabIndex = 256;
+            this.label17.Text = "บาท";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label8.Location = new System.Drawing.Point(305, 72);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(31, 16);
+            this.label8.TabIndex = 255;
+            this.label8.Text = "บาท";
+            // 
+            // txtSumPOMaster
+            // 
+            this.txtSumPOMaster.Location = new System.Drawing.Point(577, 47);
+            this.txtSumPOMaster.Name = "txtSumPOMaster";
+            this.txtSumPOMaster.Size = new System.Drawing.Size(156, 23);
+            this.txtSumPOMaster.TabIndex = 261;
+            this.txtSumPOMaster.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtTotalCheque
+            // 
+            this.txtTotalCheque.Location = new System.Drawing.Point(138, 45);
+            this.txtTotalCheque.Name = "txtTotalCheque";
+            this.txtTotalCheque.Size = new System.Drawing.Size(156, 23);
+            this.txtTotalCheque.TabIndex = 260;
+            this.txtTotalCheque.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label16.Location = new System.Drawing.Point(474, 101);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(98, 16);
+            this.label16.TabIndex = 259;
+            this.label16.Text = "ส่งเงินจริงทั้งหมด";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label9.Location = new System.Drawing.Point(35, 98);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(97, 16);
+            this.label9.TabIndex = 254;
+            this.label9.Text = "รวมค่าธรรมเนียม";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label15.Location = new System.Drawing.Point(739, 48);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(31, 16);
+            this.label15.TabIndex = 252;
+            this.label15.Text = "บาท";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label6.Location = new System.Drawing.Point(305, 46);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 16);
+            this.label6.TabIndex = 251;
+            this.label6.Text = "บาท";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label14.Location = new System.Drawing.Point(472, 74);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(99, 16);
+            this.label14.TabIndex = 250;
+            this.label14.Text = "รวมส่ง(เกิน/ขาด)";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label7.Location = new System.Drawing.Point(58, 71);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(74, 16);
+            this.label7.TabIndex = 249;
+            this.label7.Text = "รวมยอดโอน";
+            // 
+            // txtSumTotalSend
+            // 
+            this.txtSumTotalSend.Location = new System.Drawing.Point(577, 21);
+            this.txtSumTotalSend.Name = "txtSumTotalSend";
+            this.txtSumTotalSend.Size = new System.Drawing.Size(156, 23);
+            this.txtSumTotalSend.TabIndex = 263;
+            this.txtSumTotalSend.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label13.Location = new System.Drawing.Point(458, 47);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(113, 16);
+            this.label13.TabIndex = 248;
+            this.label13.Text = "รวมยอดขายทั้งหมด";
+            // 
+            // txtTotalSend
+            // 
+            this.txtTotalSend.Location = new System.Drawing.Point(138, 19);
+            this.txtTotalSend.Name = "txtTotalSend";
+            this.txtTotalSend.Size = new System.Drawing.Size(156, 23);
+            this.txtTotalSend.TabIndex = 265;
+            this.txtTotalSend.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label12.Location = new System.Drawing.Point(739, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(31, 16);
+            this.label12.TabIndex = 247;
+            this.label12.Text = "บาท";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label5.Location = new System.Drawing.Point(20, 45);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(112, 16);
+            this.label5.TabIndex = 246;
+            this.label5.Text = "รวมยอดชำระเครดิต";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label11.Location = new System.Drawing.Point(472, 21);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(99, 16);
+            this.label11.TabIndex = 245;
+            this.label11.Text = "รวมส่งเงินทั้งหมด";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label4.Location = new System.Drawing.Point(305, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 16);
+            this.label4.TabIndex = 244;
+            this.label4.Text = "บาท";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label3.Location = new System.Drawing.Point(72, 19);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 16);
+            this.label3.TabIndex = 253;
+            this.label3.Text = "รวมส่งเงิน";
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.panel10);
+            this.panel7.Controls.Add(this.panel8);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(1225, 580);
+            this.panel7.TabIndex = 171;
+            // 
+            // panel10
+            // 
+            this.panel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel10.Controls.Add(this.panel11);
+            this.panel10.Controls.Add(this.panel3);
+            this.panel10.Controls.Add(this.panel4);
+            this.panel10.Location = new System.Drawing.Point(0, 0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(1222, 441);
+            this.panel10.TabIndex = 247;
+            // 
+            // panel11
+            // 
+            this.panel11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel11.Controls.Add(this.gridPayment);
+            this.panel11.Location = new System.Drawing.Point(0, 74);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(1222, 364);
+            this.panel11.TabIndex = 246;
             // 
             // gridPayment
             // 
@@ -158,14 +478,14 @@
             this.gridPayment.Location = new System.Drawing.Point(0, 0);
             this.gridPayment.MultiSelect = false;
             this.gridPayment.Name = "gridPayment";
-            this.gridPayment.Size = new System.Drawing.Size(1005, 364);
-            this.gridPayment.TabIndex = 245;
+            this.gridPayment.Size = new System.Drawing.Size(1222, 364);
+            this.gridPayment.TabIndex = 246;
             this.gridPayment.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridPayment_CellEndEdit);
             this.gridPayment.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.gridPayment_CellValidating);
             this.gridPayment.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridPayment_EditingControlShowing);
             this.gridPayment.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.gridPayment_RowPostPaint);
             this.gridPayment.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridPayment_KeyDown);
-            this.gridPayment.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.gridPayment_KeyPress);
+            this.gridPayment.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTotalGetMoney_KeyPress);
             this.gridPayment.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.gridPayment_PreviewKeyDown);
             // 
             // colWHID
@@ -281,302 +601,6 @@
             this.colDocNo.Name = "colDocNo";
             this.colDocNo.Visible = false;
             // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.txtTotalGetMoney);
-            this.panel8.Controls.Add(this.txtTotalDeposit);
-            this.panel8.Controls.Add(this.label18);
-            this.panel8.Controls.Add(this.label10);
-            this.panel8.Controls.Add(this.txtSumDiv);
-            this.panel8.Controls.Add(this.txtTotalTransfer);
-            this.panel8.Controls.Add(this.label17);
-            this.panel8.Controls.Add(this.label8);
-            this.panel8.Controls.Add(this.txtSumPOMaster);
-            this.panel8.Controls.Add(this.txtTotalCheque);
-            this.panel8.Controls.Add(this.label16);
-            this.panel8.Controls.Add(this.label9);
-            this.panel8.Controls.Add(this.label15);
-            this.panel8.Controls.Add(this.label6);
-            this.panel8.Controls.Add(this.label14);
-            this.panel8.Controls.Add(this.label7);
-            this.panel8.Controls.Add(this.txtSumTotalSend);
-            this.panel8.Controls.Add(this.label13);
-            this.panel8.Controls.Add(this.txtTotalSend);
-            this.panel8.Controls.Add(this.label12);
-            this.panel8.Controls.Add(this.label5);
-            this.panel8.Controls.Add(this.label11);
-            this.panel8.Controls.Add(this.label4);
-            this.panel8.Controls.Add(this.label3);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.panel8.Location = new System.Drawing.Point(0, 437);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(1008, 143);
-            this.panel8.TabIndex = 246;
-            // 
-            // txtTotalGetMoney
-            // 
-            this.txtTotalGetMoney.BackColor = System.Drawing.SystemColors.Window;
-            this.txtTotalGetMoney.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.txtTotalGetMoney.Location = new System.Drawing.Point(711, 97);
-            this.txtTotalGetMoney.Name = "txtTotalGetMoney";
-            this.txtTotalGetMoney.Size = new System.Drawing.Size(156, 23);
-            this.txtTotalGetMoney.TabIndex = 267;
-            this.txtTotalGetMoney.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtTotalGetMoney.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTotalGetMoney_KeyPress);
-            // 
-            // txtTotalDeposit
-            // 
-            this.txtTotalDeposit.Location = new System.Drawing.Point(138, 97);
-            this.txtTotalDeposit.Name = "txtTotalDeposit";
-            this.txtTotalDeposit.Size = new System.Drawing.Size(156, 23);
-            this.txtTotalDeposit.TabIndex = 266;
-            this.txtTotalDeposit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label18.Location = new System.Drawing.Point(873, 98);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(31, 16);
-            this.label18.TabIndex = 258;
-            this.label18.Text = "บาท";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label10.Location = new System.Drawing.Point(305, 98);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(31, 16);
-            this.label10.TabIndex = 257;
-            this.label10.Text = "บาท";
-            // 
-            // txtSumDiv
-            // 
-            this.txtSumDiv.Location = new System.Drawing.Point(711, 71);
-            this.txtSumDiv.Name = "txtSumDiv";
-            this.txtSumDiv.Size = new System.Drawing.Size(156, 23);
-            this.txtSumDiv.TabIndex = 264;
-            this.txtSumDiv.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtTotalTransfer
-            // 
-            this.txtTotalTransfer.Location = new System.Drawing.Point(138, 71);
-            this.txtTotalTransfer.Name = "txtTotalTransfer";
-            this.txtTotalTransfer.Size = new System.Drawing.Size(156, 23);
-            this.txtTotalTransfer.TabIndex = 262;
-            this.txtTotalTransfer.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label17.Location = new System.Drawing.Point(873, 72);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(31, 16);
-            this.label17.TabIndex = 256;
-            this.label17.Text = "บาท";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label8.Location = new System.Drawing.Point(305, 72);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(31, 16);
-            this.label8.TabIndex = 255;
-            this.label8.Text = "บาท";
-            // 
-            // txtSumPOMaster
-            // 
-            this.txtSumPOMaster.Location = new System.Drawing.Point(711, 45);
-            this.txtSumPOMaster.Name = "txtSumPOMaster";
-            this.txtSumPOMaster.Size = new System.Drawing.Size(156, 23);
-            this.txtSumPOMaster.TabIndex = 261;
-            this.txtSumPOMaster.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtTotalCheque
-            // 
-            this.txtTotalCheque.Location = new System.Drawing.Point(138, 45);
-            this.txtTotalCheque.Name = "txtTotalCheque";
-            this.txtTotalCheque.Size = new System.Drawing.Size(156, 23);
-            this.txtTotalCheque.TabIndex = 260;
-            this.txtTotalCheque.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label16.Location = new System.Drawing.Point(607, 101);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(98, 16);
-            this.label16.TabIndex = 259;
-            this.label16.Text = "ส่งเงินจริงทั้งหมด";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label9.Location = new System.Drawing.Point(35, 98);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(97, 16);
-            this.label9.TabIndex = 254;
-            this.label9.Text = "รวมค่าธรรมเนียม";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label15.Location = new System.Drawing.Point(873, 46);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(31, 16);
-            this.label15.TabIndex = 252;
-            this.label15.Text = "บาท";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label6.Location = new System.Drawing.Point(305, 46);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 16);
-            this.label6.TabIndex = 251;
-            this.label6.Text = "บาท";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label14.Location = new System.Drawing.Point(606, 72);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(99, 16);
-            this.label14.TabIndex = 250;
-            this.label14.Text = "รวมส่ง(เกิน/ขาด)";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label7.Location = new System.Drawing.Point(58, 71);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(74, 16);
-            this.label7.TabIndex = 249;
-            this.label7.Text = "รวมยอดโอน";
-            // 
-            // txtSumTotalSend
-            // 
-            this.txtSumTotalSend.Location = new System.Drawing.Point(711, 19);
-            this.txtSumTotalSend.Name = "txtSumTotalSend";
-            this.txtSumTotalSend.Size = new System.Drawing.Size(156, 23);
-            this.txtSumTotalSend.TabIndex = 263;
-            this.txtSumTotalSend.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label13.Location = new System.Drawing.Point(592, 45);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(113, 16);
-            this.label13.TabIndex = 248;
-            this.label13.Text = "รวมยอดขายทั้งหมด";
-            // 
-            // txtTotalSend
-            // 
-            this.txtTotalSend.Location = new System.Drawing.Point(138, 19);
-            this.txtTotalSend.Name = "txtTotalSend";
-            this.txtTotalSend.Size = new System.Drawing.Size(156, 23);
-            this.txtTotalSend.TabIndex = 265;
-            this.txtTotalSend.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label12.Location = new System.Drawing.Point(873, 20);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(31, 16);
-            this.label12.TabIndex = 247;
-            this.label12.Text = "บาท";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label5.Location = new System.Drawing.Point(20, 45);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(112, 16);
-            this.label5.TabIndex = 246;
-            this.label5.Text = "รวมยอดชำระเครดิต";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label11.Location = new System.Drawing.Point(606, 19);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(99, 16);
-            this.label11.TabIndex = 245;
-            this.label11.Text = "รวมส่งเงินทั้งหมด";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label4.Location = new System.Drawing.Point(305, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 16);
-            this.label4.TabIndex = 244;
-            this.label4.Text = "บาท";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label3.Location = new System.Drawing.Point(72, 19);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 16);
-            this.label3.TabIndex = 253;
-            this.label3.Text = "รวมส่งเงิน";
-            // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.panel10);
-            this.panel7.Controls.Add(this.panel8);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(0, 0);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1008, 580);
-            this.panel7.TabIndex = 171;
-            // 
-            // panel10
-            // 
-            this.panel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel10.Controls.Add(this.panel11);
-            this.panel10.Controls.Add(this.panel3);
-            this.panel10.Controls.Add(this.panel4);
-            this.panel10.Location = new System.Drawing.Point(0, 0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(1005, 441);
-            this.panel10.TabIndex = 247;
-            // 
-            // panel11
-            // 
-            this.panel11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel11.Controls.Add(this.gridPayment);
-            this.panel11.Location = new System.Drawing.Point(0, 74);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(1005, 364);
-            this.panel11.TabIndex = 246;
-            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Azure;
@@ -592,7 +616,7 @@
             this.panel3.Font = new System.Drawing.Font("Tahoma", 9.7F);
             this.panel3.Location = new System.Drawing.Point(0, 35);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1005, 42);
+            this.panel3.Size = new System.Drawing.Size(1222, 42);
             this.panel3.TabIndex = 220;
             // 
             // btnSearchBranchCode
@@ -700,7 +724,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1005, 35);
+            this.panel4.Size = new System.Drawing.Size(1222, 35);
             this.panel4.TabIndex = 30;
             // 
             // FormPic
@@ -730,7 +754,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1008, 609);
+            this.panel6.Size = new System.Drawing.Size(1225, 609);
             this.panel6.TabIndex = 35;
             // 
             // panel9
@@ -740,7 +764,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1008, 29);
+            this.panel9.Size = new System.Drawing.Size(1225, 29);
             this.panel9.TabIndex = 32;
             // 
             // panel2
@@ -750,7 +774,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1008, 31);
+            this.panel2.Size = new System.Drawing.Size(1225, 31);
             this.panel2.TabIndex = 35;
             // 
             // panel5
@@ -779,7 +803,7 @@
             this.panel1.Controls.Add(this.panel7);
             this.panel1.Location = new System.Drawing.Point(0, 26);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1008, 580);
+            this.panel1.Size = new System.Drawing.Size(1225, 580);
             this.panel1.TabIndex = 31;
             // 
             // btnClose
@@ -968,7 +992,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 609);
+            this.ClientSize = new System.Drawing.Size(1225, 609);
             this.Controls.Add(this.panel6);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmPay";
@@ -976,12 +1000,12 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmPay_FormClosed);
             this.Load += new System.EventHandler(this.FrmPay_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.gridPayment)).EndInit();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
             this.panel11.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridPayment)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -997,7 +1021,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.DataGridView gridPayment;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.TextBox txtTotalGetMoney;
         private System.Windows.Forms.TextBox txtTotalDeposit;
@@ -1052,6 +1075,9 @@
         private UControl.SaveButton btnSave;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.TextBox txtRemark;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.DataGridView gridPayment;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWHID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSend;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCheque;

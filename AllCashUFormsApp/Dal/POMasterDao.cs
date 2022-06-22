@@ -157,6 +157,102 @@ namespace AllCashUFormsApp
 
         //x.DocTypeCode.Trim() == "IV" && !string.IsNullOrEmpty(x.DocRef) && x.DocRef.Trim() == docTypeCode
 
+        public static List<tbl_POMaster> SelectRefMaxAutoIDPRE(this tbl_POMaster tbl_POMaster, string whid, string docTypeCode = "")
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                    sql += " WHERE ISNULL(DocRef,'') <> '' AND DocTypeCode = 'IV'  AND WHID = '" + whid + "' AND ISNULL(DocRef,'') = '" + docTypeCode.Trim() + "') ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+
+                }
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_POMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
+        public static string SelectMaxAutoIDPRE_ReGen(this tbl_POMaster tbl_POMaster, string docNo)
+        {
+            string result = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_PreOrder_SelectMaxPODocNo";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@TemDocNo", docNo);
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    result = newTable.Rows[0]["DocNo"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return result;
+        }
+
+        public static List<tbl_POMaster> SelectMaxAutoIDPRE(this tbl_POMaster tbl_POMaster, string whid, string docTypeCode = "")
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    if (docTypeCode.Trim() == "IV")
+                    {
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND WHID = '" + whid + "' AND ISNULL(DocRef, '') = '' )";
+                    }
+                    else
+                    {
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND WHID = '" + whid + "' )";
+                    }
+
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+
+                }
+
+                //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                //{
+                //    list = db.tbl_POMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
         public static List<tbl_POMaster> SelectRefMaxAutoID(this tbl_POMaster tbl_POMaster, string docTypeCode = "")
         {
             List<tbl_POMaster> list = new List<tbl_POMaster>();
@@ -616,5 +712,44 @@ namespace AllCashUFormsApp
 
             return list;
         }
+
+
+        public static List<tbl_POMaster> GetPOMasterSingle(this tbl_POMaster tbl_POMaster, string _DocTypeCode, string _DocStatus, string _DocDate)
+        {
+            string msg = "start POMasterDao=>GetPOMasterSingle";
+            msg.WriteLog(null);
+
+            var list = new List<tbl_POMaster>();
+            try
+            {
+                string sql = "SELECT *  FROM tbl_POMaster ";
+                sql += " WHERE FlagDel = 0 ";
+                if (!string.IsNullOrEmpty(_DocTypeCode))
+                {
+                    sql += " AND DocTypeCode = '" + _DocTypeCode.Trim() + "'";
+                }
+                if (!string.IsNullOrEmpty(_DocStatus))
+                {
+                    sql += " AND DocStatus = '" + _DocStatus.Trim() + "'";
+                }
+                if (!string.IsNullOrEmpty(_DocDate))
+                {
+                    sql += " AND cast(DocDate as date) = '" + _DocDate + "'";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>GetPOMasterSingle";
+            msg.WriteLog(null);
+
+            return list;
+        }
+
     }
 }

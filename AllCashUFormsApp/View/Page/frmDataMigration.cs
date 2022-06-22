@@ -35,7 +35,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
@@ -49,7 +49,7 @@ namespace AllCashUFormsApp.View.Page
             btnRemove.Enabled = false;
             btnCancel.Enabled = false;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -135,7 +135,7 @@ namespace AllCashUFormsApp.View.Page
         {
             Cursor.Current = Cursors.Default;
 
-            txtComment.AppendText("--------------------------Complete Precess-----------------------------");
+            txtComment.AppendText("--------------------------Complete Process-----------------------------");
             txtComment.AppendText(Environment.NewLine);
 
             string msg = "";
@@ -221,7 +221,7 @@ namespace AllCashUFormsApp.View.Page
 
             Cursor.Current = Cursors.WaitCursor;
 
-            txtComment.AppendText("--------------------------Begin Precess-----------------------------");
+            txtComment.AppendText("--------------------------Begin Process-----------------------------");
             txtComment.AppendText(Environment.NewLine);
 
             progressBar1.Minimum = 0;

@@ -20,5 +20,6 @@ namespace AllCashUFormsApp.Model
         public string PostalCode = "";
         public string lane = "";
         public string billTo = "";
+        public string Moo = "";
     }
 }

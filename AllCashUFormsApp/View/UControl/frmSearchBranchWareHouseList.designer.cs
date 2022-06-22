@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchBranchWareHouseList));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlTopPage = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,7 +44,8 @@
             this.grdList = new System.Windows.Forms.DataGridView();
             this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colWHName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSaleType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBranchID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlTopPage.SuspendLayout();
             this.pnlBottomPage.SuspendLayout();
@@ -159,7 +161,8 @@
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSelect,
             this.colWHID,
-            this.Column6,
+            this.colWHName,
+            this.colSaleType,
             this.colBranchID});
             this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdList.Location = new System.Drawing.Point(0, 45);
@@ -179,8 +182,8 @@
             // colWHID
             // 
             this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle1;
             this.colWHID.HeaderText = "รหัสคลัง";
             this.colWHID.MaxInputLength = 20;
             this.colWHID.Name = "colWHID";
@@ -188,22 +191,32 @@
             this.colWHID.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colWHID.Width = 90;
             // 
-            // Column6
+            // colWHName
             // 
-            this.Column6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column6.DataPropertyName = "WHName";
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.Column6.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Column6.HeaderText = "ชื่อคลัง";
-            this.Column6.MaxInputLength = 20;
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
+            this.colWHName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colWHName.DataPropertyName = "WHName";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHName.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colWHName.HeaderText = "ชื่อคลัง";
+            this.colWHName.MaxInputLength = 100;
+            this.colWHName.Name = "colWHName";
+            this.colWHName.ReadOnly = true;
+            // 
+            // colSaleType
+            // 
+            this.colSaleType.DataPropertyName = "SaleType";
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colSaleType.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colSaleType.HeaderText = "ประเภทแวน";
+            this.colSaleType.MaxInputLength = 100;
+            this.colSaleType.Name = "colSaleType";
+            this.colSaleType.ReadOnly = true;
             // 
             // colBranchID
             // 
             this.colBranchID.DataPropertyName = "BranchID";
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle4;
             this.colBranchID.HeaderText = "รหัสสาขา";
             this.colBranchID.MaxInputLength = 20;
             this.colBranchID.Name = "colBranchID";
@@ -247,7 +260,8 @@
         private System.Windows.Forms.DataGridView grdList;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWHID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colWHName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSaleType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBranchID;
     }
 }

@@ -46,12 +46,12 @@ namespace AllCashUFormsApp.View.Page
             searchBranchControls = new List<Control>() { txtBranchCode, txtBranchName };
             searchFromBWHControls = new List<Control> { txtFromWHCode, txtFromWHName };
             searchToBWHControls = new List<Control> { txtToWHCode, txtToWHName };
-            searchFromPrdControls = new List<Control> { txtFromProductCode, txtFromProductName };
-            searchToPrdControls = new List<Control> { txtToProductCode, txtToProductName };
+            searchFromPrdControls = new List<Control> { txtFromProductCode, txtFromProductName, ddlFromUOM };
+            searchToPrdControls = new List<Control> { txtToProductCode, txtToProductName, ddlToUOM };
 
             readOnlyControls = new string[] { txtBranchCode.Name, txtBranchName.Name, txtFromWHCode.Name, txtFromWHName.Name,
                 txtToWHCode.Name, txtToWHName.Name, txtFromProductName.Name,
-                txtFromStock.Name, txtToStock.Name, txtToProductName.Name, txtCrUser.Name, dtpDocDate.Name }.ToList();
+                txtFromStock.Name, txtToStock.Name, txtToProductName.Name, txtCrUser.Name, dtpDocDate.Name, ddlFromUOM.Name, ddlToUOM.Name }.ToList();
 
             txdDocNo.KeyDown += TxdDocNo_KeyDown;
 
@@ -66,7 +66,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "TR");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "TR");
             if (documentType != null)
             {
                 docTypeCode = documentType.DocTypeCode;
@@ -84,7 +84,7 @@ namespace AllCashUFormsApp.View.Page
             this.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnAdd, btnCopy, btnPrint, "");
             btnPrintCrys.Enabled = btnPrint.Enabled;
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -98,12 +98,21 @@ namespace AllCashUFormsApp.View.Page
 
             dtpDocDate.SetDateTimePickerFormat();
 
-            allProduct = bu.GetProduct();
-            allUomSet = bu.GetUOMSet();
+            allProduct = bu.tbl_Product;
+            allUomSet = bu.tbl_ProductUomSet;
+            allUOM = bu.tbl_ProductUom;
 
-            //allProductPrice = bu.GetProductPriceGroup();
-            allProdGroup = bu.GetProductGroup();
-            allProdSubGroup = bu.GetProductSubGroup();
+            //allProductPrice = bu.tbl_ProductPriceGroup;
+            allProdGroup = bu.tbl_ProductGroup;
+            allProdSubGroup = bu.tbl_ProductSubGroup;
+
+            //last edit by sailom .k 08/06/2022----------
+            if (ddlFromUOM.Items.Count == 0)
+                ddlFromUOM.BindDropdownList(allUOM, "ProductUomName", "ProductUomID", 0);
+
+            if (ddlToUOM.Items.Count == 0)
+                ddlToUOM.BindDropdownList(allUOM, "ProductUomName", "ProductUomID", 0);
+            //last edit by sailom .k 08/06/2022----------
         }
 
         public void BindTRData(string trDocNo)
@@ -131,6 +140,24 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPRDetail(prDts);
             }
+
+            //last edit by sailom .k 30/05/2022----------
+            //var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == f_prodID).ToList();
+            //if (uomSet.Count > 0)
+            //{
+            //    var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+            //    var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+            //    ddlToUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            //}
+
+            //uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == t_prodID).ToList();
+            //if (uomSet.Count > 0)
+            //{
+            //    var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+            //    var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+            //    ddlFromUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            //}
+            //last edit by sailom .k 30/05/2022----------
 
             this.OpenControl(false, readOnlyControls.ToArray(), null);
 
@@ -181,7 +208,7 @@ namespace AllCashUFormsApp.View.Page
             Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == pr.DocStatus; };
             ddlDocStatus.SelectedValueDropdownList(condition);
 
-            var user = bu.GetEmployeeByUserName(pr.EmpID);
+            var user = bu.GetEmployeeByUserName(pr.CrUser); //edit by sailom 22/03/2022 //bu.GetEmployeeByUserName(pr.EmpID);
             if (user != null)
                 txtCrUser.Text = string.Join(" ", user.TitleName, user.FirstName, user.LastName);
             else
@@ -200,7 +227,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     txtToProductCode.Text = prDts[i].ProductID;
                     txtToProductName.Text = allProduct.FirstOrDefault(x => x.ProductID == prDts[i].ProductID).ProductName;
-                    txtToStock.BindStockOnHand(allUomSet, bu, whid, prDts[i].ProductID, prDts[i].OrderQty.Value, txtOrderQty, lblUOM); 
+                    txtToStock.BindStockOnHand(allUomSet, bu, whid, prDts[i].ProductID, prDts[i].OrderQty.Value, txtOrderQty, lblUOM);
                 }
                 else
                 {
@@ -212,9 +239,23 @@ namespace AllCashUFormsApp.View.Page
                     {
                         lblUOM.Text = allUomSet.First(x => x.UomSetID == prDts[i].OrderUom).UomSetName;
                     }
-                    
+
                 }
             }
+
+            //last edit by sailom .k 08/06/2022------------------
+            var f_prodID = txtFromProductCode.Text;
+            var t_prodID = txtToProductCode.Text;
+
+            var fromUOM = prDts.FirstOrDefault(x => x.ProductID == f_prodID);
+            if (fromUOM != null)
+                ddlFromUOM.SelectedValue = fromUOM.OrderUom;
+
+            var toUOM = prDts.FirstOrDefault(x => x.ProductID == t_prodID);
+            if (toUOM != null)
+                ddlToUOM.SelectedValue = toUOM.OrderUom;
+            //last edit by sailom .k 08/06/2022------------------
+
         }
 
         private void InitHeader()
@@ -224,7 +265,7 @@ namespace AllCashUFormsApp.View.Page
             {
                 this.BindData("FromBranchID", searchBranchControls, b[0].BranchID);
             }
-            
+
             this.BindData("BranchWarehouse", searchFromBWHControls, "1000");
             this.BindData("BranchWarehouse", searchToBWHControls, "1000");
 
@@ -235,6 +276,10 @@ namespace AllCashUFormsApp.View.Page
 
             var allDocStatus = bu.GetDocStatus().Where(x => x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList();
             ddlDocStatus.BindDropdownList(allDocStatus, "DocStatusName", "DocStatusCode", 0);
+
+            //last edit by sailom .k 30/05/2022----------
+            ddlFromUOM.BindDropdownList(allUOM, "ProductUomName", "ProductUomID", 0);
+            ddlToUOM.BindDropdownList(allUOM, "ProductUomName", "ProductUomID", 0);
 
             txtBaseQty.Enabled = chkFixBaseQty.Checked;
         }
@@ -311,7 +356,7 @@ namespace AllCashUFormsApp.View.Page
             pr.Shipto = null;
             pr.Remark = txtRemark.Text;
 
-            var documentType = bu.GetDocumentType().FirstOrDefault(x => x.DocTypeCode.Trim() == "TR");
+            var documentType = bu.tbl_DocumentType.FirstOrDefault(x => x.DocTypeCode.Trim() == "TR");
             if (documentType != null)
                 pr.Comment = documentType.DocRemark;
 
@@ -366,75 +411,83 @@ namespace AllCashUFormsApp.View.Page
                 prDt.ProductName = prdName.Text;
 
                 decimal orderQty = 0;
-
-                //spacial case
-                bool isSpacialCase = true;
-                if (!isReduce)
+                if (isReduce)
                 {
-                    var minUomID = 0;
-
-                    var minUom = allUomSet.Where(x => x.ProductID == prdCode.Text).ToList();
-                    if (minUom.Count > 0)
-                    {
-                        var minItem = minUom.OrderBy(x => x.BaseQty).First();
-                        if (minItem != null)
-                            minUomID = minItem.UomSetID;
-                    }
-
-                    var prdTemp = allProduct.FirstOrDefault(x => x.ProductID == prdCode.Text);
-
-                    if (!chkFixBaseQty.Checked &&
-                        (prdTemp != null && prdTemp.PurchaseUomID == 2) &&
-                        minUomID != 0)  //for pack and piece
-                    {
-                        prDt.OrderUom = minUomID;
-
-                        var _orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
-                        var _baseQty = minUom.Max(y => y.BaseQty);
-
-                        orderQty = _orderQty * _baseQty;
-                    }
-                    else if (chkFixBaseQty.Checked) //01032021 by sailom
-                    {
-                        prDt.OrderUom = minUomID;
-
-                        var _orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
-
-                        decimal _baseQty = 1;
-
-                        if (!string.IsNullOrEmpty(txtBaseQty.Text))
-                            _baseQty = Convert.ToDecimal(txtBaseQty.Text);
-                        else
-                        {
-                            _baseQty = minUom.Max(y => y.BaseQty);
-                        }
-
-                        orderQty = _orderQty * _baseQty;
-                    }
-                    else
-                        isSpacialCase = false;
+                    prDt.OrderUom = Convert.ToInt32(ddlFromUOM.SelectedValue); // bu.tbl_ProductUomSet.FirstOrDefault(x => x.ProductID == prdCode.Text && x.UomSetName == ddlFromUOM.SelectedValue.ToString()).UomSetID;
+                    orderQty = -Convert.ToDecimal(txtOrderQty.Text);
                 }
-                else //normal case
+                else
                 {
-                    isSpacialCase = false;
+                    prDt.OrderUom = Convert.ToInt32(ddlToUOM.SelectedValue);
+                    orderQty = Convert.ToDecimal(txtOrderQty.Text);
                 }
 
-                if (!isSpacialCase)
-                {
-                    
-                    Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.ProductID == prdCode.Text && x.UomSetID == 2);
-                    var prodUomSetPack = bu.GetUOMSet(tbl_ProductUomSetPre);
-                    if (prodUomSetPack != null && prodUomSetPack.Count > 0)
-                        prDt.OrderUom = prodUomSetPack[0].UomSetID;
-                    else
-                    {
-                        Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPreOriginal = (x => x.ProductID == prdCode.Text);
-                        var prodUomSetOri = bu.GetUOMSet(tbl_ProductUomSetPreOriginal);
-                        prDt.OrderUom = prodUomSetOri[0].UomSetID;
-                    }
+                ////spacial case
+                //bool isSpacialCase = true;
+                //if (!isReduce)
+                //{
+                //    var minUomID = 0;
 
-                    orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
-                }
+                //    var minUom = allUomSet.Where(x => x.ProductID == prdCode.Text).ToList();
+                //    if (minUom.Count > 0)
+                //    {
+                //        var minItem = minUom.OrderBy(x => x.BaseQty).First();
+                //        if (minItem != null)
+                //            minUomID = minItem.UomSetID;
+                //    }
+
+                //    var prdTemp = allProduct.FirstOrDefault(x => x.ProductID == prdCode.Text);
+
+                //    if (!chkFixBaseQty.Checked &&
+                //        (prdTemp != null && prdTemp.PurchaseUomID == 2) &&
+                //        minUomID != 0)  //for pack and piece
+                //    {
+                //        prDt.OrderUom = minUomID;
+
+                //        var _orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
+                //        var _baseQty = minUom.Max(y => y.BaseQty);
+
+                //        orderQty = _orderQty * _baseQty;
+                //    }
+                //    else if (chkFixBaseQty.Checked) //01032021 by sailom
+                //    {
+                //        prDt.OrderUom = minUomID;
+
+                //        var _orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
+                //        int _baseQty = 1;
+                //        if (!string.IsNullOrEmpty(txtBaseQty.Text))
+                //            _baseQty = Convert.ToInt32(txtBaseQty.Text);
+                //        else
+                //        {
+                //            _baseQty = minUom.Max(y => y.BaseQty);
+                //        }
+
+                //        orderQty = _orderQty * _baseQty;
+                //    }
+                //    else
+                //        isSpacialCase = false;
+                //}
+                //else //normal case
+                //{
+                //    isSpacialCase = false;
+                //}
+
+                //if (!isSpacialCase)
+                //{
+
+                //    Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPre = (x => x.ProductID == prdCode.Text && x.UomSetID == 2);
+                //    var prodUomSetPack = bu.GetUOMSet(tbl_ProductUomSetPre);
+                //    if (prodUomSetPack != null && prodUomSetPack.Count > 0)
+                //        prDt.OrderUom = prodUomSetPack[0].UomSetID;
+                //    else
+                //    {
+                //        Func<tbl_ProductUomSet, bool> tbl_ProductUomSetPreOriginal = (x => x.ProductID == prdCode.Text);
+                //        var prodUomSetOri = bu.GetUOMSet(tbl_ProductUomSetPreOriginal);
+                //        prDt.OrderUom = prodUomSetOri[0].UomSetID;
+                //    }
+
+                //    orderQty = isReduce ? -Convert.ToDecimal(txtOrderQty.Text) : Convert.ToDecimal(txtOrderQty.Text);
+                //}
 
                 prDt.OrderQty = orderQty;
                 prDt.SendQty = orderQty;
@@ -473,6 +526,7 @@ namespace AllCashUFormsApp.View.Page
 
             DateTime crDate = DateTime.Now;
             string trnType = "T";
+            int index = 0;
 
             foreach (var prDt in prDts)
             {
@@ -486,7 +540,7 @@ namespace AllCashUFormsApp.View.Page
                 invMm.DocTypeCode = pr.DocTypeCode;
 
                 decimal unitQty = 0;
-                unitQty = prDt.OrderQty.Value;
+                unitQty = Convert.ToDecimal(txtOrderQty.Text);// prDt.OrderQty.Value;  //last edit by sailom .k 30/05/2022----------
 
                 if (prDt.OrderQty > 0)
                 {
@@ -496,6 +550,15 @@ namespace AllCashUFormsApp.View.Page
                     invMm.TrnQtyIn = unitQty;
                     invMm.TrnQtyOut = 0;
                     invMm.TrnQty = unitQty;
+
+                    //last edit by sailom .k 30/05/2022----------
+                    var prdUOM = bu.tbl_ProductUomSet.FirstOrDefault(x => x.ProductID == prDt.ProductID && x.UomSetID.ToString() == ddlFromUOM.SelectedValue.ToString());
+                    if (prdUOM != null)
+                    {
+                        var _qty = unitQty * prdUOM.BaseQty;
+                        invMm.TrnQtyIn = _qty;
+                        invMm.TrnQty = _qty;
+                    }
                 }
                 else
                 {
@@ -505,6 +568,15 @@ namespace AllCashUFormsApp.View.Page
                     invMm.TrnQtyIn = 0;
                     invMm.TrnQtyOut = unitQty * -1;
                     invMm.TrnQty = unitQty;
+
+                    //last edit by sailom .k 30/05/2022----------
+                    var prdUOM = bu.tbl_ProductUomSet.FirstOrDefault(x => x.ProductID == prDt.ProductID && x.UomSetID.ToString() == ddlToUOM.SelectedValue.ToString());
+                    if (prdUOM != null)
+                    {
+                        var _qty = (unitQty * -1) * prdUOM.BaseQty;
+                        invMm.TrnQtyOut = _qty < 0 ? (_qty * -1) : _qty;
+                        invMm.TrnQty = _qty;
+                    }
                 }
 
                 invMm.CrDate = crDate;
@@ -526,6 +598,7 @@ namespace AllCashUFormsApp.View.Page
                 invMm.FlagSend = false;
 
                 invMms.Add(invMm);
+                index++;
             }
         }
 
@@ -1031,6 +1104,15 @@ namespace AllCashUFormsApp.View.Page
                 var whid = txtBranchCode.Text + txtToWHCode.Text;
                 string prodID = txtToProductCode.Text;
                 txtToStock.BindStockOnHand(allUomSet, bu, whid, prodID, 0);
+
+                //last edit by sailom .k 30/05/2022----------
+                var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == prodID).ToList();
+                if (uomSet.Count > 0)
+                {
+                    var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                    var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                    ddlToUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+                }
             }
         }
 
@@ -1044,6 +1126,15 @@ namespace AllCashUFormsApp.View.Page
                 var whid = txtBranchCode.Text + txtFromWHCode.Text;
                 string prodID = txtFromProductCode.Text;
                 txtFromStock.BindStockOnHand(allUomSet, bu, whid, prodID, 0, null, lblUOM);
+
+                //last edit by sailom .k 30/05/2022----------
+                var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == prodID).ToList();
+                if (uomSet.Count > 0)
+                {
+                    var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                    var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                    ddlFromUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+                }
             }
         }
 
@@ -1100,6 +1191,27 @@ namespace AllCashUFormsApp.View.Page
             emp = bu.GetEmployee(Helper.tbl_Users.EmpID);
 
             txdDocNo.Text = string.Empty;
+
+            //last edit by sailom .k 30/05/2022----------
+            var f_prodID = txtFromProductCode.Text;
+            var t_prodID = txtToProductCode.Text;
+
+            var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == f_prodID).ToList();
+            if (uomSet.Count > 0)
+            {
+                var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                ddlToUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            }
+
+            uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == t_prodID).ToList();
+            if (uomSet.Count > 0)
+            {
+                var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                ddlFromUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            }
+            //last edit by sailom .k 30/05/2022----------
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -1131,7 +1243,7 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
             //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rpt", "Form_TR", _params);
 
-            this.OpenTestCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rdlc", "Form_TR", _params); //Reporting service by sailom 30/11/2021
+            this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rdlc", "Form_TR", _params); //Reporting service by sailom 30/11/2021
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)
@@ -1183,6 +1295,14 @@ namespace AllCashUFormsApp.View.Page
             var whid = txtBranchCode.Text + txtFromWHCode.Text;
             string prodID = txtFromProductCode.Text;
             txtFromStock.BindStockOnHand(allUomSet, bu, whid, prodID, 0, null, lblUOM);
+
+            var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == prodID).ToList();
+            if (uomSet.Count > 0)
+            {
+                var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                ddlFromUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            }
         }
 
         private void btnSearchToProductCode_Click(object sender, EventArgs e)
@@ -1192,9 +1312,15 @@ namespace AllCashUFormsApp.View.Page
             var whid = txtBranchCode.Text + txtToWHCode.Text;
             string prodID = txtToProductCode.Text;
             txtToStock.BindStockOnHand(allUomSet, bu, whid, prodID, 0);
-        }
 
-        #endregion
+            var uomSet = bu.tbl_ProductUomSet.Where(x => x.ProductID == prodID).ToList();
+            if (uomSet.Count > 0)
+            {
+                var _prdUOM = allUOM.Where(x => uomSet.Select(a => a.UomSetID).Contains(x.ProductUomID)).ToList();
+                var minUOM = uomSet.First(a => a.BaseQty == uomSet.Min(x => x.BaseQty));
+                ddlToUOM.BindDropdownList(_prdUOM, "ProductUomName", "ProductUomID", null, x => x.ProductUomID == minUOM.UomSetID);
+            }
+        }
 
         private void chkFixBaseQty_CheckedChanged(object sender, EventArgs e)
         {
@@ -1209,6 +1335,10 @@ namespace AllCashUFormsApp.View.Page
         {
             MemoryManagement.FlushMemory();
         }
+
+        #endregion
+
+
 
 
     }

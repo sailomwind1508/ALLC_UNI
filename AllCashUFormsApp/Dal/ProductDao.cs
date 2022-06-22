@@ -224,6 +224,31 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static List<tbl_Product> SelectAllNonFlag(this tbl_Product tbl_Product)
+        {
+            List<tbl_Product> list = new List<tbl_Product>();
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "";
+                sql += " SELECT * ";
+                sql += "  FROM [dbo].[tbl_Product] ORDER BY ProductGroupID, ProductSubGroupID, Seq ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_Product), sql);
+                list = dynamicListReturned.Cast<tbl_Product>().OrderBy(x => x.ProductGroupID).ThenBy(x => x.ProductSubGroupID).ThenBy(x => x.Seq).ToList();
+
+                //tbl_Products = list;
+
+            }
+            catch (Exception ex)
+            {
+
+                ex.WriteLog(tbl_Product.GetType());
+            }
+
+            return list;
+        }
+
         ///// <summary>
         ///// select all data
         ///// </summary>

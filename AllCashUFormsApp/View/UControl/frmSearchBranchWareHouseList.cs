@@ -27,22 +27,48 @@ namespace AllCashUFormsApp.View.UControl
             this.FormClosed += frmSearchBranchWareHouseList_FormClosed;
         }
 
+        public void SetTableBranchWH(DataTable dtBranchWH)
+        {
+            dtBranchWH.Columns.Add("WHID", typeof(string));
+            dtBranchWH.Columns.Add("WHName", typeof(string));
+            dtBranchWH.Columns.Add("SaleType", typeof(string));
+            dtBranchWH.Columns.Add("BranchID", typeof(string));
+        }
+
         private void BindBranchWareHouse()
         {
             DataTable dt = new DataTable();
+            DataTable dtBranchWH = new DataTable();
 
             if (frmReport._RptStock == "ALL")
             {
-                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && (x.WHType == 0 || x.WHType == 1)); //For remove whid = 0 last edit by sailom 11/10/2021
+                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0"); // edit by sailom .k 03/03/2022 for support pre-order && (x.WHType == 0 || x.WHType == 1)); //For remove whid = 0 last edit by sailom 11/10/2021
             }
             else
             {
-                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType == 1); //For remove whid = 0 last edit by sailom 11/10/2021
+                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType != 0 ); // edit by sailom .k 03/03/2022 for support pre-order // && x.WHType == 1); //For remove whid = 0 last edit by sailom 11/10/2021
             }
             
             if (dt != null && dt.Rows.Count > 0)
             {
-                grdList.DataSource = dt;
+                SetTableBranchWH(dtBranchWH);
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    string _saletypeName = "";
+                    string _saletypeID = r["SaleTypeID"].ToString();
+                    
+                    if (_saletypeID == "2")
+                        _saletypeName = "A";
+                    else if (_saletypeID == "3")
+                        _saletypeName = "B";
+                    else
+                        _saletypeName = "ปกติ";
+
+                    dtBranchWH.Rows.Add(r["WHID"], r["WHName"], _saletypeName, r["BranchID"]);
+                }
+
+                grdList.DataSource = dtBranchWH;
 
                 grdList.CreateCheckBoxHeaderColumn("colSelect");
 
@@ -77,6 +103,7 @@ namespace AllCashUFormsApp.View.UControl
 
             var joinString = string.Join(",", selectList);
 
+            frmProductSlip.allBranchWH = joinString;
             frmReport._txtBW = joinString;
 
             this.Close();

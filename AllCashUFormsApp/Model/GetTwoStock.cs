@@ -20,7 +20,7 @@ namespace AllCashUFormsApp.Model
         public string DocNo { get; set; }
         public string VisitID { get; set; }
         public string VisitType { get; set; }
-        public Nullable<System.DateTime> CrDate { get; set; }
+        public System.DateTime CrDate { get; set; }
         public string ProductID { get; set; }
         public decimal StockQty { get; set; }
     }

@@ -284,8 +284,13 @@ namespace AllCashUFormsApp.View.UControl
                     List<DataGridColumn> colList = new List<DataGridColumn>();
                     AddPromotionPopupCols(_frm, colList);
 
-                    _frm.PreparePopupForm("PromotionProduct", _frm.Name, "เลือกของแถม", colList, null, null, null);
-                    _frm.ShowDialog();
+                    var proInfo = pro.GetHQPromotion(a => mmchPro.Select(x => x.PromotionID).Contains(a.PromotionID)).Where(x => x.DisCountPattern == "free=free").ToList();
+
+                    if (proInfo.Count > 0)
+                    {
+                        _frm.PreparePopupForm("PromotionProduct", _frm.Name, "เลือกของแถม", colList, mmchPro, null, null, null);
+                        _frm.ShowDialog();
+                    }
                 }
 
             }

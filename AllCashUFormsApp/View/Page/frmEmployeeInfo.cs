@@ -21,6 +21,7 @@ namespace AllCashUFormsApp.View.Page
         List<string> readOnlyDepoControls = new List<string>();
         Dictionary<Control, Label> validateEmpCtrls = new Dictionary<Control, Label>();
         List<string> readOnlyEmpControls = new List<string>();
+        public string empID = ""; //adisorn 02/03/2022
 
         public frmEmployeeInfo()
         {
@@ -64,14 +65,14 @@ namespace AllCashUFormsApp.View.Page
 
         private void InitPage()
         {
-            var menu = bu.GetAllFromMenu().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (menu != null)
             {
                 FormHeader.Text = menu.FormText;
                 FormHeader.BackColor = ColorTranslator.FromHtml("#7AD1F9");
             }
 
-            var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
+            var headerPic = bu.tbl_MstMenu.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
@@ -126,23 +127,46 @@ namespace AllCashUFormsApp.View.Page
 
             txtEmpID.Text = ddlDepo.SelectedValue + "Exxx";
 
+            if (!string.IsNullOrEmpty(empID))
+            {
+                txtSearchEmp.Text = empID;
+                btnSearchEmp.PerformClick();
+            }
+
             rdoEmpStatusN.Enabled = false;
             rdoEmpStatusC.Enabled = false;
         }
 
         private void PrepareEmpID()
         {
-            var code = bu.GetCompany().BranchID;
-
-            var tbl_EmployeeList = bu.GetEmployee(); //Adisorn 2/2/2565 รันรหัสพนักงานที่ไม่ใช่ SuperAdmin
-            if (tbl_EmployeeList != null && tbl_EmployeeList.Count > 0)
+            if (Helper.BranchName == "CENTER") //Adisorn 2/3/2565  Center รันรหัสพนักงานเป็น XXXE + Running
             {
-                string _no = tbl_EmployeeList.Max(x => x.EmpID);
-                var no = Convert.ToInt32(_no.Substring(4, _no.Length - 4)) + 1;
-                txtEmpID.Text = code + "E" + no.ToString("000");
+                string formatEmpID = "XXXE";
+                var employee = bu.GetEmployee(x=>x.EmpID.Contains(formatEmpID));
+                if (employee.Count > 0)
+                {
+                    string _no = employee.Max(x => x.EmpID);
+                    var no = Convert.ToInt32(_no.Substring(4, _no.Length - 4)) + 1;
+                    txtEmpID.Text = formatEmpID + no.ToString("000");
+                }
+                else
+                {
+                    txtEmpID.Text = formatEmpID + "001";
+                }
             }
             else
-                txtEmpID.Text = code + "E001";
+            {
+                var code = bu.GetCompany().BranchID;
+                var tbl_EmployeeList = bu.GetEmployee();
+                if (tbl_EmployeeList != null && tbl_EmployeeList.Count > 0)
+                {
+                    string _no = tbl_EmployeeList.Max(x => x.EmpID);
+                    var no = Convert.ToInt32(_no.Substring(4, _no.Length - 4)) + 1;
+                    txtEmpID.Text = code + "E" + no.ToString("000");
+                }
+                else
+                    txtEmpID.Text = code + "E001";
+            }
         }
 
         private void RemoveEmployee(string empID)
@@ -525,7 +549,7 @@ namespace AllCashUFormsApp.View.Page
             //}
         }
 
-        private void SelectEmployeeDetails(DataGridViewCellEventArgs e)
+        private void SelectEmployeeDetails(DataGridViewCellEventArgs e, string _EmployeeID = "")
         {
             try
             {
@@ -745,11 +769,11 @@ namespace AllCashUFormsApp.View.Page
                 BindEmployeeData_V2();
         }
 
-
         #endregion
 
         private void frmEmployeeInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
+            empID = "";
             MemoryManagement.FlushMemory();
         }
     }
