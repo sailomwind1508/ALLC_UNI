@@ -31,6 +31,7 @@ namespace AllCashUFormsApp.View.Page
         public string docTypeCode = "";
         int runDigit = 0;
         static bool isCyrsRpt = false;
+        static bool isPrintAll = false;
 
         List<Control> searchCustControls = new List<Control>();
         List<Control> searchPromotionControls = new List<Control>();
@@ -256,6 +257,119 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
+            //else if (isPrintAll)
+            //{
+            //    var wh = bu.GetBranchWarehouse(txtWHCode.Text);
+            //    if (frmText == "พิมพ์ทั้งหมด")
+            //    {
+            //        _params = new Dictionary<string, object>();
+            //        _params.Add("@DocNo", txdDocNo.Text);
+
+            //        if (wh != null)
+            //        {
+            //            if (wh.DriverEmpID == "credit")
+            //            {
+            //                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+            //                this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+            //                _params = new Dictionary<string, object>();
+            //                _params.Add("@DocNo", txdDocNo.Text);
+            //                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+            //                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+            //            }
+            //            else
+            //            {
+            //                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+            //                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+            //            }
+            //        }
+
+            //        _params = new Dictionary<string, object>();
+            //        _params.Add("@DocNo", txdDocNo.Text);
+            //        if (wh != null)
+            //        {
+            //            if (wh.DriverEmpID == "credit")
+            //            {
+            //                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+            //                this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+            //                _params = new Dictionary<string, object>();
+            //                _params.Add("@DocNo", txdDocNo.Text);
+            //                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+            //                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+            //            }
+            //            else
+            //            {
+            //                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+            //                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+            //            }
+            //        }
+            //    }
+            //    else if (frmText == "พิมพ์ต้นฉบับ")
+            //    {
+            //        var _params2 = new Dictionary<string, object>();
+            //        var listIvDocNo = bu.GetAllInvVEMaster().Select(x => x.DocNo).ToList();//.Take(10).ToList();
+            //        _params2.Add("@DocNo", listIvDocNo);
+
+            //        if (wh != null)
+            //        {
+            //            //if (wh.DriverEmpID == "credit")
+            //            //{
+            //            //    _params2.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
+            //            //    this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+            //            //    _params2 = new Dictionary<string, List<string>>();
+            //            //    _params2.Add("@DocNo", txdDocNo.Text);
+            //            //    _params2.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
+            //            //    this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
+            //            //}
+            //            //else
+            //            {
+            //                _params2.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
+            //                this.OpenManyReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params2);
+            //            }
+            //        }
+            //    }
+            //    //else if (frmText == "พิมพ์สำเนา")
+            //    //{
+            //    //    _params = new Dictionary<string, object>();
+            //    //    //_params.Add("@DocNo", txdDocNo.Text);
+            //    //    _params.Add("@DocNo", "-1");
+            //    //    if (wh != null)
+            //    //    {
+            //    //        if (wh.DriverEmpID == "credit")
+            //    //        {
+            //    //            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
+            //    //            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
+
+            //    //            _params = new Dictionary<string, object>();
+            //    //            _params.Add("@DocNo", txdDocNo.Text);
+            //    //            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
+            //    //            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
+            //    //        }
+            //    //        else
+            //    //        {
+            //    //            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
+            //    //            this.OpenManyReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);////////////
+            //    //        }
+            //    //    }
+            //    //}
+            //    //else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
+            //    //{
+            //    //    if (!string.IsNullOrEmpty(txtCustPONo.Text))
+            //    //    {
+            //    //        _params = new Dictionary<string, object>();
+            //    //        _params.Add("@DocNo", txtCustPONo.Text);
+            //    //        this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        string message = "ไม่สามารถพิมพ์ใบกำกับภาษีอย่างย่อได้ !!!";
+            //    //        message.ShowWarningMessage();
+            //    //        return;
+            //    //    }
+            //    //}
+            //}
             else
             {
                 var wh = bu.GetBranchWarehouse(txtWHCode.Text);
@@ -282,7 +396,7 @@ namespace AllCashUFormsApp.View.Page
                             this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
                         }
                     }
-                    
+
                     _params = new Dictionary<string, object>();
                     _params.Add("@DocNo", txdDocNo.Text);
                     if (wh != null)
@@ -302,7 +416,7 @@ namespace AllCashUFormsApp.View.Page
                             _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
                             this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
                         }
-                    } 
+                    }
                 }
                 else if (frmText == "พิมพ์ต้นฉบับ")
                 {
@@ -415,6 +529,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
                 btnPrint.Enabled = ddlDocStatus.SelectedValue.ToString() == "4"; //Last edit by sailom.k 03/11/2021 request by admin UBN
+
+
+            CreateGridBtnList();
         }
 
         private void BindIVMaster(tbl_IVMaster obj)
@@ -1545,6 +1662,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnPrint_Click(object sender, EventArgs e)
         {
             isCyrsRpt = false;
+            isPrintAll = false;
 
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
@@ -1554,6 +1672,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnPrintCrys_Click(object sender, EventArgs e)
         {
             isCyrsRpt = true;
+            isPrintAll = false;
 
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
@@ -1562,7 +1681,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
+            isCyrsRpt = false;
+            isPrintAll = true;
 
+            FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
+
+            printContextMenuStrip.Show(btnPrint, new Point(0, btnPrint.Height));
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -2065,6 +2189,156 @@ namespace AllCashUFormsApp.View.Page
 
         #endregion
 
+        private void CreateGridBtnList()
+        {
+            contextMenuStrip1 = new ContextMenuStrip();
 
+            contextMenuStrip1.Items.Clear();
+            contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(grdMenu_Opening);
+
+            grdList.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        void grdMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            Control c = contextMenuStrip1.SourceControl as Control;
+            ToolStripDropDownItem tsi = contextMenuStrip1.OwnerItem as ToolStripDropDownItem;
+
+            // Clear the ContextMenuStrip control's Items collection.
+            contextMenuStrip1.Items.Clear();
+
+            // Populate the ContextMenuStrip control with its default items.
+            var printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.copyBtn).ImageToByte();
+
+            List<tbl_MstMenu> menuList = new List<tbl_MstMenu>();
+            tbl_MstMenu m = new tbl_MstMenu();
+            m.MenuID = 300;
+            m.MenuName = "prdDetails";
+            m.MenuText = "รายละเอียดสินค้า";
+            m.FormName = "prdDetails";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.depo).ImageToByte();
+            m = new tbl_MstMenu();
+            m.MenuID = 301;
+            m.MenuName = "prdStock";
+            m.MenuText = "ตรวจสอบสินค้าเคลื่อนไหว";
+            m.FormName = "prdStock";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.invoiceFull).ImageToByte();
+            m = new tbl_MstMenu();
+            m.MenuID = 302;
+            m.MenuName = "repStock";
+            m.MenuText = "รายงานสินค้าคงเหลือ แยกตามคลัง";
+            m.FormName = "repStock";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            foreach (var item in menuList)
+            {
+                contextMenuStrip1.Items.Add(item.MenuText, item.MenuImage.byteArrayToImage(), ToolGrdStripMenuItem_Click);
+            }
+
+            // Set Cancel to false. 
+            // It is optimized to true based on empty entry.
+            e.Cancel = false;
+        }
+
+        private void ToolGrdStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string menuStripTxt = ((System.Windows.Forms.ToolStripItem)sender).Text;
+            if (grdList.CurrentCell.RowIndex != -1 && grdList.CurrentCell.ColumnIndex != -1)
+            {
+                int rowIndex = grdList.CurrentCell.RowIndex;
+                int colIndex = grdList.CurrentCell.ColumnIndex;
+                string productID = grdList.Rows[rowIndex].Cells[0].EditedFormattedValue.ToString();
+
+                if (!string.IsNullOrEmpty(productID))
+                {
+                    switch (menuStripTxt)
+                    {
+                        case "รายละเอียดสินค้า":
+                            {
+                                MainForm mfrm = null;
+                                foreach (Form f in Application.OpenForms)
+                                {
+                                    if (f.Name.ToLower() == "mainform")
+                                    {
+                                        mfrm = (MainForm)f;
+                                    }
+                                }
+
+                                frmProductInfo frm = new frmProductInfo();
+                                frm.MdiParent = mfrm;
+                                frm.StartPosition = FormStartPosition.CenterParent;
+                                frm.WindowState = FormWindowState.Maximized;
+                                frm.Show();
+                                frm.BindProductInfo(productID);
+                            }
+                            break;
+                        case "ตรวจสอบสินค้าเคลื่อนไหว":
+                            {
+                                MainForm mfrm = null;
+                                foreach (Form f in Application.OpenForms)
+                                {
+                                    if (f.Name.ToLower() == "mainform")
+                                    {
+                                        mfrm = (MainForm)f;
+                                    }
+                                }
+
+                                frmProductMovement frm = new frmProductMovement();
+                                frm.MdiParent = mfrm;
+                                frm.StartPosition = FormStartPosition.CenterParent;
+                                frm.WindowState = FormWindowState.Maximized;
+                                frm.Show();
+                                frm.BindProductMovement(txtWHCode.Text, txtWHCode.Text, productID, true);
+
+                            }
+                            break;
+                        case "รายงานสินค้าคงเหลือ แยกตามคลัง":
+                            {
+                                var cDate = DateTime.Now.AddDays(1);
+                                Dictionary<string, object> _params = new Dictionary<string, object>();
+
+                                _params.Add("@DateFr", cDate);
+                                _params.Add("@DateTo", cDate);
+                                _params.Add("@YearFr", -1);
+                                _params.Add("@MonthFr", -1);
+                                _params.Add("@YearTo", -1);
+                                _params.Add("@MonthTo", -1);
+                                //Doc Status--------------------------------------
+                                _params.Add("@DocStatus", "4");
+                                _params.Add("@BranchID", bu.tbl_Branchs[0].BranchID);
+                                _params.Add("@WHID", txtWHCode.Text);
+                                //WHID--------------------------------------
+                                //ProductSubGroupID--------------------------------------
+                                _params.Add("@ProductSubGroupID", "");
+                                //ProductSubGroupID--------------------------------------
+                                //ProductID--------------------------------------
+                                _params.Add("@ProductID", productID);
+                                //ProductID--------------------------------------
+                                _params.Add("@FromWH", txtWHCode.Text);
+                                _params.Add("@ToWH", txtWHCode.Text);
+                                //FromWH And ToWH--------------------------------------
+                                //SalAreaID--------------------------------------
+                                _params.Add("@SalAreaID", "");
+                                //SalAreaID--------------------------------------
+                                //ShopTypeID--------------------------------------
+                                _params.Add("@ShopTypeID", 0);
+
+                                this.OpenExcelReportsPopup(menuStripTxt, "proc_RPTStock.XSLT", "proc_RPTStock_XSLT", _params, true);
+                            }
+                            break;
+                        default: break;
+                    }
+                }
+            }
+
+        }
     }
 }

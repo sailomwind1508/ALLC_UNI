@@ -746,11 +746,10 @@ namespace AllCashUFormsApp
                     sql += " ,'pin_mark' + CAST(t2.Seq AS NVARCHAR) + '.png' AS [MarkerImage]";
                 }
 
-                sql += @" , IIF([CustomerImg] IS NULL
-                    , (CASE WHEN ISNULL(CAST(t1.CustImage AS NVARCHAR), '') = '' then NULL
+                sql += @" , (CASE WHEN ISNULL(CAST(t1.CustImage AS NVARCHAR), '') = '' then NULL
                     ELSE 
 	                    IIF(CAST(t1.CustImage AS NVARCHAR) LIKE '%Images%', t1.CustImage, NULL) 
-                    END), NULL) AS CustImage
+                    END) AS CustImage
                     , t1.FlagDel
                     , t1.WHID
                     FROM tbl_ArCustomer t1 

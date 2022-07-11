@@ -42,24 +42,41 @@ namespace AllCashUFormsApp.View.Page
                 string _BranchID = bu.tbl_Branchs[0].BranchID; //ADISORN 15/06-2022
 
                 var _dt = buCust.GetServerImagePath(_BranchID);
-
                 string _ServerNameFromCenter = "";
                 string imgPathTmp = "";
-                if (_dt.Rows.Count > 0 && _BranchID != "104")
+                //last edit by sailom .k 02/07/2022-----------------------------------------------------
+                var preOrderFlag = false;  //cash van
+                var allbwh = bu.GetAllBranchWarehouse();
+                if (allbwh.Count > 0)
+                {
+                    if (allbwh.Any(x => x.WHType == 2)) //pre-order
+                    {
+                        preOrderFlag = true;
+                    }
+                }
+
+                if (_dt.Rows.Count > 0 && !preOrderFlag) //cash van
                 {
                     _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
                     imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
                 }
 
-                if (_BranchID == "104") //เป็นศูนย์ที่ใช้ IP
+                if (preOrderFlag) //เป็นศูนย์ที่ใช้ IP //pre-order
                 {
-                    // ConfigurationManager.AppSettings["ServerName"];
-                    string ServerName = Connection.ConnectionString;
-                    imgPathTmp = ServerName.Split('=')[1].Split(';')[0].ToString();
+                    _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
+                    imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @"/CU";
+
+                    if (_BranchID == "104")
+                    {
+                        string ServerName = Connection.ConnectionString;
+                        imgPathTmp = ServerName.Split('=')[1].Split(';')[0].ToString();
+                        imgPathTmp = @"http://" + imgPathTmp + @"/CU";
+                    }
                 }
                 URLPathImage = imgPathTmp;
+                //last edit by sailom .k 02/07/2022-----------------------------------------------------
             }
             catch (Exception ex)
             {

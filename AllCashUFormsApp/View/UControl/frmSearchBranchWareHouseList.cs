@@ -17,14 +17,6 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchBranchWareHouseList()
         {
             InitializeComponent();
-
-            this.Load += frmSearchBrachWareHouseList_Load;
-
-            btnAccept.Click += btnAccept_Click;
-            btnCancel.Click += btnCancel_Click;
-
-            grdList.RowPostPaint += grdList_RowPostPaint;
-            this.FormClosed += frmSearchBranchWareHouseList_FormClosed;
         }
 
         public void SetTableBranchWH(DataTable dtBranchWH)
@@ -37,44 +29,64 @@ namespace AllCashUFormsApp.View.UControl
 
         private void BindBranchWareHouse()
         {
-            DataTable dt = new DataTable();
-            DataTable dtBranchWH = new DataTable();
-
-            if (frmReport._RptStock == "ALL")
+            try
             {
-                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0"); // edit by sailom .k 03/03/2022 for support pre-order && (x.WHType == 0 || x.WHType == 1)); //For remove whid = 0 last edit by sailom 11/10/2021
-            }
-            else
-            {
-                dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType != 0 ); // edit by sailom .k 03/03/2022 for support pre-order // && x.WHType == 1); //For remove whid = 0 last edit by sailom 11/10/2021
-            }
-            
-            if (dt != null && dt.Rows.Count > 0)
-            {
+                DataTable dt = new DataTable();
+                DataTable dtBranchWH = new DataTable();
                 SetTableBranchWH(dtBranchWH);
 
-                foreach (DataRow r in dt.Rows)
+                if (frmReport._RptStock == "ALL")
                 {
-                    string _saletypeName = "";
-                    string _saletypeID = r["SaleTypeID"].ToString();
-                    
-                    if (_saletypeID == "2")
-                        _saletypeName = "A";
-                    else if (_saletypeID == "3")
-                        _saletypeName = "B";
+                    if (!string.IsNullOrEmpty(txtSearch.Text))
+                        dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && (x.WHID.Contains(txtSearch.Text) || x.WHName.Contains(txtSearch.Text)));
                     else
-                        _saletypeName = "ปกติ";
+                        dt = bu.GetBranchWareHouseTable(x => x.WHID != "0"); // edit by sailom .k 03/03/2022 for support pre-order
+                                                                             // && (x.WHType == 0 || x.WHType == 1)); //For remove whid = 0 last edit by sailom 11/10/2021
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(txtSearch.Text))
+                    {
+                        dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType != 0 && (x.WHID.Contains(txtSearch.Text) || x.WHName.Contains(txtSearch.Text)));
+                    }
+                    else
+                    {
+                        dt = bu.GetBranchWareHouseTable(x => x.WHID != "0" && x.WHType != 0); // edit by sailom .k 03/03/2022 for support pre-order // && x.WHType == 1); //For remove whid = 0 last edit by sailom 11/10/2021
+                    }
+                }
 
-                    dtBranchWH.Rows.Add(r["WHID"], r["WHName"], _saletypeName, r["BranchID"]);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        string _saletypeName = "";
+                        string _saletypeID = r["SaleTypeID"].ToString();
+
+                        switch (_saletypeID)
+                        {
+                            case "2":
+                                _saletypeName = "A";
+                                break;
+                            case "3":
+                                _saletypeName = "B";
+                                break;
+                            default:
+                                _saletypeName = "ปกติ";
+                                break;
+                        }
+
+                        dtBranchWH.Rows.Add(r["WHID"], r["WHName"], _saletypeName, r["BranchID"]);
+                    }
                 }
 
                 grdList.DataSource = dtBranchWH;
-
                 grdList.CreateCheckBoxHeaderColumn("colSelect");
-
                 lblgridCount.Text = grdList.Rows.Count.ToNumberFormat();
             }
-
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void frmSearchBrachWareHouseList_Load(object sender, EventArgs e)
@@ -117,6 +129,14 @@ namespace AllCashUFormsApp.View.UControl
         private void frmSearchBranchWareHouseList_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BindBranchWareHouse();
+            }
         }
     }
 }

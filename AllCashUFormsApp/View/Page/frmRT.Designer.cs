@@ -545,7 +545,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(183, 85);
+            this.label3.Location = new System.Drawing.Point(216, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 16);
             this.label3.TabIndex = 125;
@@ -557,7 +557,7 @@
             this.lblVatType.AutoSize = true;
             this.lblVatType.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVatType.ForeColor = System.Drawing.Color.Blue;
-            this.lblVatType.Location = new System.Drawing.Point(163, 85);
+            this.lblVatType.Location = new System.Drawing.Point(196, 85);
             this.lblVatType.Name = "lblVatType";
             this.lblVatType.Size = new System.Drawing.Size(17, 17);
             this.lblVatType.TabIndex = 124;
@@ -567,7 +567,7 @@
             // 
             this.txnDiscountAmt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnDiscountAmt.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnDiscountAmt.Location = new System.Drawing.Point(222, 30);
+            this.txnDiscountAmt.Location = new System.Drawing.Point(255, 30);
             this.txnDiscountAmt.MaxLength = 5;
             this.txnDiscountAmt.Name = "txnDiscountAmt";
             this.txnDiscountAmt.ReadOnly = true;
@@ -578,7 +578,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(67, 85);
+            this.label2.Location = new System.Drawing.Point(100, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 16);
             this.label2.TabIndex = 122;
@@ -588,7 +588,7 @@
             // 
             this.txnDiscountType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnDiscountType.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnDiscountType.Location = new System.Drawing.Point(131, 30);
+            this.txnDiscountType.Location = new System.Drawing.Point(164, 30);
             this.txnDiscountType.MaxLength = 5;
             this.txnDiscountType.Name = "txnDiscountType";
             this.txnDiscountType.ReadOnly = true;
@@ -599,7 +599,7 @@
             // 
             this.txnTotalDue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnTotalDue.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnTotalDue.Location = new System.Drawing.Point(222, 134);
+            this.txnTotalDue.Location = new System.Drawing.Point(255, 134);
             this.txnTotalDue.MaxLength = 5;
             this.txnTotalDue.Name = "txnTotalDue";
             this.txnTotalDue.ReadOnly = true;
@@ -610,7 +610,7 @@
             // 
             this.txnAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnAmount.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnAmount.Location = new System.Drawing.Point(222, 4);
+            this.txnAmount.Location = new System.Drawing.Point(255, 4);
             this.txnAmount.MaxLength = 5;
             this.txnAmount.Name = "txnAmount";
             this.txnAmount.ReadOnly = true;
@@ -621,7 +621,7 @@
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(87, 7);
+            this.label13.Location = new System.Drawing.Point(120, 7);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(129, 16);
             this.label13.TabIndex = 112;
@@ -631,7 +631,7 @@
             // 
             this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(120, 137);
+            this.label17.Location = new System.Drawing.Point(153, 137);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(96, 16);
             this.label17.TabIndex = 120;
@@ -641,7 +641,7 @@
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(66, 33);
+            this.label14.Location = new System.Drawing.Point(99, 33);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(59, 16);
             this.label14.TabIndex = 114;
@@ -651,7 +651,7 @@
             // 
             this.txnBeforeVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnBeforeVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnBeforeVat.Location = new System.Drawing.Point(222, 56);
+            this.txnBeforeVat.Location = new System.Drawing.Point(255, 56);
             this.txnBeforeVat.MaxLength = 5;
             this.txnBeforeVat.Name = "txnBeforeVat";
             this.txnBeforeVat.ReadOnly = true;
@@ -662,7 +662,7 @@
             // 
             this.txnExcVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnExcVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnExcVat.Location = new System.Drawing.Point(222, 108);
+            this.txnExcVat.Location = new System.Drawing.Point(255, 108);
             this.txnExcVat.MaxLength = 5;
             this.txnExcVat.Name = "txnExcVat";
             this.txnExcVat.ReadOnly = true;
@@ -673,7 +673,7 @@
             // 
             this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(147, 59);
+            this.label15.Location = new System.Drawing.Point(180, 59);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(69, 16);
             this.label15.TabIndex = 116;
@@ -683,7 +683,7 @@
             // 
             this.txnVatAmt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnVatAmt.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnVatAmt.Location = new System.Drawing.Point(222, 82);
+            this.txnVatAmt.Location = new System.Drawing.Point(255, 82);
             this.txnVatAmt.MaxLength = 5;
             this.txnVatAmt.Name = "txnVatAmt";
             this.txnVatAmt.ReadOnly = true;
@@ -694,7 +694,7 @@
             // 
             this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(107, 111);
+            this.label16.Location = new System.Drawing.Point(140, 111);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(109, 16);
             this.label16.TabIndex = 118;

@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchProduct));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlTopPage = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -41,8 +41,8 @@
             this.lblCountListText = new System.Windows.Forms.Label();
             this.grdList = new System.Windows.Forms.DataGridView();
             this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlTopPage.SuspendLayout();
             this.pnlBottomPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
@@ -56,29 +56,30 @@
             this.pnlTopPage.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTopPage.Location = new System.Drawing.Point(0, 0);
             this.pnlTopPage.Name = "pnlTopPage";
-            this.pnlTopPage.Size = new System.Drawing.Size(553, 45);
+            this.pnlTopPage.Size = new System.Drawing.Size(553, 38);
             this.pnlTopPage.TabIndex = 2;
             // 
             // txtSearch
             // 
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.Location = new System.Drawing.Point(83, 11);
+            this.txtSearch.Location = new System.Drawing.Point(58, 9);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSearch.MaxLength = 50;
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(456, 23);
-            this.txtSearch.TabIndex = 1;
+            this.txtSearch.Size = new System.Drawing.Size(483, 23);
+            this.txtSearch.TabIndex = 2;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label1.Location = new System.Drawing.Point(15, 14);
+            this.label1.Location = new System.Drawing.Point(10, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 16);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "ค้นหารหัส";
+            this.label1.Size = new System.Drawing.Size(47, 16);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "ค้นหา :";
             // 
             // pnlBottomPage
             // 
@@ -110,6 +111,7 @@
             this.btnCancel.Text = "ยกเลิก";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAccept
             // 
@@ -128,6 +130,7 @@
             this.btnAccept.Text = "ตกลง";
             this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAccept.UseVisualStyleBackColor = false;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // lblgridCount
             // 
@@ -156,14 +159,15 @@
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSelect,
-            this.colKey,
-            this.colValue});
+            this.colProductCode,
+            this.colProductName});
             this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdList.Location = new System.Drawing.Point(0, 45);
+            this.grdList.Location = new System.Drawing.Point(0, 38);
             this.grdList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grdList.Name = "grdList";
-            this.grdList.Size = new System.Drawing.Size(553, 459);
-            this.grdList.TabIndex = 24;
+            this.grdList.Size = new System.Drawing.Size(553, 466);
+            this.grdList.TabIndex = 3;
+            this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
             // colSelect
             // 
@@ -173,26 +177,28 @@
             this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.colSelect.Width = 30;
             // 
-            // colKey
+            // colProductCode
             // 
-            this.colKey.DataPropertyName = "Key";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colKey.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colKey.HeaderText = "รหัสสินค้า";
-            this.colKey.Name = "colKey";
-            this.colKey.ReadOnly = true;
-            this.colKey.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colKey.Width = 120;
+            this.colProductCode.DataPropertyName = "ProductCode";
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colProductCode.HeaderText = "รหัสสินค้า";
+            this.colProductCode.MaxInputLength = 255;
+            this.colProductCode.Name = "colProductCode";
+            this.colProductCode.ReadOnly = true;
+            this.colProductCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colProductCode.Width = 120;
             // 
-            // colValue
+            // colProductName
             // 
-            this.colValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colValue.DataPropertyName = "Value";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colValue.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colValue.HeaderText = "ชื่อสินค้า";
-            this.colValue.Name = "colValue";
-            this.colValue.ReadOnly = true;
+            this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colProductName.DataPropertyName = "ProductName";
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colProductName.HeaderText = "ชื่อสินค้า";
+            this.colProductName.MaxInputLength = 500;
+            this.colProductName.Name = "colProductName";
+            this.colProductName.ReadOnly = true;
             // 
             // frmSearchProduct
             // 
@@ -209,6 +215,7 @@
             this.Name = "frmSearchProduct";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ค้นหารายการ";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSearchProduct_FormClosed);
             this.Load += new System.EventHandler(this.frmSearchProduct_Load);
             this.pnlTopPage.ResumeLayout(false);
             this.pnlTopPage.PerformLayout();
@@ -231,7 +238,7 @@
         private System.Windows.Forms.Label lblCountListText;
         private System.Windows.Forms.DataGridView grdList;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colSelect;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colKey;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
     }
 }

@@ -310,7 +310,7 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 uData.FlagDel = rdoEmpStatusN.Checked ? false : true;
-                //uData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue);
+                uData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue); //สิทธิ์การใช้งาน
 
                 //เก็บ UserID และ Pass เมื่อเพิ่มหรือแก้ไข ข้อมูลพนักงาน
                 uData.Username = txtUsername.Text;

@@ -2,6 +2,7 @@
 //using CrystalDecisions.Shared;
 //using CrystalDecisions.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
+using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,6 +85,25 @@ namespace AllCashUFormsApp.View.UControl
                 StoreName = storeName;
                 Params = _params;
                 autoGenEx = _autoGenExcel;
+                this.Text = popUPText;
+                isManyReport = false;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+        }
+
+        public void PrepareMargeReportPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params)
+        {
+            try
+            {
+                //formName = frmName;
+                formText = popUPText;
+                ReportName = reportName;
+                StoreName = storeName;
+                Params = _params;
+                //autoGenEx = _autoGenExcel;
                 this.Text = popUPText;
                 isManyReport = false;
             }
@@ -190,14 +210,17 @@ namespace AllCashUFormsApp.View.UControl
                     using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
                     {
                         int index = 1;
-                        foreach (var item in Params)
+                        //foreach (var item in Params)
                         {
-                            foreach (var item2 in (List<string>)item.Value)
+                            foreach (var item2 in (List<string>)Params.First().Value)
                             {
                                 SqlCommand cmd = new SqlCommand(StoreName, con);
                                 cmd.CommandType = CommandType.StoredProcedure;
                                 cmd.CommandTimeout = 0;
-                                cmd.Parameters.Add(new SqlParameter(item.Key, item2));
+                                cmd.Parameters.Add(new SqlParameter(Params.First().Key.ToString(), item2.ToString()));
+
+                                var docType = (string)(Params.Last().Value);
+                                cmd.Parameters.Add(new SqlParameter(Params.Last().Key.ToString(), docType));
 
                                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
 
@@ -215,15 +238,25 @@ namespace AllCashUFormsApp.View.UControl
                         }
                     }
 
+                    this.reportViewer1.ProcessingMode = ProcessingMode.Local;
+                    this.reportViewer1.Reset();
+                    this.reportViewer1.LocalReport.ReportEmbeddedResource = _reportPath;
+                    this.reportViewer1.LocalReport.ReportPath = _reportPath;
+                    this.reportViewer1.LocalReport.DataSources.Clear();
+                    //this.reportViewer1.LocalReport.DataSources.Clear();
+                    this.reportViewer1.SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout);
+                    this.reportViewer1.ZoomMode = Microsoft.Reporting.WinForms.ZoomMode.Percent;
+                    this.reportViewer1.ZoomPercent = 150;
+
                     foreach (var rdsItem in sourceList)
                     {
-                        this.reportViewer1.SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout);
-                        this.reportViewer1.ZoomMode = Microsoft.Reporting.WinForms.ZoomMode.Percent;
-                        this.reportViewer1.ZoomPercent = 150;
+                        rds = new Microsoft.Reporting.WinForms.ReportDataSource(rdsItem.Name, rdsItem.Value);
 
-                        this.reportViewer1.LocalReport.DataSources.Clear();
-                        this.reportViewer1.LocalReport.DataSources.Add(rdsItem);
+                        
+                        this.reportViewer1.LocalReport.DataSources.Add(rds);
                     }
+
+                    this.reportViewer1.Refresh();
                 }
                 else
                 {
@@ -256,10 +289,10 @@ namespace AllCashUFormsApp.View.UControl
                     this.reportViewer1.LocalReport.DataSources.Add(rds);
                 }
 
-                reportViewer1.LocalReport.ReportPath = _reportPath;
+                //reportViewer1.LocalReport.ReportPath = _reportPath;
 
-                this.reportViewer1.RefreshReport();
-
+                //this.reportViewer1.RefreshReport();
+                
             }
             catch (Exception ex)
             {

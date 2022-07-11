@@ -889,6 +889,13 @@ namespace AllCashUFormsApp.View.Page
             button1.Enabled = false; // ดึงข้อมูลจาก Center
         }
 
+        public void BindProductInfo(string prodcutID)
+        {
+            txtSearch.Text = prodcutID;
+
+            btnSearch.PerformClick();
+        }
+
         private void ddlProGroupNoData(ComboBox ddl)
         {
             var ProGroup = new List<tbl_ProductGroup>();

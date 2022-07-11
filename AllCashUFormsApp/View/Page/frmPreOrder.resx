@@ -13421,6 +13421,29 @@
   <metadata name="SignaturePO.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="btnRollback.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAPnSURBVFhH7ZdJaBNRGMd7Kb27X2zF5VCx2qOKSjMJ7j0IraBexBhUEDyptElotIoLRqmiICqF
+        utB6iDaTpqLpgq0L2CV1Qa0VaVWaLtZaFZoueX7f83uZSTOTTCt68gcfSea99/3/M/OWLyn/mQouOWdG
+        YaV5qUM2bSz0ShucVZasAo95OjX/HVyVOQudPtMRhywFIZh2mFvh0+XwSwto2J8Ddzrb7jNfhMQjsWIJ
+        Y8QuSxdcnrWzKM3UcMrmFZCsW538WHUuq2guZnXt11lL1z0e+L2i+ShvU/eF6LNXSWso3eRwek1bIcGw
+        SOau2c6CnwJsbHyU6YFtwU8P2BnoK8ZhDrtPyqe0xoABK3GgSOJ9UaIp7Ha7eUxkdHyEVT4/qzYRNvwk
+        8J3DgJAY3Pj+NqWNJy8vj4ceDzvK1Sa6C/yrZ5KMPjTh+CAZ7jwRyQwglc/PKSa80nmS0QaXGnTksx3f
+        Iz7KRBgxgK/OXbNDmAi7fJb5JBcPrOOj1JFPuGRMNBAIBNjg4CD9Umj9eF95CrJURHLxQGMbdsLllGi2
+        C9QGPB4PS01NZTabjf9Wg0+yuHqzMNBCcrHg9kod+Jo2gjDg8/lYWloay87OZv39/dQaS3nTEWEg4rq3
+        bhrJKhRW5WQLA/XvbtKwxFgsFi6aTBzBzUrkx3OEZBXwUBEdmruqaZg+wWCQLVk9m0dmZiYbGBigFm2a
+        u/xRA44q83qSVcCLigE/DdMHDWStmcOjoaGBrurT1JnEgFM2LRMd6ttv0LDEoAkMI9S+LYsawNdNsgp4
+        nosORifhZFBPQt3agc5zvmSMLMNkhB+/5p+GliECjS7qxE+1P2HY94z1LtrLv7/qfsiuPj7ALjXsYacC
+        +W6SiwcrGRAPowEjW7EeP689YD3zdrOedCvkCLOXoVrW8eUpxJNIS6d/Mclpg5WMeAqe4GlKaZCxcTZk
+        v86FdeJH71xrXSjdmkty8WAZBeLRKgiPVCNEfg6zrztLtEQ1ozdj93GSjIdKsWhBgsVFstcRGR5hQ0W3
+        NMX0IpRu20yS8WAZpTZxJrCNn2qJjGDbh9Iy9nmRItJ5/kpj99rD+3rTrfk9GbsOwrVvog2u1ZKcNnZv
+        znIQjylKcTmVwz5R117Gt2wM3GRwnV9u3M9ewYRra7zF2ldYR1Gko++pidJx4NohYQBiiC7rg2UUVjIg
+        zldHsjhxfwt79KEi0vbmzl0QKKU0USZtQICVDAgUQbSoBdXhlKXXYPak1h8T/gp+iw8pBnbVUPPkwPMc
+        /47hCQrLNtcuW1ZpnvEqFFEl+jKsm6j57zNRHPaDYmr6N5Dwd3zsyp2npPwCdl7TGZVoMc4AAAAASUVO
+        RK5CYII=
+</value>
+  </data>
   <data name="btnFixRL.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAlNJREFUSEtj
@@ -13644,6 +13667,9 @@
   </data>
   <metadata name="serviceController1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>167, 17</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

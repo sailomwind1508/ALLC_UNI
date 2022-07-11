@@ -207,8 +207,8 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
                 [generate-id() = 
                  generate-id(key('kRows', RefDocNo))]">
 							<xsl:sort select="Date"/>
-							<xsl:sort select="FromWHID"/>
-							<xsl:sort select="ToWHID"/>
+							<xsl:sort select="RefDocNo"/>
+							
 						</xsl:apply-templates>
 
 					</tbody>

@@ -34,6 +34,7 @@ namespace AllCashUFormsApp.View.Page
         private static List<string> selectProdect = new List<string>();
         static DataTable tmpDTData = new DataTable();
         string excelName = "";
+        bool isPopup = false;
 
         public frmProductMovement()
         {
@@ -46,6 +47,33 @@ namespace AllCashUFormsApp.View.Page
             readOnlyControls = new string[] { txtBranchCode.Name }.ToList();
 
             ccbProductCode.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ccb_ItemCheck);
+        }
+
+        public void BindProductMovement(string fromWHID, string toWHID, string productID, bool flagPopup)
+        {
+            isPopup = flagPopup;
+
+            if (ccbProductCode.Items.Count == 0)
+            {
+                BindCcb();
+            }
+
+            var allProduct = bu.tbl_Product.Where(x => x.ProductID == productID).ToList();
+            productArr = allProduct.Select(x => x.ProductCode + ":" + x.ProductName).ToArray();
+
+            ccbProductCode.Text = productArr[0];
+
+            selectProdect = new List<string>();
+            selectProdect.Add(productID);
+
+            txtFromWHCode.Text = fromWHID;
+            txtToWHCode.Text = toWHID;
+
+            var cDate = DateTime.Now.AddDays(1);
+            dtpFromDate.Value = cDate.AddMonths(-1);
+            dtpToDate.Value = cDate;
+
+            btnSearch.PerformClick();
         }
 
         #region private methods
@@ -520,7 +548,8 @@ namespace AllCashUFormsApp.View.Page
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            GetProductList();
+            if (!isPopup)
+                GetProductList();
 
             tmpDTData = new DataTable();
             if (rdoSummary.Checked)

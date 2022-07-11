@@ -669,6 +669,15 @@ namespace AllCashUFormsApp.View.Page
             pr.ShipWHID = "0";
             pr.SalAreaID = "0";
             pr.EmpID = branch[0].BranchCode + "E000";
+
+            //case new document and no have empid Last edit by sailom .k 01/07/2022---------------------------------------
+            var _user = bu.GetUser().FirstOrDefault(x => x.Username == Helper.tbl_Users.Username);
+            if (_user != null)
+            {
+                pr.EmpID = _user.EmpID;
+            }
+            //case new document and no have empid Last edit by sailom .k 01/07/2022---------------------------------------
+
             pr.ContactName = null;
             pr.ContactTel = null;
             pr.Shipto = null;

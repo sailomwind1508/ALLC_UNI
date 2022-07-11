@@ -116,19 +116,25 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
-        public DataTable GetSendDataTableView()
+        public DataTable GetSendDataTableView(DateTime sendDate)
         {
             DataTable dt = new DataTable();
-            string sql = "select * from ReceiveTabletDataView AS t1 ORDER BY t1.WHID,t1.DateSend ASC";
-            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            //string sql = "select * from ReceiveTabletDataView AS t1 ORDER BY t1.WHID,t1.DateSend ASC";
+
+            Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+            sqlParmas.Add("@SendDate", sendDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+            string sql = "proc_ReceiveTabletDataView"; //last edit by sailom.k 04/07/2022
+            dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
             return dt;
         }
         
         public DataTable GetSendDataTableViewLastest()
         {
             DataTable dt = new DataTable();
-            string sql = "select * from ReceiveTabletDataView_Lastest AS t1 ORDER BY t1.WHID,t1.DateSend ASC";
-            dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            //string sql = "select * from ReceiveTabletDataView_Lastest AS t1 ORDER BY t1.WHID,t1.DateSend ASC";
+
+            string sql = "proc_ReceiveTabletDataView_Lastest"; //last edit by sailom.k 04/07/2022
+            dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
             return dt;
         }
         

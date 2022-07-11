@@ -218,7 +218,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>หน่วย</Value>
                               <Style>
                                 <FontFamily>AngsanaUPC</FontFamily>
                                 <FontSize>12pt</FontSize>
@@ -438,14 +438,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox11">
+                    <Textbox Name="UomSetName">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!UomSetName.Value</Value>
                               <Style>
                                 <FontFamily>AngsanaUPC</FontFamily>
                                 <FontSize>12pt</FontSize>
@@ -453,11 +453,11 @@
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Right</TextAlign>
+                            <TextAlign>Center</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox11</rd:DefaultName>
+                      <rd:DefaultName>UomSetName</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -7256,7 +7256,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox11</rd:DefaultName>
-          <Top>0in</Top>
           <Left>0.12464in</Left>
           <Height>0.28064in</Height>
           <Width>1.04535in</Width>
@@ -7288,7 +7287,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Comment</rd:DefaultName>
-          <Top>0in</Top>
           <Left>1.24956in</Left>
           <Height>0.60813in</Height>
           <Width>5.34619in</Width>

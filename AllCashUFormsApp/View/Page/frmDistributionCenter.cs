@@ -1205,7 +1205,17 @@ namespace AllCashUFormsApp.View.Page
                         eData.EmpID = ddlDepo.SelectedValue + "E" + tempRunningNo;
                     }
                     else
+                    {
                         eData.EmpID = ddlDepo.SelectedValue + "E000";
+
+                        //case new document and no have empid Last edit by sailom .k 01/07/2022---------------------------------------
+                        var _user = bu.GetUser().FirstOrDefault(x => x.Username == Helper.tbl_Users.Username);
+                        if (_user != null)
+                        {
+                            eData.EmpID = _user.EmpID;
+                        }
+                        //case new document and no have empid Last edit by sailom .k 01/07/2022---------------------------------------
+                    }
                 }
 
                 eData.RoleID = Convert.ToInt32(ddlRoleID.SelectedValue); //Adisorn 22/12/2564

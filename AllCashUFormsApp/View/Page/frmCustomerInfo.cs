@@ -52,7 +52,7 @@ namespace AllCashUFormsApp.View.Page
             searchBranchWHControls = new List<Control>() { txtBranchCode_, txtBranchName_ };
             searchBranchWHControlsEdit = new List<Control>() { txtWHCode, txtWHName };
 
-            validateSaveCtrls.Add(txtBranchCode_,lbl_Depo);
+            validateSaveCtrls.Add(txtBranchCode_, lbl_Depo);
             validateSaveCtrls.Add(txtWHCode, lbl_WH);
             validateSaveCtrls.Add(cbbSalArea, lbl_SalArea);
             validateSaveCtrls.Add(txtDistrictCode, lblDistrict);
@@ -67,21 +67,40 @@ namespace AllCashUFormsApp.View.Page
 
                 string _ServerNameFromCenter = "";
                 string imgPathTmp = "";
-                if (_dt.Rows.Count > 0 && _BranchID != "104")
+
+                //last edit by sailom .k 02/07/2022-----------------------------------------------------
+                var preOrderFlag = false;  //cash van
+                var allbwh = bu.GetAllBranchWarehouse();
+                if (allbwh.Count > 0)
+                {
+                    if (allbwh.Any(x => x.WHType == 2)) //pre-order
+                    {
+                        preOrderFlag = true;
+                    }
+                }
+
+                if (_dt.Rows.Count > 0 && !preOrderFlag) //cash van
                 {
                     _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
                     imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
                 }
 
-                if (_BranchID == "104") //เป็นศูนย์ที่ใช้ IP
+                if (preOrderFlag) //เป็นศูนย์ที่ใช้ IP //pre-order
                 {
-                    // ConfigurationManager.AppSettings["ServerName"];
-                    string ServerName = Connection.ConnectionString;
-                    imgPathTmp = ServerName.Split('=')[1].Split(';')[0].ToString();
+                    _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
+                    imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @"/CU";
+
+                    if (_BranchID == "104")
+                    {
+                        string ServerName = Connection.ConnectionString;
+                        imgPathTmp = ServerName.Split('=')[1].Split(';')[0].ToString();
+                        imgPathTmp = @"http://" + imgPathTmp + @"/CU";
+                    }
                 }
                 URLPathImage = imgPathTmp;
+                //last edit by sailom .k 02/07/2022-----------------------------------------------------
             }
             catch (Exception ex)
             {
@@ -120,11 +139,9 @@ namespace AllCashUFormsApp.View.Page
 
             grdList.RowsDefaultCellStyle.BackColor = Color.White;
             grdList.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
-        }
 
-        private void InitialData()
-        {
             grdList.AutoGenerateColumns = false;
+            //grdList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
             btnAdd.Enabled = true;
@@ -136,6 +153,11 @@ namespace AllCashUFormsApp.View.Page
 
             pnlEdit.OpenControl(false, PanelEditControls.ToArray()); //
 
+            chkSaleAreaEdit.Enabled = false;
+        }
+
+        private void InitialData()
+        {
             GetBranch(txtBranchCode, txtBranchName);
 
             var allWH = new List<tbl_BranchWarehouse>();
@@ -164,8 +186,6 @@ namespace AllCashUFormsApp.View.Page
             cbbTitle.Items.Add("บมจ.");
             cbbTitle.Items.Add("คุณ");
             cbbTitle.SelectedIndex = 0;
-
-            chkSaleAreaEdit.Enabled = false;
         }
 
         public void BindCustomerInfo(string customerID)
@@ -176,6 +196,19 @@ namespace AllCashUFormsApp.View.Page
             txtSearch.Text = customerID;
 
             BindData();
+        }
+
+        private void SetCustomerTable(DataTable dt)
+        {
+            dt.Columns.Add("CustomerID", typeof(string));
+            dt.Columns.Add("CustName", typeof(string));
+            dt.Columns.Add("ImageCustomer", typeof(int));
+            dt.Columns.Add("ShopTypeName", typeof(string));
+            dt.Columns.Add("SalAreaID", typeof(string));
+            dt.Columns.Add("SalAreaName", typeof(string));
+            dt.Columns.Add("WHID", typeof(string));
+            dt.Columns.Add("Seq", typeof(int));
+            dt.Columns.Add("FlagMember", typeof(bool));
         }
 
         private void SelectDetails(DataGridViewCellEventArgs e)
@@ -367,10 +400,13 @@ namespace AllCashUFormsApp.View.Page
 
                 int _select = 0;
                 bool flagColor = false;
-                if (int.TryParse(cells.Value.ToString(), out _select))
+                if (cells.Value != null)
                 {
-                    if (_select == 1)
-                        flagColor = true;
+                    if (int.TryParse(cells.Value.ToString(), out _select))
+                    {
+                        if (_select == 1)
+                            flagColor = true;
+                    }
                 }
 
                 cells.Value = flagColor;
@@ -423,8 +459,18 @@ namespace AllCashUFormsApp.View.Page
             if (dtCustomer.Rows.Count > 0)
                 dtCustomer.Columns["Seq"].ReadOnly = false; //last edit by adisorn 02/02/2022
 
-            grdList.DataSource = dtCustomer;
-            lblQtyCount.Text = dtCustomer.Rows.Count.ToNumberFormat();
+            DataTable newTable = new DataTable();
+            SetCustomerTable(newTable);
+
+            foreach (DataRow r in dtCustomer.Rows)
+            {
+                int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
+                newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
+                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]);
+            }
+
+            grdList.DataSource = newTable;
+            lblQtyCount.Text = newTable.Rows.Count.ToNumberFormat();
 
             SetGridView(); //SetFlagMember and ImageCustomer
             SetButtonAfterBindGridView();
@@ -1204,6 +1250,27 @@ namespace AllCashUFormsApp.View.Page
                 if (grdList.RowCount == 0)
                     return;
 
+                Cursor.Current = Cursors.WaitCursor;
+
+                DataTable dt = (DataTable)grdList.DataSource;
+
+                var listWHID = dt.AsEnumerable().Select(x => x.Field<string>("WHID")).Distinct().ToList();
+                var listSalAreaID = dt.AsEnumerable().Select(x => x.Field<string>("SalAreaID")).Distinct().ToList();
+
+                msg = "";
+
+                if (listWHID.Count != 1)
+                    msg += "กรุณาเลือก 1 แวน !!\n";
+
+                if (listSalAreaID.Count != 1)
+                    msg += "กรุณาเลือก 1 ตลาด !!\n";
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    msg.ShowWarningMessage();
+                    return;
+                }
+
                 var ListCustomerID = new List<string>();
                 for (int i = 0; i < grdList.RowCount; i++)
                 {
@@ -1213,24 +1280,48 @@ namespace AllCashUFormsApp.View.Page
 
                 var allCustomerID = string.Join(",", ListCustomerID);
                 var cData = bu.SelectCustomerList(allCustomerID);
+
+                var list = new List<tbl_ArCustomer>();
                 if (cData.Count > 0)
                 {
-                    var dt = (DataTable)grdList.DataSource;
-                    for (int i = 0; i < cData.Count; i++)
+                    //var dt = (DataTable)grdList.DataSource;
+
+                    //for (int i = 0; i < cData.Count; i++)
+                    //{
+                    //string _CustID = cData[i].CustomerID;
+                    //DataRow r = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("CustomerID") == _CustID);
+                    //if (r != null)
+                    //{
+                    //    cData[i].Seq = Convert.ToInt16(r["Seq"]);
+                    //    cData[i].EdDate = DateTime.Now;
+                    //    cData[i].EdUser = Helper.tbl_Users.Username;
+                    //}
+                    //}
+
+                    int running = 1;
+                    
+                    //grdList.Sort(grdList.Columns["colSeq"], ListSortDirection.Ascending);
+                   
+                    for (int index = 0; index < grdList.RowCount; index++)
                     {
-                        string _CustID = cData[i].CustomerID;
-                        DataRow r = dt.AsEnumerable().FirstOrDefault(x => x.Field<string>("CustomerID") == _CustID);
-                        if (r != null)
+                        string _custID = grdList.Rows[index].Cells["colCustomerID"].Value.ToString();
+                        var Customer = cData.FirstOrDefault(x => x.CustomerID == _custID);
+                        if (Customer != null)
                         {
-                            cData[i].Seq = Convert.ToInt16(r["Seq"]);
-                            cData[i].EdDate = DateTime.Now;
-                            cData[i].EdUser = Helper.tbl_Users.Username;
+                            Customer.Seq = Convert.ToInt16(running);
+                            Customer.EdDate = DateTime.Now;
+                            Customer.EdUser = Helper.tbl_Users.Username;
+                            list.Add(Customer);
+
+                            running++;
                         }
                     }
-                    foreach (var data in cData)
+
+                    foreach (var data in list)
                     {
                         ret = bu.UpdateData(data);
                     }
+
                     if (ret == 1)
                     {
                         msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
@@ -1242,10 +1333,13 @@ namespace AllCashUFormsApp.View.Page
                         this.ShowProcessErr();
                     }
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
+                Cursor.Current = Cursors.Default;
             }
 
             msg = "end frmCustomerInfo=>btnChangeSeq_Click";
@@ -1384,6 +1478,184 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
+        private void btnMoveUp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                int _RowIndex = grdList.SelectedCells[0].OwningRow.Index;
+                if (_RowIndex > 0)
+                {
+                    DataTable dtClone = (DataTable)grdList.DataSource;
+                    DataRow row = dtClone.NewRow();
+                    //row[0] = grdList.CurrentRow.Cells["colCustomerID"].Value.ToString();
+                    //row[1] = grdList.CurrentRow.Cells["colCustName"].Value.ToString();
+                    //row[2] = Convert.ToInt32(grdList.CurrentRow.Cells["colImageCustomer"].Value);
+                    //row[3] = grdList.CurrentRow.Cells["colShopTypeName"].Value.ToString();
+                    //row[4] = grdList.CurrentRow.Cells["colSalAreaID"].Value.ToString();
+                    //row[5] = grdList.CurrentRow.Cells["colSalAreaName"].Value.ToString();
+                    //row[6] = grdList.CurrentRow.Cells["colWHID"].Value.ToString();
+                    //row[7] = Convert.ToInt32(grdList.CurrentRow.Cells["colSeq"].Value);
+                    //row[8] = Convert.ToBoolean(grdList.CurrentRow.Cells["colFlagMember"].Value);
+                    string _CustomerID = grdList.Rows[_RowIndex].Cells["colCustomerID"].Value.ToString();
+                    DataRow dr = dtClone.AsEnumerable().FirstOrDefault(x=>x.Field<string>("CustomerID") == _CustomerID);
+                    row[0] = dr["CustomerID"].ToString();
+                    row[1] = dr["CustName"].ToString();
+                    row[2] = Convert.ToInt32(dr["ImageCustomer"]);
+                    row[3] = dr["ShopTypeName"].ToString();
+                    row[4] = dr["SalAreaID"].ToString();
+                    row[5] = dr["SalAreaName"].ToString();
+                    row[6] = dr["WHID"].ToString();
+                    row[7] = Convert.ToInt32(dr["Seq"]);
+                    row[8] = Convert.ToBoolean(dr["FlagMember"]);
+
+                    if (row != null)
+                    {
+                        dtClone.Rows.RemoveAt(_RowIndex);
+                        dtClone.Rows.InsertAt(row, _RowIndex - 1);
+                        //grdList.ClearSelection();
+                        grdList.Rows[_RowIndex - 1].Selected = true;
+                    }
+                }
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void btnMoveDown_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                int _RowIndex = grdList.SelectedCells[0].OwningRow.Index;
+
+                if (grdList.RowCount == 0)
+                    return;
+                if (_RowIndex == grdList.RowCount - 1)
+                    return;
+
+                DataTable dtClone = (DataTable)grdList.DataSource;
+                DataRow row = dtClone.NewRow();
+                //row[0] = grdList.CurrentRow.Cells["colCustomerID"].Value.ToString();
+                //row[1] = grdList.CurrentRow.Cells["colCustName"].Value.ToString();
+                //row[2] = Convert.ToInt32(grdList.CurrentRow.Cells["colImageCustomer"].Value);
+                //row[3] = grdList.CurrentRow.Cells["colShopTypeName"].Value.ToString();
+                //row[4] = grdList.CurrentRow.Cells["colSalAreaID"].Value.ToString();
+                //row[5] = grdList.CurrentRow.Cells["colSalAreaName"].Value.ToString();
+                //row[6] = grdList.CurrentRow.Cells["colWHID"].Value.ToString();
+                //row[7] = Convert.ToInt32(grdList.CurrentRow.Cells["colSeq"].Value);
+                //row[8] = Convert.ToBoolean(grdList.CurrentRow.Cells["colFlagMember"].Value);
+
+
+                string _CustomerID = grdList.Rows[_RowIndex].Cells["colCustomerID"].Value.ToString();
+                DataRow dr = dtClone.AsEnumerable().FirstOrDefault(x => x.Field<string>("CustomerID") == _CustomerID);
+                row[0] = dr["CustomerID"].ToString();
+                row[1] = dr["CustName"].ToString();
+                row[2] = Convert.ToInt32(dr["ImageCustomer"]);
+                row[3] = dr["ShopTypeName"].ToString();
+                row[4] = dr["SalAreaID"].ToString();
+                row[5] = dr["SalAreaName"].ToString();
+                row[6] = dr["WHID"].ToString();
+                row[7] = Convert.ToInt32(dr["Seq"]);
+                row[8] = Convert.ToBoolean(dr["FlagMember"]);
+
+                if (row != null)
+                {
+                    dtClone.Rows.RemoveAt(_RowIndex);
+                    dtClone.Rows.InsertAt(row, _RowIndex + 1);
+                    //grdList.ClearSelection();
+                    grdList.Rows[_RowIndex + 1].Selected = true;
+                }
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void grdList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            //try 
+            //{
+            //    if (grdList.CurrentRow.Cells["colSeq"].EditedFormattedValue == null)
+            //    {
+            //        grdList.CurrentRow.Cells["colSeq"].Value = 0;
+            //        return;
+            //    }
+            //    short _Seq = Convert.ToInt16(grdList.CurrentRow.Cells["colSeq"].EditedFormattedValue);
+
+            //    int index = grdList.CurrentRow.Index;
+            //    if (index == 0 && _Seq != 1)
+            //    {
+            //        grdList.CurrentRow.Cells["colSeq"].Value = 1;
+            //        return;
+            //    }
+
+            //    Cursor.Current = Cursors.WaitCursor;
+            //    DataTable dtClone = (DataTable)grdList.DataSource;
+              
+
+            //    for (int i = 0; i < grdList.RowCount; i++)
+            //    {
+            //        short Seq = Convert.ToInt16(grdList.Rows[i].Cells["colSeq"].EditedFormattedValue);
+
+            //        if (Seq == 1 && i == 0)
+            //        {
+            //            break;
+            //        }
+
+            //        if (_Seq >= Seq && i != index)
+            //        {
+            //            //short Seq2 = Convert.ToInt16(grdList.Rows[i].Cells["colSeq"].EditedFormattedValue);
+
+            //            grdList.Rows[i].Cells["colSeq"].Value = Seq + 1;
+
+            //            //if (Seq != 1)
+            //            //{
+            //            //    grdList.Rows[i].Cells["colSeq"].Value = Seq + 1;
+            //            //}
+            //            //if (Seq == _Seq)
+            //            //{
+            //            //    grdList.Rows[i].Cells["colSeq"].Value = Seq + 1;
+            //            //}
+            //        }
+
+            //    }
+            //    //DataRow r = dtClone.AsEnumerable().FirstOrDefault(x => x.Field<short>("Seq") == _Seq);
+            //    //if (r != null)
+            //    //{
+            //    //    r["Seq"] = _Seq + 1;
+            //    //}
+            //    dtClone.DefaultView.Sort = "Seq ASC";
+            //    grdList.DataSource = dtClone;
+            //    SetGridView(); //SetFlagMember and ImageCustomer
+            //    Cursor.Current = Cursors.Default;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Cursor.Current = Cursors.Default;
+            //    ex.Message.ShowErrorMessage();
+            //}
+        }
+
+        private void grdList_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            //grdList.EndEdit();
+        }
+
+        private void grdList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender, e, this.Font);
@@ -1408,5 +1680,108 @@ namespace AllCashUFormsApp.View.Page
             //    cells.Style.BackColor = Color.Red;
 
         }
+
+        //last edit by sailom.k 04/07/2022-----------------------------------------------------------
+        private Rectangle dragBoxFromMouseDown;
+        private int rowIndexFromMouseDown;
+        private int rowIndexOfItemUnderMouseToDrop;
+
+        private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty &&
+                !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
+                    // Proceed with the drag and drop, passing in the list item.                    
+                    DragDropEffects dropEffect = grdList.DoDragDrop(
+                          grdList.Rows[rowIndexFromMouseDown],
+                          DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Get the index of the item the mouse is below.
+            rowIndexFromMouseDown = grdList.HitTest(e.X, e.Y).RowIndex;
+
+            if (rowIndexFromMouseDown != -1)
+            {
+                // Remember the point where the mouse down occurred. 
+                // The DragSize indicates the size that the mouse can move 
+                // before a drag event should be started.                
+                Size dragSize = SystemInformation.DragSize;
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                dragBoxFromMouseDown = new Rectangle(
+                          new Point(
+                            e.X - (dragSize.Width / 2),
+                            e.Y - (dragSize.Height / 2)),
+                      dragSize);
+            }
+            else
+                // Reset the rectangle if the mouse is not over an item in the ListBox.
+                dragBoxFromMouseDown = Rectangle.Empty;
+        }
+
+        private void dataGridView1_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void dataGridView1_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                // The mouse locations are relative to the screen, so they must be 
+                // converted to client coordinates.
+                Point clientPoint = grdList.PointToClient(new Point(e.X, e.Y));
+                // Get the row index of the item the mouse is below. 
+                rowIndexOfItemUnderMouseToDrop = grdList.HitTest(clientPoint.X, clientPoint.Y).RowIndex;
+
+                if (e.Effect == DragDropEffects.Move)
+                {
+                    var dt = (DataTable)grdList.DataSource;
+                    var tmpDT = dt.Copy();
+
+                    if (tmpDT != null && tmpDT.Rows.Count > 0)
+                    {
+                        DataRow newRow = tmpDT.Rows[rowIndexFromMouseDown];
+                        dt.Rows.RemoveAt(rowIndexFromMouseDown);
+
+                        var dr = dt.NewRow();
+                        for (int i = 0; i < 9; i++)
+                        {
+                            dr[i] = newRow[i];
+                        }
+
+                        dt.Rows.InsertAt(dr, rowIndexOfItemUnderMouseToDrop);
+
+                        //tmpDT.Rows.InsertAt(newRow, rowIndexOfItemUnderMouseToDrop);
+
+                        grdList.DataSource = dt;
+                    }
+                }
+
+                //// If the drag operation was a move then remove and insert the row.
+                //if (e.Effect == DragDropEffects.Move)
+                //{
+                //    DataGridViewRow rowToMove = e.Data.GetData(typeof(DataGridViewRow)) as DataGridViewRow;
+                //    grdList.Rows.RemoveAt(rowIndexFromMouseDown);
+                //    grdList.Rows.Insert(rowIndexOfItemUnderMouseToDrop, rowToMove);
+
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+
+        }
+
+        //last edit by sailom.k 04/07/2022-----------------------------------------------------------
     }
 }

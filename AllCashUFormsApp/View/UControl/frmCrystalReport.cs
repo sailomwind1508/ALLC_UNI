@@ -59,7 +59,7 @@ namespace AllCashUFormsApp.View.UControl
         private string headerRemark = "";
         public string excelName { get; set; }
 
-        
+
 
         CultureInfo newCulture = new CultureInfo("th-TH");
 
@@ -70,7 +70,7 @@ namespace AllCashUFormsApp.View.UControl
 
         private void frmCrystalReport_Load(object sender, EventArgs e)
         {
-           
+
         }
 
         public void PrepareReportPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool _autoGenExcel = false)
@@ -165,7 +165,7 @@ namespace AllCashUFormsApp.View.UControl
                     colsNameList = new List<string> { empname, van, actualexvat, actualinvat, bought, sku, visited, com, perc_com, invoice, sku_inv };
 
                     ExportRatioKPIToExcel();
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -259,7 +259,7 @@ namespace AllCashUFormsApp.View.UControl
 
         private void frmCrystalReport_FormClosed(object sender, FormClosedEventArgs e)
         {
-            
+
         }
 
         private XPathDocument GetDocument(DataTable dt)
@@ -381,7 +381,7 @@ namespace AllCashUFormsApp.View.UControl
                 }
 
                 if (FormHelper.ShowPrintingReportName)
-                    System.Diagnostics.Process.Start(_excelName);  
+                    System.Diagnostics.Process.Start(_excelName);
             }
             catch (Exception ex)
             {
@@ -768,11 +768,12 @@ namespace AllCashUFormsApp.View.UControl
                 {
                     var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
                     decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("whid")).Distinct().Count());
-         
+
                     dtClone.Clear();
 
                     var tempDataRow = new List<DataRow>();
                     tempDataRow = dt.AsEnumerable().Where(x => x.Field<int>("day") == day.data.Field<int>("day")).ToList();
+                    tempDataRow = tempDataRow.OrderBy(x => x.Field<string>("whid")).ToList(); //last edit by sailom .k 05/07/2022
 
                     string sheetName = dof.ToString();// day.data.Field<int>("day").ToString(); //change request by manager UBN last edit by sailom 19/10/2021
                     if (day.data.Field<int>("day") == 99)
@@ -796,7 +797,7 @@ namespace AllCashUFormsApp.View.UControl
                     var total_percentage = tempDataRow.Sum(x => x.Field<decimal>("percentage"));
                     var total_visit_cust = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
                     var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
-                    
+
                     var total_custbought = tempDataRow.Sum(x => x.Field<decimal>("custbought"));
                     var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday"));
                     var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
@@ -814,7 +815,7 @@ namespace AllCashUFormsApp.View.UControl
                     var avg_percentage = total_percentage / (countVan == 0 ? 1 : countVan);
                     var avg_visit_cust = total_visit_cust / (countVan == 0 ? 1 : countVan);
                     var avg_visit_cust2 = total_visit_cust2 / (countVan == 0 ? 1 : countVan);
-                    
+
                     var avg_custbought = total_custbought / (countVan == 0 ? 1 : countVan);
                     var avg_boughtperday = total_boughtperday / (countVan == 0 ? 1 : countVan);
                     var avg_sku = total_sku / (countVan == 0 ? 1 : countVan);
@@ -1239,7 +1240,7 @@ namespace AllCashUFormsApp.View.UControl
                 {
                     var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
                     decimal countVan = Convert.ToDecimal(vanInDay.Select(x => x.Field<string>("whid")).Distinct().Count());
-           
+
                     dtClone.Clear();
 
                     var tempDataRow = new List<DataRow>();
@@ -1286,7 +1287,7 @@ namespace AllCashUFormsApp.View.UControl
                     var avg_perc_com = avg_com / (avg_visited == 0 ? 1 : avg_visited);
                     var avg_invoice = total_invoice / (countVan == 0 ? 1 : countVan);
                     var avg_sku_inv = total_sku_inv / (countVan == 0 ? 1 : countVan);
-                   
+
                     dtClone.Rows.Add("AVG/VAN:", "-", avg_actualexvat, avg_actualincvat, avg_bought, avg_sku, avg_visited, avg_com,
                         avg_perc_com, avg_invoice, avg_sku_inv);
 
@@ -1557,11 +1558,5 @@ namespace AllCashUFormsApp.View.UControl
                 o = null;
             }
         }
-
-
-        
-
-
-
     }
 }

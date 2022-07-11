@@ -17,5 +17,10 @@ namespace AllCashUFormsApp.Controller
             dt = tbl_ProductSubGroups.ToDataTable();
             return dt;
         }
+
+        public DataTable GetProductSubGroupData_Popup(string Search)
+        {
+            return new tbl_ProductSubGroup().GetProductSubGroupData_Popup(Search);
+        }
     }
 }

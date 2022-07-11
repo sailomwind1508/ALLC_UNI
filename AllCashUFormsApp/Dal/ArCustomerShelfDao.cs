@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -273,5 +275,75 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static DataTable GetCustomerShelfData(this tbl_ArCustomerShelf tbl_ArCustomerShelf, string Search, int flagDel, string WHID)
+        {
+            DataTable dt = new DataTable("CustomerShelf");
+            try
+            {
+                string sql = @"SELECT t1.CustomerID
+                            , t2.CustName
+                            , ISNULL(t1.ImagePath, '') AS 'ImagePath'
+                            , ISNULL(t1.ProductID, '') AS 'ProductID'
+                            , ISNULL(t3.ProductName, '') AS 'ProductName'
+                            , t1.ShelfID
+                            , t1.WHID
+                            , t4.WHName
+                            , t1.AutoID
+                            , t1.FlagDel
+                            FROM tbl_ArCustomerShelf t1
+                            left join tbl_ArCustomer t2 ON t1.CustomerID = t2.CustomerID
+                            left join tbl_Product t3 ON t1.ProductID = t3.ProductID
+                            left join tbl_BranchWarehouse t4 ON t1.WHID = t4.WHID";
+
+                sql += " WHERE 1=1";
+
+                if (!string.IsNullOrEmpty(WHID))
+                    sql += " AND t1.WHID = '" + WHID + "'";
+
+                if (!string.IsNullOrEmpty(Search))
+                    sql += " AND (t1.CustomerID like '%" + @Search + "%' OR t2.CustName like '%" + @Search + "%' OR t1.ShelfID like '%" + @Search + "%')";
+
+                sql += " AND t1.FlagDel = " + flagDel;
+
+                sql += " order by t1.WHID, t1.CustomerID"; 
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+                ex.Message.ShowErrorMessage();
+            }
+
+            return dt;
+        }
+
+        public static int UpdateCustomerShelf(this tbl_ArCustomerShelf tbl_ArCustomerShelf)
+        {
+            int ret = 0;
+            SqlConnection con = new SqlConnection(Connection.ConnectionString);
+            try
+            {
+                string sql = "UPDATE tbl_ArCustomerShelf SET ShelfID = @ShelfID, EdDate = @EdDate, EdUser = @EdUser WHERE AutoID = @AutoID";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("@ShelfID", tbl_ArCustomerShelf.ShelfID);
+                cmd.Parameters.AddWithValue("@AutoID", tbl_ArCustomerShelf.AutoID);
+                cmd.Parameters.AddWithValue("@EdDate", DateTime.Now);
+                cmd.Parameters.AddWithValue("@EdUser", Helper.tbl_Users.Username);
+
+                ret = cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+            }
+
+            return ret;
+        }
+
     }
 }

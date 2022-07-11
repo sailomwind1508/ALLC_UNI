@@ -374,5 +374,10 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_Product()).SelectSingleProduct();
         }
+
+        public DataTable GetProductData_Popup(string _ProductSubGroupID, string Search)
+        {
+            return (new tbl_Product()).GetProductData_Popup(_ProductSubGroupID, Search);
+        }
     }
 }

@@ -505,7 +505,7 @@ namespace AllCashUFormsApp.View.Page
 
                 List<string> set1 = new List<string>() { "Node2", "Node3", "Node20", "Node34", "Node50_2" };
                 List<string> set2 = new List<string>() { "Node56", "Node12", "Node43", "Node44", "Node55" };
-                List<string> set3 = new List<string>() { "Node45", "Node49", "Node51", "Node53", "Node11", "Node29", "Rep_PreOrder_POStatus_XSLT" };
+                List<string> set3 = new List<string>() { "Node45", "Node51", "Node53", "Node11", "Node29", "Rep_PreOrder_POStatus_XSLT" };
                 List<string> set4 = new List<string>() { "Node4", "Node5", "Node8", "Node9", "proc_StockMovement_ByWH", "NodeRLSumm", "Rep_BillDuplicate", "proc_StockMovement_ByWH_RefCode" };
                 List<string> set5 = new List<string>() { "Node34_Bath", "Node34_Carton", "Node34_Unit", "Node48", "Node40", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton", };
                 List<string> set6 = new List<string>() { "Node50", "Node52" };
@@ -629,7 +629,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else if (set10.Contains(e.Node.Name))//Set10 รายวัน+Dis+FWH+TWH+S+R-------------
                 {
-                    EnableDailyCycleCtrl(true, true, false, true, true, false, false);
+                    EnableDailyCycleCtrl(true, true, true, true, true, true, false);
                     EnableDistribution(true, true);
                     EnableFromWarehouse(true, true);
                     EnableToWarehouse(true, true);

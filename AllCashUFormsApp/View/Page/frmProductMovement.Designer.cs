@@ -47,6 +47,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.pnlTL = new System.Windows.Forms.Panel();
+            this.chkAllMM = new System.Windows.Forms.CheckBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,7 +68,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.chkAllMM = new System.Windows.Forms.CheckBox();
             this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
@@ -156,9 +156,9 @@
             this.panel6.Controls.Add(this.grdList);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.panel6.Location = new System.Drawing.Point(0, 109);
+            this.panel6.Location = new System.Drawing.Point(0, 106);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(992, 353);
+            this.panel6.Size = new System.Drawing.Size(992, 356);
             this.panel6.TabIndex = 119;
             // 
             // grdList
@@ -172,7 +172,7 @@
             this.grdList.Location = new System.Drawing.Point(0, 0);
             this.grdList.MultiSelect = false;
             this.grdList.Name = "grdList";
-            this.grdList.Size = new System.Drawing.Size(992, 353);
+            this.grdList.Size = new System.Drawing.Size(992, 356);
             this.grdList.TabIndex = 15;
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
@@ -184,7 +184,7 @@
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
             this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(992, 109);
+            this.pnlTop.Size = new System.Drawing.Size(992, 106);
             this.pnlTop.TabIndex = 118;
             // 
             // pnlTR
@@ -199,16 +199,16 @@
             this.pnlTR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTR.Location = new System.Drawing.Point(728, 0);
             this.pnlTR.Name = "pnlTR";
-            this.pnlTR.Size = new System.Drawing.Size(264, 109);
+            this.pnlTR.Size = new System.Drawing.Size(264, 106);
             this.pnlTR.TabIndex = 21;
             // 
             // grbPrdMMType
             // 
             this.grbPrdMMType.Controls.Add(this.rdoDetails);
             this.grbPrdMMType.Controls.Add(this.rdoSummary);
-            this.grbPrdMMType.Location = new System.Drawing.Point(24, 54);
+            this.grbPrdMMType.Location = new System.Drawing.Point(24, 51);
             this.grbPrdMMType.Name = "grbPrdMMType";
-            this.grbPrdMMType.Size = new System.Drawing.Size(224, 52);
+            this.grbPrdMMType.Size = new System.Drawing.Size(224, 45);
             this.grbPrdMMType.TabIndex = 107;
             this.grbPrdMMType.TabStop = false;
             this.grbPrdMMType.Text = "รูปแบบรายงาน";
@@ -216,7 +216,7 @@
             // rdoDetails
             // 
             this.rdoDetails.AutoSize = true;
-            this.rdoDetails.Location = new System.Drawing.Point(104, 22);
+            this.rdoDetails.Location = new System.Drawing.Point(112, 18);
             this.rdoDetails.Name = "rdoDetails";
             this.rdoDetails.Size = new System.Drawing.Size(112, 20);
             this.rdoDetails.TabIndex = 18;
@@ -228,7 +228,7 @@
             // rdoSummary
             // 
             this.rdoSummary.AutoSize = true;
-            this.rdoSummary.Location = new System.Drawing.Point(6, 22);
+            this.rdoSummary.Location = new System.Drawing.Point(14, 18);
             this.rdoSummary.Name = "rdoSummary";
             this.rdoSummary.Size = new System.Drawing.Size(92, 20);
             this.rdoSummary.TabIndex = 17;
@@ -240,7 +240,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 35);
+            this.label3.Location = new System.Drawing.Point(21, 33);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 16);
             this.label3.TabIndex = 106;
@@ -250,7 +250,7 @@
             // 
             this.dtpToDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpToDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpToDate.Location = new System.Drawing.Point(85, 30);
+            this.dtpToDate.Location = new System.Drawing.Point(85, 28);
             this.dtpToDate.Name = "dtpToDate";
             this.dtpToDate.Size = new System.Drawing.Size(163, 23);
             this.dtpToDate.TabIndex = 105;
@@ -300,8 +300,21 @@
             this.pnlTL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTL.Location = new System.Drawing.Point(0, 0);
             this.pnlTL.Name = "pnlTL";
-            this.pnlTL.Size = new System.Drawing.Size(722, 109);
+            this.pnlTL.Size = new System.Drawing.Size(722, 106);
             this.pnlTL.TabIndex = 20;
+            // 
+            // chkAllMM
+            // 
+            this.chkAllMM.AutoSize = true;
+            this.chkAllMM.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.chkAllMM.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.chkAllMM.Location = new System.Drawing.Point(535, 28);
+            this.chkAllMM.Name = "chkAllMM";
+            this.chkAllMM.Size = new System.Drawing.Size(112, 20);
+            this.chkAllMM.TabIndex = 127;
+            this.chkAllMM.Text = "ดึงข้อมูลทุกคลัง";
+            this.chkAllMM.UseVisualStyleBackColor = false;
+            this.chkAllMM.CheckedChanged += new System.EventHandler(this.chkAllMM_CheckedChanged);
             // 
             // btnClear
             // 
@@ -311,7 +324,7 @@
             this.btnClear.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClear.Location = new System.Drawing.Point(634, 82);
+            this.btnClear.Location = new System.Drawing.Point(631, 75);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(67, 26);
             this.btnClear.TabIndex = 126;
@@ -328,7 +341,7 @@
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(561, 82);
+            this.btnSearch.Location = new System.Drawing.Point(558, 75);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 26);
             this.btnSearch.TabIndex = 125;
@@ -340,7 +353,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(328, 33);
+            this.label2.Location = new System.Drawing.Point(328, 31);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 16);
             this.label2.TabIndex = 123;
@@ -348,7 +361,7 @@
             // 
             // txtToWHCode
             // 
-            this.txtToWHCode.Location = new System.Drawing.Point(369, 30);
+            this.txtToWHCode.Location = new System.Drawing.Point(369, 28);
             this.txtToWHCode.MaxLength = 15;
             this.txtToWHCode.Name = "txtToWHCode";
             this.txtToWHCode.Size = new System.Drawing.Size(123, 23);
@@ -362,7 +375,7 @@
             this.btnToWHCode.ForeColor = System.Drawing.SystemColors.Control;
             this.btnToWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnToWHCode.Image")));
             this.btnToWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnToWHCode.Location = new System.Drawing.Point(494, 30);
+            this.btnToWHCode.Location = new System.Drawing.Point(494, 28);
             this.btnToWHCode.Name = "btnToWHCode";
             this.btnToWHCode.Size = new System.Drawing.Size(35, 23);
             this.btnToWHCode.TabIndex = 122;
@@ -375,7 +388,7 @@
             this.ddlProductSubGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlProductSubGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlProductSubGroup.FormattingEnabled = true;
-            this.ddlProductSubGroup.Location = new System.Drawing.Point(369, 56);
+            this.ddlProductSubGroup.Location = new System.Drawing.Point(369, 52);
             this.ddlProductSubGroup.Name = "ddlProductSubGroup";
             this.ddlProductSubGroup.Size = new System.Drawing.Size(186, 24);
             this.ddlProductSubGroup.TabIndex = 120;
@@ -385,7 +398,7 @@
             this.ddlProductGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlProductGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlProductGroup.FormattingEnabled = true;
-            this.ddlProductGroup.Location = new System.Drawing.Point(89, 56);
+            this.ddlProductGroup.Location = new System.Drawing.Point(89, 52);
             this.ddlProductGroup.Name = "ddlProductGroup";
             this.ddlProductGroup.Size = new System.Drawing.Size(159, 24);
             this.ddlProductGroup.TabIndex = 119;
@@ -394,7 +407,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(267, 59);
+            this.label1.Location = new System.Drawing.Point(267, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(99, 16);
             this.label1.TabIndex = 118;
@@ -403,7 +416,7 @@
             // lblEmpCode
             // 
             this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(7, 59);
+            this.lblEmpCode.Location = new System.Drawing.Point(7, 55);
             this.lblEmpCode.Name = "lblEmpCode";
             this.lblEmpCode.Size = new System.Drawing.Size(75, 16);
             this.lblEmpCode.TabIndex = 117;
@@ -411,7 +424,7 @@
             // 
             // txtFromWHCode
             // 
-            this.txtFromWHCode.Location = new System.Drawing.Point(89, 30);
+            this.txtFromWHCode.Location = new System.Drawing.Point(89, 28);
             this.txtFromWHCode.MaxLength = 15;
             this.txtFromWHCode.Name = "txtFromWHCode";
             this.txtFromWHCode.Size = new System.Drawing.Size(123, 23);
@@ -425,7 +438,7 @@
             this.btnFromWHCode.ForeColor = System.Drawing.SystemColors.Control;
             this.btnFromWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnFromWHCode.Image")));
             this.btnFromWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFromWHCode.Location = new System.Drawing.Point(214, 30);
+            this.btnFromWHCode.Location = new System.Drawing.Point(214, 28);
             this.btnFromWHCode.Name = "btnFromWHCode";
             this.btnFromWHCode.Size = new System.Drawing.Size(35, 23);
             this.btnFromWHCode.TabIndex = 111;
@@ -436,7 +449,7 @@
             // lblWHCode
             // 
             this.lblWHCode.AutoSize = true;
-            this.lblWHCode.Location = new System.Drawing.Point(9, 33);
+            this.lblWHCode.Location = new System.Drawing.Point(9, 31);
             this.lblWHCode.Name = "lblWHCode";
             this.lblWHCode.Size = new System.Drawing.Size(73, 16);
             this.lblWHCode.TabIndex = 113;
@@ -445,7 +458,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 86);
+            this.label6.Location = new System.Drawing.Point(9, 80);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 16);
             this.label6.TabIndex = 109;
@@ -524,19 +537,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // chkAllMM
-            // 
-            this.chkAllMM.AutoSize = true;
-            this.chkAllMM.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.chkAllMM.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkAllMM.Location = new System.Drawing.Point(535, 30);
-            this.chkAllMM.Name = "chkAllMM";
-            this.chkAllMM.Size = new System.Drawing.Size(112, 20);
-            this.chkAllMM.TabIndex = 127;
-            this.chkAllMM.Text = "ดึงข้อมูลทุกคลัง";
-            this.chkAllMM.UseVisualStyleBackColor = false;
-            this.chkAllMM.CheckedChanged += new System.EventHandler(this.chkAllMM_CheckedChanged);
-            // 
             // ccbProductCode
             // 
             this.ccbProductCode.CheckOnClick = true;
@@ -544,7 +544,7 @@
             this.ccbProductCode.DropDownHeight = 1;
             this.ccbProductCode.FormattingEnabled = true;
             this.ccbProductCode.IntegralHeight = false;
-            this.ccbProductCode.Location = new System.Drawing.Point(89, 83);
+            this.ccbProductCode.Location = new System.Drawing.Point(89, 77);
             this.ccbProductCode.Name = "ccbProductCode";
             this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
             this.ccbProductCode.TabIndex = 108;

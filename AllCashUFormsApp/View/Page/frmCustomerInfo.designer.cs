@@ -30,14 +30,14 @@ namespace AllCashUFormsApp.View.Page
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerInfo));
             this.pnlBackGround = new System.Windows.Forms.Panel();
             this.splitCustomerCenter = new System.Windows.Forms.SplitContainer();
@@ -56,6 +56,8 @@ namespace AllCashUFormsApp.View.Page
             this.lblQtyCount = new System.Windows.Forms.Label();
             this.lblQtyCountList = new System.Windows.Forms.Label();
             this.pnlSearch = new System.Windows.Forms.Panel();
+            this.btnMoveDown = new System.Windows.Forms.Button();
+            this.btnMoveUp = new System.Windows.Forms.Button();
             this.btnUpdateImage = new System.Windows.Forms.Button();
             this.chkChangeSaleArea = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -167,6 +169,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlPageName = new System.Windows.Forms.Panel();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
+            this.pnlButtonTopPage = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
@@ -178,7 +181,6 @@ namespace AllCashUFormsApp.View.Page
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.pnlButtonTopPage = new System.Windows.Forms.Panel();
             this.pnlBackGround.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCustomerCenter)).BeginInit();
             this.splitCustomerCenter.Panel1.SuspendLayout();
@@ -196,9 +198,9 @@ namespace AllCashUFormsApp.View.Page
             this.pnlTabPage.SuspendLayout();
             this.pnlPageName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
+            this.pnlButtonTopPage.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
-            this.pnlButtonTopPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlBackGround
@@ -236,19 +238,20 @@ namespace AllCashUFormsApp.View.Page
             this.pnlGridView.BackColor = System.Drawing.Color.Azure;
             this.pnlGridView.Controls.Add(this.grdList);
             this.pnlGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlGridView.Location = new System.Drawing.Point(0, 165);
+            this.pnlGridView.Location = new System.Drawing.Point(0, 163);
             this.pnlGridView.Name = "pnlGridView";
-            this.pnlGridView.Size = new System.Drawing.Size(597, 416);
+            this.pnlGridView.Size = new System.Drawing.Size(597, 418);
             this.pnlGridView.TabIndex = 167;
             // 
             // grdList
             // 
+            this.grdList.AllowDrop = true;
             this.grdList.AllowUserToAddRows = false;
             this.grdList.AllowUserToDeleteRows = false;
             this.grdList.AllowUserToResizeColumns = false;
             this.grdList.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCustomerID,
@@ -265,17 +268,24 @@ namespace AllCashUFormsApp.View.Page
             this.grdList.Location = new System.Drawing.Point(0, 0);
             this.grdList.MultiSelect = false;
             this.grdList.Name = "grdList";
-            this.grdList.Size = new System.Drawing.Size(597, 416);
+            this.grdList.Size = new System.Drawing.Size(597, 418);
             this.grdList.TabIndex = 170;
             this.grdList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellClick);
+            this.grdList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellEndEdit);
+            this.grdList.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_CellValueChanged);
+            this.grdList.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdList_RowLeave);
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             this.grdList.SelectionChanged += new System.EventHandler(this.grdList_SelectionChanged);
+            this.grdList.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragDrop);
+            this.grdList.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragOver);
+            this.grdList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
+            this.grdList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseMove);
             // 
             // colCustomerID
             // 
             this.colCustomerID.DataPropertyName = "CustomerID";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colCustomerID.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colCustomerID.DefaultCellStyle = dataGridViewCellStyle10;
             this.colCustomerID.HeaderText = "รหัสลูกค้า";
             this.colCustomerID.MaxInputLength = 20;
             this.colCustomerID.Name = "colCustomerID";
@@ -287,8 +297,8 @@ namespace AllCashUFormsApp.View.Page
             // colCustName
             // 
             this.colCustName.DataPropertyName = "CustName";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colCustName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colCustName.DefaultCellStyle = dataGridViewCellStyle11;
             this.colCustName.HeaderText = "ชื่อลูกค้า";
             this.colCustName.MaxInputLength = 200;
             this.colCustName.Name = "colCustName";
@@ -309,8 +319,8 @@ namespace AllCashUFormsApp.View.Page
             // colShopTypeName
             // 
             this.colShopTypeName.DataPropertyName = "ShopTypeName";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle12;
             this.colShopTypeName.HeaderText = "ประเภทร้านค้า";
             this.colShopTypeName.MaxInputLength = 50;
             this.colShopTypeName.Name = "colShopTypeName";
@@ -321,8 +331,8 @@ namespace AllCashUFormsApp.View.Page
             // colSalAreaID
             // 
             this.colSalAreaID.DataPropertyName = "SalAreaID";
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSalAreaID.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSalAreaID.DefaultCellStyle = dataGridViewCellStyle13;
             this.colSalAreaID.HeaderText = "รหัสตลาด";
             this.colSalAreaID.MaxInputLength = 20;
             this.colSalAreaID.Name = "colSalAreaID";
@@ -334,8 +344,8 @@ namespace AllCashUFormsApp.View.Page
             // colSalAreaName
             // 
             this.colSalAreaName.DataPropertyName = "SalAreaName";
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSalAreaName.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSalAreaName.DefaultCellStyle = dataGridViewCellStyle14;
             this.colSalAreaName.HeaderText = "ชื่อตลาด";
             this.colSalAreaName.MaxInputLength = 50;
             this.colSalAreaName.Name = "colSalAreaName";
@@ -346,8 +356,8 @@ namespace AllCashUFormsApp.View.Page
             // colWHID
             // 
             this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle15;
             this.colWHID.HeaderText = "รหัสคลัง Van";
             this.colWHID.MaxInputLength = 20;
             this.colWHID.Name = "colWHID";
@@ -358,12 +368,13 @@ namespace AllCashUFormsApp.View.Page
             // colSeq
             // 
             this.colSeq.DataPropertyName = "Seq";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSeq.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSeq.DefaultCellStyle = dataGridViewCellStyle16;
             this.colSeq.HeaderText = "ลำดับ";
             this.colSeq.MaxInputLength = 15;
             this.colSeq.Name = "colSeq";
+            this.colSeq.ReadOnly = true;
             this.colSeq.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.colSeq.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colSeq.Width = 60;
@@ -413,6 +424,8 @@ namespace AllCashUFormsApp.View.Page
             this.pnlSearch.AutoSize = true;
             this.pnlSearch.BackColor = System.Drawing.Color.Azure;
             this.pnlSearch.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlSearch.Controls.Add(this.btnMoveDown);
+            this.pnlSearch.Controls.Add(this.btnMoveUp);
             this.pnlSearch.Controls.Add(this.btnUpdateImage);
             this.pnlSearch.Controls.Add(this.chkChangeSaleArea);
             this.pnlSearch.Controls.Add(this.btnSearch);
@@ -436,8 +449,42 @@ namespace AllCashUFormsApp.View.Page
             this.pnlSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.pnlSearch.Location = new System.Drawing.Point(0, 0);
             this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Size = new System.Drawing.Size(597, 165);
+            this.pnlSearch.Size = new System.Drawing.Size(597, 163);
             this.pnlSearch.TabIndex = 164;
+            // 
+            // btnMoveDown
+            // 
+            this.btnMoveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMoveDown.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnMoveDown.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMoveDown.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMoveDown.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveDown.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveDown.Image")));
+            this.btnMoveDown.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnMoveDown.Location = new System.Drawing.Point(550, 121);
+            this.btnMoveDown.Name = "btnMoveDown";
+            this.btnMoveDown.Size = new System.Drawing.Size(37, 35);
+            this.btnMoveDown.TabIndex = 418;
+            this.btnMoveDown.UseVisualStyleBackColor = false;
+            this.btnMoveDown.Click += new System.EventHandler(this.btnMoveDown_Click);
+            // 
+            // btnMoveUp
+            // 
+            this.btnMoveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMoveUp.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnMoveUp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMoveUp.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMoveUp.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveUp.Image = ((System.Drawing.Image)(resources.GetObject("btnMoveUp.Image")));
+            this.btnMoveUp.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnMoveUp.Location = new System.Drawing.Point(550, 84);
+            this.btnMoveUp.Name = "btnMoveUp";
+            this.btnMoveUp.Size = new System.Drawing.Size(37, 34);
+            this.btnMoveUp.TabIndex = 417;
+            this.btnMoveUp.UseVisualStyleBackColor = false;
+            this.btnMoveUp.Click += new System.EventHandler(this.btnMoveUp_Click);
             // 
             // btnUpdateImage
             // 
@@ -447,20 +494,21 @@ namespace AllCashUFormsApp.View.Page
             this.btnUpdateImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdateImage.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdateImage.Image")));
             this.btnUpdateImage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUpdateImage.Location = new System.Drawing.Point(429, 85);
+            this.btnUpdateImage.Location = new System.Drawing.Point(398, 84);
             this.btnUpdateImage.Name = "btnUpdateImage";
             this.btnUpdateImage.Size = new System.Drawing.Size(149, 34);
             this.btnUpdateImage.TabIndex = 212;
             this.btnUpdateImage.Text = "ปรับปรุงข้อมูลรูปภาพ";
             this.btnUpdateImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnUpdateImage.UseVisualStyleBackColor = false;
+            this.btnUpdateImage.Visible = false;
             this.btnUpdateImage.Click += new System.EventHandler(this.btnUpdateImage_Click);
             // 
             // chkChangeSaleArea
             // 
             this.chkChangeSaleArea.AutoSize = true;
             this.chkChangeSaleArea.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkChangeSaleArea.Location = new System.Drawing.Point(247, 109);
+            this.chkChangeSaleArea.Location = new System.Drawing.Point(254, 109);
             this.chkChangeSaleArea.Name = "chkChangeSaleArea";
             this.chkChangeSaleArea.Size = new System.Drawing.Size(93, 20);
             this.chkChangeSaleArea.TabIndex = 416;
@@ -478,9 +526,9 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(502, 6);
+            this.btnSearch.Location = new System.Drawing.Point(513, 6);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 26);
+            this.btnSearch.Size = new System.Drawing.Size(67, 24);
             this.btnSearch.TabIndex = 216;
             this.btnSearch.Text = "ค้นหา";
             this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -494,21 +542,23 @@ namespace AllCashUFormsApp.View.Page
             this.txtSearch.Location = new System.Drawing.Point(97, 7);
             this.txtSearch.MaxLength = 200;
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(394, 23);
+            this.txtSearch.Size = new System.Drawing.Size(413, 23);
             this.txtSearch.TabIndex = 215;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // txtBranchName
             // 
-            this.txtBranchName.Location = new System.Drawing.Point(280, 59);
+            this.txtBranchName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBranchName.Location = new System.Drawing.Point(273, 58);
             this.txtBranchName.MaxLength = 50;
             this.txtBranchName.Name = "txtBranchName";
-            this.txtBranchName.Size = new System.Drawing.Size(167, 23);
+            this.txtBranchName.Size = new System.Drawing.Size(237, 23);
             this.txtBranchName.TabIndex = 214;
             // 
             // txtBranchCode
             // 
-            this.txtBranchCode.Location = new System.Drawing.Point(97, 59);
+            this.txtBranchCode.Location = new System.Drawing.Point(97, 58);
             this.txtBranchCode.MaxLength = 9;
             this.txtBranchCode.Name = "txtBranchCode";
             this.txtBranchCode.Size = new System.Drawing.Size(136, 23);
@@ -523,7 +573,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnChangeSeq.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnChangeSeq.Image = ((System.Drawing.Image)(resources.GetObject("btnChangeSeq.Image")));
             this.btnChangeSeq.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnChangeSeq.Location = new System.Drawing.Point(478, 123);
+            this.btnChangeSeq.Location = new System.Drawing.Point(446, 121);
             this.btnChangeSeq.Name = "btnChangeSeq";
             this.btnChangeSeq.Size = new System.Drawing.Size(101, 34);
             this.btnChangeSeq.TabIndex = 210;
@@ -535,7 +585,7 @@ namespace AllCashUFormsApp.View.Page
             // chkBoxPresale
             // 
             this.chkBoxPresale.AutoSize = true;
-            this.chkBoxPresale.Location = new System.Drawing.Point(247, 85);
+            this.chkBoxPresale.Location = new System.Drawing.Point(254, 86);
             this.chkBoxPresale.Name = "chkBoxPresale";
             this.chkBoxPresale.Size = new System.Drawing.Size(69, 20);
             this.chkBoxPresale.TabIndex = 207;
@@ -546,7 +596,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.ddlShopType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlShopType.FormattingEnabled = true;
-            this.ddlShopType.Location = new System.Drawing.Point(97, 134);
+            this.ddlShopType.Location = new System.Drawing.Point(97, 132);
             this.ddlShopType.Name = "ddlShopType";
             this.ddlShopType.Size = new System.Drawing.Size(136, 24);
             this.ddlShopType.TabIndex = 204;
@@ -555,7 +605,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label2.Location = new System.Drawing.Point(1, 135);
+            this.label2.Location = new System.Drawing.Point(1, 133);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(92, 16);
             this.label2.TabIndex = 205;
@@ -565,7 +615,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.ddlSalArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlSalArea.FormattingEnabled = true;
-            this.ddlSalArea.Location = new System.Drawing.Point(97, 109);
+            this.ddlSalArea.Location = new System.Drawing.Point(97, 107);
             this.ddlSalArea.Name = "ddlSalArea";
             this.ddlSalArea.Size = new System.Drawing.Size(136, 24);
             this.ddlSalArea.TabIndex = 198;
@@ -575,7 +625,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.label38.AutoSize = true;
             this.label38.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label38.Location = new System.Drawing.Point(46, 110);
+            this.label38.Location = new System.Drawing.Point(46, 108);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(47, 16);
             this.label38.TabIndex = 203;
@@ -621,7 +671,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.ddlWH.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlWH.FormattingEnabled = true;
-            this.ddlWH.Location = new System.Drawing.Point(97, 84);
+            this.ddlWH.Location = new System.Drawing.Point(97, 82);
             this.ddlWH.Name = "ddlWH";
             this.ddlWH.Size = new System.Drawing.Size(136, 24);
             this.ddlWH.TabIndex = 197;
@@ -631,7 +681,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Van.AutoSize = true;
             this.lbl_Van.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Van.Location = new System.Drawing.Point(54, 87);
+            this.lbl_Van.Location = new System.Drawing.Point(54, 86);
             this.lbl_Van.Name = "lbl_Van";
             this.lbl_Van.Size = new System.Drawing.Size(43, 16);
             this.lbl_Van.TabIndex = 202;
@@ -651,7 +701,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblDepo_.AutoSize = true;
             this.lblDepo_.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblDepo_.Location = new System.Drawing.Point(50, 64);
+            this.lblDepo_.Location = new System.Drawing.Point(50, 63);
             this.lblDepo_.Name = "lblDepo_";
             this.lblDepo_.Size = new System.Drawing.Size(47, 16);
             this.lblDepo_.TabIndex = 206;
@@ -675,7 +725,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchBranch.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchBranch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchBranch.Image")));
             this.btnSearchBranch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchBranch.Location = new System.Drawing.Point(239, 59);
+            this.btnSearchBranch.Location = new System.Drawing.Point(236, 58);
             this.btnSearchBranch.Name = "btnSearchBranch";
             this.btnSearchBranch.Size = new System.Drawing.Size(35, 23);
             this.btnSearchBranch.TabIndex = 202;
@@ -777,7 +827,7 @@ namespace AllCashUFormsApp.View.Page
             this.panel3.Controls.Add(this.rdoCancel);
             this.panel3.Controls.Add(this.rdoNormal);
             this.panel3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.panel3.Location = new System.Drawing.Point(163, 4);
+            this.panel3.Location = new System.Drawing.Point(149, 4);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(136, 25);
             this.panel3.TabIndex = 418;
@@ -811,7 +861,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label7.Location = new System.Drawing.Point(103, 8);
+            this.label7.Location = new System.Drawing.Point(89, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 16);
             this.label7.TabIndex = 417;
@@ -820,7 +870,7 @@ namespace AllCashUFormsApp.View.Page
             // chkSaleAreaEdit
             // 
             this.chkSaleAreaEdit.AutoSize = true;
-            this.chkSaleAreaEdit.Location = new System.Drawing.Point(4, 78);
+            this.chkSaleAreaEdit.Location = new System.Drawing.Point(399, 5);
             this.chkSaleAreaEdit.Name = "chkSaleAreaEdit";
             this.chkSaleAreaEdit.Size = new System.Drawing.Size(93, 20);
             this.chkSaleAreaEdit.TabIndex = 416;
@@ -855,7 +905,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnAddShelf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddShelf.Image = ((System.Drawing.Image)(resources.GetObject("btnAddShelf.Image")));
             this.btnAddShelf.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddShelf.Location = new System.Drawing.Point(520, 415);
+            this.btnAddShelf.Location = new System.Drawing.Point(538, 415);
             this.btnAddShelf.Name = "btnAddShelf";
             this.btnAddShelf.Size = new System.Drawing.Size(61, 26);
             this.btnAddShelf.TabIndex = 414;
@@ -871,7 +921,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnRemoveShelf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveShelf.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveShelf.Image")));
             this.btnRemoveShelf.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemoveShelf.Location = new System.Drawing.Point(587, 415);
+            this.btnRemoveShelf.Location = new System.Drawing.Point(605, 415);
             this.btnRemoveShelf.Name = "btnRemoveShelf";
             this.btnRemoveShelf.Size = new System.Drawing.Size(61, 26);
             this.btnRemoveShelf.TabIndex = 412;
@@ -882,14 +932,14 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtFirstName
             // 
-            this.txtFirstName.Location = new System.Drawing.Point(287, 432);
+            this.txtFirstName.Location = new System.Drawing.Point(273, 432);
             this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(221, 23);
+            this.txtFirstName.Size = new System.Drawing.Size(241, 23);
             this.txtFirstName.TabIndex = 36;
             // 
             // txtRemark
             // 
-            this.txtRemark.Location = new System.Drawing.Point(165, 456);
+            this.txtRemark.Location = new System.Drawing.Point(151, 456);
             this.txtRemark.MaxLength = 500;
             this.txtRemark.Name = "txtRemark";
             this.txtRemark.Size = new System.Drawing.Size(516, 23);
@@ -897,7 +947,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtEmpID
             // 
-            this.txtEmpID.Location = new System.Drawing.Point(165, 432);
+            this.txtEmpID.Location = new System.Drawing.Point(151, 432);
             this.txtEmpID.Name = "txtEmpID";
             this.txtEmpID.Size = new System.Drawing.Size(78, 23);
             this.txtEmpID.TabIndex = 35;
@@ -910,7 +960,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSaleEmp.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSaleEmp.Image = ((System.Drawing.Image)(resources.GetObject("btnSaleEmp.Image")));
             this.btnSaleEmp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSaleEmp.Location = new System.Drawing.Point(247, 431);
+            this.btnSaleEmp.Location = new System.Drawing.Point(233, 431);
             this.btnSaleEmp.Name = "btnSaleEmp";
             this.btnSaleEmp.Size = new System.Drawing.Size(35, 23);
             this.btnSaleEmp.TabIndex = 405;
@@ -921,7 +971,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Remark.AutoSize = true;
             this.lbl_Remark.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Remark.Location = new System.Drawing.Point(93, 459);
+            this.lbl_Remark.Location = new System.Drawing.Point(79, 459);
             this.lbl_Remark.Name = "lbl_Remark";
             this.lbl_Remark.Size = new System.Drawing.Size(67, 16);
             this.lbl_Remark.TabIndex = 402;
@@ -931,7 +981,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_EmployeeID.AutoSize = true;
             this.lbl_EmployeeID.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_EmployeeID.Location = new System.Drawing.Point(76, 434);
+            this.lbl_EmployeeID.Location = new System.Drawing.Point(62, 434);
             this.lbl_EmployeeID.Name = "lbl_EmployeeID";
             this.lbl_EmployeeID.Size = new System.Drawing.Size(84, 16);
             this.lbl_EmployeeID.TabIndex = 403;
@@ -945,7 +995,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchPriceGroup.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchPriceGroup.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchPriceGroup.Image")));
             this.btnSearchPriceGroup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchPriceGroup.Location = new System.Drawing.Point(314, 406);
+            this.btnSearchPriceGroup.Location = new System.Drawing.Point(300, 406);
             this.btnSearchPriceGroup.Name = "btnSearchPriceGroup";
             this.btnSearchPriceGroup.Size = new System.Drawing.Size(35, 23);
             this.btnSearchPriceGroup.TabIndex = 33;
@@ -955,34 +1005,34 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtTelephone
             // 
-            this.txtTelephone.Location = new System.Drawing.Point(361, 333);
+            this.txtTelephone.Location = new System.Drawing.Point(347, 333);
             this.txtTelephone.MaxLength = 50;
             this.txtTelephone.Name = "txtTelephone";
-            this.txtTelephone.Size = new System.Drawing.Size(145, 23);
+            this.txtTelephone.Size = new System.Drawing.Size(165, 23);
             this.txtTelephone.TabIndex = 29;
             this.txtTelephone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtTelephone_KeyPress);
             // 
             // txtCreditDay
             // 
-            this.txtCreditDay.Location = new System.Drawing.Point(435, 407);
+            this.txtCreditDay.Location = new System.Drawing.Point(421, 407);
             this.txtCreditDay.MaxLength = 3;
             this.txtCreditDay.Name = "txtCreditDay";
-            this.txtCreditDay.Size = new System.Drawing.Size(72, 23);
+            this.txtCreditDay.Size = new System.Drawing.Size(92, 23);
             this.txtCreditDay.TabIndex = 34;
             this.txtCreditDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtCreditDay.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCreditDay_KeyPress);
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(361, 358);
+            this.txtEmail.Location = new System.Drawing.Point(347, 358);
             this.txtEmail.MaxLength = 50;
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(145, 23);
+            this.txtEmail.Size = new System.Drawing.Size(165, 23);
             this.txtEmail.TabIndex = 32;
             // 
             // txtTaxId
             // 
-            this.txtTaxId.Location = new System.Drawing.Point(164, 382);
+            this.txtTaxId.Location = new System.Drawing.Point(150, 382);
             this.txtTaxId.MaxLength = 15;
             this.txtTaxId.Name = "txtTaxId";
             this.txtTaxId.Size = new System.Drawing.Size(144, 23);
@@ -990,7 +1040,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtFax
             // 
-            this.txtFax.Location = new System.Drawing.Point(164, 358);
+            this.txtFax.Location = new System.Drawing.Point(150, 358);
             this.txtFax.MaxLength = 50;
             this.txtFax.Name = "txtFax";
             this.txtFax.Size = new System.Drawing.Size(144, 23);
@@ -998,7 +1048,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtContact
             // 
-            this.txtContact.Location = new System.Drawing.Point(164, 333);
+            this.txtContact.Location = new System.Drawing.Point(150, 333);
             this.txtContact.MaxLength = 200;
             this.txtContact.Name = "txtContact";
             this.txtContact.Size = new System.Drawing.Size(123, 23);
@@ -1008,7 +1058,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.cbbPriceGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbPriceGroup.FormattingEnabled = true;
-            this.cbbPriceGroup.Location = new System.Drawing.Point(165, 406);
+            this.cbbPriceGroup.Location = new System.Drawing.Point(151, 406);
             this.cbbPriceGroup.Name = "cbbPriceGroup";
             this.cbbPriceGroup.Size = new System.Drawing.Size(141, 24);
             this.cbbPriceGroup.TabIndex = 32;
@@ -1017,7 +1067,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.chkRequestTaxBill.AutoSize = true;
             this.chkRequestTaxBill.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.chkRequestTaxBill.Location = new System.Drawing.Point(167, 483);
+            this.chkRequestTaxBill.Location = new System.Drawing.Point(153, 483);
             this.chkRequestTaxBill.Name = "chkRequestTaxBill";
             this.chkRequestTaxBill.Size = new System.Drawing.Size(145, 20);
             this.chkRequestTaxBill.TabIndex = 38;
@@ -1028,7 +1078,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_StatusTax.AutoSize = true;
             this.lbl_StatusTax.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_StatusTax.Location = new System.Drawing.Point(40, 483);
+            this.lbl_StatusTax.Location = new System.Drawing.Point(26, 483);
             this.lbl_StatusTax.Name = "lbl_StatusTax";
             this.lbl_StatusTax.Size = new System.Drawing.Size(121, 16);
             this.lbl_StatusTax.TabIndex = 279;
@@ -1038,7 +1088,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Credit.AutoSize = true;
             this.lbl_Credit.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Credit.Location = new System.Drawing.Point(354, 410);
+            this.lbl_Credit.Location = new System.Drawing.Point(340, 410);
             this.lbl_Credit.Name = "lbl_Credit";
             this.lbl_Credit.Size = new System.Drawing.Size(79, 16);
             this.lbl_Credit.TabIndex = 281;
@@ -1048,7 +1098,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Mail.AutoSize = true;
             this.lbl_Mail.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Mail.Location = new System.Drawing.Point(312, 360);
+            this.lbl_Mail.Location = new System.Drawing.Point(298, 360);
             this.lbl_Mail.Name = "lbl_Mail";
             this.lbl_Mail.Size = new System.Drawing.Size(45, 16);
             this.lbl_Mail.TabIndex = 287;
@@ -1058,7 +1108,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_PriceGroup.AutoSize = true;
             this.lbl_PriceGroup.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_PriceGroup.Location = new System.Drawing.Point(52, 407);
+            this.lbl_PriceGroup.Location = new System.Drawing.Point(38, 407);
             this.lbl_PriceGroup.Name = "lbl_PriceGroup";
             this.lbl_PriceGroup.Size = new System.Drawing.Size(108, 16);
             this.lbl_PriceGroup.TabIndex = 283;
@@ -1068,7 +1118,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_TaxNo.AutoSize = true;
             this.lbl_TaxNo.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_TaxNo.Location = new System.Drawing.Point(23, 381);
+            this.lbl_TaxNo.Location = new System.Drawing.Point(9, 381);
             this.lbl_TaxNo.Name = "lbl_TaxNo";
             this.lbl_TaxNo.Size = new System.Drawing.Size(136, 16);
             this.lbl_TaxNo.TabIndex = 284;
@@ -1078,7 +1128,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label11.Location = new System.Drawing.Point(83, 359);
+            this.label11.Location = new System.Drawing.Point(69, 359);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(76, 16);
             this.label11.TabIndex = 285;
@@ -1088,7 +1138,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblPhone.AutoSize = true;
             this.lblPhone.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblPhone.Location = new System.Drawing.Point(292, 336);
+            this.lblPhone.Location = new System.Drawing.Point(278, 336);
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(64, 16);
             this.lblPhone.TabIndex = 286;
@@ -1098,7 +1148,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_NameContact.AutoSize = true;
             this.lbl_NameContact.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_NameContact.Location = new System.Drawing.Point(86, 334);
+            this.lbl_NameContact.Location = new System.Drawing.Point(72, 334);
             this.lbl_NameContact.Name = "lbl_NameContact";
             this.lbl_NameContact.Size = new System.Drawing.Size(73, 16);
             this.lbl_NameContact.TabIndex = 288;
@@ -1112,7 +1162,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnDepo.ForeColor = System.Drawing.SystemColors.Control;
             this.btnDepo.Image = ((System.Drawing.Image)(resources.GetObject("btnDepo.Image")));
             this.btnDepo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDepo.Location = new System.Drawing.Point(257, 30);
+            this.btnDepo.Location = new System.Drawing.Point(243, 30);
             this.btnDepo.Name = "btnDepo";
             this.btnDepo.Size = new System.Drawing.Size(35, 23);
             this.btnDepo.TabIndex = 2;
@@ -1122,7 +1172,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtWHCode
             // 
-            this.txtWHCode.Location = new System.Drawing.Point(163, 55);
+            this.txtWHCode.Location = new System.Drawing.Point(149, 55);
             this.txtWHCode.MaxLength = 10;
             this.txtWHCode.Name = "txtWHCode";
             this.txtWHCode.Size = new System.Drawing.Size(89, 23);
@@ -1223,9 +1273,9 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchAddress.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearchAddress.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchAddress.Image")));
             this.btnSearchAddress.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchAddress.Location = new System.Drawing.Point(432, 229);
+            this.btnSearchAddress.Location = new System.Drawing.Point(434, 229);
             this.btnSearchAddress.Name = "btnSearchAddress";
-            this.btnSearchAddress.Size = new System.Drawing.Size(76, 49);
+            this.btnSearchAddress.Size = new System.Drawing.Size(79, 49);
             this.btnSearchAddress.TabIndex = 23;
             this.btnSearchAddress.Text = "ราย\r\nละเอียด";
             this.btnSearchAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1235,46 +1285,46 @@ namespace AllCashUFormsApp.View.Page
             // txtShipTo
             // 
             this.txtShipTo.BackColor = System.Drawing.SystemColors.Window;
-            this.txtShipTo.Location = new System.Drawing.Point(165, 280);
+            this.txtShipTo.Location = new System.Drawing.Point(151, 280);
             this.txtShipTo.MaxLength = 200;
             this.txtShipTo.Multiline = true;
             this.txtShipTo.Name = "txtShipTo";
             this.txtShipTo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtShipTo.Size = new System.Drawing.Size(265, 51);
+            this.txtShipTo.Size = new System.Drawing.Size(277, 51);
             this.txtShipTo.TabIndex = 24;
             // 
             // txtBillTo
             // 
             this.txtBillTo.BackColor = System.Drawing.SystemColors.Window;
-            this.txtBillTo.Location = new System.Drawing.Point(165, 229);
+            this.txtBillTo.Location = new System.Drawing.Point(151, 229);
             this.txtBillTo.MaxLength = 200;
             this.txtBillTo.Multiline = true;
             this.txtBillTo.Name = "txtBillTo";
             this.txtBillTo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtBillTo.Size = new System.Drawing.Size(265, 50);
+            this.txtBillTo.Size = new System.Drawing.Size(277, 50);
             this.txtBillTo.TabIndex = 22;
             // 
             // txtCustName
             // 
-            this.txtCustName.Location = new System.Drawing.Point(165, 205);
+            this.txtCustName.Location = new System.Drawing.Point(151, 205);
             this.txtCustName.MaxLength = 200;
             this.txtCustName.Name = "txtCustName";
-            this.txtCustName.Size = new System.Drawing.Size(342, 23);
+            this.txtCustName.Size = new System.Drawing.Size(362, 23);
             this.txtCustName.TabIndex = 21;
             // 
             // txtCustShortName
             // 
-            this.txtCustShortName.Location = new System.Drawing.Point(310, 181);
+            this.txtCustShortName.Location = new System.Drawing.Point(296, 181);
             this.txtCustShortName.MaxLength = 200;
             this.txtCustShortName.Name = "txtCustShortName";
-            this.txtCustShortName.Size = new System.Drawing.Size(197, 23);
+            this.txtCustShortName.Size = new System.Drawing.Size(216, 23);
             this.txtCustShortName.TabIndex = 20;
             // 
             // cbbTitle
             // 
             this.cbbTitle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbTitle.FormattingEnabled = true;
-            this.cbbTitle.Location = new System.Drawing.Point(165, 181);
+            this.cbbTitle.Location = new System.Drawing.Point(151, 181);
             this.cbbTitle.Name = "cbbTitle";
             this.cbbTitle.Size = new System.Drawing.Size(89, 24);
             this.cbbTitle.TabIndex = 19;
@@ -1293,7 +1343,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_ShortName.AutoSize = true;
             this.lbl_ShortName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_ShortName.Location = new System.Drawing.Point(261, 184);
+            this.lbl_ShortName.Location = new System.Drawing.Point(247, 184);
             this.lbl_ShortName.Name = "lbl_ShortName";
             this.lbl_ShortName.Size = new System.Drawing.Size(49, 16);
             this.lbl_ShortName.TabIndex = 266;
@@ -1303,7 +1353,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblC_Title.AutoSize = true;
             this.lblC_Title.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblC_Title.Location = new System.Drawing.Point(91, 183);
+            this.lblC_Title.Location = new System.Drawing.Point(77, 183);
             this.lblC_Title.Name = "lblC_Title";
             this.lblC_Title.Size = new System.Drawing.Size(67, 16);
             this.lblC_Title.TabIndex = 265;
@@ -1313,7 +1363,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.chkSelectBillTo.AutoSize = true;
             this.chkSelectBillTo.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.chkSelectBillTo.Location = new System.Drawing.Point(432, 290);
+            this.chkSelectBillTo.Location = new System.Drawing.Point(434, 291);
             this.chkSelectBillTo.Name = "chkSelectBillTo";
             this.chkSelectBillTo.Size = new System.Drawing.Size(88, 36);
             this.chkSelectBillTo.TabIndex = 25;
@@ -1325,7 +1375,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.cbbPreOrder.AutoSize = true;
             this.cbbPreOrder.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.cbbPreOrder.Location = new System.Drawing.Point(427, 82);
+            this.cbbPreOrder.Location = new System.Drawing.Point(413, 82);
             this.cbbPreOrder.Name = "cbbPreOrder";
             this.cbbPreOrder.Size = new System.Drawing.Size(75, 18);
             this.cbbPreOrder.TabIndex = 10;
@@ -1334,16 +1384,16 @@ namespace AllCashUFormsApp.View.Page
             // 
             // txtCustomerRefCode
             // 
-            this.txtCustomerRefCode.Location = new System.Drawing.Point(412, 133);
+            this.txtCustomerRefCode.Location = new System.Drawing.Point(398, 132);
             this.txtCustomerRefCode.MaxLength = 50;
             this.txtCustomerRefCode.Name = "txtCustomerRefCode";
-            this.txtCustomerRefCode.Size = new System.Drawing.Size(93, 23);
+            this.txtCustomerRefCode.Size = new System.Drawing.Size(114, 23);
             this.txtCustomerRefCode.TabIndex = 17;
             // 
             // txtSeq
             // 
             this.txtSeq.BackColor = System.Drawing.SystemColors.Window;
-            this.txtSeq.Location = new System.Drawing.Point(353, 80);
+            this.txtSeq.Location = new System.Drawing.Point(339, 80);
             this.txtSeq.MaxLength = 6;
             this.txtSeq.Name = "txtSeq";
             this.txtSeq.Size = new System.Drawing.Size(64, 23);
@@ -1355,7 +1405,7 @@ namespace AllCashUFormsApp.View.Page
             // txtDistrictCode
             // 
             this.txtDistrictCode.BackColor = System.Drawing.SystemColors.Window;
-            this.txtDistrictCode.Location = new System.Drawing.Point(164, 106);
+            this.txtDistrictCode.Location = new System.Drawing.Point(150, 106);
             this.txtDistrictCode.MaxLength = 6;
             this.txtDistrictCode.Name = "txtDistrictCode";
             this.txtDistrictCode.Size = new System.Drawing.Size(133, 23);
@@ -1364,34 +1414,34 @@ namespace AllCashUFormsApp.View.Page
             // txtDistrictName
             // 
             this.txtDistrictName.BackColor = System.Drawing.SystemColors.Window;
-            this.txtDistrictName.Location = new System.Drawing.Point(369, 106);
+            this.txtDistrictName.Location = new System.Drawing.Point(355, 106);
             this.txtDistrictName.MaxLength = 50;
             this.txtDistrictName.Name = "txtDistrictName";
-            this.txtDistrictName.Size = new System.Drawing.Size(136, 23);
+            this.txtDistrictName.Size = new System.Drawing.Size(157, 23);
             this.txtDistrictName.TabIndex = 13;
             // 
             // txtWHName
             // 
             this.txtWHName.BackColor = System.Drawing.SystemColors.Window;
-            this.txtWHName.Location = new System.Drawing.Point(297, 55);
+            this.txtWHName.Location = new System.Drawing.Point(284, 55);
             this.txtWHName.MaxLength = 200;
             this.txtWHName.Name = "txtWHName";
-            this.txtWHName.Size = new System.Drawing.Size(208, 23);
+            this.txtWHName.Size = new System.Drawing.Size(228, 23);
             this.txtWHName.TabIndex = 6;
             // 
             // txtBranchName_
             // 
             this.txtBranchName_.BackColor = System.Drawing.SystemColors.Window;
-            this.txtBranchName_.Location = new System.Drawing.Point(298, 31);
+            this.txtBranchName_.Location = new System.Drawing.Point(284, 31);
             this.txtBranchName_.MaxLength = 50;
             this.txtBranchName_.Name = "txtBranchName_";
-            this.txtBranchName_.Size = new System.Drawing.Size(208, 23);
+            this.txtBranchName_.Size = new System.Drawing.Size(228, 23);
             this.txtBranchName_.TabIndex = 3;
             // 
             // txtBranchCode_
             // 
             this.txtBranchCode_.BackColor = System.Drawing.SystemColors.Window;
-            this.txtBranchCode_.Location = new System.Drawing.Point(163, 31);
+            this.txtBranchCode_.Location = new System.Drawing.Point(149, 31);
             this.txtBranchCode_.MaxLength = 9;
             this.txtBranchCode_.Name = "txtBranchCode_";
             this.txtBranchCode_.Size = new System.Drawing.Size(89, 23);
@@ -1405,7 +1455,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchShopType.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchShopType.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchShopType.Image")));
             this.btnSearchShopType.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchShopType.Location = new System.Drawing.Point(300, 132);
+            this.btnSearchShopType.Location = new System.Drawing.Point(286, 132);
             this.btnSearchShopType.Name = "btnSearchShopType";
             this.btnSearchShopType.Size = new System.Drawing.Size(35, 23);
             this.btnSearchShopType.TabIndex = 12;
@@ -1421,7 +1471,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchVan.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchVan.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchVan.Image")));
             this.btnSearchVan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchVan.Location = new System.Drawing.Point(257, 55);
+            this.btnSearchVan.Location = new System.Drawing.Point(243, 55);
             this.btnSearchVan.Name = "btnSearchVan";
             this.btnSearchVan.Size = new System.Drawing.Size(35, 23);
             this.btnSearchVan.TabIndex = 5;
@@ -1434,7 +1484,7 @@ namespace AllCashUFormsApp.View.Page
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(66, 228);
+            this.label6.Location = new System.Drawing.Point(52, 228);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(16, 16);
             this.label6.TabIndex = 248;
@@ -1445,7 +1495,7 @@ namespace AllCashUFormsApp.View.Page
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(81, 206);
+            this.label5.Location = new System.Drawing.Point(67, 206);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(16, 16);
             this.label5.TabIndex = 248;
@@ -1456,7 +1506,7 @@ namespace AllCashUFormsApp.View.Page
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label4.ForeColor = System.Drawing.Color.Red;
-            this.label4.Location = new System.Drawing.Point(74, 109);
+            this.label4.Location = new System.Drawing.Point(60, 109);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(16, 16);
             this.label4.TabIndex = 248;
@@ -1467,7 +1517,7 @@ namespace AllCashUFormsApp.View.Page
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(97, 82);
+            this.label3.Location = new System.Drawing.Point(83, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(16, 16);
             this.label3.TabIndex = 247;
@@ -1478,7 +1528,7 @@ namespace AllCashUFormsApp.View.Page
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(98, 32);
+            this.label1.Location = new System.Drawing.Point(84, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(16, 16);
             this.label1.TabIndex = 246;
@@ -1489,7 +1539,7 @@ namespace AllCashUFormsApp.View.Page
             this.label43.AutoSize = true;
             this.label43.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label43.ForeColor = System.Drawing.Color.Red;
-            this.label43.Location = new System.Drawing.Point(103, 58);
+            this.label43.Location = new System.Drawing.Point(89, 58);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(16, 16);
             this.label43.TabIndex = 246;
@@ -1499,7 +1549,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Depo.AutoSize = true;
             this.lbl_Depo.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Depo.Location = new System.Drawing.Point(114, 32);
+            this.lbl_Depo.Location = new System.Drawing.Point(100, 32);
             this.lbl_Depo.Name = "lbl_Depo";
             this.lbl_Depo.Size = new System.Drawing.Size(43, 16);
             this.lbl_Depo.TabIndex = 249;
@@ -1509,7 +1559,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Ship2.AutoSize = true;
             this.lbl_Ship2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Ship2.Location = new System.Drawing.Point(83, 284);
+            this.lbl_Ship2.Location = new System.Drawing.Point(69, 284);
             this.lbl_Ship2.Name = "lbl_Ship2";
             this.lbl_Ship2.Size = new System.Drawing.Size(76, 16);
             this.lbl_Ship2.TabIndex = 245;
@@ -1519,7 +1569,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_Bill.AutoSize = true;
             this.lbl_Bill.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Bill.Location = new System.Drawing.Point(81, 230);
+            this.lbl_Bill.Location = new System.Drawing.Point(67, 230);
             this.lbl_Bill.Name = "lbl_Bill";
             this.lbl_Bill.Size = new System.Drawing.Size(78, 16);
             this.lbl_Bill.TabIndex = 243;
@@ -1529,7 +1579,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_CName.AutoSize = true;
             this.lbl_CName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_CName.Location = new System.Drawing.Point(96, 207);
+            this.lbl_CName.Location = new System.Drawing.Point(82, 207);
             this.lbl_CName.Name = "lbl_CName";
             this.lbl_CName.Size = new System.Drawing.Size(63, 16);
             this.lbl_CName.TabIndex = 244;
@@ -1539,7 +1589,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.cbbSalArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbSalArea.FormattingEnabled = true;
-            this.cbbSalArea.Location = new System.Drawing.Point(163, 80);
+            this.cbbSalArea.Location = new System.Drawing.Point(149, 80);
             this.cbbSalArea.Name = "cbbSalArea";
             this.cbbSalArea.Size = new System.Drawing.Size(133, 24);
             this.cbbSalArea.TabIndex = 7;
@@ -1549,7 +1599,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.cbbShopType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbShopType.FormattingEnabled = true;
-            this.cbbShopType.Location = new System.Drawing.Point(164, 132);
+            this.cbbShopType.Location = new System.Drawing.Point(150, 132);
             this.cbbShopType.Name = "cbbShopType";
             this.cbbShopType.Size = new System.Drawing.Size(133, 24);
             this.cbbShopType.TabIndex = 14;
@@ -1557,18 +1607,18 @@ namespace AllCashUFormsApp.View.Page
             // txtCustomerSAPCode
             // 
             this.txtCustomerSAPCode.BackColor = System.Drawing.SystemColors.Window;
-            this.txtCustomerSAPCode.Location = new System.Drawing.Point(372, 157);
+            this.txtCustomerSAPCode.Location = new System.Drawing.Point(358, 157);
             this.txtCustomerSAPCode.MaxLength = 50;
             this.txtCustomerSAPCode.Name = "txtCustomerSAPCode";
             this.txtCustomerSAPCode.ReadOnly = true;
-            this.txtCustomerSAPCode.Size = new System.Drawing.Size(133, 23);
+            this.txtCustomerSAPCode.Size = new System.Drawing.Size(155, 23);
             this.txtCustomerSAPCode.TabIndex = 18;
             // 
             // lbl_CustSAP_Code
             // 
             this.lbl_CustSAP_Code.AutoSize = true;
             this.lbl_CustSAP_Code.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_CustSAP_Code.Location = new System.Drawing.Point(303, 161);
+            this.lbl_CustSAP_Code.Location = new System.Drawing.Point(289, 161);
             this.lbl_CustSAP_Code.Name = "lbl_CustSAP_Code";
             this.lbl_CustSAP_Code.Size = new System.Drawing.Size(66, 16);
             this.lbl_CustSAP_Code.TabIndex = 242;
@@ -1577,7 +1627,7 @@ namespace AllCashUFormsApp.View.Page
             // txtCustomerID
             // 
             this.txtCustomerID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtCustomerID.Location = new System.Drawing.Point(164, 158);
+            this.txtCustomerID.Location = new System.Drawing.Point(150, 158);
             this.txtCustomerID.MaxLength = 20;
             this.txtCustomerID.Name = "txtCustomerID";
             this.txtCustomerID.ReadOnly = true;
@@ -1588,7 +1638,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_CustID.AutoSize = true;
             this.lbl_CustID.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_CustID.Location = new System.Drawing.Point(89, 159);
+            this.lbl_CustID.Location = new System.Drawing.Point(75, 159);
             this.lbl_CustID.Name = "lbl_CustID";
             this.lbl_CustID.Size = new System.Drawing.Size(69, 16);
             this.lbl_CustID.TabIndex = 241;
@@ -1598,7 +1648,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_RefCode.AutoSize = true;
             this.lbl_RefCode.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_RefCode.Location = new System.Drawing.Point(337, 136);
+            this.lbl_RefCode.Location = new System.Drawing.Point(323, 136);
             this.lbl_RefCode.Name = "lbl_RefCode";
             this.lbl_RefCode.Size = new System.Drawing.Size(76, 16);
             this.lbl_RefCode.TabIndex = 237;
@@ -1608,7 +1658,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_ShopType.AutoSize = true;
             this.lbl_ShopType.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_ShopType.Location = new System.Drawing.Point(66, 133);
+            this.lbl_ShopType.Location = new System.Drawing.Point(52, 133);
             this.lbl_ShopType.Name = "lbl_ShopType";
             this.lbl_ShopType.Size = new System.Drawing.Size(92, 16);
             this.lbl_ShopType.TabIndex = 239;
@@ -1618,7 +1668,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_District_Name.AutoSize = true;
             this.lbl_District_Name.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_District_Name.Location = new System.Drawing.Point(304, 110);
+            this.lbl_District_Name.Location = new System.Drawing.Point(290, 110);
             this.lbl_District_Name.Name = "lbl_District_Name";
             this.lbl_District_Name.Size = new System.Drawing.Size(63, 16);
             this.lbl_District_Name.TabIndex = 240;
@@ -1628,7 +1678,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lblDistrict.AutoSize = true;
             this.lblDistrict.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lblDistrict.Location = new System.Drawing.Point(89, 108);
+            this.lblDistrict.Location = new System.Drawing.Point(75, 108);
             this.lblDistrict.Name = "lblDistrict";
             this.lblDistrict.Size = new System.Drawing.Size(69, 16);
             this.lblDistrict.TabIndex = 240;
@@ -1638,7 +1688,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_SalArea.AutoSize = true;
             this.lbl_SalArea.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_SalArea.Location = new System.Drawing.Point(111, 81);
+            this.lbl_SalArea.Location = new System.Drawing.Point(97, 81);
             this.lbl_SalArea.Name = "lbl_SalArea";
             this.lbl_SalArea.Size = new System.Drawing.Size(47, 16);
             this.lbl_SalArea.TabIndex = 236;
@@ -1648,7 +1698,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_NoSeq.AutoSize = true;
             this.lbl_NoSeq.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_NoSeq.Location = new System.Drawing.Point(305, 83);
+            this.lbl_NoSeq.Location = new System.Drawing.Point(291, 83);
             this.lbl_NoSeq.Name = "lbl_NoSeq";
             this.lbl_NoSeq.Size = new System.Drawing.Size(47, 16);
             this.lbl_NoSeq.TabIndex = 235;
@@ -1658,7 +1708,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.lbl_WH.AutoSize = true;
             this.lbl_WH.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_WH.Location = new System.Drawing.Point(119, 57);
+            this.lbl_WH.Location = new System.Drawing.Point(105, 57);
             this.lbl_WH.Name = "lbl_WH";
             this.lbl_WH.Size = new System.Drawing.Size(39, 16);
             this.lbl_WH.TabIndex = 235;
@@ -1704,6 +1754,15 @@ namespace AllCashUFormsApp.View.Page
             this.FormHeader.Size = new System.Drawing.Size(48, 17);
             this.FormHeader.TabIndex = 0;
             this.FormHeader.Text = "label8";
+            // 
+            // pnlButtonTopPage
+            // 
+            this.pnlButtonTopPage.Controls.Add(this.panel1);
+            this.pnlButtonTopPage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlButtonTopPage.Location = new System.Drawing.Point(0, 0);
+            this.pnlButtonTopPage.Name = "pnlButtonTopPage";
+            this.pnlButtonTopPage.Size = new System.Drawing.Size(1305, 31);
+            this.pnlButtonTopPage.TabIndex = 0;
             // 
             // panel1
             // 
@@ -1916,15 +1975,6 @@ namespace AllCashUFormsApp.View.Page
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // pnlButtonTopPage
-            // 
-            this.pnlButtonTopPage.Controls.Add(this.panel1);
-            this.pnlButtonTopPage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlButtonTopPage.Location = new System.Drawing.Point(0, 0);
-            this.pnlButtonTopPage.Name = "pnlButtonTopPage";
-            this.pnlButtonTopPage.Size = new System.Drawing.Size(1305, 31);
-            this.pnlButtonTopPage.TabIndex = 0;
-            // 
             // frmCustomerInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -1964,26 +2014,15 @@ namespace AllCashUFormsApp.View.Page
             this.pnlPageName.ResumeLayout(false);
             this.pnlPageName.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).EndInit();
+            this.pnlButtonTopPage.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            this.pnlButtonTopPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.Panel pnlBackGround;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel5;
-        private UControl.CloseButton btnClose;
-        private UControl.AddButton btnAdd;
-        private UControl.ExcelButton btnExcel;
-        private UControl.EditButton btnEdit;
-        private UControl.PrintButton btnPrint;
-        private UControl.RemoveButton btnRemove;
-        private UControl.CancelButton btnCancel;
-        private UControl.CopyButton btnCopy;
-        private UControl.SaveButton btnSave;
         private System.Windows.Forms.Panel pnlButtonTopPage;
         private System.Windows.Forms.SplitContainer splitCustomerCenter;
         private System.Windows.Forms.Panel pnlGridView;
@@ -2098,6 +2137,24 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox chkSaleAreaEdit;
         private System.Windows.Forms.CheckBox chkChangeSaleArea;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.RadioButton rdoCancel;
+        private System.Windows.Forms.RadioButton rdoNormal;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnUpdateImage;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel5;
+        private UControl.CloseButton btnClose;
+        private UControl.AddButton btnAdd;
+        private UControl.ExcelButton btnExcel;
+        private UControl.EditButton btnEdit;
+        private UControl.PrintButton btnPrint;
+        private UControl.RemoveButton btnRemove;
+        private UControl.CancelButton btnCancel;
+        private UControl.CopyButton btnCopy;
+        private UControl.SaveButton btnSave;
+        private System.Windows.Forms.Button btnMoveDown;
+        private System.Windows.Forms.Button btnMoveUp;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCustomerID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCustName;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colImageCustomer;
@@ -2107,10 +2164,5 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.DataGridViewTextBoxColumn colWHID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSeq;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colFlagMember;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.RadioButton rdoCancel;
-        private System.Windows.Forms.RadioButton rdoNormal;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button btnUpdateImage;
     }
 }

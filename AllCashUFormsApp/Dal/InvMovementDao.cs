@@ -78,10 +78,23 @@ namespace AllCashUFormsApp
                 }
 
                 DataTable dt = new DataTable();
-                string sql = "";
-                sql += " SELECT SUM(TrnQty) AS 'TrnQty', ProductID, WHID "; //edit by sailom 13/12/2021
-                sql += " FROM [dbo].[tbl_InvMovement] ";
-                sql += " WHERE TrnType <> 'X' AND ProductID IN (" + prdIDs + ") AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID ";
+                //last edit by sailom .k 04/07/2022
+                //string sql = "";
+                //sql += " SELECT SUM(TrnQty) AS 'TrnQty', ProductID, WHID "; //edit by sailom 13/12/2021
+                //sql += " FROM [dbo].[tbl_InvMovement] ";
+                //sql += " WHERE TrnType <> 'X' AND ProductID IN (" + prdIDs + ") AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID ";
+
+                string sql = " SELECT ISNULL(t2.TrnQty, 0) as 'TrnQty', t1.ProductID, '" + whid.Trim() + "' as WHID ";
+                sql += " FROM dbo.tbl_Product t1 ";
+                sql += " LEFT JOIN  ";
+                sql += " (  ";
+                sql += "    SELECT SUM(TrnQty)  AS 'TrnQty'  ";
+                sql += "    , ProductID  ";
+                sql += " , WHID    ";
+                sql += " FROM [dbo].[tbl_InvMovement]   ";
+                sql += " WHERE TrnType <> 'X'  ";
+                sql += " AND ProductID IN (" + prdIDs + ") AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID ";
+                sql += " ) t2 ON t1.ProductID = t2.ProductID  ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvMovement), sql);
                 list = dynamicListReturned.Cast<tbl_InvMovement>().ToList();
@@ -174,7 +187,7 @@ namespace AllCashUFormsApp
                 sql += " SELECT TrnDate, TrnType, RefDocNo, WHID, ToWHID, ProductID, ProductName, TrnQtyIn, TrnQtyOut, TrnQty, CrDate  ";
                 sql += " FROM [dbo].[tbl_InvMovement] ";
                 sql += " WHERE TrnType <> 'X' ";
-                
+
                 if (prdIds != "")
                     sql += " AND ProductID IN (" + prdIds + ") ";
                 if (whid != "-1")
@@ -204,7 +217,7 @@ namespace AllCashUFormsApp
                 ///////////////////////////////////////////////////////////////////
                 if (!string.IsNullOrEmpty(docTypeCode))
                 {
-                    
+
                     string sql = "";
                     sql += " SELECT TrnDate, TrnType, RefDocNo, WHID, ToWHID, ProductID, ProductName, TrnQtyIn, TrnQtyOut, TrnQty, CrDate  ";
                     sql += " FROM [dbo].[tbl_InvMovement] ";
@@ -233,7 +246,7 @@ namespace AllCashUFormsApp
             DataTable dt = new DataTable();
             try
             {
-                
+
                 string sql = "";
                 sql += " SELECT TrnDate, TrnType, RefDocNo, WHID, ToWHID, ProductID, ProductName, TrnQtyIn, TrnQtyOut, TrnQty, CrDate  ";
                 sql += " FROM [dbo].[tbl_InvMovement] WHERE TrnType <> 'X' ";
@@ -311,7 +324,7 @@ namespace AllCashUFormsApp
         public static void Insert(this List<tbl_InvMovement> tbl_InvMovements, DB_ALL_CASH_UNIEntities db)
         {
             string msg = "start InvMovementDao=>InsertListWithDB";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
 
             try
             {
@@ -327,13 +340,13 @@ namespace AllCashUFormsApp
             }
 
             msg = "end InvMovementDao=>InsertListWithDB";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
         }
 
         public static int UpdateEntity(this List<tbl_InvMovement> tbl_InvMovements, DB_ALL_CASH_UNIEntities db, string docTypeCode = "")
         {
             string msg = "start InvMovementDao=>UpdateEntity";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
 
             int ret = 0;
 
@@ -385,7 +398,7 @@ namespace AllCashUFormsApp
             }
 
             msg = "end InvMovementDao=>UpdateEntity";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
 
             return ret;
         }
@@ -393,7 +406,7 @@ namespace AllCashUFormsApp
         public static int Update(this List<tbl_InvMovement> tbl_InvMovements)
         {
             string msg = "start InvMovementDao=>UpdateList";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
 
             int ret = 0;
 
@@ -440,7 +453,7 @@ namespace AllCashUFormsApp
             }
 
             msg = "end InvMovementDao=>UpdateList";
-           msg.WriteLog(null);
+            msg.WriteLog(null);
 
             return ret != 0 ? 1 : 0;
         }

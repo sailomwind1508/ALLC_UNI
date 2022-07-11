@@ -20,11 +20,17 @@ namespace AllCashUFormsApp.Dal
             DataTable dt = new DataTable();
             try
             {
-                string d = DateDoc.ToString("yyyyMMdd", new CultureInfo("en-US"));
-                string sql = "select * from V_BankNote ";
-                sql += " where cast(DocDate as DATE) ='" + d + "'";
-                sql += " order by WHID";
-                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                string date = DateDoc.ToString("yyyyMMdd", new CultureInfo("en-US"));
+                //string sql = "select * from V_BankNote ";
+                //sql += " where cast(DocDate as DATE) ='" + d + "'";
+                //sql += " order by WHID";
+                //dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                string sql = "proc_V_BankNote";
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocDate", date);
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+
                 return dt;
             }
             catch (Exception ex)

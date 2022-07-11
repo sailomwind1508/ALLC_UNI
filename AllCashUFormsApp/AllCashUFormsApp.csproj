@@ -311,6 +311,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DBModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\DB_ALL_CASH_UNIEntities.cs" />
     <Compile Include="Model\EndDayPOInfoModel.cs" />
     <Compile Include="Model\GetBranchWarehouse.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
@@ -890,6 +891,12 @@
     <Compile Include="View\Page\frmBrokenReason.Designer.cs">
       <DependentUpon>frmBrokenReason.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmButtonTamplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmButtonTamplate.Designer.cs">
+      <DependentUpon>frmButtonTamplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmCompany.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -901,6 +908,12 @@
     </Compile>
     <Compile Include="View\Page\frmCustomerMap.designer.cs">
       <DependentUpon>frmCustomerMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerShelf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerShelf.designer.cs">
+      <DependentUpon>frmCustomerShelf.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmDataMigration.cs">
       <SubType>Form</SubType>
@@ -1575,6 +1588,9 @@
     <EmbeddedResource Include="View\Page\frmBrokenReason.resx">
       <DependentUpon>frmBrokenReason.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmButtonTamplate.resx">
+      <DependentUpon>frmButtonTamplate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmCompany.resx">
       <DependentUpon>frmCompany.cs</DependentUpon>
     </EmbeddedResource>
@@ -1583,6 +1599,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmCustomerMap.resx">
       <DependentUpon>frmCustomerMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCustomerShelf.resx">
+      <DependentUpon>frmCustomerShelf.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmDataMigration.resx">
       <DependentUpon>frmDataMigration.cs</DependentUpon>

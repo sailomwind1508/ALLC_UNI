@@ -11,15 +11,20 @@ using AllCashUFormsApp.Model;
 using AllCashUFormsApp.Dal;
 using System.Data.SqlClient;
 using AllCashUFormsApp.View.UControl;
+using System.Globalization;
 
 namespace AllCashUFormsApp.View.Page
 {
+    /// <summary>
+    /// Last edit by sailom .k 04/07/2022
+    /// </summary>
     public partial class frmReceiveTabletData : Form
     {
         MenuBU menuBU = new MenuBU();
         SendData bu = new SendData();
         List<Control> searchBranchWarehouseControls = new List<Control>();
         public static bool confirmDelete = false;
+        DateTime cDate = DateTime.Now; //last edit by sailom .k 05/07/2022
 
         public frmReceiveTabletData()
         {
@@ -66,6 +71,17 @@ namespace AllCashUFormsApp.View.Page
 
             dtpSendDate.SetDateTimePickerFormat();
 
+            //last edit by sailom .k 05/07/2022-----------------------
+            cDate = DateTime.Now;
+            var allbwh = bu.GetAllBranchWarehouse();
+            if (allbwh.Count > 0)
+            {
+                if (allbwh.Any(x => x.WHType == 2)) //pre-order
+                    cDate = cDate.AddDays(1);
+            }
+            dtpSendDate.Value = cDate;
+            //last edit by sailom .k 05/07/2022-----------------------
+
             //var comp = bu.GetCompany();
             //btnPullSalesAmt.Enabled = (comp.CompanyCode == "104" && (Helper.tbl_Users.Username == "Admin" || Helper.tbl_Users.Username == "superadmin"));
         }
@@ -90,42 +106,59 @@ namespace AllCashUFormsApp.View.Page
         private void BindSendData()
         {
             DataTable dt = new DataTable();
-            dt = bu.GetSendDataTableView();
 
-            DataTable dtClone = new DataTable();
-            dtClone = dt.Clone();
-            dtClone.Clear();
-
+            //last edit by sailom .k 05/07/2022-----------------------------------
             var tempDataRow = new List<DataRow>();
-            if (dtpSendDate.Value.ToShortDateString() == DateTime.Now.ToShortDateString())
+            if (dtpSendDate.Value.ToShortDateString() == cDate.ToShortDateString())
             {
                 dt = bu.GetSendDataTableViewLastest();
                 tempDataRow = dt.AsEnumerable().ToList();
             }
             else
-                tempDataRow = dt.AsEnumerable().Where(x => x.Field<DateTime>("DateSend").ToShortDateString() == dtpSendDate.Value.ToShortDateString()).ToList();
+            {
+                dt = bu.GetSendDataTableView(dtpSendDate.Value);
+                //tempDataRow = dt.AsEnumerable().Where(x => x.Field<DateTime>("DateSend").ToShortDateString() == dtpSendDate.Value.ToShortDateString()).ToList();
+                tempDataRow = dt.AsEnumerable().ToList();
+            }
+
+            DataTable dtClone = new DataTable();
+            dtClone = dt.Clone();
+            dtClone.Clear();
+            //last edit by sailom .k 05/07/2022-----------------------------------
 
             if (!string.IsNullOrEmpty(txtWHCode.Text))
                 tempDataRow = tempDataRow.Where(x => x.Field<string>("WHID") == txtWHCode.Text).ToList();
 
             foreach (DataRow r in tempDataRow)
             {
-                dtClone.Rows.Add(r["WHID"].ToString(), Convert.ToDateTime(r["DateSend"]), Convert.ToBoolean(r["FlagSend"]), Convert.ToBoolean(r["FlagReceive"]));
+                dtClone.Rows.Add(r["WHID"].ToString(), Convert.ToDateTime(r["DateSend"]), Convert.ToBoolean(r["FlagSend"])
+                    , Convert.ToBoolean(r["FlagReceive"]), Convert.ToDateTime(r["ReceiveDate"]));
             }
 
-            grdCalendar.DataSource = dtClone; //Bind Gridview
-
-            for (int i = 0; i < grdCalendar.Rows.Count; i++)
+            //Last edit by sailom .k 04/07/2022-------------------------------------------------------------
+            //grdCalendar.DataSource = dtClone; //Bind Gridview
+            grdCalendar.Rows.Clear();
+            for (int i = 0; i < dtClone.Rows.Count; i++)
             {
-                foreach (DataRow r in dtClone.Rows)
+                //foreach (DataRow r in dtClone.Rows)
                 {
-                    if (r["WHID"].ToString() == grdCalendar.Rows[i].Cells["colWHID"].Value.ToString())
-                    {
-                        grdCalendar.Rows[i].Cells["colSendFlag"].Value = Convert.ToBoolean(r["FlagSend"]);
-                        grdCalendar.Rows[i].Cells["colPullFlag"].Value = Convert.ToBoolean(r["FlagReceive"]);
-                    }
+                    grdCalendar.Rows.Add(1);
+
+                    grdCalendar.Rows[i].Cells[0].Value = dtClone.Rows[i]["WHID"];
+                    grdCalendar.Rows[i].Cells[1].Value = dtClone.Rows[i]["DateSend"];
+                    grdCalendar.Rows[i].Cells[2].Value = dtClone.Rows[i]["FlagSend"];
+                    grdCalendar.Rows[i].Cells[3].Value = dtClone.Rows[i]["FlagReceive"];
+                    grdCalendar.Rows[i].Cells[4].Value = dtClone.Rows[i]["ReceiveDate"];
+
+                    //if (r["WHID"].ToString() == grdCalendar.Rows[i].Cells["colWHID"].Value.ToString())
+                    //{
+                    //    grdCalendar.Rows[i].Cells["colSendFlag"].Value = Convert.ToBoolean(r["FlagSend"]);
+                    //    grdCalendar.Rows[i].Cells["colPullFlag"].Value = Convert.ToBoolean(r["FlagReceive"]);
+                    //    grdCalendar.Rows[i].Cells["colReceiveDate"].Value = Convert.ToDateTime(r["ReceiveDate"]);
+                    //}
                 }
             }
+            //Last edit by sailom .k 04/07/2022-------------------------------------------------------------
         }
 
         private void BindTLGridview()
@@ -194,15 +227,15 @@ namespace AllCashUFormsApp.View.Page
                 if (ret != 0)
                 {
                     string msg = "";
-                    if (_event == 4)
+                    if (_event == 5)
                     {
                         msg = "ยกเลิกการส่งข้อมูล เรียบร้อยแล้ว!!";
                     }
-                    else if (_event == 5)
+                    else if (_event == 6)
                     {
                         msg = "ส่งยอดแล้ว เรียบร้อยแล้ว!!";
                     }
-                    else if (_event == 6)
+                    else if (_event == 7)
                     {
                         msg = "ดึงยอดแล้ว เรียบร้อยแล้ว!!";
                     }
@@ -295,7 +328,7 @@ namespace AllCashUFormsApp.View.Page
 
                 string _whid = whid.Value.ToString();
 
-                if (e.ColumnIndex == 4) //ยังไม่ส่งยอด
+                if (e.ColumnIndex == 5) //ยังไม่ส่งยอด
                 {
                     sendFlag.Value = false;
                     pullFlag.Value = false;
@@ -303,22 +336,22 @@ namespace AllCashUFormsApp.View.Page
                     int ret = bu.ClearTLdata(_whid);
 
                     if (ret != 0)
-                        Save(e, grdCalendar, 4, _whid);
+                        Save(e, grdCalendar, 5, _whid);
                 }
-                else if (e.ColumnIndex == 5) // ส่งยอดแล้ว
+                else if (e.ColumnIndex == 6) // ส่งยอดแล้ว
                 {
                     sendFlag.Value = true;
 
-                    Save(e, grdCalendar, 5, _whid);
+                    Save(e, grdCalendar, 6, _whid);
                 }
-                else if (e.ColumnIndex == 6) //ดึงยอดแล้ว
+                else if (e.ColumnIndex == 7) //ดึงยอดแล้ว
                 {
                     sendFlag.Value = true;
                     pullFlag.Value = true;
 
-                    Save(e, grdCalendar, 6, _whid);
+                    Save(e, grdCalendar, 7, _whid);
                 }
-                else if (e.ColumnIndex == 7) //ลบ
+                else if (e.ColumnIndex == 8) //ลบ
                 {
                     string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
                     string title = "ทำการยืนยัน!!";
@@ -381,13 +414,13 @@ namespace AllCashUFormsApp.View.Page
             try
             {
                 var row = grdCalendar.Rows[e.RowIndex];
-                var cDate = DateTime.Now;
+                //var cDate = DateTime.Now;
                 var tmpDate = new DateTime(1900, 1, 1);
                 var _dateSend = Convert.ToDateTime(row.Cells["colDateSend"].Value);
 
                 if (_dateSend != tmpDate)
                 {
-                    if (_dateSend.ToShortDateString() != cDate.ToShortDateString())
+                    if (_dateSend.ToShortDateString() != dtpSendDate.Value.ToShortDateString())
                     {
                         row.DefaultCellStyle.BackColor = Color.LightYellow;
                         row.DefaultCellStyle.ForeColor = Color.Red;

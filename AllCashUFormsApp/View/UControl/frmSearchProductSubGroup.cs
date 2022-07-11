@@ -21,32 +21,22 @@ namespace AllCashUFormsApp.View.UControl
         public frmSearchProductSubGroup()
         {
             InitializeComponent();
-
-            this.Load += frmSearchProductSubGroup_Load;
-
-            btnAccept.Click += btnAccept_Click;
-            btnCancel.Click += btnCancel_Click;
-
-            grdList.RowPostPaint += grdList_RowPostPaint;
         }
 
-        private void BindData()
+        private void BindProductSubGroup()
         {
-            DataTable dt = new DataTable();
-            
-            dt = bu.GetProductSubGroupTable();
-
-            lblgridCount.Text = dt.Rows.Count.ToNumberFormat();
-
-            if (dt != null && dt.Rows.Count > 0)
+            try
             {
+                Cursor.Current = Cursors.WaitCursor;
+                var dt = bu.GetProductSubGroupData_Popup(txtSearch.Text);
                 grdList.DataSource = dt;
-
-                try
-                {
-                    grdList.CreateCheckBoxHeaderColumn("colSelect");
-                }
-                catch { }
+                lblgridCount.Text = dt.Rows.Count.ToNumberFormat();
+                grdList.CreateCheckBoxHeaderColumn("colSelect");
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
             }
         }
 
@@ -54,7 +44,7 @@ namespace AllCashUFormsApp.View.UControl
         {
             grdList.AutoGenerateColumns = false;
 
-            BindData();
+            BindProductSubGroup(); //22-06-2022 adisorn  
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -64,6 +54,7 @@ namespace AllCashUFormsApp.View.UControl
 
         private void btnAccept_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             List<string> selectList = new List<string>();
 
             for (int i = 0; i < grdList.Rows.Count; i++)
@@ -75,15 +66,27 @@ namespace AllCashUFormsApp.View.UControl
             }
 
             var joinString = string.Join(",", selectList);
-
             frmReport._txtSubGroupPro = joinString;
-
+            Cursor.Current = Cursors.Default;
             this.Close();
         }
 
         private void grdList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             grdList.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BindProductSubGroup();
+            }
+        }
+
+        private void frmSearchProductSubGroup_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MemoryManagement.FlushMemory();
         }
     }
 }

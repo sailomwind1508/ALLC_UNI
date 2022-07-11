@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -34,6 +35,7 @@ namespace AllCashUFormsApp
 
             return list;
         }
+       
         public static List<tbl_ProductSubGroup> SelectAllNonFlag(this tbl_ProductSubGroup tbl_ProductSubGroup)
         {
             List<tbl_ProductSubGroup> list = new List<tbl_ProductSubGroup>();
@@ -213,5 +215,35 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static DataTable GetProductSubGroupData_Popup(this tbl_ProductSubGroup tbl_ProductSubGroup, string Search)
+        {
+            try
+            {
+                DataTable newTable = new DataTable(); //22-06-2022 adisorn หน้าค้นหากลุ่มย่อยสินค้า ในรายงาน 6.1
+
+                string sql = "SELECT * FROM tbl_ProductSubGroup";
+                sql += " WHERE FlagDel = 0";
+
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    sql += " AND ProductSubGroupCode LIKE '%" + Search + "%' OR ProductSubGroupName LIKE '%" + Search + "%' ";
+                }
+
+                sql += " ORDER BY ProductSubGroupID ";
+
+                newTable = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ProductSubGroup.GetType());
+                return null;
+            }
+
+        }
+
+
     }
 }

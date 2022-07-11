@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchBranchWareHouseList));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlTopPage = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -73,6 +73,7 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(456, 23);
             this.txtSearch.TabIndex = 1;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // label1
             // 
@@ -114,6 +115,7 @@
             this.btnCancel.Text = "ยกเลิก";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAccept
             // 
@@ -132,6 +134,7 @@
             this.btnAccept.Text = "ตกลง";
             this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAccept.UseVisualStyleBackColor = false;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // lblgridCount
             // 
@@ -170,6 +173,7 @@
             this.grdList.Name = "grdList";
             this.grdList.Size = new System.Drawing.Size(553, 456);
             this.grdList.TabIndex = 16;
+            this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
             // colSelect
             // 
@@ -182,8 +186,8 @@
             // colWHID
             // 
             this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle5;
             this.colWHID.HeaderText = "รหัสคลัง";
             this.colWHID.MaxInputLength = 20;
             this.colWHID.Name = "colWHID";
@@ -195,8 +199,8 @@
             // 
             this.colWHName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colWHName.DataPropertyName = "WHName";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHName.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHName.DefaultCellStyle = dataGridViewCellStyle6;
             this.colWHName.HeaderText = "ชื่อคลัง";
             this.colWHName.MaxInputLength = 100;
             this.colWHName.Name = "colWHName";
@@ -205,8 +209,8 @@
             // colSaleType
             // 
             this.colSaleType.DataPropertyName = "SaleType";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colSaleType.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colSaleType.DefaultCellStyle = dataGridViewCellStyle7;
             this.colSaleType.HeaderText = "ประเภทแวน";
             this.colSaleType.MaxInputLength = 100;
             this.colSaleType.Name = "colSaleType";
@@ -215,8 +219,8 @@
             // colBranchID
             // 
             this.colBranchID.DataPropertyName = "BranchID";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBranchID.DefaultCellStyle = dataGridViewCellStyle8;
             this.colBranchID.HeaderText = "รหัสสาขา";
             this.colBranchID.MaxInputLength = 20;
             this.colBranchID.Name = "colBranchID";
@@ -238,6 +242,8 @@
             this.Name = "frmSearchBranchWareHouseList";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ค้นหารายการ";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSearchBranchWareHouseList_FormClosed);
+            this.Load += new System.EventHandler(this.frmSearchBrachWareHouseList_Load);
             this.pnlTopPage.ResumeLayout(false);
             this.pnlTopPage.PerformLayout();
             this.pnlBottomPage.ResumeLayout(false);

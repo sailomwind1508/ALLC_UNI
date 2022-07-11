@@ -195,6 +195,7 @@ namespace AllCashUFormsApp.View.Page
                     btnRemove.Enabled = true;
                     SetReadOnlyGridView(true);
                     txtRemark.DisableTextBox(true);
+                    txtCrUser.DisableTextBox(true);
                 }
                 else
                 {
@@ -375,6 +376,7 @@ namespace AllCashUFormsApp.View.Page
         {
             txtBranchCode.DisableTextBox(Lock);
             txtBranchName.DisableTextBox(Lock);
+            txtCrUser.DisableTextBox(Lock);
             dtpDocDate.Enabled = !Lock;
             btnSearch.Enabled = !Lock;
             btnCalculateSales.Enabled = !Lock;
@@ -431,6 +433,7 @@ namespace AllCashUFormsApp.View.Page
         private void SetDisableTextBox()
         {
             txtBranchName.DisableTextBox(true);
+            txtCrUser.DisableTextBox(true);
             txtTotalSend.DisableTextBox(true);
             txtTotalCheque.DisableTextBox(true);
             txtTotalTransfer.DisableTextBox(true);
@@ -475,6 +478,8 @@ namespace AllCashUFormsApp.View.Page
                 CalDiv(gridPayment, true);
 
                 txtTotalGetMoney.DisableTextBox(false);
+
+                txtCrUser.Text = dtBankNote.Rows[0]["CrUser"].ToString();
 
                 string date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
                 var list = bu.GetPayMaster(x => x.Docdate.ToString("yyyyMMdd", new CultureInfo("en-US")) == date && x.FlagDel == false);
@@ -810,6 +815,7 @@ namespace AllCashUFormsApp.View.Page
             CalDiv(gridPayment, true);
             SetReadOnlyGridView(true);
             txtRemark.DisableTextBox(true);
+            txtCrUser.DisableTextBox(true);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

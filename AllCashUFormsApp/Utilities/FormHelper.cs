@@ -1257,6 +1257,14 @@ namespace AllCashUFormsApp
             _frm.ShowDialog();
         }
 
+        public static void OpenReportingMargeReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
+        {
+
+            Reporting _frm = new Reporting();
+            _frm.PrepareMargeReportPopup(popUPText, reportName, storeName, _params);
+            _frm.ShowDialog();
+        }
+
         public static void OpenManyReportingReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
 

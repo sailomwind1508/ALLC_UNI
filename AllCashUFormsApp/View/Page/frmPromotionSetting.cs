@@ -155,6 +155,7 @@ namespace AllCashUFormsApp.View.Page
         {
             DataTable dtBranch = new DataTable();
 
+            bu.GetSendProductInfoPrepareData();
             dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
 
             DataTable newTable = new DataTable();

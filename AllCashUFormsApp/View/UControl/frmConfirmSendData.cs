@@ -162,7 +162,7 @@ namespace AllCashUFormsApp.View.UControl
                         frm.WindowState = FormWindowState.Minimized;
 
                         frm.SetDefaultDate(dtpDocDate.Value);
-
+                        
                         frm.Show();
                         frm.WindowState = FormWindowState.Maximized;
 
