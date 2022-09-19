@@ -398,7 +398,7 @@ namespace AllCashUFormsApp.View.UControl
             this.MinimizeBox = false;
             this.Name = "frmConfirmSendData";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmCoonfirmSendData";
+            this.Text = "ยืนยันการดึงยอด";
             this.Load += new System.EventHandler(this.frmConfirmSendData_Load);
             this.panel2.ResumeLayout(false);
             this.pnlTR.ResumeLayout(false);

@@ -118,26 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnSendAmtCustData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAA05JREFUWEftls1LVFEYh8+oiZqEUFBE4ITlxyKNyJRaOERkRVi2yIW1qBnLT7RF
-        2MbMj8gyVDRHokzCtFpJiyCdkSFpNB1R03TTov6IiNnI2++93tE7eu51bNRN94WHGYZ73/Occ35z7hVm
-        mWWWWWYZV97UM3FxqkPkTzvFlW0mf7pTtTCqVtACPhaI1p8u4N5y2n65Re2PD0K8y1YUDMs6Ui0OfL6b
-        hlVsL1vo7yqZf+Pcakrn+5RPm6/ZqWroV4SrSIghR+4eT9UitpvKF/q3lAoAQbJNNFP8cDkpEvTeqgvk
-        mLNiyO6PdZdQzsQTwuyURrIBwqFi4S05vr+mjNE6inTdIowZJGgBcSBeJQYIy7Kgww+UGzNGHyiNuKFs
-        oH+BexXOviTryD2IOVbQCLJUD/gKxkEjiIgZvBkkGCBxpJoKv73YFEnejUuIz25PFXpj1TTjaAUTwBwg
-        lQEQuXPwhlSQG+32VFI4uVzOm6+Z4tylSs/gMYBGkLe0BPDKMQXAEj1k1xFk7BSLxjkINA+0kVwG8nZU
-        m7c1/QEkDMFFBoKMXc1lXci55GuuIW8HV+dNhiqyH5wCJ1X4ewqwRBquYDAccA66kaSSt+lOwrGFe3RW
-        TQskmHLwB/xW8YNeEBGnm0EZS7m8DAHZdpct9NFp31P9vMmAxKYKxg6XUfr4I7o62w2hlVUrxtmZN/Oc
-        kry1FOW6rVwr77EKSDCbssUJnjuQa6ITk62UPdmmCLGYY76Xcqedyu9M6lgjxfFTYgNbrAsuWlcQj0Pa
-        h3PxGLYvS5UIcAbbbZvqoEzNb1mQTx9/rExI1i8ISDRIeAhCOmZ2uIvJ6q2BQEuQWACtmBaeCE+IJ8YT
-        XNtbBRKBg3k16x7UnLeUsQapQKjwxKze+8pEpVsOCa8EftzxSuo+6nh7jiBvvF2ygTdKKiYqzSUkAi8H
-        q5G+LFiGimivTt7CYSmXTWtzyRJG4CJV0O6PchVT4hf9vIWLNJfrFVaMBXOx/Ivh5i1UlnJZQ9F4/1Q1
-        9AtLLnZ5KtOSx+rbcbMTNzszfVsMxjiOT/x51n/lFz2HQJIQn66Lc3Pd28L5uVfCNtMlxMAFVcKgkkfr
-        xWGA03/bQaRUC7PMMsus/7WE+AtWrM9WXbikmwAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="btnCancelSend.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -163,6 +143,26 @@
 </value>
   </data>
   <data name="btnSendData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAA05JREFUWEftls1LVFEYh8+oiZqEUFBE4ITlxyKNyJRaOERkRVi2yIW1qBnLT7RF
+        2MbMj8gyVDRHokzCtFpJiyCdkSFpNB1R03TTov6IiNnI2++93tE7eu51bNRN94WHGYZ73/Occ35z7hVm
+        mWWWWWYZV97UM3FxqkPkTzvFlW0mf7pTtTCqVtACPhaI1p8u4N5y2n65Re2PD0K8y1YUDMs6Ui0OfL6b
+        hlVsL1vo7yqZf+Pcakrn+5RPm6/ZqWroV4SrSIghR+4eT9UitpvKF/q3lAoAQbJNNFP8cDkpEvTeqgvk
+        mLNiyO6PdZdQzsQTwuyURrIBwqFi4S05vr+mjNE6inTdIowZJGgBcSBeJQYIy7Kgww+UGzNGHyiNuKFs
+        oH+BexXOviTryD2IOVbQCLJUD/gKxkEjiIgZvBkkGCBxpJoKv73YFEnejUuIz25PFXpj1TTjaAUTwBwg
+        lQEQuXPwhlSQG+32VFI4uVzOm6+Z4tylSs/gMYBGkLe0BPDKMQXAEj1k1xFk7BSLxjkINA+0kVwG8nZU
+        m7c1/QEkDMFFBoKMXc1lXci55GuuIW8HV+dNhiqyH5wCJ1X4ewqwRBquYDAccA66kaSSt+lOwrGFe3RW
+        TQskmHLwB/xW8YNeEBGnm0EZS7m8DAHZdpct9NFp31P9vMmAxKYKxg6XUfr4I7o62w2hlVUrxtmZN/Oc
+        kry1FOW6rVwr77EKSDCbssUJnjuQa6ITk62UPdmmCLGYY76Xcqedyu9M6lgjxfFTYgNbrAsuWlcQj0Pa
+        h3PxGLYvS5UIcAbbbZvqoEzNb1mQTx9/rExI1i8ISDRIeAhCOmZ2uIvJ6q2BQEuQWACtmBaeCE+IJ8YT
+        XNtbBRKBg3k16x7UnLeUsQapQKjwxKze+8pEpVsOCa8EftzxSuo+6nh7jiBvvF2ygTdKKiYqzSUkAi8H
+        q5G+LFiGimivTt7CYSmXTWtzyRJG4CJV0O6PchVT4hf9vIWLNJfrFVaMBXOx/Ivh5i1UlnJZQ9F4/1Q1
+        9AtLLnZ5KtOSx+rbcbMTNzszfVsMxjiOT/x51n/lFz2HQJIQn66Lc3Pd28L5uVfCNtMlxMAFVcKgkkfr
+        xWGA03/bQaRUC7PMMsus/7WE+AtWrM9WXbikmwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnSendAmtCustData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         wwAADsMBx2+oZAAAA05JREFUWEftls1LVFEYh8+oiZqEUFBE4ITlxyKNyJRaOERkRVi2yIW1qBnLT7RF

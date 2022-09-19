@@ -348,6 +348,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_IVDetail);
             }
 

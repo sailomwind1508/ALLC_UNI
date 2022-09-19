@@ -922,7 +922,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    string cfMsg = "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string cfMsg = "หากปิดวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
                     string title = "ยืนยันการปิดวัน";
                     bool confirmMsg = cfMsg.ConfirmMessageBox(title);
                     if (confirmMsg)
@@ -1657,14 +1657,20 @@ namespace AllCashUFormsApp.View.Page
             custName = "";
             if (allBranchWH != null && allBranchWH.Count > 0)
             {
-                string saleEmpID = allBranchWH.First(x => x.WHID == whid).SaleEmpID;
-                iv.EmpID = saleEmpID;
-                iv.SaleEmpID = saleEmpID;
+                var tmpSaleEmp = allBranchWH.FirstOrDefault(x => x.WHID == whid); //last edit by sailom .k 26/07/2022
 
-                var emp = allEmployee.Count > 0 ? allEmployee : bu.GetEmployee(x => x.EmpID == saleEmpID);
-                if (emp != null && emp.Count > 0)
+                if (tmpSaleEmp != null)
                 {
-                    custName = string.Join(" ", emp.First().TitleName, emp.First().FirstName, emp.First().LastName);
+                    string saleEmpID = tmpSaleEmp.SaleEmpID;
+
+                    iv.EmpID = saleEmpID;
+                    iv.SaleEmpID = saleEmpID;
+
+                    var emp = allEmployee.Count > 0 ? allEmployee.Where(x => x.EmpID == saleEmpID).ToList() : bu.GetEmployee(x => x.EmpID == saleEmpID); //last edit by sailom .k 26/07/2022
+                    if (emp != null && emp.Count > 0)
+                    {
+                        custName = string.Join(" ", emp.First().TitleName, emp.First().FirstName, emp.First().LastName);
+                    }
                 }
             }
             else
@@ -1672,6 +1678,7 @@ namespace AllCashUFormsApp.View.Page
                 iv.EmpID = "";
                 iv.SaleEmpID = "";
             }
+
             iv.SalAreaID = "";
             iv.Address = bu.tbl_Branchs.Count > 0 ? bu.tbl_Branchs.First().Address : bu.GetBranch().First().Address;
             iv.ContactName = "";
@@ -1744,11 +1751,17 @@ namespace AllCashUFormsApp.View.Page
 
             DateTime crDate = DateTime.Now;
 
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+            var listProductSeq = new Dictionary<string, short>();
+            listProductSeq = bu.FindProductLineNumber(poDTList);
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+
+            short index = 0;
             foreach (tbl_PODetail _podt in poDTList)
             {
                 var ivDt = new tbl_IVDetail();
                 ivDt.DocNo = ivDocNo;
-                ivDt.Line = _podt.Line;
+                ivDt.Line = listProductSeq.Count > 0 ? listProductSeq.First(x => x.Key == _podt.ProductID).Value : index; // _podt.Line; //Find line number from product edit by sailom .k 15/09/2022
                 ivDt.ProductID = _podt.ProductID;
                 ivDt.ProductName = _podt.ProductName;
 
@@ -1812,6 +1825,8 @@ namespace AllCashUFormsApp.View.Page
                 ivDt.FlagSend = false;
 
                 bu.tbl_IVDetails.Add(ivDt);
+
+                index++;
             }
         }
 
@@ -2080,7 +2095,7 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                if (e.ColumnIndex != -1)
+                if (e.ColumnIndex != -1 && e.RowIndex != -1)
                 {
                     string _ivDocNo = grdDailySales.Rows[e.RowIndex].Cells[7].Value.ToString();
 

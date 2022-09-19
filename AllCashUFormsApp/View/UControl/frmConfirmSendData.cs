@@ -59,8 +59,8 @@ namespace AllCashUFormsApp.View.UControl
                 var dt = bu.GetConfirmData(_docdate, _whid);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    string whid = "";
-                    string whName = "";
+                    //string whid = "";
+                    //string whName = "";
                     List<string> whids = new List<string>();
                     List<string> whNames = new List<string>();
 

@@ -133,9 +133,9 @@ namespace AllCashUFormsApp.Controller
             return new tbl_SalAreaDistrict().DeleteByWHID(WHID);
         }
 
-        public int InsertSalAreaDistrict(DataRow drs)
+        public int InsertSalAreaDistrict(DataTable dt)
         {
-            return new tbl_SalAreaDistrict().InsertSalAreaDistrict(drs);
+            return new tbl_SalAreaDistrict().InsertSalAreaDistrict(dt);
         }
 
         public DataTable GetSalAreaDistrictByWHID(string _WHID = "")
@@ -151,6 +151,11 @@ namespace AllCashUFormsApp.Controller
         public DataTable GetSalAreaDistrict_BySendData()
         {
             return new tbl_SalAreaDistrict().GetSalAreaDistrict_BySendData();
+        }
+
+        public int UpdateSalAreaDistrict(Dictionary<string, object> _params)
+        {
+            return new tbl_SalAreaDistrict().UpdateSalAreaDistrict(_params);
         }
     }
 }

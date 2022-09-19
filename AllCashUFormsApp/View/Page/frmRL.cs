@@ -1537,11 +1537,27 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RL.rpt", "Form_RL", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_RL.rdlc", "Form_RL", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RL.rpt", "Form_RL", _params);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบโอนย้ายสินค้า", "Form_RL.rdlc", "Form_RL", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RL.rpt", "Form_RL", _params);
+
+                this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_RL.rdlc", "Form_RL", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)

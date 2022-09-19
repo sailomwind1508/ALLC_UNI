@@ -535,7 +535,8 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = prDt.ProductID;
                 invMm.ProductName = prDt.ProductName;
                 invMm.RefDocNo = prDt.DocNo;
-                invMm.TrnDate = crDate.ToDateTimeFormat();
+                //invMm.TrnDate = crDate.ToDateTimeFormat();
+                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat();//last edit by sailom .k 10/08/2022 
                 invMm.TrnType = trnType;
                 invMm.DocTypeCode = pr.DocTypeCode;
 
@@ -642,79 +643,62 @@ namespace AllCashUFormsApp.View.Page
 
         private void SubPrepareInvWarehouse(string whid, bool editFlag = false)
         {
-            //edti by sailom .k 14/12/2021----------------------------
-            var invWhs = bu.tbl_InvWarehouses;
-            var prDts = bu.tbl_PRDetails;
-
-            DateTime crDate = DateTime.Now;
-
-            //var allWHStock = bu.GetInvWarehouse(whid); //edit by sailom 13/12/2021
-
-            //edit by sailom .k 16/12/201----------------------------------------------------
-            List<tbl_InvMovement> invWhItems = new List<tbl_InvMovement>();
-            List<string> prdList = new List<string>();
-            prdList.Add(txtFromProductCode.Text);
-            prdList.Add(txtToProductCode.Text);
-            //edit by sailom .k 16/12/201----------------------------------------------------
-
-            if (prdList.Count > 0)
-                invWhItems = bu.GetTotalStockMovement(prdList, whid); //  edit by sailom 13/12/2021
-
-            foreach (var item in invWhItems)
+            try
             {
-                var invWh = new tbl_InvWarehouse();
+                //edti by sailom .k 14/12/2021----------------------------
+                var invWhs = bu.tbl_InvWarehouses;
+                var prDts = bu.tbl_PRDetails;
 
-                invWh.ProductID = item.ProductID;
-                invWh.WHID = item.WHID;
-                invWh.QtyOnHand = item.TrnQty;
+                DateTime crDate = DateTime.Now;
 
-                //if (item.WHID.Contains("1000"))
-                //    invWh.QtyOnHand = -item.TrnQty;
-                //else
-                //    invWh.QtyOnHand = item.TrnQty;
+                //var allWHStock = bu.GetInvWarehouse(whid); //edit by sailom 13/12/2021
 
-                //decimal unitQty = 0;
-                //var prdUOMSets = bu.GetProductUOMSet(allUomSet, prDt.ProductID);
-                //if (prdUOMSets != null && prdUOMSets.Count > 0)
-                //{
-                //    var uom = allUomSet.FirstOrDefault(x => x.ProductID == prDt.ProductID && x.UomSetID == prDt.OrderUom);
+                //edit by sailom .k 16/12/201----------------------------------------------------
+                List<tbl_InvMovement> invWhItems = new List<tbl_InvMovement>();
+                List<string> prdList = new List<string>();
+                prdList.Add(txtFromProductCode.Text);
+                prdList.Add(txtToProductCode.Text);
+                //edit by sailom .k 16/12/201----------------------------------------------------
 
-                //    if (uom != null)//if (prDt.OrderUom != 2)
-                //        unitQty = (prDt.ReceivedQty.Value * uom.BaseQty);
-                //    else
-                //        unitQty = prDt.ReceivedQty.Value;
+                if (prdList.Count > 0)
+                    invWhItems = bu.GetTotalStockMovement(prdList, whid); //  edit by sailom 13/12/2021
 
-                //    PrepareQtyOnHand(invWh, allWHStock, prDt.ProductID, whid, unitQty);
-                //}
-                //else
-                //{
-                //    unitQty = prDt.ReceivedQty.Value;
-
-                //    PrepareQtyOnHand(invWh, allWHStock, prDt.ProductID, whid, unitQty);
-                //}
-
-                invWh.QtyOnOrder = 0;
-                invWh.QtyOnBackOrder = 0;
-                invWh.QtyInTransit = 0;
-                invWh.QtyOutTransit = 0;
-                invWh.QtyOnReject = 0;
-                invWh.MinimumQty = 0;
-                invWh.MaximumQty = 0;
-                invWh.ReOrderQty = 0;
-                invWh.CrDate = crDate;
-                invWh.CrUser = Helper.tbl_Users.Username;
-
-                if (editFlag)
+                foreach (var item in invWhItems)
                 {
-                    invWh.EdDate = crDate;
-                    invWh.EdUser = Helper.tbl_Users.Username;
+                    var invWh = new tbl_InvWarehouse();
+
+                    invWh.ProductID = item.ProductID;
+                    invWh.WHID = item.WHID;
+                    invWh.QtyOnHand = item.TrnQty;
+
+                    invWh.QtyOnOrder = 0;
+                    invWh.QtyOnBackOrder = 0;
+                    invWh.QtyInTransit = 0;
+                    invWh.QtyOutTransit = 0;
+                    invWh.QtyOnReject = 0;
+                    invWh.MinimumQty = 0;
+                    invWh.MaximumQty = 0;
+                    invWh.ReOrderQty = 0;
+                    invWh.CrDate = crDate;
+                    invWh.CrUser = Helper.tbl_Users.Username;
+
+                    if (editFlag)
+                    {
+                        invWh.EdDate = crDate;
+                        invWh.EdUser = Helper.tbl_Users.Username;
+                    }
+
+                    invWh.FlagDel = false;
+                    invWh.FlagSend = false;
+
+                    invWhs.Add(invWh);
                 }
-
-                invWh.FlagDel = false;
-                invWh.FlagSend = false;
-
-                invWhs.Add(invWh);
             }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+            
         }
 
         private void Save()
@@ -968,6 +952,17 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
 
+            //last edit by sailom .k 19/07/2022
+            if (ddlFromUOM.Items.Count > 0 && ddlToUOM.Items.Count > 0)
+            {
+                if (ddlFromUOM.SelectedValue.ToString() != ddlToUOM.SelectedValue.ToString())
+                {
+                    string msg = "กรุณาเลือกหน่วยสินค้าให้ตรงกัน!!";
+                    msg.ShowWarningMessage();
+                    ret = false;
+                }  
+            }
+
             if (ret) //validate header
             {
                 errList.SetErrMessageList(txtBranchCode, lblBranchCode);
@@ -976,6 +971,8 @@ namespace AllCashUFormsApp.View.Page
                 errList.SetErrMessageList(txtCrUser, lblCrUser);
                 errList.SetErrMessageList(txtFromProductCode, lblFromProductCode);
                 errList.SetErrMessageList(txtToProductCode, lblToProductCode);
+                errList.SetErrMessageList(txtFromProductName, lblFromProductCode);
+                errList.SetErrMessageList(txtToProductName, lblToProductCode);
                 errList.SetErrMessageList(txtOrderQty, lblOrderQty);
 
                 if (errList.Count == 0)
@@ -1239,11 +1236,26 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rpt", "Form_TR", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rdlc", "Form_TR", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rpt", "Form_TR", _params);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบโอนย้ายสินค้า", "Form_TR.rdlc", "Form_TR", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rpt", "Form_TR", _params);
+
+                this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_TR.rdlc", "Form_TR", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)
@@ -1336,10 +1348,41 @@ namespace AllCashUFormsApp.View.Page
             MemoryManagement.FlushMemory();
         }
 
+        /// <summary>
+        ///  //last edit by sailom .k 19/07/2022
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ddlFromUOM_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (ddlToUOM.Items.Count > 0)
+            {
+                bool defaultFlag = false;
+                var ds = (List<tbl_ProductUom>)ddlToUOM.DataSource;
+                if (ds != null && ds.Count > 0)
+                {
+                    if (ds.Select(x => x.ProductUomID.ToString()).ToList().Contains(ddlFromUOM.SelectedValue.ToString()))
+                    {
+                        defaultFlag = true;
+                    }
+                }
+
+                if (defaultFlag)
+                {
+                    ddlToUOM.SelectedValue = ddlFromUOM.SelectedValue;
+                }
+                else
+                {
+                    string msg = "กรุณาเลือกหน่วยสินค้าให้ตรงกัน!!";
+                    msg.ShowWarningMessage();
+                    ddlToUOM.Focus();
+
+                    return;
+                }
+            }
+        }
+
         #endregion
-
-
-
 
     }
 }

@@ -42,6 +42,8 @@ namespace AllCashUFormsApp.View.Page
         Dictionary<Control, Label> validateSaveCtrls = new Dictionary<Control, Label>();
         private static string URLPathImage = "";
 
+        private ContextMenuStrip printContextMenuStrip;
+
         public frmCustomerInfo()
         {
             InitializeComponent();
@@ -109,6 +111,60 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #region Method
+
+        private void CreatePrintBtnList()
+        {
+            printContextMenuStrip = new ContextMenuStrip();
+
+            printContextMenuStrip.Items.Clear();
+            printContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(cms_Opening);
+
+            btnExcel.ContextMenuStrip = printContextMenuStrip;
+        }
+
+        void cms_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            Control c = printContextMenuStrip.SourceControl as Control;
+            ToolStripDropDownItem tsi = printContextMenuStrip.OwnerItem as ToolStripDropDownItem;
+
+            // Clear the ContextMenuStrip control's Items collection.
+            printContextMenuStrip.Items.Clear();
+
+            // Populate the ContextMenuStrip control with its default items.
+            var printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.excelBtn).ImageToByte();
+
+            printContextMenuStrip.Items.Add("รายงานชื่อร้านค้าซ้ำ", printImage.byteArrayToImage(), ToolStripMenuItem_Click);
+            printContextMenuStrip.Items.Add("รายงานที่อยู่ซ้ำ", printImage.byteArrayToImage(), ToolStripMenuItem_Click);
+
+            // Set Cancel to false. 
+            // It is optimized to true based on empty entry.
+            e.Cancel = false;
+        }
+
+        private void ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, object>  _params = null;
+            string frmText = ((System.Windows.Forms.ToolStripItem)sender).Text;
+            switch (frmText)
+            {
+                case "รายงานชื่อร้านค้าซ้ำ":
+                    {
+                        _params = new Dictionary<string, object>();
+                        this.OpenExcelReportsPopup("รายงานชื่อร้านค้าซ้ำ", "GetCustomer_DuplicateName_XSLT.xslt", "proc_GetCustomer_DuplicateName", _params, true);
+                        break;
+                    }
+                case "รายงานที่อยู่ซ้ำ":
+                    {
+                        _params = new Dictionary<string, object>();
+                        this.OpenExcelReportsPopup("รายงานที่อยู่ซ้ำ", "GetCustomer_DuplicateAddress_XSLT.xslt", "proc_GetCustomer_DuplicateAddress", _params, true);
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+
         private void GetBranch(TextBox txtCode, TextBox txtName)
         {
             var b = bu.GetBranch();
@@ -147,6 +203,7 @@ namespace AllCashUFormsApp.View.Page
             btnAdd.Enabled = true;
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
+            btnExcel.Enabled = true;
 
             txtBranchName.DisableTextBox(true);
             chkBoxPresale.Enabled = false;
@@ -186,6 +243,8 @@ namespace AllCashUFormsApp.View.Page
             cbbTitle.Items.Add("บมจ.");
             cbbTitle.Items.Add("คุณ");
             cbbTitle.SelectedIndex = 0;
+
+            CreatePrintBtnList();
         }
 
         public void BindCustomerInfo(string customerID)
@@ -209,6 +268,10 @@ namespace AllCashUFormsApp.View.Page
             dt.Columns.Add("WHID", typeof(string));
             dt.Columns.Add("Seq", typeof(int));
             dt.Columns.Add("FlagMember", typeof(bool));
+            dt.Columns.Add("Latitude", typeof(string));
+            dt.Columns.Add("Longitude", typeof(string));
+            dt.Columns.Add("BillTo", typeof(string));
+            dt.Columns.Add("Telephone", typeof(string));
         }
 
         private void SelectDetails(DataGridViewCellEventArgs e)
@@ -273,7 +336,19 @@ namespace AllCashUFormsApp.View.Page
                             rdoCancel.Checked = true;
 
                         dtpCrDate.Text = r["CrDate"].ToString();
-                        txtBillTo.Text = r["BillTo"].ToString().Trim();
+
+                        string _BillTo = r["BillTo"].ToString().Trim();
+                        string _PostalCode = r["PostalCode"].ToString().Trim();
+                        if (_BillTo.Contains(_PostalCode) && !string.IsNullOrEmpty(_PostalCode))
+                        {
+                            txtBillTo.Text = _BillTo;
+                        }
+                        else
+                        {
+                            txtBillTo.Text = _BillTo + " "+ _PostalCode;
+                            txtBillTo.Text = txtBillTo.Text.Trim();
+                        }
+
                         txtShipTo.Text = r["ShipTo"].ToString().Trim();
                         txtContact.Text = r["Contact"].ToString().Trim();
                         txtTelephone.Text = r["Telephone"].ToString().Trim();
@@ -306,13 +381,13 @@ namespace AllCashUFormsApp.View.Page
                             SAM.Moo = _Moo;
                         }
 
-                        SAM.AddressNo = r["AddressNo"].ToString();
-                        SAM.lane = r["lane"].ToString();
-                        SAM.Street = r["Street"].ToString();
+                        SAM.AddressNo = r["AddressNo"].ToString().Trim();
+                        SAM.lane = r["lane"].ToString().Trim();
+                        SAM.Street = r["Street"].ToString().Trim();
                         SAM.AreaID = Convert.ToInt32(r["AreaID"]);
                         SAM.ProvinceID = Convert.ToInt32(r["ProvinceID"]);
-                        SAM.PostalCode = r["PostalCode"].ToString();
-                        SAM.Moo = r["Moo"].ToString();
+                        SAM.PostalCode = r["PostalCode"].ToString().Trim();
+                        SAM.Moo = r["Moo"].ToString().Trim();
 
                         SAM.DistrictID = 0;
                         if (!string.IsNullOrEmpty(r["DistrictID"].ToString()))
@@ -411,6 +486,40 @@ namespace AllCashUFormsApp.View.Page
 
                 cells.Value = flagColor;
                 cells.Style.BackColor = flagColor == true ? Color.LightGreen : Color.Red;
+
+                var cellTelephone = grdList.Rows[i].Cells["colTelephone"];
+                cellTelephone.Style.BackColor = cellTelephone.Value != null ? Color.LightGreen : Color.Red;
+
+                var cellLatitude = grdList.Rows[i].Cells["colLatitude"];
+                bool flagLatitude = false;
+                if (cellLatitude.Value != null)
+                {
+                    if (cellLatitude.Value.ToString() == "0" || cellLatitude.Value.ToString() == "0.0" || cellLatitude.Value.ToString() == "")
+                    {
+
+                    }
+                    else
+                    {
+                        flagLatitude = true;
+                    }
+                }
+                cellLatitude.Style.BackColor = flagLatitude == true ? Color.LightGreen : Color.Red;
+
+                var cellLongitude = grdList.Rows[i].Cells["colLongitude"];
+                bool flagLongitude = false;
+                if (cellLongitude.Value != null)
+                {
+
+                    if (cellLongitude.Value.ToString() == "0" || cellLongitude.Value.ToString() == "0.0" || cellLongitude.Value.ToString() == "")
+                    {
+                        
+                    }
+                    else
+                    {
+                        flagLongitude = true;
+                    }
+                }
+                cellLongitude.Style.BackColor = flagLongitude == true ? Color.LightGreen : Color.Red;
             }
         }
 
@@ -466,13 +575,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
                 newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
-                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]);
+                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
+                    , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
             }
 
             grdList.DataSource = newTable;
             lblQtyCount.Text = newTable.Rows.Count.ToNumberFormat();
 
-            SetGridView(); //SetFlagMember and ImageCustomer
+            SetGridView(); //SetFlagMember and ImageCustomer , set colour on row gridview
             SetButtonAfterBindGridView();
             SelectDetails(null);
         }
@@ -880,6 +990,7 @@ namespace AllCashUFormsApp.View.Page
         private void btnSearchAddress_Click(object sender, EventArgs e)
         {
             SAM.Page = "Customer";
+            SAM.CustomerID = txtCustomerID.Text;
             frmSearchAddress frm = new frmSearchAddress();
             frm.ShowDialog();
             if (!string.IsNullOrEmpty(SAM.billTo))
@@ -1387,29 +1498,51 @@ namespace AllCashUFormsApp.View.Page
         {
             string msg = "start frmCustomerInfo=>btnPrint_Click";
             msg.WriteLog(this.GetType());
-           
-            var dtCust = new DataTable("proc_GetCustomerData_New");
-            dtCust.Columns.Add("CustomerID", typeof(string));
-            dtCust.Columns.Add("CustName", typeof(string));
-            dtCust.Columns.Add("ImageCustomer", typeof(bool));
-            dtCust.Columns.Add("ShopTypeName", typeof(string));
-            dtCust.Columns.Add("SalAreaID", typeof(string));
-            dtCust.Columns.Add("SalAreaName", typeof(string));
-            dtCust.Columns.Add("WHID", typeof(string));
-            dtCust.Columns.Add("Seq", typeof(short));
-            dtCust.Columns.Add("FlagMember", typeof(bool));
 
-            var dt = (DataTable)grdList.DataSource;
+            //var dtCust = new DataTable("proc_GetCustomerData_New");
+            //dtCust.Columns.Add("CustomerID", typeof(string));
+            //dtCust.Columns.Add("CustName", typeof(string));
+            //dtCust.Columns.Add("ImageCustomer", typeof(bool));
+            //dtCust.Columns.Add("ShopTypeName", typeof(string));
+            //dtCust.Columns.Add("SalAreaID", typeof(string));
+            //dtCust.Columns.Add("SalAreaName", typeof(string));
+            //dtCust.Columns.Add("WHID", typeof(string));
+            //dtCust.Columns.Add("Seq", typeof(short));
+            //dtCust.Columns.Add("FlagMember", typeof(bool));
 
-            foreach (DataRow r in dt.Rows)
-            {
-                dtCust.Rows.Add(r["CustomerID"], r["CustName"], r["ImageCustomer"]
-                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"]
-                    , r["WHID"], r["Seq"], r["FlagMember"]);
-            }
+            //dtCust.Columns.Add("BillTo", typeof(string));
+            //dtCust.Columns.Add("DistrictName", typeof(string));
+            //dtCust.Columns.Add("AreaName", typeof(string));
 
-            this.OpenExcelReportsPopup("รายงานร้านค้าทั้งหมด", "proc_GetCustomerDataToExcel.xslt", dtCust, true);
-            
+            //var dt = (DataTable)grdList.DataSource;
+
+            //foreach (DataRow r in dt.Rows)
+            //{
+            //    dtCust.Rows.Add(r["CustomerID"], r["CustName"], r["ImageCustomer"]
+            //        , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"]
+            //        , r["WHID"], r["Seq"], r["FlagMember"]);
+            //}
+            //this.OpenExcelReportsPopup("รายงานร้านค้าทั้งหมด", "proc_GetCustomerDataToExcel.xslt", "", true);
+
+
+            //last edit by sailom .k 15/08/2022----------------------------------
+            string WHID = ddlWH.SelectedIndex == 0 ? "" : ddlWH.SelectedValue.ToString();
+            int shoptypeID = ddlShopType.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlShopType.SelectedValue);
+
+            string SalAreaID = "";
+            if (ddlSalArea.SelectedItem != null)
+                SalAreaID = ddlSalArea.SelectedValue.ToString() == "-1" ? "" : ddlSalArea.SelectedValue.ToString();
+
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@FlagDel", rdoN.Checked ? 0 : 1);
+            _params.Add("@WHID", WHID);
+            _params.Add("@SalAreaID", SalAreaID);
+            _params.Add("@ShopTypeID", shoptypeID);
+            _params.Add("@Search", txtSearch.Text);
+
+            this.OpenExcelReportsPopup("รายงานร้านค้าทั้งหมด", "proc_GetCustomerDataToExcel.XSLT", "proc_GetCustomerData_New", _params, true);
+            //last edit by sailom .k 15/08/2022----------------------------------
+
             msg = "end frmCustomerInfo=>btnPrint_Click";
             msg.WriteLog(this.GetType());
         }
@@ -1730,6 +1863,11 @@ namespace AllCashUFormsApp.View.Page
         private void dataGridView1_DragOver(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
+        }
+
+        private void btnExcel_Click(object sender, EventArgs e)
+        {
+            printContextMenuStrip.Show(btnExcel, new Point(0, btnExcel.Height));
         }
 
         private void dataGridView1_DragDrop(object sender, DragEventArgs e)

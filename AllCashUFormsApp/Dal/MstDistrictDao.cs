@@ -11,6 +11,25 @@ namespace AllCashUFormsApp
 {
     public static class MstDistrictDao
     {
+        public static List<tbl_MstDistrict> SelectSingle(this tbl_MstDistrict tbl_MstDistrict, string districtCode)
+        {
+            List<tbl_MstDistrict> list = new List<tbl_MstDistrict>();
+            try
+            {
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstDistrict] WHERE DistrictCode = '" + districtCode + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstDistrict), sql);
+                list = dynamicListReturned.Cast<tbl_MstDistrict>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_MstDistrict.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>

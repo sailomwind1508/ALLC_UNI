@@ -96,8 +96,17 @@ namespace AllCashUFormsApp
                 {
                     DataTable dt = new DataTable();
                     string sql = "";
-                    sql += " SELECT * FROM dbo.tbl_IVMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_IVMaster ";
-                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+                    if (docTypeCode.Trim() == "V")
+                    {
+                        sql += " SELECT * FROM dbo.tbl_IVMaster WHERE DocNo = (SELECT MAX(DocNo) FROM dbo.tbl_IVMaster "; //last edit by sailom .k 10/09/2022
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+                    }
+                    else
+                    {
+                        sql += " SELECT * FROM dbo.tbl_IVMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_IVMaster "; //last edit by sailom .k 10/09/2022
+                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+                    }
+                    
 
                     List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_IVMaster), sql);
                     list = dynamicListReturned.Cast<tbl_IVMaster>().ToList();
@@ -338,6 +347,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_IVMaster);
             }
 

@@ -15,6 +15,8 @@
 		</ss:Workbook>
 	</xsl:template>
 
+	<xsl:key name="groupWHID" match="NewDataSet/Rep_Sales_By_Doc_XSLT" use="VanByPO" />
+	
 	<xsl:template match="/">
 		<HTML>
 			<HEAD>
@@ -120,30 +122,34 @@
 			</HEAD>
 			<BODY class="content">
 				<TABLE>
-					<TR>
-						<TD class="stdPageHdr" colspan="11">
-							<xsl:value-of select="NewDataSet/Rep_Sales_By_Doc_XSLT/CompanyName"/>
-						</TD>
-					</TR>
-					<TR>
-						<TD class="stdPageHdr" colspan="11">รายงานสรุปยอดขาย แยกตามเอกสาร</TD>
-					</TR>
-					<TR>
-						<TD class="SearchKey">พิมพ์วันที่</TD>
-						<TD class="SearchValue" Colspan="1">
-							<xsl:value-of select="(NewDataSet/Rep_Sales_By_Doc_XSLT/DateFr)"/>
-						</TD>
-						<TD class="SearchKey">ถึง</TD>
-						<TD class="SearchValue" Colspan="1">
-							<xsl:value-of select="(NewDataSet/Rep_Sales_By_Doc_XSLT/DateTo)"/>
-						</TD>
-					</TR>
-					<TR>
-						<TD class="SearchKey">สถานะ</TD>
-						<TD class="SearchValue" Colspan="1">
-							<xsl:value-of select="NewDataSet/Rep_Sales_By_Doc_XSLT/Status"/>
-						</TD>
-					</TR>
+					
+					<xsl:for-each select="NewDataSet/Rep_Sales_By_Doc_XSLT[count(. | key('groupWHID', VanByPO)[1]) = 1]">
+
+						<TR>
+							<TD class="stdPageHdr" colspan="11">
+								<xsl:value-of select="CompanyName"/>
+							</TD>
+						</TR>
+						<TR>
+							<TD class="stdPageHdr" colspan="11">รายงานสรุปยอดขาย แยกตามเอกสาร</TD>
+						</TR>
+						<TR>
+							<TD class="SearchKey">พิมพ์วันที่</TD>
+							<TD class="SearchValue" Colspan="1">
+								<xsl:value-of select="DateFr"/>
+							</TD>
+							<TD class="SearchKey">ถึง</TD>
+							<TD class="SearchValue" Colspan="1">
+								<xsl:value-of select="DateTo"/>
+							</TD>
+						</TR>
+						<TR>
+							<TD class="SearchKey">สถานะ</TD>
+							<TD class="SearchValue" Colspan="1">
+								<xsl:value-of select="Status"/>
+							</TD>
+						</TR>
+						
 					<TR>
 						<TD CLASS="gridHeader">No</TD>
 						<TD CLASS="gridHeader">วันที่</TD>
@@ -154,14 +160,17 @@
 						<TD CLASS="gridHeader">มูลค่าสินค้า</TD>
 						<TD CLASS="gridHeader">ภาษีมูลค่าเพิ่ม</TD>
 						<TD CLASS="gridHeader">มูลค่าสุทธิ</TD>
-						<TD CLASS="gridHeader" WIDTH="200">จำนวนรายการ</TD>
+						<TD CLASS="gridHeader" WIDTH="100">จำนวนรายการ</TD>
 						<TD CLASS="gridHeader">พนักงานขาย</TD>
 						<TD CLASS="gridHeader">สถานะ</TD>
 					</TR>
-					<xsl:for-each select="NewDataSet/Rep_Sales_By_Doc_XSLT">
+						
+					<!--<xsl:for-each select="NewDataSet/Rep_Sales_By_Doc_XSLT">-->
+					<xsl:for-each select="key('groupWHID', VanByPO)">
+						<xsl:sort select="VanByPO"/>
 						<TR>
 							<TD class="SearchResultItem">
-								<xsl:value-of  select="No"/>
+								<xsl:value-of  select="position()"/>
 							</TD>
 							<TD class="SearchResultItem">
 								<xsl:value-of select="DocDate"/>
@@ -199,25 +208,42 @@
 								<xsl:value-of select="Status"/>
 							</TD>
 						</TR >
+						
+						
 					</xsl:for-each>
-					<TR Class="GroupFooter">
-						<TD ColSpan="4" align="right">รวมทั้งหมด</TD>
-						<TD>เอกสารใช้งาน
-							<xsl:value-of select='format-number(count(/NewDataSet/Rep_Sales_By_Doc_XSLT/No),"#,##0")'/> รายการ
-						</TD>
-						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/ReceivedQty),"###,###.00")'/>
-						</TD>
-						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/Total),"###,###.00")'/>
-						</TD>
-						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/VatAmt),"###,###.00")'/>
-						</TD>
-						<TD Class="subTotals" align="right">
-							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/NetAmt),"###,###.00")'/>
-						</TD>
+
+			
+
+					<TR CLASS="GroupFooter">
+							<TD ColSpan="4" align="right">รวมทั้งหมด</TD>
+							<TD>
+								เอกสารใช้งาน
+								<xsl:value-of select="count(key('groupWHID', VanByPO)/No)"/> รายการ
+								<!--<xsl:value-of select='format-number(count(/NewDataSet/Rep_Sales_By_Doc_XSLT/No),"#,##0")'/> รายการ-->
+							</TD>
+							<TD Class="subTotals" align="right">
+								<xsl:value-of select='format-number(sum(key("groupWHID", VanByPO)/ReceivedQty),"###,###.00")'/>
+								<!--<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/ReceivedQty),"###,###.00")'/>-->
+							</TD>
+							<TD Class="subTotals" align="right">
+								<xsl:value-of select='format-number(sum(key("groupWHID", VanByPO)/Total),"###,###.00")'/>
+								<!--<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/Total),"###,###.00")'/>-->
+							</TD>
+							<TD Class="subTotals" align="right">
+								<xsl:value-of select='format-number(sum(key("groupWHID", VanByPO)/VatAmt),"###,###.00")'/>
+								<!--<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/VatAmt),"###,###.00")'/>-->
+							</TD>
+							<TD Class="subTotals" align="right">
+								<xsl:value-of select='format-number(sum(key("groupWHID", VanByPO)/NetAmt),"###,###.00")'/>
+								<!--<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Sales_By_Doc_XSLT/NetAmt),"###,###.00")'/>-->
+							</TD>
 					</TR>
+
+					<TR>
+
+					</TR>
+
+					</xsl:for-each>
 					
 				</TABLE>
 			</BODY>

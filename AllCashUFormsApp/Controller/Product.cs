@@ -379,5 +379,10 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_Product()).GetProductData_Popup(_ProductSubGroupID, Search);
         }
+
+        public List<tbl_ProductUomSet> GetProductUomSet_Single(string ProductID)//Modified By ADISORN 10/08/2565
+        {
+            return (new tbl_ProductUomSet()).GetProductUomSet_Single(ProductID);
+        }
     }
 }

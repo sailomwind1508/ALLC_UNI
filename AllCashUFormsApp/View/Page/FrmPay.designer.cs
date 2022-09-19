@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPay));
             this.panel8 = new System.Windows.Forms.Panel();
             this.txtRemark = new System.Windows.Forms.TextBox();
@@ -82,6 +82,8 @@
             this.colMoneyDiff = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDocNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.txtCrUser = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.btnSearchBranchCode = new System.Windows.Forms.Button();
             this.dtpDocDate = new System.Windows.Forms.DateTimePicker();
             this.btnCalculateSales = new System.Windows.Forms.Button();
@@ -97,9 +99,6 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.txtCrUser = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -109,6 +108,7 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -130,23 +130,23 @@
             this.panel8.Controls.Add(this.label19);
             this.panel8.Controls.Add(this.txtTotalGetMoney);
             this.panel8.Controls.Add(this.txtTotalDeposit);
-            this.panel8.Controls.Add(this.label18);
-            this.panel8.Controls.Add(this.label10);
             this.panel8.Controls.Add(this.txtSumDiv);
             this.panel8.Controls.Add(this.txtTotalTransfer);
-            this.panel8.Controls.Add(this.label17);
-            this.panel8.Controls.Add(this.label8);
             this.panel8.Controls.Add(this.txtSumPOMaster);
             this.panel8.Controls.Add(this.txtTotalCheque);
+            this.panel8.Controls.Add(this.txtSumTotalSend);
+            this.panel8.Controls.Add(this.txtTotalSend);
+            this.panel8.Controls.Add(this.label18);
+            this.panel8.Controls.Add(this.label10);
+            this.panel8.Controls.Add(this.label17);
+            this.panel8.Controls.Add(this.label8);
             this.panel8.Controls.Add(this.label16);
             this.panel8.Controls.Add(this.label9);
             this.panel8.Controls.Add(this.label15);
             this.panel8.Controls.Add(this.label6);
             this.panel8.Controls.Add(this.label14);
             this.panel8.Controls.Add(this.label7);
-            this.panel8.Controls.Add(this.txtSumTotalSend);
             this.panel8.Controls.Add(this.label13);
-            this.panel8.Controls.Add(this.txtTotalSend);
             this.panel8.Controls.Add(this.label12);
             this.panel8.Controls.Add(this.label5);
             this.panel8.Controls.Add(this.label11);
@@ -203,7 +203,7 @@
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label18.Location = new System.Drawing.Point(740, 97);
+            this.label18.Location = new System.Drawing.Point(738, 97);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(31, 16);
             this.label18.TabIndex = 258;
@@ -213,7 +213,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label10.Location = new System.Drawing.Point(305, 95);
+            this.label10.Location = new System.Drawing.Point(299, 95);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(31, 16);
             this.label10.TabIndex = 257;
@@ -239,7 +239,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label17.Location = new System.Drawing.Point(739, 71);
+            this.label17.Location = new System.Drawing.Point(737, 71);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(31, 16);
             this.label17.TabIndex = 256;
@@ -249,7 +249,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label8.Location = new System.Drawing.Point(305, 69);
+            this.label8.Location = new System.Drawing.Point(299, 69);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(31, 16);
             this.label8.TabIndex = 255;
@@ -276,7 +276,7 @@
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label16.Location = new System.Drawing.Point(474, 98);
+            this.label16.Location = new System.Drawing.Point(477, 98);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(98, 16);
             this.label16.TabIndex = 259;
@@ -286,7 +286,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label9.Location = new System.Drawing.Point(35, 95);
+            this.label9.Location = new System.Drawing.Point(38, 95);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(97, 16);
             this.label9.TabIndex = 254;
@@ -296,7 +296,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label15.Location = new System.Drawing.Point(739, 45);
+            this.label15.Location = new System.Drawing.Point(737, 45);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(31, 16);
             this.label15.TabIndex = 252;
@@ -306,7 +306,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label6.Location = new System.Drawing.Point(305, 43);
+            this.label6.Location = new System.Drawing.Point(299, 43);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(31, 16);
             this.label6.TabIndex = 251;
@@ -316,7 +316,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label14.Location = new System.Drawing.Point(472, 71);
+            this.label14.Location = new System.Drawing.Point(475, 71);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(99, 16);
             this.label14.TabIndex = 250;
@@ -326,7 +326,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label7.Location = new System.Drawing.Point(58, 68);
+            this.label7.Location = new System.Drawing.Point(61, 68);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(74, 16);
             this.label7.TabIndex = 249;
@@ -344,7 +344,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label13.Location = new System.Drawing.Point(458, 44);
+            this.label13.Location = new System.Drawing.Point(461, 44);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 16);
             this.label13.TabIndex = 248;
@@ -362,7 +362,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label12.Location = new System.Drawing.Point(739, 19);
+            this.label12.Location = new System.Drawing.Point(737, 19);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(31, 16);
             this.label12.TabIndex = 247;
@@ -372,7 +372,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label5.Location = new System.Drawing.Point(20, 42);
+            this.label5.Location = new System.Drawing.Point(23, 42);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(112, 16);
             this.label5.TabIndex = 246;
@@ -382,7 +382,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label11.Location = new System.Drawing.Point(472, 18);
+            this.label11.Location = new System.Drawing.Point(475, 18);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(99, 16);
             this.label11.TabIndex = 245;
@@ -392,7 +392,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label4.Location = new System.Drawing.Point(305, 17);
+            this.label4.Location = new System.Drawing.Point(299, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 16);
             this.label4.TabIndex = 244;
@@ -402,7 +402,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label3.Location = new System.Drawing.Point(72, 16);
+            this.label3.Location = new System.Drawing.Point(75, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 16);
             this.label3.TabIndex = 253;
@@ -448,14 +448,14 @@
             this.gridPayment.AllowUserToDeleteRows = false;
             this.gridPayment.AllowUserToResizeColumns = false;
             this.gridPayment.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridPayment.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle45.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle45.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridPayment.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle45;
             this.gridPayment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridPayment.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colWHID,
@@ -467,14 +467,14 @@
             this.colTotal,
             this.colMoneyDiff,
             this.colDocNo});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridPayment.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle55.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle55.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle55.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle55.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle55.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle55.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridPayment.DefaultCellStyle = dataGridViewCellStyle55;
             this.gridPayment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridPayment.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.gridPayment.Location = new System.Drawing.Point(0, 0);
@@ -493,8 +493,8 @@
             // colWHID
             // 
             this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle46.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle46;
             this.colWHID.HeaderText = "VAN";
             this.colWHID.Name = "colWHID";
             this.colWHID.ReadOnly = true;
@@ -503,11 +503,11 @@
             // colSend
             // 
             this.colSend.DataPropertyName = "Send";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.colSend.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle47.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle47.Format = "N2";
+            dataGridViewCellStyle47.NullValue = null;
+            this.colSend.DefaultCellStyle = dataGridViewCellStyle47;
             this.colSend.HeaderText = "ยอดส่งเงินสด";
             this.colSend.MaxInputLength = 12;
             this.colSend.Name = "colSend";
@@ -517,11 +517,11 @@
             // colCheque
             // 
             this.colCheque.DataPropertyName = "Cheque";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle4.Format = "N2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.colCheque.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle48.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle48.Format = "N2";
+            dataGridViewCellStyle48.NullValue = null;
+            this.colCheque.DefaultCellStyle = dataGridViewCellStyle48;
             this.colCheque.HeaderText = "ชำระบิลเครดิต";
             this.colCheque.MaxInputLength = 12;
             this.colCheque.Name = "colCheque";
@@ -531,11 +531,11 @@
             // colTransfer
             // 
             this.colTransfer.DataPropertyName = "Transfer";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.colTransfer.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle49.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle49.Format = "N2";
+            dataGridViewCellStyle49.NullValue = null;
+            this.colTransfer.DefaultCellStyle = dataGridViewCellStyle49;
             this.colTransfer.HeaderText = "ยอดโอน";
             this.colTransfer.MaxInputLength = 12;
             this.colTransfer.Name = "colTransfer";
@@ -545,11 +545,11 @@
             // colDeposit
             // 
             this.colDeposit.DataPropertyName = "Deposit";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle6.Format = "N2";
-            dataGridViewCellStyle6.NullValue = null;
-            this.colDeposit.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle50.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle50.Format = "N2";
+            dataGridViewCellStyle50.NullValue = null;
+            this.colDeposit.DefaultCellStyle = dataGridViewCellStyle50;
             this.colDeposit.HeaderText = "ค่าธรรมเนียม";
             this.colDeposit.MaxInputLength = 12;
             this.colDeposit.Name = "colDeposit";
@@ -559,11 +559,11 @@
             // colTotalSend
             // 
             this.colTotalSend.DataPropertyName = "TotalSend";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.colTotalSend.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle51.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle51.Format = "N2";
+            dataGridViewCellStyle51.NullValue = null;
+            this.colTotalSend.DefaultCellStyle = dataGridViewCellStyle51;
             this.colTotalSend.HeaderText = "รวมส่งเงิน";
             this.colTotalSend.Name = "colTotalSend";
             this.colTotalSend.ReadOnly = true;
@@ -572,11 +572,11 @@
             // colTotal
             // 
             this.colTotal.DataPropertyName = "Total";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.colTotal.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle52.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle52.Format = "N2";
+            dataGridViewCellStyle52.NullValue = null;
+            this.colTotal.DefaultCellStyle = dataGridViewCellStyle52;
             this.colTotal.HeaderText = "รวมยอดขาย";
             this.colTotal.Name = "colTotal";
             this.colTotal.ReadOnly = true;
@@ -584,11 +584,11 @@
             // 
             // colMoneyDiff
             // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = null;
-            this.colMoneyDiff.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle53.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle53.Format = "N2";
+            dataGridViewCellStyle53.NullValue = null;
+            this.colMoneyDiff.DefaultCellStyle = dataGridViewCellStyle53;
             this.colMoneyDiff.HeaderText = "เกิน/ขาด";
             this.colMoneyDiff.Name = "colMoneyDiff";
             this.colMoneyDiff.ReadOnly = true;
@@ -597,8 +597,8 @@
             // colDocNo
             // 
             this.colDocNo.DataPropertyName = "DocNo";
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colDocNo.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle54.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colDocNo.DefaultCellStyle = dataGridViewCellStyle54;
             this.colDocNo.HeaderText = "DocNo";
             this.colDocNo.Name = "colDocNo";
             this.colDocNo.Visible = false;
@@ -607,21 +607,38 @@
             // 
             this.panel3.BackColor = System.Drawing.Color.Azure;
             this.panel3.Controls.Add(this.txtCrUser);
-            this.panel3.Controls.Add(this.label20);
             this.panel3.Controls.Add(this.btnSearchBranchCode);
             this.panel3.Controls.Add(this.dtpDocDate);
             this.panel3.Controls.Add(this.btnCalculateSales);
             this.panel3.Controls.Add(this.btnSearch);
             this.panel3.Controls.Add(this.txtBranchName);
-            this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.txtBranchCode);
+            this.panel3.Controls.Add(this.label20);
             this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.label2);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Font = new System.Drawing.Font("Tahoma", 9.7F);
             this.panel3.Location = new System.Drawing.Point(0, 35);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1222, 61);
             this.panel3.TabIndex = 220;
+            // 
+            // txtCrUser
+            // 
+            this.txtCrUser.Location = new System.Drawing.Point(89, 34);
+            this.txtCrUser.MaxLength = 50;
+            this.txtCrUser.Name = "txtCrUser";
+            this.txtCrUser.Size = new System.Drawing.Size(366, 23);
+            this.txtCrUser.TabIndex = 204;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(34, 37);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(57, 16);
+            this.label20.TabIndex = 205;
+            this.label20.Text = "ผู้จำทำ : ";
             // 
             // btnSearchBranchCode
             // 
@@ -673,7 +690,7 @@
             this.btnSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(668, 4);
+            this.btnSearch.Location = new System.Drawing.Point(669, 4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 29);
             this.btnSearch.TabIndex = 2;
@@ -685,16 +702,16 @@
             // txtBranchName
             // 
             this.txtBranchName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtBranchName.Location = new System.Drawing.Point(233, 9);
+            this.txtBranchName.Location = new System.Drawing.Point(230, 9);
             this.txtBranchName.Name = "txtBranchName";
-            this.txtBranchName.Size = new System.Drawing.Size(222, 23);
+            this.txtBranchName.Size = new System.Drawing.Size(225, 23);
             this.txtBranchName.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label2.Location = new System.Drawing.Point(461, 12);
+            this.label2.Location = new System.Drawing.Point(466, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 16);
             this.label2.TabIndex = 0;
@@ -713,7 +730,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label1.Location = new System.Drawing.Point(7, 10);
+            this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 16);
             this.label1.TabIndex = 0;
@@ -797,35 +814,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 31);
             this.panel5.TabIndex = 18;
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.Azure;
-            this.panel1.Controls.Add(this.panel7);
-            this.panel1.Location = new System.Drawing.Point(0, 26);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1225, 580);
-            this.panel1.TabIndex = 31;
-            // 
-            // txtCrUser
-            // 
-            this.txtCrUser.Location = new System.Drawing.Point(89, 34);
-            this.txtCrUser.MaxLength = 50;
-            this.txtCrUser.Name = "txtCrUser";
-            this.txtCrUser.Size = new System.Drawing.Size(366, 23);
-            this.txtCrUser.TabIndex = 204;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(29, 37);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(57, 16);
-            this.label20.TabIndex = 205;
-            this.label20.Text = "ผู้จำทำ : ";
             // 
             // btnClose
             // 
@@ -1008,6 +996,18 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.Azure;
+            this.panel1.Controls.Add(this.panel7);
+            this.panel1.Location = new System.Drawing.Point(0, 26);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1225, 580);
+            this.panel1.TabIndex = 31;
             // 
             // FrmPay
             // 

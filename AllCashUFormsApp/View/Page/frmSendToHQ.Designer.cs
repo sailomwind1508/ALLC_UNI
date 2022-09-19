@@ -88,9 +88,9 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.dtpDocDate.CustomFormat = "dd/MM/yyyy";
             this.dtpDocDate.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.dtpDocDate.Location = new System.Drawing.Point(104, 6);
+            this.dtpDocDate.Location = new System.Drawing.Point(98, 6);
             this.dtpDocDate.Name = "dtpDocDate";
-            this.dtpDocDate.Size = new System.Drawing.Size(199, 23);
+            this.dtpDocDate.Size = new System.Drawing.Size(163, 23);
             this.dtpDocDate.TabIndex = 10;
             // 
             // pnlCen
@@ -231,7 +231,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.chkAllData.AutoSize = true;
             this.chkAllData.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.chkAllData.Location = new System.Drawing.Point(309, 9);
+            this.chkAllData.Location = new System.Drawing.Point(268, 9);
             this.chkAllData.Name = "chkAllData";
             this.chkAllData.Size = new System.Drawing.Size(112, 20);
             this.chkAllData.TabIndex = 120;

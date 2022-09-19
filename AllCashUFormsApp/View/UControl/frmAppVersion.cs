@@ -106,7 +106,7 @@ namespace AllCashUFormsApp.View.UControl
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(this.GetType());
                 throw;
             }
             

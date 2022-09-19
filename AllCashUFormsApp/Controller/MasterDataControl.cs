@@ -221,6 +221,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 ret = false;
             }
             return ret;
@@ -234,6 +235,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -246,6 +248,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -258,6 +261,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -270,6 +274,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -282,6 +287,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -294,6 +300,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -306,6 +313,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -318,6 +326,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 return null;
             }
         }
@@ -406,6 +415,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 ret = false;
             }
             return ret;
@@ -420,6 +430,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 ret = false;
             }
             return ret;
@@ -495,6 +506,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 ret = false;
             }
             return ret;

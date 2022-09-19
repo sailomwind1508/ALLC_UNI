@@ -125,7 +125,7 @@ namespace AllCashUFormsApp.View.Page
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(this.GetType());
                 isComplete = false;
             }
 

@@ -151,7 +151,7 @@
 						<TD ColSpan="2" class="SearchKey">เลขประจำตัวผู้เสียภาษีอากร</TD>
 						<TD class="SearchValue">
 							<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-							<xsl:value-of select="/NewDataSet/Rep_IV_Sales_XSLT/TaxId"/>
+							<xsl:value-of select="/NewDataSet/Rep_IV_Sales_XSLT/BranchTaxID"/>
 						</TD>
 					</TR>
 					<TR>

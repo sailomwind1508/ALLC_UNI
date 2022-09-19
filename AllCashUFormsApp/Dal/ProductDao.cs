@@ -509,6 +509,7 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 ret = false;
+                ex.WriteLog(null);
             }
 
             return ret;
@@ -525,6 +526,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 return null;
             }
         }

@@ -30,17 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRT));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnPrintCrys = new AllCashUFormsApp.View.UControl.PrintButton(this.components);
@@ -519,20 +519,20 @@
             // pnlBR
             // 
             this.pnlBR.BackColor = System.Drawing.Color.Azure;
-            this.pnlBR.Controls.Add(this.label3);
-            this.pnlBR.Controls.Add(this.lblVatType);
             this.pnlBR.Controls.Add(this.txnDiscountAmt);
-            this.pnlBR.Controls.Add(this.label2);
             this.pnlBR.Controls.Add(this.txnDiscountType);
             this.pnlBR.Controls.Add(this.txnTotalDue);
             this.pnlBR.Controls.Add(this.txnAmount);
+            this.pnlBR.Controls.Add(this.txnBeforeVat);
+            this.pnlBR.Controls.Add(this.txnExcVat);
+            this.pnlBR.Controls.Add(this.txnVatAmt);
+            this.pnlBR.Controls.Add(this.label3);
+            this.pnlBR.Controls.Add(this.lblVatType);
+            this.pnlBR.Controls.Add(this.label2);
             this.pnlBR.Controls.Add(this.label13);
             this.pnlBR.Controls.Add(this.label17);
             this.pnlBR.Controls.Add(this.label14);
-            this.pnlBR.Controls.Add(this.txnBeforeVat);
-            this.pnlBR.Controls.Add(this.txnExcVat);
             this.pnlBR.Controls.Add(this.label15);
-            this.pnlBR.Controls.Add(this.txnVatAmt);
             this.pnlBR.Controls.Add(this.label16);
             this.pnlBR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlBR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -545,7 +545,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(216, 85);
+            this.label3.Location = new System.Drawing.Point(223, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 16);
             this.label3.TabIndex = 125;
@@ -557,7 +557,7 @@
             this.lblVatType.AutoSize = true;
             this.lblVatType.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVatType.ForeColor = System.Drawing.Color.Blue;
-            this.lblVatType.Location = new System.Drawing.Point(196, 85);
+            this.lblVatType.Location = new System.Drawing.Point(203, 85);
             this.lblVatType.Name = "lblVatType";
             this.lblVatType.Size = new System.Drawing.Size(17, 17);
             this.lblVatType.TabIndex = 124;
@@ -578,7 +578,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(100, 85);
+            this.label2.Location = new System.Drawing.Point(107, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 16);
             this.label2.TabIndex = 122;
@@ -621,7 +621,7 @@
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(120, 7);
+            this.label13.Location = new System.Drawing.Point(127, 7);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(129, 16);
             this.label13.TabIndex = 112;
@@ -631,7 +631,7 @@
             // 
             this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(153, 137);
+            this.label17.Location = new System.Drawing.Point(160, 137);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(96, 16);
             this.label17.TabIndex = 120;
@@ -641,7 +641,7 @@
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(99, 33);
+            this.label14.Location = new System.Drawing.Point(106, 33);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(59, 16);
             this.label14.TabIndex = 114;
@@ -673,7 +673,7 @@
             // 
             this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(180, 59);
+            this.label15.Location = new System.Drawing.Point(187, 59);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(69, 16);
             this.label15.TabIndex = 116;
@@ -694,7 +694,7 @@
             // 
             this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(140, 111);
+            this.label16.Location = new System.Drawing.Point(147, 111);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(109, 16);
             this.label16.TabIndex = 118;
@@ -715,11 +715,11 @@
             // 
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
             this.pnlTR.Controls.Add(this.txdDocNo);
-            this.pnlTR.Controls.Add(this.label11);
             this.pnlTR.Controls.Add(this.ddlDocStatus);
-            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.dtpDocDate);
             this.pnlTR.Controls.Add(this.btnSearchDoc);
+            this.pnlTR.Controls.Add(this.label11);
+            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.label7);
             this.pnlTR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlTR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -741,7 +741,7 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(119, 64);
+            this.label11.Location = new System.Drawing.Point(126, 62);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(97, 16);
             this.label11.TabIndex = 110;
@@ -753,7 +753,7 @@
             this.ddlDocStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlDocStatus.Enabled = false;
             this.ddlDocStatus.FormattingEnabled = true;
-            this.ddlDocStatus.Location = new System.Drawing.Point(222, 61);
+            this.ddlDocStatus.Location = new System.Drawing.Point(222, 59);
             this.ddlDocStatus.Name = "ddlDocStatus";
             this.ddlDocStatus.Size = new System.Drawing.Size(163, 24);
             this.ddlDocStatus.TabIndex = 15;
@@ -762,7 +762,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(141, 38);
+            this.label8.Location = new System.Drawing.Point(148, 37);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(75, 16);
             this.label8.TabIndex = 104;
@@ -772,7 +772,7 @@
             // 
             this.dtpDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpDocDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpDocDate.Location = new System.Drawing.Point(222, 33);
+            this.dtpDocDate.Location = new System.Drawing.Point(222, 32);
             this.dtpDocDate.Name = "dtpDocDate";
             this.dtpDocDate.Size = new System.Drawing.Size(163, 23);
             this.dtpDocDate.TabIndex = 14;
@@ -798,7 +798,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(126, 8);
+            this.label7.Location = new System.Drawing.Point(133, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(90, 16);
             this.label7.TabIndex = 101;
@@ -810,23 +810,23 @@
             this.pnlTL.Controls.Add(this.txtWHName);
             this.pnlTL.Controls.Add(this.txtWHCode);
             this.pnlTL.Controls.Add(this.btnSearchWHCode);
-            this.pnlTL.Controls.Add(this.lblWHCode);
             this.pnlTL.Controls.Add(this.txtEmpCode);
             this.pnlTL.Controls.Add(this.btnSearchEmpCode);
             this.pnlTL.Controls.Add(this.ddlSaleArea);
             this.pnlTL.Controls.Add(this.btnCustInfo);
-            this.pnlTL.Controls.Add(this.lblEmpCode);
-            this.pnlTL.Controls.Add(this.lblSaleArea);
             this.pnlTL.Controls.Add(this.txtTelephone);
-            this.pnlTL.Controls.Add(this.lblTelephone);
             this.pnlTL.Controls.Add(this.txtContact);
-            this.pnlTL.Controls.Add(this.lblContact);
             this.pnlTL.Controls.Add(this.txtBillTo);
-            this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.txtCustName);
             this.pnlTL.Controls.Add(this.txtCustomerID);
             this.pnlTL.Controls.Add(this.btnSearchCust);
+            this.pnlTL.Controls.Add(this.lblWHCode);
+            this.pnlTL.Controls.Add(this.lblSaleArea);
+            this.pnlTL.Controls.Add(this.lblTelephone);
+            this.pnlTL.Controls.Add(this.lblBillTo);
             this.pnlTL.Controls.Add(this.lblCustomerCode);
+            this.pnlTL.Controls.Add(this.lblEmpCode);
+            this.pnlTL.Controls.Add(this.lblContact);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlTL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTL.Location = new System.Drawing.Point(0, 0);
@@ -836,11 +836,11 @@
             // 
             // txtWHName
             // 
-            this.txtWHName.Location = new System.Drawing.Point(276, 152);
+            this.txtWHName.Location = new System.Drawing.Point(272, 152);
             this.txtWHName.MaxLength = 200;
             this.txtWHName.Name = "txtWHName";
             this.txtWHName.ReadOnly = true;
-            this.txtWHName.Size = new System.Drawing.Size(272, 23);
+            this.txtWHName.Size = new System.Drawing.Size(276, 23);
             this.txtWHName.TabIndex = 11;
             // 
             // txtWHCode
@@ -870,7 +870,7 @@
             // lblWHCode
             // 
             this.lblWHCode.AutoSize = true;
-            this.lblWHCode.Location = new System.Drawing.Point(32, 155);
+            this.lblWHCode.Location = new System.Drawing.Point(38, 155);
             this.lblWHCode.Name = "lblWHCode";
             this.lblWHCode.Size = new System.Drawing.Size(43, 16);
             this.lblWHCode.TabIndex = 117;
@@ -917,7 +917,7 @@
             this.btnCustInfo.ForeColor = System.Drawing.SystemColors.Control;
             this.btnCustInfo.Image = global::AllCashUFormsApp.Properties.Resources.share;
             this.btnCustInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCustInfo.Location = new System.Drawing.Point(513, 3);
+            this.btnCustInfo.Location = new System.Drawing.Point(511, 3);
             this.btnCustInfo.Name = "btnCustInfo";
             this.btnCustInfo.Size = new System.Drawing.Size(35, 23);
             this.btnCustInfo.TabIndex = 110;
@@ -928,7 +928,7 @@
             // lblEmpCode
             // 
             this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(276, 129);
+            this.lblEmpCode.Location = new System.Drawing.Point(281, 129);
             this.lblEmpCode.Name = "lblEmpCode";
             this.lblEmpCode.Size = new System.Drawing.Size(88, 16);
             this.lblEmpCode.TabIndex = 109;
@@ -937,7 +937,7 @@
             // lblSaleArea
             // 
             this.lblSaleArea.AutoSize = true;
-            this.lblSaleArea.Location = new System.Drawing.Point(24, 128);
+            this.lblSaleArea.Location = new System.Drawing.Point(30, 128);
             this.lblSaleArea.Name = "lblSaleArea";
             this.lblSaleArea.Size = new System.Drawing.Size(51, 16);
             this.lblSaleArea.TabIndex = 107;
@@ -954,7 +954,7 @@
             // lblTelephone
             // 
             this.lblTelephone.AutoSize = true;
-            this.lblTelephone.Location = new System.Drawing.Point(7, 102);
+            this.lblTelephone.Location = new System.Drawing.Point(13, 102);
             this.lblTelephone.Name = "lblTelephone";
             this.lblTelephone.Size = new System.Drawing.Size(68, 16);
             this.lblTelephone.TabIndex = 105;
@@ -971,7 +971,7 @@
             // lblContact
             // 
             this.lblContact.AutoSize = true;
-            this.lblContact.Location = new System.Drawing.Point(287, 102);
+            this.lblContact.Location = new System.Drawing.Point(292, 102);
             this.lblContact.Name = "lblContact";
             this.lblContact.Size = new System.Drawing.Size(77, 16);
             this.lblContact.TabIndex = 103;
@@ -989,7 +989,7 @@
             // lblBillTo
             // 
             this.lblBillTo.AutoSize = true;
-            this.lblBillTo.Location = new System.Drawing.Point(29, 33);
+            this.lblBillTo.Location = new System.Drawing.Point(35, 33);
             this.lblBillTo.Name = "lblBillTo";
             this.lblBillTo.Size = new System.Drawing.Size(46, 16);
             this.lblBillTo.TabIndex = 101;
@@ -997,7 +997,7 @@
             // 
             // txtCustName
             // 
-            this.txtCustName.Location = new System.Drawing.Point(276, 4);
+            this.txtCustName.Location = new System.Drawing.Point(273, 4);
             this.txtCustName.MaxLength = 200;
             this.txtCustName.Name = "txtCustName";
             this.txtCustName.ReadOnly = true;
@@ -1031,7 +1031,7 @@
             // lblCustomerCode
             // 
             this.lblCustomerCode.AutoSize = true;
-            this.lblCustomerCode.Location = new System.Drawing.Point(24, 7);
+            this.lblCustomerCode.Location = new System.Drawing.Point(30, 7);
             this.lblCustomerCode.Name = "lblCustomerCode";
             this.lblCustomerCode.Size = new System.Drawing.Size(51, 16);
             this.lblCustomerCode.TabIndex = 99;
@@ -1081,8 +1081,8 @@
             // colProductCode
             // 
             this.colProductCode.DataPropertyName = "ProductID";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle23;
             this.colProductCode.HeaderText = "รหัสสินค้า";
             this.colProductCode.MaxInputLength = 15;
             this.colProductCode.Name = "colProductCode";
@@ -1090,9 +1090,9 @@
             // 
             // colSearchProduct
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle24;
             this.colSearchProduct.HeaderText = "";
             this.colSearchProduct.Name = "colSearchProduct";
             this.colSearchProduct.Text = "...";
@@ -1103,9 +1103,9 @@
             // 
             this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle25.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle25;
             this.colProductName.HeaderText = "รายการ";
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
@@ -1114,9 +1114,9 @@
             // colUnit
             // 
             this.colUnit.DataPropertyName = "UomSetName";
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colUnit.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colUnit.DefaultCellStyle = dataGridViewCellStyle26;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
             this.colUnit.ReadOnly = true;
@@ -1126,11 +1126,11 @@
             // colAmount
             // 
             this.colAmount.DataPropertyName = "OrderQty";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.colAmount.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle27.Format = "N2";
+            dataGridViewCellStyle27.NullValue = null;
+            this.colAmount.DefaultCellStyle = dataGridViewCellStyle27;
             this.colAmount.HeaderText = "จำนวนขาย";
             this.colAmount.MaxInputLength = 6;
             this.colAmount.Name = "colAmount";
@@ -1140,11 +1140,11 @@
             // colSellPriceVat
             // 
             this.colSellPriceVat.DataPropertyName = "SellPriceVat";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle6.Format = "N2";
-            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle28.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle28.Format = "N2";
+            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle28;
             this.colSellPriceVat.HeaderText = "หน่วยละ";
             this.colSellPriceVat.MaxInputLength = 10;
             this.colSellPriceVat.Name = "colSellPriceVat";
@@ -1154,11 +1154,11 @@
             // 
             // colCommittion
             // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle7.Format = "N2";
-            this.colCommittion.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle29.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle29.Format = "N2";
+            this.colCommittion.DefaultCellStyle = dataGridViewCellStyle29;
             this.colCommittion.HeaderText = "คอมมิชชั่น";
             this.colCommittion.Name = "colCommittion";
             this.colCommittion.ReadOnly = true;
@@ -1167,11 +1167,11 @@
             // colVAT
             // 
             this.colVAT.DataPropertyName = "VatType";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle8.NullValue = "N0";
-            this.colVAT.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle30.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle30.NullValue = "N0";
+            this.colVAT.DefaultCellStyle = dataGridViewCellStyle30;
             this.colVAT.HeaderText = "ภาษี";
             this.colVAT.Name = "colVAT";
             this.colVAT.ReadOnly = true;
@@ -1186,11 +1186,11 @@
             // 
             // colDiscount
             // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle9.Format = "N0";
-            this.colDiscount.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle31.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle31.Format = "N0";
+            this.colDiscount.DefaultCellStyle = dataGridViewCellStyle31;
             this.colDiscount.HeaderText = "ส่วนลด";
             this.colDiscount.Name = "colDiscount";
             this.colDiscount.ReadOnly = true;
@@ -1199,11 +1199,11 @@
             // colTotal
             // 
             this.colTotal.DataPropertyName = "LineTotal";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle10.Format = "N2";
-            this.colTotal.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle32.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle32.Format = "N2";
+            this.colTotal.DefaultCellStyle = dataGridViewCellStyle32;
             this.colTotal.HeaderText = "จำนวนเงิน";
             this.colTotal.Name = "colTotal";
             this.colTotal.ReadOnly = true;
@@ -1212,11 +1212,11 @@
             // 
             // colCommittionAmt
             // 
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle11.Format = "N2";
-            this.colCommittionAmt.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle33.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle33.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle33.Format = "N2";
+            this.colCommittionAmt.DefaultCellStyle = dataGridViewCellStyle33;
             this.colCommittionAmt.HeaderText = "ค่าคอมมิชชั่น";
             this.colCommittionAmt.Name = "colCommittionAmt";
             this.colCommittionAmt.ReadOnly = true;

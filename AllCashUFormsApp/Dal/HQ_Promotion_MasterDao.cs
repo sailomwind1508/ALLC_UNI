@@ -188,6 +188,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 return null;
             }
         }
@@ -209,7 +210,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(null);
             }
 
             return list;

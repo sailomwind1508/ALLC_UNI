@@ -260,6 +260,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_PODetail_PRE);
             }
 

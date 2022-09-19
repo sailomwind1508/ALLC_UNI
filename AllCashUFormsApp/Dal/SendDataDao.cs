@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Globalization;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace AllCashUFormsApp
 {
@@ -200,6 +201,7 @@ namespace AllCashUFormsApp
 
             return dt;
         }
+
         //public static DataTable GetWHID_FromSendData(this tbl_SendData tbl_SendData)
         //{
         //    var dt = new DataTable();
@@ -218,5 +220,63 @@ namespace AllCashUFormsApp
 
         //    return dt;
         //}
+
+        public static List<tbl_SendData> GetSendDataSingle(this tbl_SendData tbl_SendData, string DateSend, string WHID)
+        {
+            var list = new List<tbl_SendData>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_SendData WHERE 1=1";
+
+                if (!string.IsNullOrEmpty(DateSend))
+                    sql += " AND CAST(DateSend AS DATE) = '" + DateSend.Trim() + "'";
+
+                if (!string.IsNullOrEmpty(WHID))
+                    sql += " AND WHID = '" + WHID.Trim() + "'";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SendData), sql);
+                list = dynamicListReturned.Cast<tbl_SendData>().ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SendData != null ? tbl_SendData.GetType() : null);
+                return null;
+            }
+            return list;
+        }
+
+        public static int UpdateSendData(this tbl_SendData tbl_SendData, string oldDocDate, string NewDocDate, string WHID, string UserName)
+        {
+            string msg = "start SendDataDao=>UpdateSendData";
+            msg.WriteLog(null);
+
+            int ret = new int();
+
+            try
+            {
+                SqlConnection con = new SqlConnection(Connection.ConnectionString);
+                string sql = "UPDATE tbl_SendData";
+                sql += " SET DateSend = @DateSend";
+                sql += ", UserSend = @UserSend";
+                sql += " WHERE CAST(DateSend AS DATE) = '" + oldDocDate + "'";
+                sql += " AND WHID = '" + WHID + "'";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                con.Open();
+                cmd.Parameters.AddWithValue("@DateSend", NewDocDate);
+                cmd.Parameters.AddWithValue("@UserSend", UserName);
+                ret = cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SendData != null ? tbl_SendData.GetType() : null);
+            }
+
+            msg = "end SendDataDao=>UpdateSendData";
+            msg.WriteLog(null);
+
+            return ret;
+        }
     }
 }

@@ -484,6 +484,13 @@ namespace AllCashUFormsApp.Controller
         {
             return new tbl_SalAreaDistrict().SelectSingle(_SalAreaID);
         }
+
+        public int SalAreaDistrictPerformUpdate(List<tbl_SalAreaDistrict> tbl_SalAreaDistricts)
+        {
+            DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString);
+            return tbl_SalAreaDistricts.PerformUpdate(db);
+        }
+
         #endregion
 
     }

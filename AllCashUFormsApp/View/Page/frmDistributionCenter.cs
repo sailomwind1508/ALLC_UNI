@@ -16,8 +16,11 @@ namespace AllCashUFormsApp.View.Page
 {
     public partial class frmDistributionCenter : Form
     {
+        SaleArea sa = new SaleArea();
+        SaleAreaDistrict buSADistrict = new SaleAreaDistrict();
         MenuBU menuBU = new MenuBU();
         DistributionCenter bu = new DistributionCenter();
+
         DataTable dt = new DataTable();
 
         List<Control> saleEmpList = new List<Control>();
@@ -40,6 +43,8 @@ namespace AllCashUFormsApp.View.Page
 
         Dictionary<Control, Label> validateMKTCtrls = new Dictionary<Control, Label>();
         List<string> readOnlyMKTControls = new List<string>();
+
+        static bool isEditList = false;
 
         public frmDistributionCenter()
         {
@@ -186,8 +191,6 @@ namespace AllCashUFormsApp.View.Page
 
             grdDepo.SetDataGridViewStyle();
 
-            SetDefaultGridViewEvent(grdDepo);
-
             pnlBranchDT.ClearControl();
 
             btnAdd.Enabled = true;
@@ -259,11 +262,7 @@ namespace AllCashUFormsApp.View.Page
             ddlDepo.BindDropdownList(branchList, "BranchName", "BranchID");
 
             grdEmpList.SetDataGridViewStyle();
-
-            SetDefaultGridViewEvent(grdEmpList);
-
             pnlEmpDT.ClearControl();
-
             pnlEmpDT.OpenControl(false, readOnlyDepoControls.ToArray());
 
             txtEmpID.Text = ddlDepo.SelectedValue + "Exxx";
@@ -276,10 +275,7 @@ namespace AllCashUFormsApp.View.Page
         {
             grdBWHList.SetDataGridViewStyle();
 
-            SetDefaultGridViewEvent(grdBWHList);
-
             pnlBWH.ClearControl();
-
             pnlBWH.OpenControl(false, readOnlyDepoControls.ToArray());
 
             rdoBWHStatusN.Enabled = false;
@@ -292,10 +288,7 @@ namespace AllCashUFormsApp.View.Page
 
             grdVanList.SetDataGridViewStyle();
 
-            SetDefaultGridViewEvent(grdVanList);
-
             pnlVANDT.ClearControl();
-
             pnlVANDT.OpenControl(false, readOnlyVANDTControls.ToArray());
 
             rdoStatusVanN.Enabled = false;
@@ -323,19 +316,12 @@ namespace AllCashUFormsApp.View.Page
 
             grdSaleAreaList.SetDataGridViewStyle();
 
-            SetDefaultGridViewEvent(grdSaleAreaList);
-
             pnlMKT.ClearControl();
 
             pnlMKT.OpenControl(false, readOnlyMKTControls.ToArray());
 
             rdoMKTStatusN.Enabled = false;
             rdoMKTStatusC.Enabled = false;
-        }
-
-        public void SetDefaultGridViewEvent(DataGridView grd)
-        {
-
         }
 
         private bool ValidateSave(string tabName)
@@ -667,7 +653,8 @@ namespace AllCashUFormsApp.View.Page
             }
             else if (tctrlDistribution.SelectedTab == tabMarket)
             {
-                SaveMKT();
+                //SaveMKT();
+                SaveTabMarketing(); //03-08-2022 adisorn update with store
             }
         }
 
@@ -1966,7 +1953,7 @@ namespace AllCashUFormsApp.View.Page
 
                 string _whCode = "";
                 string _whSeq = "";
-                string _whName = "";
+                //string _whName = "";
 
                 Func<tbl_BranchWarehouse, bool> tbl_BranchWarehouseFunc = (x => x.BranchID == code && x.VanType == 1);
                 var tbl_BranchWarehouseList = bu.GetAllBranchWarehouse(tbl_BranchWarehouseFunc);
@@ -2353,6 +2340,11 @@ namespace AllCashUFormsApp.View.Page
 
         private void PrepareMTK()
         {
+            Cursor.Current = Cursors.WaitCursor;
+
+            Func<tbl_SalArea, bool> tbl_SalAreaFunc = (x => x.BranchID == bu.tbl_Branchs[0].BranchID);
+            tbl_SalAreaList = bu.GetSaleArea(tbl_SalAreaFunc);
+
             int rowIndex = grdDepo.CurrentCell.RowIndex;
             if (rowIndex != -1)
             {
@@ -2380,10 +2372,17 @@ namespace AllCashUFormsApp.View.Page
                         string _name = tbl_SalAreaList.Where(x => x.SalAreaName.Contains(vCode)).Max(x => x.SalAreaName);
                         if (_name != null)
                         {
-                            var _mktName = _name.Substring(_name.Length - 2, 2);
-                            var mktName = Convert.ToInt32(_mktName) + 1;
+                            try
+                            {
+                                var _mktName = _name.Substring(_name.Length - 2, 2);
+                                var mktName = Convert.ToInt32(_mktName) + 1;
 
-                            _salAreaName = "ตลาด " + vCode + "-" + mktName;
+                                _salAreaName = "ตลาด " + vCode + "-" + mktName;
+                            }
+                            catch
+                            {
+                                _salAreaName = "ตลาด xxx-xx";
+                            }
                         }
                         else
                             _salAreaName = "ตลาด xxx-xx";
@@ -2410,6 +2409,81 @@ namespace AllCashUFormsApp.View.Page
                 txtSeq.Text = _seq;
                 txtCountCustomer.Text = "0";
             }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private int UpdateSalAreaData()
+        {
+            int ret = 0;
+
+            var dtSalArea = sa.GetSalAreaData(0, txtSalAreaID.Text);
+
+            var _SalArea = new tbl_SalArea();
+
+            pnlMKT.Controls.SetObjectFromControl(_SalArea);
+
+            _SalArea.BranchID = bu.tbl_Branchs[0].BranchID;
+
+            if (dtSalArea != null && dtSalArea.Rows.Count > 0)
+            {
+                _SalArea.CrDate = dtSalArea.Rows[0].Field<DateTime>("CrDate");
+                _SalArea.CrUser = dtSalArea.Rows[0].Field<string>("CrUser");
+
+                _SalArea.EdDate = DateTime.Now;
+                _SalArea.EdUser = Helper.tbl_Users.Username;
+            }
+            else
+            {
+                _SalArea.CrDate = DateTime.Now;
+                _SalArea.CrUser = Helper.tbl_Users.Username;
+            }
+
+            _SalArea.ZoneID = Convert.ToInt32(ddlZoneID.SelectedValue) == -1 ? 0 : Convert.ToInt32(ddlZoneID.SelectedValue);
+            _SalArea.FlagDel = rdoMKTStatusN.Checked ? false : true;
+
+            ret = sa.UpdateData(_SalArea);
+            return ret;
+        }
+
+        private void SaveTabMarketing()
+        {
+            try
+            {
+                if (!ValidateSave(tabMarket.Name))
+                    return;
+
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                List<int> ret = new List<int>();
+
+                ret.Add(UpdateSalAreaData());
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@SalAreaID", txtSalAreaID.Text);
+                _params.Add("@WHID", ddlWHID.SelectedValue.ToString());
+                _params.Add("@ZoneID", Convert.ToInt32(ddlZoneID.SelectedValue) == -1 ? 0 : Convert.ToInt32(ddlZoneID.SelectedValue));
+                ret.Add(buSADistrict.UpdateSalAreaDistrict(_params));
+
+                if (ret.All(x=>x == 1))
+                {
+                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    btnSearchMKT.PerformClick();
+                }
+                else
+                {
+                    this.ShowProcessErr();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
         }
 
         private void SaveMKT()
@@ -2429,21 +2503,21 @@ namespace AllCashUFormsApp.View.Page
                 if (!cfMsg.ConfirmMessageBox(title))
                     return;
 
-                SaleArea sa = new SaleArea();
-
                 if (isEditMode)
                 {
                     List<tbl_SalAreaDistrict> sadList = new List<tbl_SalAreaDistrict>();
 
                     Func<tbl_SalArea, bool> tbl_SalAreaFunc = (x => x.SalAreaID == txtSalAreaID.Text);
-                    saData = bu.GetSaleArea(tbl_SalAreaFunc)[0];
+                    //saData = bu.GetSaleArea(tbl_SalAreaFunc)[0];
+                    saData = bu.GetSaleArea(txtSalAreaID.Text);
                     pnlMKT.Controls.SetObjectFromControl(saData);
                     saData.EdDate = DateTime.Now;
                     saData.EdUser = Helper.tbl_Users.Username;
 
                     SaleAreaDistrict sad = new SaleAreaDistrict();
-                    Func<tbl_SalAreaDistrict, bool> tbl_SalAreaDistrictFunc = (x => x.SalAreaID == txtSalAreaID.Text);
-                    sadList = bu.GetSaleAreaDistrict(tbl_SalAreaDistrictFunc);
+                    //Func<tbl_SalAreaDistrict, bool> tbl_SalAreaDistrictFunc = (x => x.SalAreaID == txtSalAreaID.Text);
+                    //sadList = bu.GetSaleAreaDistrict(tbl_SalAreaDistrictFunc);
+                    sadList = bu.GetSaleAreaDistrict(txtSalAreaID.Text);
 
                     List<int> removeList = new List<int>();
 
@@ -2485,10 +2559,11 @@ namespace AllCashUFormsApp.View.Page
                     SaleAreaDistrict sad = new SaleAreaDistrict();
 
                     List<int> retUpdate = new List<int>();
-                    foreach (var item in sadList)
-                    {
-                        retUpdate.Add(sad.UpdateData(item));
-                    }
+                    bu.SalAreaDistrictPerformUpdate(sadList);
+                    //foreach (var item in sadList)
+                    //{
+                    //    retUpdate.Add(sad.UpdateData(item));
+                    //}
 
                     if (retUpdate.All(x => x == 1))
                         ret = 1;
@@ -2510,7 +2585,6 @@ namespace AllCashUFormsApp.View.Page
                 else
                 {
                     this.ShowProcessErr();
-                    return;
                 }
             }
             catch (Exception ex)
@@ -2524,6 +2598,9 @@ namespace AllCashUFormsApp.View.Page
 
         private List<tbl_SalAreaDistrict> PrepareSaleAreaDistrict(string salAreaID)
         {
+            var allDistrict = new tbl_MstDistrict().SelectAll();
+            var allArea = new tbl_MstArea().SelectAll();
+
             List<tbl_SalAreaDistrict> tbl_SalAreaDistrictList = new List<tbl_SalAreaDistrict>();
             for (int i = 0; i < grdSaleDistrictList.RowCount; i++)
             {
@@ -2538,21 +2615,27 @@ namespace AllCashUFormsApp.View.Page
                 _sad.WHID = ddlWHID.SelectedValue.ToString();
                 _sad.DistrictCode = cell2.Value.ToString();
 
-                Func<tbl_MstDistrict, bool> tbl_MstDistrictFunc = (a => a.DistrictCode == _sad.DistrictCode);
-                var _tbl_MstDistrict = new tbl_MstDistrict().Select(tbl_MstDistrictFunc);
-                if (_tbl_MstDistrict != null && _tbl_MstDistrict.Count > 0)
+                //Func<tbl_MstDistrict, bool> tbl_MstDistrictFunc = (a => a.DistrictCode == _sad.DistrictCode);
+                //var _tbl_MstDistrict = new tbl_MstDistrict().Select(tbl_MstDistrictFunc);
+
+                var _tbl_MstDistrict = allDistrict.FirstOrDefault(x => x.DistrictCode == _sad.DistrictCode);
+
+                //SelectSingle
+                if (_tbl_MstDistrict != null)
                 {
-                    _sad.DistrictID = _tbl_MstDistrict[0].DistrictID;
+                    _sad.DistrictID = _tbl_MstDistrict.DistrictID;
                 }
                 _sad.DistrictName = cell3.Value.ToString();
                 _sad.AreaName = cell1.Value.ToString();
                 _sad.ProvinceName = cell0.Value.ToString();
 
-                Func<tbl_MstArea, bool> tbl_MstAreaFunc = (a => a.AreaName == _sad.AreaName);
-                var _tbl_MstAreaList = new tbl_MstArea().Select(tbl_MstAreaFunc);
-                if (_tbl_MstAreaList != null && _tbl_MstAreaList.Count > 0)
+                //Func<tbl_MstArea, bool> tbl_MstAreaFunc = (a => a.AreaName == _sad.AreaName);
+                //var _tbl_MstAreaList = new tbl_MstArea().Select(tbl_MstAreaFunc);
+
+                var _tbl_MstAreaList = allArea.FirstOrDefault(x => x.AreaName == _sad.AreaName);
+                if (_tbl_MstAreaList != null)
                 {
-                    _sad.PostalCode = _tbl_MstAreaList[0].PostalCode;
+                    _sad.PostalCode = _tbl_MstAreaList.PostalCode;
                 }
 
                 tbl_SalAreaDistrictList.Add(_sad);
@@ -2614,7 +2697,6 @@ namespace AllCashUFormsApp.View.Page
                     else
                     {
                         this.ShowProcessErr();
-                        return;
                     }
                 }
             }
@@ -2629,112 +2711,134 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindMKTDetail()
         {
-            if (grdSaleAreaList.CurrentCell != null)
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
             {
-                int rowIndex = grdSaleAreaList.CurrentCell.RowIndex;
-
-                if (rowIndex != -1)
+                if (grdSaleAreaList.CurrentCell != null)
                 {
-                    var cell0 = grdSaleAreaList.Rows[rowIndex].Cells[0];
-                    var cell5 = grdSaleAreaList.Rows[rowIndex].Cells[5];
-             
-                    var salAreaID = cell0.Value.ToString();
+                    int rowIndex = grdSaleAreaList.CurrentCell.RowIndex;
 
-                    Func<tbl_SalArea, bool> tbl_SalAreaFunc = (x => x.SalAreaID == salAreaID);
-                    var sa = bu.GetSaleArea(tbl_SalAreaFunc);
-
-                    if (sa != null && sa.Count > 0)
+                    if (rowIndex != -1)
                     {
-                        pnlMKT.Controls.SetTextBoxControlValue(sa[0]);
-                        txtCountCustomer.Text = cell5.Value.ToString();
+                        var cell0 = grdSaleAreaList.Rows[rowIndex].Cells[0];
+                        var cell5 = grdSaleAreaList.Rows[rowIndex].Cells[5];
 
-                        rdoMKTStatusN.Checked = sa[0].FlagDel == false;
-                        rdoMKTStatusC.Checked = sa[0].FlagDel == true;
+                        var salAreaID = cell0.Value.ToString();
 
-                        ddlZoneID.SelectedValue = sa[0].ZoneID == 0 ? -1 : sa[0].ZoneID;
+                        Func<tbl_SalArea, bool> tbl_SalAreaFunc = (x => x.SalAreaID == salAreaID);
+                        var sa = bu.GetSaleArea(tbl_SalAreaFunc);
 
-                        var saleAreDistinct1 = bu.SelectSalAreaDistrict(salAreaID);
-
-                        //var saleAreDistinct = bu.GetSaleAreaDistrict(x => x.SalAreaID == salAreaID);
-                        if (saleAreDistinct1 != null && saleAreDistinct1.Count > 0)
+                        if (sa != null && sa.Count > 0)
                         {
-                            ddlWHID.SelectedValue = saleAreDistinct1[0].WHID.ToString();
+                            pnlMKT.Controls.SetTextBoxControlValue(sa[0]);
+                            txtCountCustomer.Text = cell5.Value.ToString();
+
+                            rdoMKTStatusN.Checked = sa[0].FlagDel == false;
+                            rdoMKTStatusC.Checked = sa[0].FlagDel == true;
+
+                            ddlZoneID.SelectedValue = sa[0].ZoneID == 0 ? -1 : sa[0].ZoneID;
+
+                            var saleAreDistinct1 = bu.SelectSalAreaDistrict(salAreaID);
+
+                            //var saleAreDistinct = bu.GetSaleAreaDistrict(x => x.SalAreaID == salAreaID);
+                            if (saleAreDistinct1 != null && saleAreDistinct1.Count > 0)
+                            {
+                                ddlWHID.SelectedValue = saleAreDistinct1[0].WHID.ToString();
+                            }
+                            else
+                                ddlWHID.SelectedValue = "-1";
+
+                            Sub_BindSaleAreaDistrict(txtSalAreaID.Text);
+
+                            pnlMKT.OpenControl(false, readOnlyVANDTControls.ToArray());
+
+                            btnSearchBranch.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
+                            btnAdd.Enabled = true;
+                            btnCopy.Enabled = false;
+                            btnRemove.Enabled = true;
+
+                            btnRemove.Enabled = !sa[0].FlagDel;
                         }
-                        else
-                            ddlWHID.SelectedValue = "-1";
-
-                        BindSaleAreaDistrict(txtSalAreaID.Text);
-
-                        pnlMKT.OpenControl(false, readOnlyVANDTControls.ToArray());
-
-                        btnSearchBranch.EnableButton(btnAdd, btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, btnExcel);
-                        btnAdd.Enabled = true;
-                        btnCopy.Enabled = false;
-                        btnRemove.Enabled = true;
-
-                        btnRemove.Enabled = !sa[0].FlagDel;
                     }
                 }
+                else
+                {
+                    DataTable _dt = new DataTable();
+                    SetSalAreaDistrict(_dt);
+                    grdSaleDistrictList.DataSource = _dt;
+                    lblDistrictCount.Text = _dt.Rows.Count.ToNumberFormat();
+
+                    pnlMKT.ClearControl();
+                    pnlMKT.OpenControl(false, readOnlyVANDTControls.ToArray());
+
+                    btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
+                    btnSave.Enabled = false;
+                    btnCancel.Enabled = false;
+
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DataTable _dt = new DataTable();
-                SetSalAreaDistrict(_dt);
-                grdSaleDistrictList.DataSource = _dt;
-                lblDistrictCount.Text = _dt.Rows.Count.ToNumberFormat();
-
-                pnlMKT.ClearControl();
-                pnlMKT.OpenControl(false, readOnlyVANDTControls.ToArray());
-
-                btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, "");
-                btnSave.Enabled = false;
-                btnCancel.Enabled = false;
-
+                ex.Message.ShowErrorMessage();
             }
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void BindMKTData()
         {
-            var selZone = Convert.ToInt32(ddlZone.SelectedValue);
+            Cursor.Current = Cursors.WaitCursor;
 
-           // Func<tbl_SalArea, bool> tbl_SalAreaFunc = null;
-           // int _zoneID = (selZone != -1 ? selZone : 0);
-           // tbl_SalAreaFunc = (x => x.FlagDel == rdoMKTC.Checked &&
-           //(x.ZoneID == (selZone != -1 ? selZone : x.ZoneID)) &&
-           //(x.SalAreaID.Contains(txtSearchMKT.Text) || x.SalAreaName.Contains(txtSearchMKT.Text)));
-
-            int _flagDel = rdoMKTN.Checked ? 0 : 1;
-            int _ZoneID = selZone != -1 ? selZone : 0;
-
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@Search", txtSearchMKT.Text);
-            _params.Add("@FlagDel", _flagDel);
-            _params.Add("@ZoneID", _ZoneID);
-
-            //var dt = bu.GetMKTTable(tbl_SalAreaFunc);//657
-
-            var dt2 = bu.proc_GetMKT_Data(_params);//366
-
-            var grd = grdSaleAreaList;
-            grd.DataSource = dt2;
-            lblMKTCount.Text = dt2.Rows.Count.ToNumberFormat();
-
-            if (dt2 != null && dt2.Rows.Count > 0)
+            try
             {
-                DataGridViewColumn col0 = grd.Columns[0];
-                DataGridViewColumn col1 = grd.Columns[1];
-                DataGridViewColumn col2 = grd.Columns[2];
-                DataGridViewColumn col3 = grd.Columns[3];
-                DataGridViewColumn col4 = grd.Columns[4];
-                DataGridViewColumn col5 = grd.Columns[5];
+                var selZone = Convert.ToInt32(ddlZone.SelectedValue);
 
-                col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col1.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
-                col3.SetColumnStyle(80, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                // Func<tbl_SalArea, bool> tbl_SalAreaFunc = null;
+                // int _zoneID = (selZone != -1 ? selZone : 0);
+                // tbl_SalAreaFunc = (x => x.FlagDel == rdoMKTC.Checked &&
+                //(x.ZoneID == (selZone != -1 ? selZone : x.ZoneID)) &&
+                //(x.SalAreaID.Contains(txtSearchMKT.Text) || x.SalAreaName.Contains(txtSearchMKT.Text)));
+
+                int _flagDel = rdoMKTN.Checked ? 0 : 1;
+                int _ZoneID = selZone != -1 ? selZone : 0;
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@Search", txtSearchMKT.Text);
+                _params.Add("@FlagDel", _flagDel);
+                _params.Add("@ZoneID", _ZoneID);
+
+                //var dt = bu.GetMKTTable(tbl_SalAreaFunc);//657
+
+                var dt2 = bu.proc_GetMKT_Data(_params);//366
+
+                var grd = grdSaleAreaList;
+                grd.DataSource = dt2;
+                lblMKTCount.Text = dt2.Rows.Count.ToNumberFormat();
+
+                if (dt2 != null && dt2.Rows.Count > 0)
+                {
+                    DataGridViewColumn col0 = grd.Columns[0];
+                    DataGridViewColumn col1 = grd.Columns[1];
+                    DataGridViewColumn col2 = grd.Columns[2];
+                    DataGridViewColumn col3 = grd.Columns[3];
+                    DataGridViewColumn col4 = grd.Columns[4];
+                    DataGridViewColumn col5 = grd.Columns[5];
+
+                    col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                    col1.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                    col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.Fill, DataGridViewContentAlignment.MiddleLeft, "", 120);
+                    col3.SetColumnStyle(80, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                    col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                    col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                }
             }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+
+            Cursor.Current = Cursors.Default;
         }
 
         public void AddSaleAreaDistrictRow(DataTable newRowDt)
@@ -2780,7 +2884,7 @@ namespace AllCashUFormsApp.View.Page
             dt.Columns.Add("ชื่อตำบล", typeof(string));
         }
 
-        private void BindSaleAreaDistrict(string _SalAreaID)
+        private void Sub_BindSaleAreaDistrict(string _SalAreaID)
         {
             if (!string.IsNullOrEmpty(_SalAreaID))
             {
@@ -2857,6 +2961,8 @@ namespace AllCashUFormsApp.View.Page
         private void grdSaleAreaList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             BindMKTDetail();
+
+            isEditList = true;
         }
 
         private void grdSaleAreaList_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -2871,6 +2977,11 @@ namespace AllCashUFormsApp.View.Page
 
         private void ddlWHID_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isEditList)
+            {
+                return;
+            }
+
             string _salAreaName = "";
             string _seq = "1";
             if (ddlWHID.SelectedValue.ToString() != "-1" && tbl_SalAreaList != null && tbl_SalAreaList.Count > 0)
@@ -2879,10 +2990,19 @@ namespace AllCashUFormsApp.View.Page
                 string _name = tbl_SalAreaList.Where(x => x.SalAreaName.Contains(vCode)).Max(x => x.SalAreaName);
                 if (_name != null)
                 {
-                    var _mktName = _name.Length > 10 ? _name.Substring(_name.Length - 2, 2) : _name.Substring(_name.Length - 1, 1);
-                    var mktName = Convert.ToInt32(_mktName) + 1;
+                    try
+                    {
+                        var _mktName = _name.Length > 10 ? _name.Substring(_name.Length - 2, 2) : _name.Substring(_name.Length - 1, 1);
+                        var mktName = Convert.ToInt32(_mktName) + 1;
 
-                    _salAreaName = "ตลาด " + vCode + "-" + mktName;
+                        _salAreaName = "ตลาด " + vCode + "-" + mktName;
+                    }
+                    catch
+                    {
+
+                        _salAreaName = "ตลาด xxx-xx";
+                    }
+                   
                 }
                 else
                     _salAreaName = "ตลาด xxx-xx";
@@ -2916,6 +3036,11 @@ namespace AllCashUFormsApp.View.Page
         private void frmDistributionCenter_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void ddlWHID_MouseClick(object sender, MouseEventArgs e)
+        {
+            isEditList = false;
         }
     }
 }

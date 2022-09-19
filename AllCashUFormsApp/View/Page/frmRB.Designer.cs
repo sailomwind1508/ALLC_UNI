@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRB));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -104,6 +104,7 @@
             this.colBaseQtyDT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUomSetID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -439,7 +440,7 @@
             this.pnlBL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlBL.Location = new System.Drawing.Point(0, 0);
             this.pnlBL.Name = "pnlBL";
-            this.pnlBL.Size = new System.Drawing.Size(561, 108);
+            this.pnlBL.Size = new System.Drawing.Size(628, 108);
             this.pnlBL.TabIndex = 116;
             // 
             // panel6
@@ -500,9 +501,9 @@
             this.pnlBR.Controls.Add(this.txtSaleEmpID);
             this.pnlBR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlBR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlBR.Location = new System.Drawing.Point(567, 0);
+            this.pnlBR.Location = new System.Drawing.Point(637, 0);
             this.pnlBR.Name = "pnlBR";
-            this.pnlBR.Size = new System.Drawing.Size(425, 108);
+            this.pnlBR.Size = new System.Drawing.Size(355, 108);
             this.pnlBR.TabIndex = 22;
             // 
             // txtSaleEmpID
@@ -529,17 +530,17 @@
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
             this.pnlTR.Controls.Add(this.pnlPODocNo);
             this.pnlTR.Controls.Add(this.txdDocNo);
-            this.pnlTR.Controls.Add(this.label11);
             this.pnlTR.Controls.Add(this.ddlDocStatus);
-            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.dtpDocDate);
             this.pnlTR.Controls.Add(this.btnSearchDoc);
+            this.pnlTR.Controls.Add(this.label11);
+            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.label7);
             this.pnlTR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlTR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlTR.Location = new System.Drawing.Point(567, 0);
+            this.pnlTR.Location = new System.Drawing.Point(637, 0);
             this.pnlTR.Name = "pnlTR";
-            this.pnlTR.Size = new System.Drawing.Size(425, 126);
+            this.pnlTR.Size = new System.Drawing.Size(355, 126);
             this.pnlTR.TabIndex = 21;
             // 
             // pnlPODocNo
@@ -547,7 +548,7 @@
             this.pnlPODocNo.Controls.Add(this.txtPODoc);
             this.pnlPODocNo.Controls.Add(this.btnPODoc);
             this.pnlPODocNo.Controls.Add(this.label1);
-            this.pnlPODocNo.Location = new System.Drawing.Point(103, 74);
+            this.pnlPODocNo.Location = new System.Drawing.Point(32, 77);
             this.pnlPODocNo.Name = "pnlPODocNo";
             this.pnlPODocNo.Size = new System.Drawing.Size(319, 31);
             this.pnlPODocNo.TabIndex = 111;
@@ -583,7 +584,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 6);
+            this.label1.Location = new System.Drawing.Point(33, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(88, 16);
             this.label1.TabIndex = 154;
@@ -593,7 +594,7 @@
             // 
             this.txdDocNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txdDocNo.BackColor = System.Drawing.Color.Turquoise;
-            this.txdDocNo.Location = new System.Drawing.Point(222, 2);
+            this.txdDocNo.Location = new System.Drawing.Point(152, 2);
             this.txdDocNo.Name = "txdDocNo";
             this.txdDocNo.Size = new System.Drawing.Size(163, 23);
             this.txdDocNo.TabIndex = 13;
@@ -602,7 +603,7 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(119, 53);
+            this.label11.Location = new System.Drawing.Point(56, 53);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(97, 16);
             this.label11.TabIndex = 110;
@@ -614,7 +615,7 @@
             this.ddlDocStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlDocStatus.Enabled = false;
             this.ddlDocStatus.FormattingEnabled = true;
-            this.ddlDocStatus.Location = new System.Drawing.Point(222, 50);
+            this.ddlDocStatus.Location = new System.Drawing.Point(152, 50);
             this.ddlDocStatus.Name = "ddlDocStatus";
             this.ddlDocStatus.Size = new System.Drawing.Size(163, 24);
             this.ddlDocStatus.TabIndex = 16;
@@ -623,7 +624,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(150, 31);
+            this.label8.Location = new System.Drawing.Point(87, 31);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(66, 16);
             this.label8.TabIndex = 104;
@@ -633,7 +634,7 @@
             // 
             this.dtpDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpDocDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpDocDate.Location = new System.Drawing.Point(222, 26);
+            this.dtpDocDate.Location = new System.Drawing.Point(152, 26);
             this.dtpDocDate.Name = "dtpDocDate";
             this.dtpDocDate.Size = new System.Drawing.Size(163, 23);
             this.dtpDocDate.TabIndex = 15;
@@ -647,7 +648,7 @@
             this.btnSearchDoc.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchDoc.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchDoc.Image")));
             this.btnSearchDoc.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchDoc.Location = new System.Drawing.Point(387, 2);
+            this.btnSearchDoc.Location = new System.Drawing.Point(317, 2);
             this.btnSearchDoc.Name = "btnSearchDoc";
             this.btnSearchDoc.Size = new System.Drawing.Size(35, 23);
             this.btnSearchDoc.TabIndex = 14;
@@ -659,7 +660,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(126, 5);
+            this.label7.Location = new System.Drawing.Point(63, 5);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(90, 16);
             this.label7.TabIndex = 101;
@@ -690,22 +691,22 @@
             this.pnlTL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTL.Location = new System.Drawing.Point(0, 0);
             this.pnlTL.Name = "pnlTL";
-            this.pnlTL.Size = new System.Drawing.Size(561, 126);
+            this.pnlTL.Size = new System.Drawing.Size(631, 126);
             this.pnlTL.TabIndex = 20;
             // 
             // txtToWHName
             // 
-            this.txtToWHName.Location = new System.Drawing.Point(267, 52);
+            this.txtToWHName.Location = new System.Drawing.Point(264, 52);
             this.txtToWHName.MaxLength = 200;
             this.txtToWHName.Name = "txtToWHName";
             this.txtToWHName.ReadOnly = true;
-            this.txtToWHName.Size = new System.Drawing.Size(285, 23);
+            this.txtToWHName.Size = new System.Drawing.Size(361, 23);
             this.txtToWHName.TabIndex = 8;
             // 
             // lblEmpCode
             // 
             this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(38, 103);
+            this.lblEmpCode.Location = new System.Drawing.Point(39, 103);
             this.lblEmpCode.Name = "lblEmpCode";
             this.lblEmpCode.Size = new System.Drawing.Size(64, 16);
             this.lblEmpCode.TabIndex = 121;
@@ -713,11 +714,11 @@
             // 
             // txtEmpName
             // 
-            this.txtEmpName.Location = new System.Drawing.Point(267, 100);
+            this.txtEmpName.Location = new System.Drawing.Point(264, 100);
             this.txtEmpName.MaxLength = 200;
             this.txtEmpName.Name = "txtEmpName";
             this.txtEmpName.ReadOnly = true;
-            this.txtEmpName.Size = new System.Drawing.Size(285, 23);
+            this.txtEmpName.Size = new System.Drawing.Size(361, 23);
             this.txtEmpName.TabIndex = 12;
             // 
             // txtToWHCode
@@ -771,7 +772,7 @@
             // lblToWHCode
             // 
             this.lblToWHCode.AutoSize = true;
-            this.lblToWHCode.Location = new System.Drawing.Point(8, 55);
+            this.lblToWHCode.Location = new System.Drawing.Point(9, 55);
             this.lblToWHCode.Name = "lblToWHCode";
             this.lblToWHCode.Size = new System.Drawing.Size(94, 16);
             this.lblToWHCode.TabIndex = 117;
@@ -779,11 +780,11 @@
             // 
             // txtFromWHName
             // 
-            this.txtFromWHName.Location = new System.Drawing.Point(267, 28);
+            this.txtFromWHName.Location = new System.Drawing.Point(264, 28);
             this.txtFromWHName.MaxLength = 200;
             this.txtFromWHName.Name = "txtFromWHName";
             this.txtFromWHName.ReadOnly = true;
-            this.txtFromWHName.Size = new System.Drawing.Size(285, 23);
+            this.txtFromWHName.Size = new System.Drawing.Size(361, 23);
             this.txtFromWHName.TabIndex = 5;
             // 
             // txtFromWHCode
@@ -813,7 +814,7 @@
             // lblFromWHCode
             // 
             this.lblFromWHCode.AutoSize = true;
-            this.lblFromWHCode.Location = new System.Drawing.Point(22, 31);
+            this.lblFromWHCode.Location = new System.Drawing.Point(23, 31);
             this.lblFromWHCode.Name = "lblFromWHCode";
             this.lblFromWHCode.Size = new System.Drawing.Size(80, 16);
             this.lblFromWHCode.TabIndex = 113;
@@ -824,13 +825,13 @@
             this.txtCrUser.Location = new System.Drawing.Point(102, 76);
             this.txtCrUser.MaxLength = 50;
             this.txtCrUser.Name = "txtCrUser";
-            this.txtCrUser.Size = new System.Drawing.Size(450, 23);
+            this.txtCrUser.Size = new System.Drawing.Size(523, 23);
             this.txtCrUser.TabIndex = 9;
             // 
             // lblCrUser
             // 
             this.lblCrUser.AutoSize = true;
-            this.lblCrUser.Location = new System.Drawing.Point(45, 79);
+            this.lblCrUser.Location = new System.Drawing.Point(46, 79);
             this.lblCrUser.Name = "lblCrUser";
             this.lblCrUser.Size = new System.Drawing.Size(57, 16);
             this.lblCrUser.TabIndex = 109;
@@ -838,11 +839,11 @@
             // 
             // txtBranchName
             // 
-            this.txtBranchName.Location = new System.Drawing.Point(267, 4);
+            this.txtBranchName.Location = new System.Drawing.Point(264, 4);
             this.txtBranchName.MaxLength = 200;
             this.txtBranchName.Name = "txtBranchName";
             this.txtBranchName.ReadOnly = true;
-            this.txtBranchName.Size = new System.Drawing.Size(285, 23);
+            this.txtBranchName.Size = new System.Drawing.Size(361, 23);
             this.txtBranchName.TabIndex = 2;
             // 
             // txtBranchCode
@@ -872,7 +873,7 @@
             // lblBranchCode
             // 
             this.lblBranchCode.AutoSize = true;
-            this.lblBranchCode.Location = new System.Drawing.Point(22, 7);
+            this.lblBranchCode.Location = new System.Drawing.Point(23, 7);
             this.lblBranchCode.Name = "lblBranchCode";
             this.lblBranchCode.Size = new System.Drawing.Size(80, 16);
             this.lblBranchCode.TabIndex = 99;
@@ -916,8 +917,8 @@
             // colProductCode
             // 
             this.colProductCode.DataPropertyName = "ProductID";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle13;
             this.colProductCode.HeaderText = "รหัสสินค้า";
             this.colProductCode.MaxInputLength = 15;
             this.colProductCode.Name = "colProductCode";
@@ -925,9 +926,9 @@
             // 
             // colSearchProduct
             // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle14;
             this.colSearchProduct.HeaderText = "";
             this.colSearchProduct.Name = "colSearchProduct";
             this.colSearchProduct.Text = "...";
@@ -938,9 +939,9 @@
             // 
             this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle15;
             this.colProductName.HeaderText = "รายการ";
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
@@ -949,9 +950,9 @@
             // colUnit
             // 
             this.colUnit.DataPropertyName = "UomSetName";
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colUnit.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colUnit.DefaultCellStyle = dataGridViewCellStyle16;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
             this.colUnit.ReadOnly = true;
@@ -961,9 +962,9 @@
             // colBaseQtyDT
             // 
             this.colBaseQtyDT.DataPropertyName = "BaseQtyDT";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBaseQtyDT.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle17.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBaseQtyDT.DefaultCellStyle = dataGridViewCellStyle17;
             this.colBaseQtyDT.HeaderText = "จำนวนหน่วยนับ";
             this.colBaseQtyDT.Name = "colBaseQtyDT";
             this.colBaseQtyDT.ReadOnly = true;
@@ -973,11 +974,11 @@
             // colAmount
             // 
             this.colAmount.DataPropertyName = "OrderQty";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle12.Format = "N2";
-            dataGridViewCellStyle12.NullValue = null;
-            this.colAmount.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle18.Format = "N2";
+            dataGridViewCellStyle18.NullValue = null;
+            this.colAmount.DefaultCellStyle = dataGridViewCellStyle18;
             this.colAmount.HeaderText = "จำนวนโอนออก";
             this.colAmount.MaxInputLength = 6;
             this.colAmount.Name = "colAmount";
@@ -993,6 +994,11 @@
             this.colUomSetID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colUomSetID.Visible = false;
             this.colUomSetID.Width = 80;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // frmRB
             // 
@@ -1105,5 +1111,6 @@
         private System.Windows.Forms.Button btnPODoc;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtPODoc;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

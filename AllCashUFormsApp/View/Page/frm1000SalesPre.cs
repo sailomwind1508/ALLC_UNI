@@ -1057,6 +1057,8 @@ namespace AllCashUFormsApp.View.Page
 
             dtpDocDate.Value = DateTime.Now.AddDays(1); //for pre-order
             dtpDueDate.Value = DateTime.Now.AddDays(1); //for pre-order
+
+            ddlDocStatus.BindDropdownDocStatus(bu, "4");
             //txtCustomerCode.Focus();
         }
 
@@ -1472,7 +1474,9 @@ namespace AllCashUFormsApp.View.Page
                         }
                         else
                         {
-                            bu.tbl_PODetails.Add(_poDt);
+                            if (bu.tbl_PODetails.Any(x => x.ProductID == _poDt.ProductID)) { }//No Add free item //last edit by asilom .k 26/08/2022
+                            else
+                                bu.tbl_PODetails.Add(_poDt);
                         }
                     }
                 }
@@ -1551,7 +1555,10 @@ namespace AllCashUFormsApp.View.Page
                             _poDt.CrUser = Helper.tbl_Users.Username;
 
                             _poDt.LineRemark = pro.GetHQReward(x => x.RewardID == rewardID)[0].RewardName;
-                            bu.tbl_PODetails.Add(_poDt);
+
+                            if (bu.tbl_PODetails.Any(x => x.ProductID == _poDt.ProductID)) { }//No Add free item //last edit by asilom .k 26/08/2022
+                            else
+                                bu.tbl_PODetails.Add(_poDt);
                         }
                     }
                 }
@@ -2291,11 +2298,17 @@ namespace AllCashUFormsApp.View.Page
             var ivDts = bu.tbl_IVDetails;
             DateTime crDate = DateTime.Now;
 
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+            var listProductSeq = new Dictionary<string, short>();
+            listProductSeq = bu.FindProductLineNumber(poDts);
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+
+            short index = 0;
             foreach (tbl_PODetail _podt in poDts)
             {
                 var ivDt = new tbl_IVDetail();
                 ivDt.DocNo = bu.tbl_IVMaster.DocNo;
-                ivDt.Line = _podt.Line;
+                ivDt.Line = listProductSeq.Count > 0 ? listProductSeq.First(x => x.Key == _podt.ProductID).Value : index; // _podt.Line; //Find line number from product edit by sailom .k 15/09/2022
                 ivDt.ProductID = _podt.ProductID;
                 ivDt.ProductName = _podt.ProductName;
 
@@ -2361,6 +2374,8 @@ namespace AllCashUFormsApp.View.Page
                 ivDt.LineComTotal = 0;
 
                 ivDts.Add(ivDt);
+
+                index++;
             }
         }
 
@@ -2786,6 +2801,16 @@ namespace AllCashUFormsApp.View.Page
                     else
                         ret = 0;
 
+                    //revers iv master - details edit by sailom.k 09/09/2022
+                    if (ret == 0)
+                    {
+                        if (bu.tbl_IVMaster != null && !string.IsNullOrEmpty(bu.tbl_IVMaster.DocNo))
+                        {
+                            bu.ReverseVE(bu.tbl_IVMaster.DocNo);
+                        }
+                    }
+                    //revers iv master - details edit by sailom.k 09/09/2022
+
                     if (ret == 1)
                     {
                         Cursor.Current = Cursors.Default;
@@ -3052,6 +3077,8 @@ namespace AllCashUFormsApp.View.Page
         private void btnAdd_Click(object sender, EventArgs e)
         {
             InitialData();
+
+            ddlDocStatus.Enabled = false;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -3203,6 +3230,9 @@ namespace AllCashUFormsApp.View.Page
 
             ClearPromotionTemp();
 
+            ddlDocStatus.BindDropdownDocStatus(bu, "4");
+            ddlDocStatus.Enabled = false;
+
             grdList.CellContentClick -= grdList_CellContentClick;
         }
 
@@ -3210,16 +3240,30 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            //this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                this.OpenReportingReportsNonPreViewPopup("ใบส่งของ/ใบรับเงิน", "Form_IV1.rdlc", "Form_IV", _params); //edit by sailom 04/04/2022
 
-            //this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(ต้นฉบับ)", "Form_IV1.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
-            //this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(สำเนา)", "Form_IV1_Copy.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
 
-            this.OpenReportingReportsPopup("ใบส่งของ/ใบรับเงิน", "Form_IV1.rdlc", "Form_IV", _params); //edit by sailom 04/04/2022
+                //this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+
+                //this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(ต้นฉบับ)", "Form_IV1.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                //this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(สำเนา)", "Form_IV1_Copy.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+
+                this.OpenReportingReportsPopup("ใบส่งของ/ใบรับเงิน", "Form_IV1.rdlc", "Form_IV", _params); //edit by sailom 04/04/2022
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)

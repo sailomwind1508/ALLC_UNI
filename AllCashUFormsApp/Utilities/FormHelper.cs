@@ -58,7 +58,7 @@ namespace AllCashUFormsApp
         public static List<string> PrintingReportName = new List<string>();
         public static bool ShowPrintingReportName = true;
 
-        private static Form frm;
+        //private static Form frm;
 
         public static void CreateAndSendMail(string reportName, string branchName, string date)
         {
@@ -433,7 +433,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(null);
             }
         }
 
@@ -1240,6 +1240,15 @@ namespace AllCashUFormsApp
             _frm.ShowDialog();
         }
 
+        public static void OpenCrystalReportsNonPreViewPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params)
+        {
+
+            frmCrystalReportEx _frm = new frmCrystalReportEx();
+
+            _frm.PrepareReportNonPreViewPopup(popUPText, reportName, storeName, _params);
+            _frm.ShowDialog();
+        }
+
         public static void OpenCrystalReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
         {
 
@@ -1247,6 +1256,13 @@ namespace AllCashUFormsApp
 
             _frm.PrepareReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             _frm.ShowDialog();
+        }
+
+        public static void OpenReportingReportsNonPreViewPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params)
+        {
+            Reporting _frm = new Reporting();
+            _frm.PrepareReportNonPreViewPopup(popUPText, reportName, storeName, _params);
+            _frm.LoadForm();
         }
 
         public static void OpenReportingReportsPopup(this Form frm, string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool autoGenExcel = false)
@@ -3337,7 +3353,7 @@ namespace AllCashUFormsApp
                     tempMsg += string.Format("ไม่สามารถทำรายการได้ เนื่องจากสินค้าใน stock คลัง {0} มีไม่เพียงพอ \n\n", whid);
                     foreach (var item in validateRLList)
                     {
-                        tempMsg += string.Format("--> {0} คงเหลือ {1} BPK จาก {2} BRK \n", item.ProductID, item.StockQty.ToStringN2(), item.InputQty.ToStringN2());
+                        tempMsg += string.Format("-->สินค้า : {0} คงเหลือในคลัง : {1} หน่วย(เล็ก) จากที่ระบุ : {2} หน่วย(เล็ก) \n", item.ProductID, item.StockQty.ToStringN2(), item.InputQty.ToStringN2());
                     }
                     message = tempMsg;
 
@@ -3421,6 +3437,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 DataList = null;
             }
 
@@ -3477,6 +3494,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 DataList = null;
             }
 

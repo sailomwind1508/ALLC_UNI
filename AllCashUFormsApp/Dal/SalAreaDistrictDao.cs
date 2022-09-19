@@ -241,6 +241,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 return null;
             }
         }
@@ -276,6 +277,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 return null;
             }
         }
@@ -352,7 +354,7 @@ namespace AllCashUFormsApp
             return ret;
         }
 
-        public static int InsertSalAreaDistrict(this tbl_SalAreaDistrict tbl_SalAreaDistrict, DataRow drs)
+        public static int InsertSalAreaDistrict(this tbl_SalAreaDistrict tbl_SalAreaDistrict, DataTable dt)
         {
             int ret = 0;
 
@@ -361,7 +363,13 @@ namespace AllCashUFormsApp
 
             try
             {
-                string sql = @"INSERT INTO dbo.[tbl_SalAreaDistrict]
+                con.Open();
+
+                string sql = "";
+
+                foreach (DataRow drs in dt.Rows)
+                {
+                    sql += @" INSERT INTO dbo.[tbl_SalAreaDistrict]
                                 ([SalAreaID]
                                 ,[WHID]
                                 ,[DistrictID]
@@ -371,29 +379,31 @@ namespace AllCashUFormsApp
                                 ,[ProvinceName]
                                 ,[PostalCode]
                                 ,[FlagSend] )
-                            VALUES
-                                ( @SalAreaID
-                                , @WHID
-                                , @DistrictID
-                                , @DistrictCode
-                                , @DistrictName
-                                , @AreaName
-                                , @ProvinceName
-                                , @PostalCode
-                                , @FlagSend )";
+                            VALUES ";
 
-                cmd = new SqlCommand(sql, con);
-                con.Open();
-                cmd.Parameters.AddWithValue("@SalAreaID", drs["SalAreaID"]);
-                cmd.Parameters.AddWithValue("@WHID", drs["WHID"]);
-                cmd.Parameters.AddWithValue("@DistrictID", drs["DistrictID"]);
-                cmd.Parameters.AddWithValue("@DistrictCode", drs["DistrictCode"]);
-                cmd.Parameters.AddWithValue("@DistrictName", drs["DistrictName"]);
-                cmd.Parameters.AddWithValue("@AreaName", drs["AreaName"]);
-                cmd.Parameters.AddWithValue("@ProvinceName", drs["ProvinceName"]);
-                cmd.Parameters.AddWithValue("@PostalCode", drs["PostalCode"]);
-                cmd.Parameters.AddWithValue("@FlagSend", drs["FlagSend"]);
+                    sql += "( '" + drs["SalAreaID"] + "'";
+                    sql += "  , '" + drs["WHID"] + "'";
+                    sql += "  , " + drs["DistrictID"];
+                    sql += "  , '" + drs["DistrictCode"] + "'";
+                    sql += "  , '" + drs["DistrictName"] + "'";
+                    sql += "  , '" + drs["AreaName"] + "'";
+                    sql += "  , '" + drs["ProvinceName"] + "'";
+                    sql += "  , '" + drs["PostalCode"] + "'";
+                    sql += "  , " + Convert.ToInt16(drs["FlagSend"]) + " )";
 
+                    cmd = new SqlCommand(sql, con);
+                    
+                    //cmd.Parameters.AddWithValue("@SalAreaID", drs["SalAreaID"]);
+                    //cmd.Parameters.AddWithValue("@WHID", drs["WHID"]);
+                    //cmd.Parameters.AddWithValue("@DistrictID", drs["DistrictID"]);
+                    //cmd.Parameters.AddWithValue("@DistrictCode", drs["DistrictCode"]);
+                    //cmd.Parameters.AddWithValue("@DistrictName", drs["DistrictName"]);
+                    //cmd.Parameters.AddWithValue("@AreaName", drs["AreaName"]);
+                    //cmd.Parameters.AddWithValue("@ProvinceName", drs["ProvinceName"]);
+                    //cmd.Parameters.AddWithValue("@PostalCode", drs["PostalCode"]);
+                    //cmd.Parameters.AddWithValue("@FlagSend", drs["FlagSend"]);
+                }
+                
                 ret = cmd.ExecuteNonQuery();
                 con.Close();
             }
@@ -501,5 +511,173 @@ namespace AllCashUFormsApp
                 return null;
             }
         }
+
+        public static int BulkInsert(this List<tbl_SalAreaDistrict> tbl_SalAreaDistricts)
+        {
+            string msg = "start tbl_SalAreaDistrictDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            var table = tbl_SalAreaDistricts.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_SalAreaDistrict";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end tbl_SalAreaDistrictDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this List<tbl_SalAreaDistrict> tbl_SalAreaDistricts)
+        {
+            string msg = "start tbl_SalAreaDistrictDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+
+                string sql = " DELETE FROM tbl_SalAreaDistrict WHERE SalAreaID = '" + tbl_SalAreaDistricts.FirstOrDefault().SalAreaID + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_SalAreaDistricts.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_SalAreaDistrictDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this List<tbl_SalAreaDistrict> tbl_SalAreaDistricts)
+        {
+            string msg = "start tbl_SalAreaDistrictDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_SalAreaDistrict WHERE SalAreaID = '" + tbl_SalAreaDistricts.FirstOrDefault().SalAreaID + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end tbl_SalAreaDistrictDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this List<tbl_SalAreaDistrict> tbl_SalAreaDistricts, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start tbl_SalAreaDistrictDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_SalAreaDistrict();
+                var salAreaID = tbl_SalAreaDistricts.First().SalAreaID;
+                updateData = db.tbl_SalAreaDistrict.FirstOrDefault(x => x.SalAreaID == salAreaID);
+
+                if (updateData != null)
+                {
+                    ret = tbl_SalAreaDistricts.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_SalAreaDistricts.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end tbl_SalAreaDistrictDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int UpdateSalAreaDistrict(this tbl_SalAreaDistrict tbl_SalAreaDistrict, Dictionary<string, object> _params)
+        {
+            int ret = 0;
+
+            try
+            {
+                SqlConnection con = new SqlConnection(Connection.ConnectionString);
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand("proc_update_SalAreaDistrict", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                foreach (var item in _params)
+                {
+                    cmd.Parameters.Add(new SqlParameter(item.Key, item.Value));
+                }
+
+                ret = cmd.ExecuteNonQuery();
+
+                if (ret > 0)
+                {
+                    ret = 1;
+                }
+
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalAreaDistrict.GetType());
+                ret = 0;
+            }
+
+            return ret;
+        }
+
     }
 }

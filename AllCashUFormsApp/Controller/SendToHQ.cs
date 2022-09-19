@@ -162,6 +162,7 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 ret = false;
             }
             return ret;

@@ -220,17 +220,39 @@ namespace AllCashUFormsApp.View.Page
                         }
                     }
 
-                    foreach (var item in rlList)
-                    {
-                        DateTime rlDocDate;
-                        string whName = "";
-                        rlDocDate = item.Key;
-                        whName = item.Value;
+                    string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+                    string title = "ยืนยันการพิมพ์!!";
+                    var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-                        _params = new Dictionary<string, object>();
-                        _params.Add("@DocDate", rlDocDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
-                        _params.Add("@WHID", whName);
-                        this.OpenReportingReportsPopup("ใบจัดสินค้า(RL)", "Form_RL_Report2.rdlc", "Form_RL_PRE_New", _params);
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        foreach (var item in rlList)
+                        {
+                            DateTime rlDocDate;
+                            string whName = "";
+                            rlDocDate = item.Key;
+                            whName = item.Value;
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocDate", rlDocDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                            _params.Add("@WHID", whName);
+                            this.OpenReportingReportsNonPreViewPopup("ใบจัดสินค้า(RL)", "Form_RL_Report2.rdlc", "Form_RL_PRE_New", _params);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in rlList)
+                        {
+                            DateTime rlDocDate;
+                            string whName = "";
+                            rlDocDate = item.Key;
+                            whName = item.Value;
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocDate", rlDocDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                            _params.Add("@WHID", whName);
+                            this.OpenReportingReportsPopup("ใบจัดสินค้า(RL)", "Form_RL_Report2.rdlc", "Form_RL_PRE_New", _params);
+                        }
                     }
                 }
             }
@@ -284,22 +306,49 @@ namespace AllCashUFormsApp.View.Page
                             tempList.Add(item.Value, new List<string> { item.Key });
                     }
 
-                    foreach (var item in tempList)
+                    string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+                    string title = "ยืนยันการพิมพ์!!";
+                    var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                    if (confirmResult == DialogResult.Yes)
                     {
-                        string rlDocNos = "";
-                        string whName = "";
-                        //rlDocNo = item.Key;
-                        //whName = item.Value;
-                        rlDocNos = string.Join(",", item.Value);
-                        whName = item.Key;
+                        foreach (var item in tempList)
+                        {
+                            string rlDocNos = "";
+                            string whName = "";
+                            //rlDocNo = item.Key;
+                            //whName = item.Value;
+                            rlDocNos = string.Join(",", item.Value);
+                            whName = item.Key;
 
-                        _params = new Dictionary<string, object>();
-                        _params.Add("@DocNo", rlDocNos);
-                        _params.Add("@WHID", whName);
-                        _params.Add("@DocDateFr", dtpDocDatePO.Value);
-                        _params.Add("@DocDateTo", dtpDocDatePO.Value);
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", rlDocNos);
+                            _params.Add("@WHID", whName);
+                            _params.Add("@DocDateFr", dtpDocDatePO.Value);
+                            _params.Add("@DocDateTo", dtpDocDatePO.Value);
 
-                        this.OpenReportingReportsPopup("ใบคุมส่งสินค้าตามคลังรถ", "proc_PreOrder_Cust_Ctrl_Report2.rdlc", "proc_PreOrder_Cust_Ctrl_Report", _params);
+                            this.OpenReportingReportsNonPreViewPopup("ใบคุมส่งสินค้าตามคลังรถ", "proc_PreOrder_Cust_Ctrl_Report2.rdlc", "proc_PreOrder_Cust_Ctrl_Report", _params);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in tempList)
+                        {
+                            string rlDocNos = "";
+                            string whName = "";
+                            //rlDocNo = item.Key;
+                            //whName = item.Value;
+                            rlDocNos = string.Join(",", item.Value);
+                            whName = item.Key;
+
+                            _params = new Dictionary<string, object>();
+                            _params.Add("@DocNo", rlDocNos);
+                            _params.Add("@WHID", whName);
+                            _params.Add("@DocDateFr", dtpDocDatePO.Value);
+                            _params.Add("@DocDateTo", dtpDocDatePO.Value);
+
+                            this.OpenReportingReportsPopup("ใบคุมส่งสินค้าตามคลังรถ", "proc_PreOrder_Cust_Ctrl_Report2.rdlc", "proc_PreOrder_Cust_Ctrl_Report", _params);
+                        }
                     }
                 }
             }
@@ -333,15 +382,33 @@ namespace AllCashUFormsApp.View.Page
 
                     if (poList.Count > 0)
                     {
-                        foreach (var _poDocNo in poList)
-                        {
-                            _params = new Dictionary<string, object>();
-                            _params.Add("@DocNo", _poDocNo);
-                            //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
-                            //this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params);
+                        string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+                        string title = "ยืนยันการพิมพ์!!";
+                        var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-                            this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(ต้นฉบับ)", "Form_IV1.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
-                            this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(สำเนา)", "Form_IV1_Copy.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                        if (confirmResult == DialogResult.Yes)
+                        {
+                            foreach (var _poDocNo in poList)
+                            {
+                                _params = new Dictionary<string, object>();
+                                _params.Add("@DocNo", _poDocNo);
+
+                                this.OpenReportingReportsNonPreViewPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(ต้นฉบับ)", "Form_IV1.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                                this.OpenReportingReportsNonPreViewPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(สำเนา)", "Form_IV1_Copy.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                            }
+                        }
+                        else
+                        {
+                            foreach (var _poDocNo in poList)
+                            {
+                                _params = new Dictionary<string, object>();
+                                _params.Add("@DocNo", _poDocNo);
+                                //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+                                //this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params);
+
+                                this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(ต้นฉบับ)", "Form_IV1.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                                this.OpenReportingReportsPopup("ใบส่งของ/ใบกำกับภาษีอย่างย่อ(สำเนา)", "Form_IV1_Copy.rdlc", "Form_IV", _params); //change report header edit by sailom 29/03/2022
+                            }
                         }
                     }
                 }
@@ -2964,7 +3031,9 @@ namespace AllCashUFormsApp.View.Page
                         }
                         else
                         {
-                            bu.tbl_PODetails.Add(_poDt);
+                            if (bu.tbl_PODetails.Any(x => x.ProductID == _poDt.ProductID)) { }//No Add free item //last edit by asilom .k 26/08/2022
+                            else
+                                bu.tbl_PODetails.Add(_poDt);
                         }
                     }
                 }
@@ -3043,7 +3112,11 @@ namespace AllCashUFormsApp.View.Page
                             _poDt.CrUser = Helper.tbl_Users.Username;
 
                             _poDt.LineRemark = pro.GetHQReward(x => x.RewardID == rewardID)[0].RewardName;
-                            bu.tbl_PODetails.Add(_poDt);
+
+
+                            if (bu.tbl_PODetails.Any(x => x.ProductID == _poDt.ProductID)) { }//No Add free item //last edit by asilom .k 26/08/2022
+                            else
+                                bu.tbl_PODetails.Add(_poDt);
                         }
                     }
                 }

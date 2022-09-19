@@ -416,6 +416,7 @@ namespace AllCashUFormsApp.View.UControl
             }
             catch (Exception ex)
             {
+                ex.WriteLog(this.GetType());
                 BindDataGrid(_dt);
             }
         }
@@ -430,24 +431,24 @@ namespace AllCashUFormsApp.View.UControl
             switch (_objType)
             {
                 case ObjectType.BranchWarehouseID: SubSelectProductItem(text, ref _dt, ref filteredRows, "WHID", "WHName"); break;
-                case ObjectType.Supplier: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
+                case ObjectType.Supplier: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
                 case ObjectType.SubDistict: SubSelectProductItem(text, ref _dt, ref filteredRows, "DistrictCode", "DistrictName", "DistrictID"); break;
                 case ObjectType.Promotion: SubSelectProductItem(text, ref _dt, ref filteredRows, "PromotionID", "PromotionName"); break;
                 case ObjectType.PromotionTemp: SubSelectProductItem(text, ref _dt, ref filteredRows, "PromotionID", "PromotionName"); break;
-                case ObjectType.ODProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.REProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.RLProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.RBProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.RJProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.RTProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.TRProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.CCProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.IVProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.IMProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.VEProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.IVPreProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.IMPreProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
-                case ObjectType.PreOrderProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName"); break;
+                case ObjectType.ODProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.REProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.RLProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.RBProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.RJProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.RTProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.TRProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.CCProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.IVProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.IMProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.VEProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.IVPreProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.IMPreProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
+                case ObjectType.PreOrderProduct: SubSelectProductItem(text, ref _dt, ref filteredRows, "ProductID", "ProductName", "ProductShortName"); break; //last edit by sailom .k 05/08/2022
                 case ObjectType.OD: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.RE: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.REOD: FilterItem(text, ref _dt, ref filteredRows); break;
@@ -487,7 +488,12 @@ namespace AllCashUFormsApp.View.UControl
         {
             if (!string.IsNullOrEmpty(text))
             {
-                filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", code, text, name, text));
+                //last edit by sailom .k 05/08/2022
+                if (!string.IsNullOrEmpty(name2))
+                    filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%'", code, text, name, text, name2, text));
+                else
+                    filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", code, text, name, text));
+
                 if (filteredRows != null)
                 {
                     _dt.AddDataTableRow(ref filteredRows);

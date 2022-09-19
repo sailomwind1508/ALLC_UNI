@@ -21,7 +21,7 @@ namespace AllCashUFormsApp.View.Page
         DataTable dt = new DataTable();
         ObjectFactory objectFactory = new ObjectFactory();
 
-        int runDigit = 0;
+        //int runDigit = 0;
         List<Control> searchBranchControls = new List<Control>();
         List<Control> searchFromBWHControls = new List<Control>();
         List<Control> searchToBWHControls = new List<Control>();

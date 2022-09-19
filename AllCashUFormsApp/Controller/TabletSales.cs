@@ -58,6 +58,33 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
+        public string RecoveryPO(string docNo, string userName)
+        {
+            string ret = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocNo", docNo);
+                sqlParmas.Add("@UserName", userName);
+
+                string sql = "proc_tbl_POMaster_Recovery";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString();
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return "";
+            }
+        }
+
         public string GenerateCancelRL(DateTime docdate, string whid, string userName, string docNos)
         {
             string ret = "";

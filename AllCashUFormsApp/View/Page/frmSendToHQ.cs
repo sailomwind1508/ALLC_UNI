@@ -98,32 +98,40 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSendData_Click(object sender, EventArgs e)
         {
-            string cfMsg = "ต้องการส่งข้อมูลใช่หรือไม่?";
-            string title = "ยืนยันการส่ง!!";
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            isComplete = true;
-            isCancel = false;
-            bool connectFlag = bu.VerifyHQConnection();
-            if (!connectFlag)
+            try
             {
-                string msg = "ไม่สามารถ Connect Server สำนักงานใหญ่ได้!!! กรุณาติดต่อ IT Support";
-                msg.ShowInfoMessage();
+                string cfMsg = "ต้องการส่งข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการส่ง!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
 
-                return;
+                isComplete = true;
+                isCancel = false;
+                bool connectFlag = bu.VerifyHQConnection();
+                if (!connectFlag)
+                {
+                    string msg = "ไม่สามารถ Connect Server สำนักงานใหญ่ได้!!! กรุณาติดต่อ IT Support";
+                    msg.ShowInfoMessage();
+
+                    return;
+                }
+
+                Cursor.Current = Cursors.WaitCursor;
+
+                txtComment.AppendText("--------------------------Begin Process-----------------------------");
+                txtComment.AppendText(Environment.NewLine);
+
+                progressBar1.Minimum = 0;
+                progressBar1.Maximum = 100;
+                progressBar1.Step = 10;
+
+                backgroundWorker1.RunWorkerAsync();
             }
-
-            Cursor.Current = Cursors.WaitCursor;
-
-            txtComment.AppendText("--------------------------Begin Process-----------------------------");
-            txtComment.AppendText(Environment.NewLine);
-
-            progressBar1.Minimum = 0;
-            progressBar1.Maximum = 100;
-            progressBar1.Step = 10;
-
-            backgroundWorker1.RunWorkerAsync();
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void btnCancelSend_Click(object sender, EventArgs e)
@@ -209,10 +217,11 @@ namespace AllCashUFormsApp.View.Page
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(this.GetType());
                 isComplete = false;
+                Cursor.Current = Cursors.Default;
             }
-            
+
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -243,7 +252,7 @@ namespace AllCashUFormsApp.View.Page
                     msg = "ยกเลิก ส่งข้อมูลเรียบร้อยแล้ว!!!";
                 }
             }
-            
+
             msg.ShowInfoMessage();
         }
 
@@ -288,39 +297,48 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSendAmtCustData_Click(object sender, EventArgs e)
         {
-            string dateC = dtpDocDate.Value.ToString("yyMM", new CultureInfo("en-US"));
-            string months = dtpDocDate.Value.Month.ToString();
-            string _months = dtpDocDate.Value.ToString("MM", new CultureInfo("en-US"));
-            string date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
-
-            string years = dtpDocDate.Value.Year.ToString(new CultureInfo("en-US"));
-
-            string cfMsg = "ต้องการส่งข้อมูลร้านเยี่ยม รอบการขายที่ " + months + " ประจำปี " + years + " ใช่หรือไม่?";
-            string title = "ยืนยันการส่ง!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DateC", dateC);
-            _params.Add("@I", months);
-            _params.Add("@O", _months);
-            _params.Add("@DATE", date);
-
-            bool ret = false;
-
-            ret = bu.CallSendAmtArCustomerData(_params);
-
-            if (ret == true)
+            try
             {
-                string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
-                msg.ShowInfoMessage();
+                string dateC = dtpDocDate.Value.ToString("yyMM", new CultureInfo("en-US"));
+                string months = dtpDocDate.Value.Month.ToString();
+                string _months = dtpDocDate.Value.ToString("MM", new CultureInfo("en-US"));
+                string date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
+
+                string years = dtpDocDate.Value.Year.ToString(new CultureInfo("en-US"));
+
+                string cfMsg = "ต้องการส่งข้อมูลร้านเยี่ยม รอบการขายที่ " + months + " ประจำปี " + years + " ใช่หรือไม่?";
+                string title = "ยืนยันการส่ง!!";
+
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                Cursor.Current = Cursors.WaitCursor;
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DateC", dateC);
+                _params.Add("@I", months);
+                _params.Add("@O", _months);
+                _params.Add("@DATE", date);
+
+                bool ret = false;
+
+                ret = bu.CallSendAmtArCustomerData(_params);
+
+                if (ret == true)
+                {
+                    string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+                }
+                else
+                {
+                    string msg = "ส่งข้อมูลล้มเหลว!!";
+                    msg.ShowErrorMessage();
+                    return;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                string msg = "ส่งข้อมูลล้มเหลว!!";
-                msg.ShowErrorMessage();
-                return;
+                ex.WriteLog(this.GetType());
+                Cursor.Current = Cursors.Default;
             }
         }
 

@@ -196,6 +196,14 @@ namespace AllCashUFormsApp.View.Page
             btnCustInfo.Enabled = !string.IsNullOrEmpty(txtCustomerID.Text);
 
             CreateGridBtnList();
+
+            if (Helper.tbl_Users.RoleID == 10)
+            {
+                btnRecovery.Visible = true;
+                btnRecovery.Enabled = true;
+            }
+            else
+                btnRecovery.Visible = false;
         }
 
         private void BindPOMaster(tbl_POMaster po)
@@ -573,7 +581,8 @@ namespace AllCashUFormsApp.View.Page
                 var po = bu.tbl_POMaster;
                 if (po != null)
                 {
-                    txnBeforeVat.Text = (po.DocRef == "IM" ? (po.Amount.Value - po.ExcVat.Value - po.Discount.Value - po.VatAmt.Value) : (po.IncVat.Value - po.ExcVat.Value - po.Discount.Value - po.VatAmt.Value)).ToStringN2();
+                    //last edit by sailom .k 04/08/2022
+                    txnBeforeVat.Text = (po.DocRef == "IM" ? (po.Amount.Value - po.ExcVat.Value - po.Discount.Value - po.VatAmt.Value) : incVat).ToStringN2();//(incVat - po.ExcVat.Value - po.Discount.Value - po.VatAmt.Value)).ToStringN2();
                     txnVatAmt.Text = po.VatAmt.Value.ToStringN2();
                 }
             }
@@ -755,6 +764,8 @@ namespace AllCashUFormsApp.View.Page
 
             allEmp = new Dictionary<string, string>();
             bu.GetEmployee().ForEach(x => allEmp.Add(x.EmpID, (x.TitleName.Replace(" ", string.Empty) + x.FirstName.Replace(" ", string.Empty) + x.LastName.Replace(" ", string.Empty))));
+
+            ddlDocStatus.BindDropdownDocStatus(bu, "4");
             //txtCustomerCode.Focus();
         }
 
@@ -992,7 +1003,8 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = poDt.ProductID;
                 invMm.ProductName = poDt.ProductName;
                 invMm.RefDocNo = poDt.DocNo;
-                invMm.TrnDate = crDate.ToDateTimeFormat();
+                //invMm.TrnDate = crDate.ToDateTimeFormat();
+                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat();//last edit by sailom .k 10/08/2022 
                 invMm.TrnType = "S";
                 invMm.DocTypeCode = po.DocTypeCode;
                 invMm.WHID = po.WHID;
@@ -1315,11 +1327,17 @@ namespace AllCashUFormsApp.View.Page
             var ivDts = bu.tbl_IVDetails;
             DateTime crDate = DateTime.Now;
 
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+            var listProductSeq = new Dictionary<string, short>();
+            listProductSeq = bu.FindProductLineNumber(poDts);
+            //Find line number from product edit by sailom .k 15/09/2022----------------
+
+            short index = 0;
             foreach (tbl_PODetail _podt in poDts)
             {
                 var ivDt = new tbl_IVDetail();
                 ivDt.DocNo = bu.tbl_IVMaster.DocNo;
-                ivDt.Line = _podt.Line;
+                ivDt.Line = listProductSeq.Count > 0 ? listProductSeq.First(x => x.Key == _podt.ProductID).Value : index; // _podt.Line; //Find line number from product edit by sailom .k 15/09/2022
                 ivDt.ProductID = _podt.ProductID;
                 ivDt.ProductName = _podt.ProductName;
 
@@ -1375,6 +1393,8 @@ namespace AllCashUFormsApp.View.Page
                 ivDt.LineComTotal = 0;
 
                 ivDts.Add(ivDt);
+
+                index++;
             }
         }
 
@@ -1654,6 +1674,16 @@ namespace AllCashUFormsApp.View.Page
                     else
                         ret = 0;
 
+                    //revers iv master - details edit by sailom.k 09/09/2022
+                    if (ret == 0)
+                    {
+                        if (bu.tbl_IVMaster != null && !string.IsNullOrEmpty(bu.tbl_IVMaster.DocNo))
+                        {
+                             bu.ReverseVE(bu.tbl_IVMaster.DocNo); 
+                        }
+                    }
+                    //revers iv master - details edit by sailom.k 09/09/2022
+
                     if (ret == 1)
                     {
                         Cursor.Current = Cursors.Default;
@@ -1858,6 +1888,8 @@ namespace AllCashUFormsApp.View.Page
         private void btnAdd_Click(object sender, EventArgs e)
         {
             InitialData();
+
+            ddlDocStatus.Enabled = false;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -1971,6 +2003,9 @@ namespace AllCashUFormsApp.View.Page
             btnSearchDoc.Enabled = true;
             txdDocNo.Enabled = true;
 
+            ddlDocStatus.BindDropdownDocStatus(bu, "4");
+            ddlDocStatus.Enabled = false;
+
             grdList.CellContentClick -= grdList_CellContentClick;
         }
 
@@ -1978,11 +2013,26 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rpt", "Form_IV", _params);
+
+                this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)
@@ -2574,6 +2624,37 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
 
+        }
+
+        private void btnRecovery_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txdDocNo.Text))
+            {
+                string cfMsg = "ต้องการกู้คืนข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการกู้คืน!!";
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                var ret = bu.RecoveryPO(txdDocNo.Text, Helper.tbl_Users.Username);
+                if (ret == "1")
+                {
+                    BindTabletSalesData(txdDocNo.Text);
+
+                    string message = "กู้ข้อมูลสำเร็จ!!!";
+                    message.ShowInfoMessage();
+                }
+                else
+                {
+                    string message = "กู้ข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง!!!";
+                    message.ShowErrorMessage();
+                }
+            }
+            else
+            {
+                string message = "กรุณาเลือกเลขที่เอกสารก่อน!!!";
+                txdDocNo.Focus();
+                message.ShowWarningMessage();
+            }
         }
     }
 }

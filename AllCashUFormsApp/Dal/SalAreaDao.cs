@@ -12,6 +12,26 @@ namespace AllCashUFormsApp
 {
     public static class SalAreaDao
     {
+        public static tbl_SalArea SelectSingle(this tbl_SalArea tbl_SalArea, string salAreaID)
+        {
+            List<tbl_SalArea> list = new List<tbl_SalArea>();
+            try
+            {
+                DataTable dt = new DataTable();
+
+                string sql = " SELECT * FROM [dbo].[tbl_SalArea] WHERE SalAreaID = '" + salAreaID + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_SalArea), sql);
+                list = dynamicListReturned.Cast<tbl_SalArea>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_SalArea.GetType());
+            }
+
+            return list.FirstOrDefault();
+        }
+
         public static DataTable GetSalAreaData(this tbl_SalArea tbl_SalArea, int flagDel, string searchtext)
         {
             DataSet ds = new DataSet();
@@ -268,6 +288,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 return null;
             }
         }

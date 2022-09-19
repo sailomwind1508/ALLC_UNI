@@ -893,6 +893,26 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+        public static bool ValidateNewRowWhenCopy(this DataGridView grdList, string _prodcutID, int colIndex, int rowIndex)
+        {
+            bool ret = true;
+            for (int i = 0; i < grdList.Rows.Count; i++)
+            {
+                if (grdList[colIndex, i].IsNotNullOrEmptyCell() && grdList[colIndex + 2, i].IsNotNullOrEmptyCell())
+                {
+                    string productID = grdList[colIndex, i].EditedFormattedValue.ToString();
+                    string prodName = grdList[colIndex + 2, i].EditedFormattedValue.ToString();
+                    if (productID == _prodcutID && i == rowIndex)
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+            }
+
+            return ret;
+        }
+
         public static void AddNewRow(this DataGridView grd, Dictionary<int, string> initDataGridList, int idIndex, string id, int rowIndex, bool validateNewRow)
         {
             if (!validateNewRow)

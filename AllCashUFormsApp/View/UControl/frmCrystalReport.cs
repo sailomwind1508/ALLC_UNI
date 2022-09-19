@@ -23,7 +23,7 @@ namespace AllCashUFormsApp.View.UControl
     public partial class frmCrystalReport : Form
     {
         private string formText = "";
-        private string formName = "";
+        //private string formName = "";
         private string StoreName = "";
         private string ReportName = "";
         bool autoGenEx = false;

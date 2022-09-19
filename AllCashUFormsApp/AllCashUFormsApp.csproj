@@ -211,6 +211,7 @@
     <Compile Include="Controller\TXNPromotion.cs" />
     <Compile Include="Controller\Users.cs" />
     <Compile Include="Controller\VE.cs" />
+    <Compile Include="Controller\VerifyDataToSAP.cs" />
     <Compile Include="Dal\AdmControlListDao.cs" />
     <Compile Include="Dal\AdmFormListDao.cs" />
     <Compile Include="Dal\AdmMenuListDao.cs" />
@@ -878,6 +879,7 @@
     <Compile Include="Utilities\ObjectFactory.cs" />
     <Compile Include="Utilities\ObjectHelper.cs" />
     <Compile Include="Utilities\Printer.cs" />
+    <Compile Include="Utilities\PrintRDLCReport.cs" />
     <Compile Include="Utilities\SerializeHelper.cs" />
     <Compile Include="View\Page\frm1000SalesPre.cs">
       <SubType>Form</SubType>
@@ -1095,6 +1097,12 @@
     <Compile Include="View\Page\frmCyCle.Designer.cs">
       <DependentUpon>frmCyCle.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmVerifyDataToSAP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmVerifyDataToSAP.Designer.cs">
+      <DependentUpon>frmVerifyDataToSAP.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmVerifyDNS.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1175,6 +1183,12 @@
     </Compile>
     <Compile Include="View\UControl\frmConfirmTabletData.designer.cs">
       <DependentUpon>frmConfirmTabletData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmUpdateTabletData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmConfirmUpdateTabletData.designer.cs">
+      <DependentUpon>frmConfirmUpdateTabletData.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmCrystalReport.cs">
       <SubType>Form</SubType>
@@ -1458,6 +1472,12 @@
     </Compile>
     <Compile Include="View\UControl\frmSupplierType.Designer.cs">
       <DependentUpon>frmSupplierType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmUpdateSendDate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmUpdateSendDate.designer.cs">
+      <DependentUpon>frmUpdateSendDate.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmVerifyCustomer.cs">
       <SubType>Form</SubType>
@@ -1748,6 +1768,9 @@
     <EmbeddedResource Include="View\Page\frmCyCle.resx">
       <DependentUpon>frmCyCle.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmVerifyDataToSAP.resx">
+      <DependentUpon>frmVerifyDataToSAP.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmVerifyDNS.resx">
       <DependentUpon>frmVerifyDNS.cs</DependentUpon>
     </EmbeddedResource>
@@ -1774,6 +1797,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmConfirmTabletData.resx">
       <DependentUpon>frmConfirmTabletData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmConfirmUpdateTabletData.resx">
+      <DependentUpon>frmConfirmUpdateTabletData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCrystalReport.resx">
       <DependentUpon>frmCrystalReport.cs</DependentUpon>
@@ -1846,6 +1872,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmSupplierType.resx">
       <DependentUpon>frmSupplierType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmUpdateSendDate.resx">
+      <DependentUpon>frmUpdateSendDate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmVerifyCustomer.resx">
       <DependentUpon>frmVerifyCustomer.cs</DependentUpon>
@@ -1944,6 +1973,8 @@
     <Content Include="XSLT\Form_RE_XSLT.xslt" />
     <Content Include="XSLT\Form_V.xslt" />
     <Content Include="XSLT\Form_V_Copy.xslt" />
+    <Content Include="XSLT\GetCustomer_DuplicateAddress_XSLT.xslt" />
+    <Content Include="XSLT\GetCustomer_DuplicateName_XSLT.xslt" />
     <Content Include="XSLT\proc_ActualSalesByBill.xslt">
       <SubType>Designer</SubType>
     </Content>
@@ -2002,6 +2033,8 @@
     <Content Include="XSLT\Rep_IV_Sales2.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_New_Customer.xslt" />
+    <Content Include="XSLT\Rep_New_Customer_Detail.xslt" />
     <Content Include="XSLT\Rep_PreOrder_POStatus.xslt" />
     <Content Include="XSLT\Rep_ProductHero_ByDate_XSLT.xslt" />
     <Content Include="XSLT\Rep_Product_Transfer.xslt">

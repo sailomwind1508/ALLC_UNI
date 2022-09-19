@@ -29,6 +29,7 @@ namespace AllCashUFormsApp.View.UControl
         private string StoreName = "";
         private string ReportName = "";
         bool autoGenEx = false;
+        bool nonPreView = false;
         Dictionary<string, object> Params = new Dictionary<string, object>();
         private string ReportPath = ConfigurationManager.AppSettings["ReportPath"];
         private string XSLTPath = ConfigurationManager.AppSettings["XSLTPath"];
@@ -58,7 +59,7 @@ namespace AllCashUFormsApp.View.UControl
         private string headerReportName = "";
         private string headerDate = "";
 
-        private string headerRemark = "";
+        //private string headerRemark = "";
         public string excelName { get; set; }
 
         CultureInfo newCulture = new CultureInfo("th-TH");
@@ -218,6 +219,24 @@ namespace AllCashUFormsApp.View.UControl
             }
         }
 
+        public void PrepareReportNonPreViewPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params)
+        {
+            try
+            {
+                //formName = frmName;
+                formText = popUPText;
+                ReportName = reportName;
+                StoreName = storeName;
+                Params = _params;
+                autoGenEx = false;
+                nonPreView = true;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+        }
+
         public void PrepareReportPopup(string popUPText, string reportName, string storeName, Dictionary<string, object> _params, bool _autoGenExcel = false)
         {
             try
@@ -228,6 +247,7 @@ namespace AllCashUFormsApp.View.UControl
                 StoreName = storeName;
                 Params = _params;
                 autoGenEx = _autoGenExcel;
+                nonPreView = false;
             }
             catch (Exception ex)
             {
@@ -245,6 +265,7 @@ namespace AllCashUFormsApp.View.UControl
                 StoreName = storeName;
                 Params = _params;
                 autoGenEx = _autoGenExcel;
+                nonPreView = false;
 
                 //PrepareCrytalToExcelReport();
                 CreateExcelFromXSLT(popUPText);
@@ -265,6 +286,7 @@ namespace AllCashUFormsApp.View.UControl
                 StoreName = storeName;
                 Params = _params;
                 autoGenEx = _autoGenExcel;
+                nonPreView = false;
 
                 if (formText == "รายงานสัดส่วน")
                 {

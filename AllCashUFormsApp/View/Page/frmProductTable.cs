@@ -1159,7 +1159,7 @@ namespace AllCashUFormsApp.View.Page
                 {
                     var tmp = dtProPriceGroup.AsEnumerable().ToList();
 
-                    decimal Price = 0;
+                    //decimal Price = 0;
 
                     foreach (DataRow r in dtPrdUomset.Rows)
                     {

@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTransferCustomer));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtEmpID = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -76,7 +76,6 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.chkBoxALL1 = new System.Windows.Forms.CheckBox();
             this.ddlPresale = new System.Windows.Forms.CheckBox();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label27 = new System.Windows.Forms.Label();
             this.ddlSalArea = new System.Windows.Forms.ComboBox();
@@ -93,6 +92,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -424,8 +424,8 @@
             // 
             this.grdList2.AllowUserToAddRows = false;
             this.grdList2.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.grdList2.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdList2.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.grdList2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdList2.Location = new System.Drawing.Point(0, 0);
@@ -668,8 +668,8 @@
             // 
             this.grdList.AllowUserToAddRows = false;
             this.grdList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdList.Location = new System.Drawing.Point(0, 0);
@@ -680,9 +680,9 @@
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.txtSearch);
             this.panel7.Controls.Add(this.chkBoxALL1);
             this.panel7.Controls.Add(this.ddlPresale);
-            this.panel7.Controls.Add(this.txtSearch);
             this.panel7.Controls.Add(this.btnSearch);
             this.panel7.Controls.Add(this.label27);
             this.panel7.Controls.Add(this.ddlSalArea);
@@ -724,17 +724,6 @@
             this.ddlPresale.TabIndex = 242;
             this.ddlPresale.Text = "Presale";
             this.ddlPresale.UseVisualStyleBackColor = true;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtSearch.Location = new System.Drawing.Point(96, 84);
-            this.txtSearch.MaxLength = 300;
-            this.txtSearch.Multiline = true;
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(324, 24);
-            this.txtSearch.TabIndex = 8;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // btnSearch
             // 
@@ -915,6 +904,15 @@
             this.FormHeader.TabIndex = 0;
             this.FormHeader.Text = "label8";
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(96, 84);
+            this.txtSearch.MaxLength = 300;
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(325, 23);
+            this.txtSearch.TabIndex = 244;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            // 
             // frmTransferCustomer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -997,7 +995,6 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.CheckBox chkBoxALL1;
         private System.Windows.Forms.CheckBox ddlPresale;
-        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.ComboBox ddlSalArea;
@@ -1016,5 +1013,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.TextBox txtSearch;
     }
 }

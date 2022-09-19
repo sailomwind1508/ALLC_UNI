@@ -152,5 +152,25 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_SendData()).GetWHID_FromSendData();
         }
+
+        public int ValidatePOMaster(string _DocDate, string _WHID)
+        {
+            return new tbl_POMaster().ValidatePOMaster(_DocDate, _WHID);
+        }
+
+        public List<tbl_SendData> GetSendDataSingle(string DateSend, string WHID)
+        {
+            return new tbl_SendData().GetSendDataSingle(DateSend, WHID);
+        }
+
+        public int UpdateSendData(string oldDocDate, string NewDocDate, string WHID, string UserName)
+        {
+            return new tbl_SendData().UpdateSendData(oldDocDate, NewDocDate, WHID, UserName);
+        }
+
+        public int UpdateInvMovementData(Dictionary<string, object> _params)
+        {
+            return new tbl_InvMovement().UpdateInvMovementData(_params);
+        }
     }
 }

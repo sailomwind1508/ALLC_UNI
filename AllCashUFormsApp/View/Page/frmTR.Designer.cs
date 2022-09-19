@@ -70,6 +70,8 @@
             this.lblFromProductCode = new System.Windows.Forms.Label();
             this.pnlBL = new System.Windows.Forms.Panel();
             this.grdDetails = new System.Windows.Forms.GroupBox();
+            this.ddlToUOM = new System.Windows.Forms.ComboBox();
+            this.ddlFromUOM = new System.Windows.Forms.ComboBox();
             this.txtBaseQty = new System.Windows.Forms.TextBox();
             this.chkFixBaseQty = new System.Windows.Forms.CheckBox();
             this.txtRemark = new System.Windows.Forms.TextBox();
@@ -93,8 +95,6 @@
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.ddlFromUOM = new System.Windows.Forms.ComboBox();
-            this.ddlToUOM = new System.Windows.Forms.ComboBox();
             this.pnlTop.SuspendLayout();
             this.pnlTR.SuspendLayout();
             this.pnlTL.SuspendLayout();
@@ -124,11 +124,11 @@
             // 
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
             this.pnlTR.Controls.Add(this.txdDocNo);
-            this.pnlTR.Controls.Add(this.label11);
             this.pnlTR.Controls.Add(this.ddlDocStatus);
-            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.dtpDocDate);
             this.pnlTR.Controls.Add(this.btnSearchDoc);
+            this.pnlTR.Controls.Add(this.label11);
+            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.label7);
             this.pnlTR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlTR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -150,7 +150,7 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(119, 64);
+            this.label11.Location = new System.Drawing.Point(126, 60);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(97, 16);
             this.label11.TabIndex = 110;
@@ -162,7 +162,7 @@
             this.ddlDocStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlDocStatus.Enabled = false;
             this.ddlDocStatus.FormattingEnabled = true;
-            this.ddlDocStatus.Location = new System.Drawing.Point(222, 61);
+            this.ddlDocStatus.Location = new System.Drawing.Point(222, 57);
             this.ddlDocStatus.Name = "ddlDocStatus";
             this.ddlDocStatus.Size = new System.Drawing.Size(163, 24);
             this.ddlDocStatus.TabIndex = 10;
@@ -171,7 +171,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(150, 38);
+            this.label8.Location = new System.Drawing.Point(157, 36);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(66, 16);
             this.label8.TabIndex = 104;
@@ -181,7 +181,7 @@
             // 
             this.dtpDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpDocDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpDocDate.Location = new System.Drawing.Point(222, 33);
+            this.dtpDocDate.Location = new System.Drawing.Point(222, 31);
             this.dtpDocDate.Name = "dtpDocDate";
             this.dtpDocDate.Size = new System.Drawing.Size(163, 23);
             this.dtpDocDate.TabIndex = 9;
@@ -207,7 +207,7 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(126, 8);
+            this.label7.Location = new System.Drawing.Point(133, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(90, 16);
             this.label7.TabIndex = 101;
@@ -239,7 +239,7 @@
             // 
             // txtToWHName
             // 
-            this.txtToWHName.Location = new System.Drawing.Point(268, 57);
+            this.txtToWHName.Location = new System.Drawing.Point(265, 57);
             this.txtToWHName.MaxLength = 200;
             this.txtToWHName.Name = "txtToWHName";
             this.txtToWHName.ReadOnly = true;
@@ -283,7 +283,7 @@
             // 
             // txtFromWHName
             // 
-            this.txtFromWHName.Location = new System.Drawing.Point(268, 31);
+            this.txtFromWHName.Location = new System.Drawing.Point(265, 31);
             this.txtFromWHName.MaxLength = 200;
             this.txtFromWHName.Name = "txtFromWHName";
             this.txtFromWHName.ReadOnly = true;
@@ -332,7 +332,7 @@
             this.txtCrUser.MaxLength = 50;
             this.txtCrUser.Name = "txtCrUser";
             this.txtCrUser.ReadOnly = true;
-            this.txtCrUser.Size = new System.Drawing.Size(450, 23);
+            this.txtCrUser.Size = new System.Drawing.Size(447, 23);
             this.txtCrUser.TabIndex = 7;
             // 
             // lblCrUser
@@ -346,7 +346,7 @@
             // 
             // txtBranchName
             // 
-            this.txtBranchName.Location = new System.Drawing.Point(268, 5);
+            this.txtBranchName.Location = new System.Drawing.Point(265, 5);
             this.txtBranchName.MaxLength = 200;
             this.txtBranchName.Name = "txtBranchName";
             this.txtBranchName.ReadOnly = true;
@@ -391,7 +391,7 @@
             // lblUOM
             // 
             this.lblUOM.AutoSize = true;
-            this.lblUOM.Location = new System.Drawing.Point(914, 114);
+            this.lblUOM.Location = new System.Drawing.Point(945, 114);
             this.lblUOM.Name = "lblUOM";
             this.lblUOM.Size = new System.Drawing.Size(33, 16);
             this.lblUOM.TabIndex = 144;
@@ -451,7 +451,7 @@
             // 
             // txtToProductName
             // 
-            this.txtToProductName.Location = new System.Drawing.Point(263, 62);
+            this.txtToProductName.Location = new System.Drawing.Point(260, 62);
             this.txtToProductName.MaxLength = 200;
             this.txtToProductName.Name = "txtToProductName";
             this.txtToProductName.ReadOnly = true;
@@ -493,7 +493,7 @@
             // 
             // txtFromProductName
             // 
-            this.txtFromProductName.Location = new System.Drawing.Point(263, 35);
+            this.txtFromProductName.Location = new System.Drawing.Point(260, 35);
             this.txtFromProductName.MaxLength = 200;
             this.txtFromProductName.Name = "txtFromProductName";
             this.txtFromProductName.ReadOnly = true;
@@ -571,6 +571,27 @@
             this.grdDetails.Size = new System.Drawing.Size(984, 133);
             this.grdDetails.TabIndex = 145;
             this.grdDetails.TabStop = false;
+            // 
+            // ddlToUOM
+            // 
+            this.ddlToUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlToUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlToUOM.FormattingEnabled = true;
+            this.ddlToUOM.Location = new System.Drawing.Point(745, 62);
+            this.ddlToUOM.Name = "ddlToUOM";
+            this.ddlToUOM.Size = new System.Drawing.Size(81, 24);
+            this.ddlToUOM.TabIndex = 149;
+            // 
+            // ddlFromUOM
+            // 
+            this.ddlFromUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlFromUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlFromUOM.FormattingEnabled = true;
+            this.ddlFromUOM.Location = new System.Drawing.Point(836, 34);
+            this.ddlFromUOM.Name = "ddlFromUOM";
+            this.ddlFromUOM.Size = new System.Drawing.Size(81, 24);
+            this.ddlFromUOM.TabIndex = 147;
+            this.ddlFromUOM.SelectionChangeCommitted += new System.EventHandler(this.ddlFromUOM_SelectionChangeCommitted);
             // 
             // txtBaseQty
             // 
@@ -920,26 +941,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1008, 512);
             this.panel2.TabIndex = 27;
-            // 
-            // ddlFromUOM
-            // 
-            this.ddlFromUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlFromUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlFromUOM.FormattingEnabled = true;
-            this.ddlFromUOM.Location = new System.Drawing.Point(836, 34);
-            this.ddlFromUOM.Name = "ddlFromUOM";
-            this.ddlFromUOM.Size = new System.Drawing.Size(81, 24);
-            this.ddlFromUOM.TabIndex = 147;
-            // 
-            // ddlToUOM
-            // 
-            this.ddlToUOM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlToUOM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlToUOM.FormattingEnabled = true;
-            this.ddlToUOM.Location = new System.Drawing.Point(745, 62);
-            this.ddlToUOM.Name = "ddlToUOM";
-            this.ddlToUOM.Size = new System.Drawing.Size(81, 24);
-            this.ddlToUOM.TabIndex = 149;
             // 
             // frmTR
             // 

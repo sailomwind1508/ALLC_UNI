@@ -453,7 +453,7 @@ namespace AllCashUFormsApp.View.Page
                 Dictionary<string, object> _params = new Dictionary<string, object>();
                 _params.Add("@EmpID", allEmpID);
                 _params.Add("@db_server", _dbServer);
-                _params.Add("@db_name", "DB_ALL_CASH_UNI_TKM_TEST");
+                _params.Add("@db_name", _dbName);
                 _params.Add("@branch_ID", _branchID);
                 _params.Add("@UserName",Helper.tbl_Users.Username);
 

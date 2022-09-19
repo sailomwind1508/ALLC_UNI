@@ -30,15 +30,11 @@ namespace AllCashUFormsApp.View.Page
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSalesArea));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSalesArea));
-            this.colSearch = new System.Windows.Forms.DataGridViewButtonColumn();
             this.grdProvince = new System.Windows.Forms.DataGridView();
-            this.colProvinceCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProvinceName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProvinceID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlProvince = new System.Windows.Forms.Panel();
             this.pnlArea = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -61,6 +57,10 @@ namespace AllCashUFormsApp.View.Page
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.colProvinceCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSearch = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colProvinceName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvinceID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grdProvince)).BeginInit();
             this.pnlProvince.SuspendLayout();
             this.pnlArea.SuspendLayout();
@@ -72,20 +72,6 @@ namespace AllCashUFormsApp.View.Page
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // colSearch
-            // 
-            this.colSearch.DataPropertyName = "Search";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colSearch.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colSearch.HeaderText = "";
-            this.colSearch.Name = "colSearch";
-            this.colSearch.ReadOnly = true;
-            this.colSearch.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSearch.Text = "";
-            this.colSearch.ToolTipText = "...";
-            this.colSearch.Width = 25;
             // 
             // grdProvince
             // 
@@ -102,41 +88,8 @@ namespace AllCashUFormsApp.View.Page
             this.grdProvince.ReadOnly = true;
             this.grdProvince.Size = new System.Drawing.Size(373, 609);
             this.grdProvince.TabIndex = 0;
-            // 
-            // colProvinceCode
-            // 
-            this.colProvinceCode.DataPropertyName = "ProvinceCode";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colProvinceCode.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colProvinceCode.HeaderText = "รหัสจังหวัด";
-            this.colProvinceCode.MaxInputLength = 6;
-            this.colProvinceCode.Name = "colProvinceCode";
-            this.colProvinceCode.ReadOnly = true;
-            this.colProvinceCode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colProvinceCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colProvinceName
-            // 
-            this.colProvinceName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colProvinceName.DataPropertyName = "ProvinceName";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colProvinceName.DefaultCellStyle = dataGridViewCellStyle3;
-            this.colProvinceName.HeaderText = "ชื่อจังหวัด";
-            this.colProvinceName.MaxInputLength = 50;
-            this.colProvinceName.Name = "colProvinceName";
-            this.colProvinceName.ReadOnly = true;
-            this.colProvinceName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colProvinceName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colProvinceID
-            // 
-            this.colProvinceID.DataPropertyName = "ProvinceID";
-            this.colProvinceID.HeaderText = "รหัส";
-            this.colProvinceID.Name = "colProvinceID";
-            this.colProvinceID.ReadOnly = true;
-            this.colProvinceID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colProvinceID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colProvinceID.Visible = false;
+            this.grdProvince.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdProvince_CellClick);
+            this.grdProvince.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdProvince_RowPostPaint);
             // 
             // pnlProvince
             // 
@@ -284,6 +237,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnClose.Text = "ออก";
             this.btnClose.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnAdd
             // 
@@ -441,6 +395,55 @@ namespace AllCashUFormsApp.View.Page
             this.btnSave.Text = "บันทึก";
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // colProvinceCode
+            // 
+            this.colProvinceCode.DataPropertyName = "ProvinceCode";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colProvinceCode.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colProvinceCode.HeaderText = "รหัสจังหวัด";
+            this.colProvinceCode.MaxInputLength = 6;
+            this.colProvinceCode.Name = "colProvinceCode";
+            this.colProvinceCode.ReadOnly = true;
+            this.colProvinceCode.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colProvinceCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colSearch
+            // 
+            this.colSearch.DataPropertyName = "Search";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colSearch.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colSearch.HeaderText = "";
+            this.colSearch.Name = "colSearch";
+            this.colSearch.ReadOnly = true;
+            this.colSearch.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colSearch.Text = "";
+            this.colSearch.Width = 25;
+            // 
+            // colProvinceName
+            // 
+            this.colProvinceName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colProvinceName.DataPropertyName = "ProvinceName";
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colProvinceName.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colProvinceName.HeaderText = "ชื่อจังหวัด";
+            this.colProvinceName.MaxInputLength = 50;
+            this.colProvinceName.Name = "colProvinceName";
+            this.colProvinceName.ReadOnly = true;
+            this.colProvinceName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colProvinceName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colProvinceID
+            // 
+            this.colProvinceID.DataPropertyName = "ProvinceID";
+            this.colProvinceID.HeaderText = "รหัส";
+            this.colProvinceID.Name = "colProvinceID";
+            this.colProvinceID.ReadOnly = true;
+            this.colProvinceID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colProvinceID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colProvinceID.Visible = false;
             // 
             // frmSalesArea
             // 
@@ -454,6 +457,8 @@ namespace AllCashUFormsApp.View.Page
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmSalesArea";
             this.Text = "7.2 ตั้งค่าพื้นที่เขตการขาย";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSalesArea_FormClosed);
+            this.Load += new System.EventHandler(this.frmSalesArea_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdProvince)).EndInit();
             this.pnlProvince.ResumeLayout(false);
             this.pnlArea.ResumeLayout(false);
@@ -470,12 +475,7 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridViewButtonColumn colSearch;
         private System.Windows.Forms.DataGridView grdProvince;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceID;
         private System.Windows.Forms.Panel pnlProvince;
         private System.Windows.Forms.Panel pnlArea;
         private System.Windows.Forms.Panel panel6;
@@ -498,5 +498,9 @@ namespace AllCashUFormsApp.View.Page
         private UControl.SaveButton btnSave;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceCode;
+        private System.Windows.Forms.DataGridViewButtonColumn colSearch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvinceID;
     }
 }

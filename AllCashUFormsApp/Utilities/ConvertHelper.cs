@@ -383,7 +383,7 @@ namespace AllCashUFormsApp
                         {
                             pro.SetValue(objT, row[pro.Name], null);
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex) { ex.WriteLog(null); }
                     }
                 }
                 return objT;

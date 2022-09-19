@@ -269,6 +269,7 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
         public static DataTable GetPrdUomSetData(this tbl_ProductUomSet tbl_ProductUomSet, int ProductGroupID, int ProductSubGroupID, string ProductID, bool flagPrdPriceTable)
         {
             try
@@ -305,6 +306,29 @@ namespace AllCashUFormsApp
                 ex.Message.ShowErrorMessage();
                 return null;
             }
+        }
+
+        public static List<tbl_ProductUomSet> GetProductUomSet_Single(this tbl_ProductUomSet tbl_ProductUomSet, string ProductID)
+        {
+            List<tbl_ProductUomSet> list = new List<tbl_ProductUomSet>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ProductUomSet";
+
+                if (!string.IsNullOrEmpty(ProductID))
+                {
+                    sql += " WHERE ProductID = '" + ProductID + "'";
+                }
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_ProductUomSet), sql);
+                list = dynamicListReturned.Cast<tbl_ProductUomSet>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ProductUomSet.GetType());
+            }
+
+            return list;
         }
     }
 }

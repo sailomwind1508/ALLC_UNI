@@ -224,17 +224,17 @@
 									<xsl:value-of select="ยอดยกมา-เล็ก"/>
 								</TD>
 
-								<TD class="SearchResultItem">
-
+								<TD CLASS="SearchResultItem">
+									<xsl:value-of select="ยอดซื้อ-ใหญ่"/>
+								</TD>
+								<TD CLASS="SearchResultItem">
+									<xsl:value-of select="ยอดซื้อ-เล็ก"/>
 								</TD>
 								<TD class="SearchResultItem">
 
 								</TD>
 								<TD class="SearchResultItem">
-
-								</TD>
-								<TD class="SearchResultItem">
-
+				
 								</TD>
 
 								<TD class="SearchResultItem">

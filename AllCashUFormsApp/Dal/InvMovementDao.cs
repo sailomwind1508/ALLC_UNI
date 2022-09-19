@@ -23,7 +23,7 @@ namespace AllCashUFormsApp
                 string sql = "";
                 sql += " SELECT SUM(TrnQty) AS 'TrnQty', ProductID, WHID ";
                 sql += " FROM dbo.tbl_InvMovement ";
-                sql += " WHERE TrnType<> 'X'  ";
+                sql += " WHERE TrnType <> 'X'  ";
                 sql += " GROUP BY ProductID, WHID ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvMovement), sql);
@@ -93,7 +93,8 @@ namespace AllCashUFormsApp
                 sql += " , WHID    ";
                 sql += " FROM [dbo].[tbl_InvMovement]   ";
                 sql += " WHERE TrnType <> 'X'  ";
-                sql += " AND ProductID IN (" + prdIDs + ") AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID ";
+                //sql += " AND ProductID IN (" + prdIDs + ") AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID "; //last edit by sailom .k 18/07/2022
+                sql += " AND WHID = '" + whid.Trim() + "' GROUP BY ProductID, WHID ";
                 sql += " ) t2 ON t1.ProductID = t2.ProductID  ";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_InvMovement), sql);
@@ -449,6 +450,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_InvMovement);
             }
 
@@ -747,6 +749,24 @@ namespace AllCashUFormsApp
             msg = "end tbl_InvMovement=>PerformUpdate";
             msg.WriteLog(null);
 
+            return ret;
+        }
+
+        public static int UpdateInvMovementData(this tbl_InvMovement tbl_InvMovement, Dictionary<string, object> _params)
+        {
+            int ret = 0;
+            try
+            {
+                var dt = My_DataTable_Extensions.ExecuteStoreToDataTable("proc_Update_InvMovement_Data", _params);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    ret = dt.Rows[0].Field<int>("Result");
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_InvMovement != null ? tbl_InvMovement.GetType() : null);
+            }
             return ret;
         }
     }

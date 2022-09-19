@@ -292,7 +292,7 @@ namespace AllCashUFormsApp.View.Page
             decimal unitPrice = 0;
             decimal discount = 0;
             int orderUom = -1;
-            string lineDiscountType = "";
+            //string lineDiscountType = "";
 
             var cell0 = grd.Rows[rowIndex].Cells[0];
             var cell3 = grd.Rows[rowIndex].Cells[3];
@@ -1167,10 +1167,24 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+
+                this.OpenReportingReportsPopup("ใบคืนสินค้า", "Form_RT.rdlc", "Form_RT", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)

@@ -144,6 +144,7 @@
                     var adds = columns[4];
                     var markerImg = columns[5];
                     var Tel = columns[6];
+                    var Seq = columns[7];
 
                     //var tmpImg = img.replace('/', ',');
                     var imgIndex = "ShowFullSizeImg(" + i + ")";
@@ -161,7 +162,7 @@
                                 //    offset: { x: 12, y: 45 }
                                 //},
                                 icon: {
-                                    html: '<img src="MarkerImages/' + markerImg + '" alt="" >',
+                                    html: '<label style="color:red;font-weight:bold;font-size:14px;white-space:nowrap;">(' + Seq + ')</><label style="color:black;font-weight:bold;font-size:12px;white-space:nowrap;">' + name + '</><img src="MarkerImages/' + markerImg + '" alt="" />',
                                     offset: { x: 12, y: 45 }
                                 },
                                 detail: '<div><img src="' + img + '" alt="" height="180" width="250" style="cursor: pointer;" onclick="' + imgIndex + '" ></img></div><br/><div style="background: #eeeeff;">ที่อยู่ : ' + adds + '</div> <div style="background: #eeeeff;">เบอร์โทรศัพท์ : ' + Tel + '</div>',

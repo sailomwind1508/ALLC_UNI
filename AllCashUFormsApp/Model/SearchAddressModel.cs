@@ -21,5 +21,6 @@ namespace AllCashUFormsApp.Model
         public string lane = "";
         public string billTo = "";
         public string Moo = "";
+        public string CustomerID = "";
     }
 }

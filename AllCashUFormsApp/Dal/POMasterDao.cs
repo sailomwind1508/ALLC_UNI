@@ -550,10 +550,66 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_POMaster);
             }
 
             msg = "end POMasterDao=>Update->List<tbl_POMaster>";
+            msg.WriteLog(null);
+
+            return ret != 0 ? 1 : 0;
+        }
+
+        public static int UpdateDate_POMaster(this List<tbl_POMaster> tbl_POMasters)
+        {
+            string msg = "start POMasterDao=>UpdateDate_POMaster";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    foreach (var tbl_POMaster in tbl_POMasters)
+                    {
+                        var updateData = db.tbl_POMaster.FirstOrDefault(x => x.DocNo == tbl_POMaster.Remark);
+                        if (updateData != null)
+                        {
+                            foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                            {
+                                foreach (PropertyInfo tbl_POMasterItem in tbl_POMaster.GetType().GetProperties())
+                                {
+                                    if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_POMasterItem.Name)
+                                    {
+                                        var value = tbl_POMasterItem.GetValue(tbl_POMaster, null);
+
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
+                                }
+                            }
+                            db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        }
+                        else
+                        {
+                            tbl_POMaster.Delete(db);
+                            tbl_POMaster.Insert(db);
+                        }
+
+                    }
+
+                    ret = db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMasters != null ? tbl_POMasters.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>UpdateDate_POMaster";
             msg.WriteLog(null);
 
             return ret != 0 ? 1 : 0;
@@ -713,7 +769,6 @@ namespace AllCashUFormsApp
             return list;
         }
 
-
         public static List<tbl_POMaster> GetPOMasterSingle(this tbl_POMaster tbl_POMaster, string _DocTypeCode, string _DocStatus, string _DocDate)
         {
             string msg = "start POMasterDao=>GetPOMasterSingle";
@@ -751,5 +806,122 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static int ValidatePOMaster(this tbl_POMaster tbl_POMaster, string _DocDate, string _WHID)
+        {
+            string msg = "start POMasterDao=>ValidatePOMaster";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = "SELECT TOP 1 1 AS Result FROM tbl_POMaster WHERE 1=1";
+
+                if (!string.IsNullOrEmpty(_DocDate))
+                    sql += " AND CAST(DocDate AS DATE) = '" + _DocDate + "'";
+
+                if (!string.IsNullOrEmpty(_WHID))
+                    sql += " AND WHID = '" + _WHID + "'";
+
+                var dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+
+                if (dt.Rows.Count > 0)
+                {
+                    ret = dt.Rows[0].Field<int>("Result");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>ValidatePOMaster";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static List<tbl_POMaster> GetPOMaster_ByWHID(this tbl_POMaster tbl_POMaster, string _DocDate, string WHID)
+        {
+            string msg = "start POMasterDao=>GetPOMaster_ByWHID";
+            msg.WriteLog(null);
+
+            var list = new List<tbl_POMaster>();
+            try
+            {
+                string sql = "SELECT * FROM tbl_POMaster WHERE 1=1";
+
+                if (!string.IsNullOrEmpty(_DocDate))
+                    sql += " AND CAST(DocDate AS DATE) = '" + _DocDate + "'";
+
+                if (!string.IsNullOrEmpty(WHID))
+                    sql += " AND WHID = '" + WHID.Trim() + "'";
+
+                sql += " ORDER BY AutoID ";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            msg = "end POMasterDao=>GetPOMaster_ByWHID";
+            msg.WriteLog(null);
+
+            return list;
+        }
+
+        public static int UpdateDatePOMaster(this List<tbl_POMaster> tbl_POMaster)
+        {
+            string msg = "start POMasterDao=>UpdateDatePOMaster";
+            msg.WriteLog(null);
+            
+            List<int> ret = new List<int>();
+            int ret1 = new int();
+            
+            try
+            {
+                for (int i = 0; i < tbl_POMaster.Count; i++)
+                {
+                    SqlConnection con = new SqlConnection(Connection.ConnectionString);
+                    string sql = "UPDATE tbl_POMaster ";
+                    sql += "SET DocDate = @DocDate";
+                    sql += ", EdDate = @EdDate";
+                    sql += ", EdUser = @EdUser";
+                    sql += ", Remark = @Remark";
+                    sql += ", DocNo = @DocNo";
+
+                    sql += " WHERE DocNo = '" + tbl_POMaster[i].Remark.Trim() + "'";
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Remark", tbl_POMaster[i].Remark.Trim());
+                    cmd.Parameters.AddWithValue("@DocDate", tbl_POMaster[i].DocDate);
+                    cmd.Parameters.AddWithValue("@EdDate", tbl_POMaster[i].EdDate);
+                    cmd.Parameters.AddWithValue("@EdUser", tbl_POMaster[i].EdUser);
+                    cmd.Parameters.AddWithValue("@DocNo", tbl_POMaster[i].DocNo);
+
+                    ret.Add(cmd.ExecuteNonQuery());
+                    con.Close();
+                }
+
+                if (ret.All(x=>x == 1))
+                    ret1 = 1;
+                else
+                    ret1 = 0;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+                ret1 = 0;
+            }
+
+            msg = "end POMasterDao=>UpdateDatePOMaster";
+            msg.WriteLog(null);
+
+            return ret1;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace AllCashUFormsApp.Controller
             catch (Exception ex)
             {
                 hitProList = null;
-                throw;
+                ex.WriteLog(this.GetType());
             }
 
             return hitProList;
@@ -54,7 +54,7 @@ namespace AllCashUFormsApp.Controller
             catch (Exception ex)
             {
                 hitProList = null;
-                throw;
+                ex.WriteLog(this.GetType());
             }
 
             return hitProList;

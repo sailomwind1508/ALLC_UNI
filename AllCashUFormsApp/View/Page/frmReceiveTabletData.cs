@@ -105,6 +105,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindSendData()
         {
+            Cursor.Current = Cursors.WaitCursor;
             DataTable dt = new DataTable();
 
             //last edit by sailom .k 05/07/2022-----------------------------------
@@ -159,10 +160,14 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
             //Last edit by sailom .k 04/07/2022-------------------------------------------------------------
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void BindTLGridview()
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             grdList.ClearSelection();
 
             var dt = bu.GetTLData(dtpSendDate.Value);
@@ -182,6 +187,7 @@ namespace AllCashUFormsApp.View.Page
 
             var dtOverStck = bu.GetOverStockPreOrderData(dtpSendDate.Value); //Check Over Stock in main stock(1000)
             //FormHelper.CheckOverStok1000(dtpSendDate.Value); //Check Over Stock in main stock(1000)
+            Cursor.Current = Cursors.Default;
         }
 
         private void Save(DataGridViewCellEventArgs e, DataGridView grid, int _event, string whid)
@@ -325,10 +331,20 @@ namespace AllCashUFormsApp.View.Page
                 var sendFlag = grdCalendar.Rows[e.RowIndex].Cells["colSendFlag"];
                 var pullFlag = grdCalendar.Rows[e.RowIndex].Cells["colPullFlag"];
                 var sendDate = grdCalendar.Rows[e.RowIndex].Cells["colDateSend"];
+                var receiveDate = grdCalendar.Rows[e.RowIndex].Cells["colReceiveDate"];
 
                 string _whid = whid.Value.ToString();
 
-                if (e.ColumnIndex == 5) //ยังไม่ส่งยอด
+                if (e.ColumnIndex == 4) //update date tbl_POMaster, tbl_SendData
+                {
+                    frmUpdateSendDate.whcode = _whid;
+                    frmUpdateSendDate.dateSend = Convert.ToDateTime(sendDate.Value);
+                    frmUpdateSendDate frm = new frmUpdateSendDate();
+                    frm.ShowDialog();
+
+                    btnSearch.PerformClick();
+                }
+                else if (e.ColumnIndex == 5) //ยังไม่ส่งยอด
                 {
                     sendFlag.Value = false;
                     pullFlag.Value = false;
@@ -440,7 +456,7 @@ namespace AllCashUFormsApp.View.Page
             try
             {
                 string whid = "";
-                DateTime docDate = new DateTime();
+                //DateTime docDate = new DateTime();
                 if (grdList.Rows.Count > 0)
                 {
                     List<int> checkList = new List<int>();

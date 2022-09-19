@@ -693,10 +693,9 @@ namespace AllCashUFormsApp.View.Page
 
                 Cursor.Current = Cursors.WaitCursor;
 
-                foreach (DataRow r in dtList.Rows)
-                {
-                    ret.Add(buSalAreaDistrict.InsertSalAreaDistrict(r));
-                }
+
+                ret.Add(buSalAreaDistrict.InsertSalAreaDistrict(dtList));
+                
 
                 if (ret.All(x => x == 1))
                 {

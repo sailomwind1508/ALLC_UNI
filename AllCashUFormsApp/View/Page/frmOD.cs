@@ -529,7 +529,8 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = poDt.ProductID;
                 invMm.ProductName = poDt.ProductName;
                 invMm.RefDocNo = poDt.DocNo;
-                invMm.TrnDate = crDate.ToDateTimeFormat();
+                //invMm.TrnDate = crDate.ToDateTimeFormat();
+                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat();//last edit by sailom .k 10/08/2022 
                 invMm.TrnType = "";
                 invMm.DocTypeCode = po.DocTypeCode;
                 invMm.WHID = po.WHID;
@@ -1000,11 +1001,24 @@ namespace AllCashUFormsApp.View.Page
 
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบสั่งสินค้า", "Form_OD.rpt", "Form_OD", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบสั่งสินค้า", "Form_OD.rdlc", "Form_OD", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                this.OpenReportingReportsNonPreViewPopup("ใบสั่งสินค้า", "Form_OD.rdlc", "Form_OD", _params);
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบสั่งสินค้า", "Form_OD.rpt", "Form_OD", _params);
+
+                this.OpenReportingReportsPopup("ใบสั่งสินค้า", "Form_OD.rdlc", "Form_OD", _params); //Reporting service by sailom 30/11/2021
+            }
 
             msg = "end frmOD=>btnPrint_Click";
             msg.WriteLog(this.GetType());

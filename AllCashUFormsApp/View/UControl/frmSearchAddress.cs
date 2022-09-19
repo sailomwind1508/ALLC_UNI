@@ -14,6 +14,7 @@ namespace AllCashUFormsApp.View.Page
     public partial class frmSearchAddress : Form
     {
         Province bu = new Province();
+        Customer buCustomer = new Customer();
         public frmSearchAddress()
         {
             InitializeComponent();
@@ -104,6 +105,11 @@ namespace AllCashUFormsApp.View.Page
             this.Close();
         }
 
+        public void updateAddress()
+        {
+
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             try
@@ -192,6 +198,32 @@ namespace AllCashUFormsApp.View.Page
                 frmSupplierInfo.SAM.lane = lane;
                 frmSupplierInfo.SAM.PostalCode = PostalCode;
                 frmSupplierInfo.SAM.billTo = BillTo;
+            }
+
+            var list = new List<tbl_ArCustomer>();
+            if (!string.IsNullOrEmpty(frmCustomerInfo._CustomerID))
+            {
+                list = buCustomer.SelectCustomerList(frmCustomerInfo._CustomerID);
+            }
+
+            if (list.Count > 0)
+            {
+                list[0].DistrictID = Convert.ToInt32(cbbDistrict.SelectedValue);
+                list[0].AreaID = Convert.ToInt32(cbbArea.SelectedValue);
+                list[0].ProvinceID = Convert.ToInt32(cbbProvince.SelectedValue);
+                list[0].AddressNo = txtAddressNo.Text.Trim();
+                list[0].Street = txtStreet.Text.Trim();
+                list[0].lane = txtLane.Text.Trim();
+                list[0].PostalCode = txtPostalCode.Text.Trim();
+                list[0].Moo = txtMoo.Text.Trim();
+                list[0].BillTo = BillTo.Trim();
+            }
+
+            int ret = 0;
+
+            if (list.Count > 0)
+            {
+                ret = buCustomer.UpdateData(list[0]);
             }
         }
 

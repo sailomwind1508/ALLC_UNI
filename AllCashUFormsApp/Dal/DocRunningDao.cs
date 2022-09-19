@@ -197,6 +197,7 @@ namespace AllCashUFormsApp
             catch (Exception ex)
             {
                 //ex.WriteLog(tbl_DocRunning);
+                ex.WriteLog(null);
             }
 
             msg = "end DocRunningDao=>UpdateList";

@@ -2305,6 +2305,11 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_SalAreaDistrict().SelectAll();
         }
 
+        public List<tbl_SalAreaDistrict> GetSaleAreaDistrict(string salAreaID)
+        {
+            return new tbl_SalAreaDistrict().SelectSingle(salAreaID);
+        }
+
         public List<tbl_ArCustomer> GetCustomer(Func<tbl_ArCustomer, bool> condition = null)
         {
             if (condition != null)
@@ -2420,6 +2425,13 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_SalArea().SelectAll();
         }
 
+        public tbl_SalArea GetSaleArea(string salAreaID)
+        {
+            
+                return new tbl_SalArea().SelectSingle(salAreaID);
+           
+        }
+
         public List<tbl_Zone> GetZone(Func<tbl_Zone, bool> condition = null)
         {
             if (condition != null)
@@ -2521,6 +2533,38 @@ namespace AllCashUFormsApp.Controller
             return ret;
         }
 
+        /// <summary>
+        /// revers iv master - details edit by sailom.k 09/09/2022
+        /// </summary>
+        public bool ReverseVE(string ivDocNo)
+        {
+            bool ret = false;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand("proc_update_customer_sap_code_fix", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 0;
+                    cmd.Parameters.Add(new SqlParameter("@DocNo", ivDocNo.Trim()));
+                    var result = cmd.ExecuteNonQuery();
+                    ret = true;
+
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
+
         public bool VerifyIVDetails(string ivDocNo, string poDocNo)
         {
             try
@@ -2577,6 +2621,42 @@ namespace AllCashUFormsApp.Controller
                 return new tbl_HQ_SKUGroup_EXC().Select(condition);
             else
                 return new tbl_HQ_SKUGroup_EXC().SelectAll();
+        }
+
+        /// <summary>
+        /// Find line number from product
+        /// </summary>
+        /// <param name="poDTList"></param>
+        /// <returns></returns>
+        public Dictionary<string, short> FindProductLineNumber(List<tbl_PODetail> poDTList)
+        {
+            try
+            {
+                //Find line number from product edit by sailom .k 15/09/2022----------------
+                Dictionary<string, short> listProductSeq = new Dictionary<string, short>();
+                short lineNumber = 0;
+
+                if (this.tbl_Product != null && this.tbl_Product.Count > 0)
+                {
+                    var tmpProducts = this.tbl_Product.Where(x => poDTList.Select(a => a.ProductID).ToList().Contains(x.ProductID))
+                        .OrderBy(b => b.ProductGroupID).ThenBy(c => c.ProductSubGroupID).ThenBy(d => d.Seq).ToList();
+
+                    foreach (var item in tmpProducts)
+                    {
+                        listProductSeq.Add(item.ProductID, lineNumber);
+                        lineNumber++;
+                    }
+                }
+                //Find line number from product edit by sailom .k 15/09/2022----------------
+
+                return listProductSeq;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return new Dictionary<string, short>();
+            }
+
         }
     }
 }

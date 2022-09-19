@@ -129,24 +129,14 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                string _WareHouseID = "";
-                var _WHID = bu.GetBranchWarehouse(x => x.WHName == txtWHName.Text);
-
-                if (_WHID != null)
-                {
-                    _WareHouseID = _WHID.WHID;
-                }
-                else
-                {
-                    _WareHouseID = "";
-                }
+                var tbl_BranchWarehouse = bu.GetBranchWarehouse(x => x.WHName == txtWHName.Text);
 
                 string _SalAreaID = ddlSalArea.SelectedValue.ToString() != "" ? ddlSalArea.SelectedValue.ToString() : "";
 
                 Dictionary<string, object> _params = new Dictionary<string, object>();
                 _params.Add("@SalAreaID", _SalAreaID);
-                _params.Add("@CustName", "");
-                _params.Add("@WHID", _WareHouseID);
+                _params.Add("@CustName", txtSearch.Text.Trim());
+                _params.Add("@WHID", tbl_BranchWarehouse != null ? tbl_BranchWarehouse.WHID : "");
 
                 var dt = bu.GetTransferCustomerData(_params);
 

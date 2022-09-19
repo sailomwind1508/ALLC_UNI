@@ -540,7 +540,8 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = prDt.ProductID;
                 invMm.ProductName = prDt.ProductName;
                 invMm.RefDocNo = prDt.DocNo;
-                invMm.TrnDate = crDate.ToDateTimeFormat();
+                //invMm.TrnDate = crDate.ToDateTimeFormat();
+                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat();//last edit by sailom .k 10/08/2022 
                 invMm.TrnType = "I";
                 invMm.DocTypeCode = pr.DocTypeCode;
 
@@ -1150,10 +1151,24 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-        
-            this.OpenReportingReportsPopup("ใบทำลายสินค้า", "Form_RJ.rdlc", "Form_RJ", _params); //Reporting service by sailom 30/11/2021
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบทำลายสินค้า", "Form_RJ.rdlc", "Form_RJ", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+
+                this.OpenReportingReportsPopup("ใบทำลายสินค้า", "Form_RJ.rdlc", "Form_RJ", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)

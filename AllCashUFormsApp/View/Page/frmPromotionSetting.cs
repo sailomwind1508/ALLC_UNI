@@ -2380,7 +2380,7 @@ namespace AllCashUFormsApp.View.Page
                 string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
                 msg.ShowInfoMessage();
 
-                btnRefresh_Branch.PerformClick();
+                //btnRefresh_Branch.PerformClick(); //edit by sailom.k 01/08/2022
                 //btnSearch.PerformClick();
             }
             else

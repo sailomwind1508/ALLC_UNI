@@ -503,7 +503,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(588, 6);
+            this.btnSearch.Location = new System.Drawing.Point(567, 6);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(115, 26);
             this.btnSearch.TabIndex = 245;
@@ -518,7 +518,7 @@ namespace AllCashUFormsApp.View.Page
             this.txtSearch.Location = new System.Drawing.Point(285, 8);
             this.txtSearch.MaxLength = 200;
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(296, 23);
+            this.txtSearch.Size = new System.Drawing.Size(277, 23);
             this.txtSearch.TabIndex = 244;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 

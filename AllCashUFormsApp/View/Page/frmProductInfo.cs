@@ -51,29 +51,41 @@ namespace AllCashUFormsApp.View.Page
             string msg = "start frmProductInfo=>btnSearch_Click";
             msg.WriteLog(this.GetType());
 
-            pnlEdit.ClearControl();
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
 
-            OpenPanelEdit(false);
+                pnlEdit.ClearControl();
 
-            SetDefaultNumber();
+                OpenPanelEdit(false);
 
-            dtProduct = new DataTable();
+                SetDefaultNumber();
 
-            int _flagDel = rdoN.Checked ? 0 : 1;
-            int _ProductGroupID = ddlPrdGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPrdGroup.SelectedValue);
-            int _ProductSubGroupID = ddlPrdSubGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPrdSubGroup.SelectedValue);
+                dtProduct = new DataTable();
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@flagDel", _flagDel);
-            _params.Add("@ProductGroupID", _ProductGroupID);
-            _params.Add("@ProductSubGroupID", _ProductSubGroupID);
-            _params.Add("@Search", txtSearch.Text);
-            dtProduct = bu.proc_tbl_Product_Data(_params);
-            grdPro.DataSource = dtProduct;
-            lblgrdQty.Text = dtProduct.Rows.Count.ToNumberFormat();
+                int _flagDel = rdoN.Checked ? 0 : 1;
+                int _ProductGroupID = ddlPrdGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPrdGroup.SelectedValue);
+                int _ProductSubGroupID = ddlPrdSubGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPrdSubGroup.SelectedValue);
 
-            SetControl_PanelSearch();
-            SelectProductDetails(null);
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@flagDel", _flagDel);
+                _params.Add("@ProductGroupID", _ProductGroupID);
+                _params.Add("@ProductSubGroupID", _ProductSubGroupID);
+                _params.Add("@Search", txtSearch.Text);
+                dtProduct = bu.proc_tbl_Product_Data(_params);
+                grdPro.DataSource = dtProduct;
+                lblgrdQty.Text = dtProduct.Rows.Count.ToNumberFormat();
+
+                SetControl_PanelSearch();
+                SelectProductDetails(null);
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+                Cursor.Current = Cursors.Default;
+            }
 
             msg = "end frmProductInfo=>btnSearch_Click";
             msg.WriteLog(this.GetType());
@@ -87,6 +99,7 @@ namespace AllCashUFormsApp.View.Page
             flagNew = true;
 
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnRemove.Enabled = false;
 
             pnlGridView.Enabled = false;
             grdPro.Enabled = false;
@@ -94,6 +107,7 @@ namespace AllCashUFormsApp.View.Page
             pnlEdit.ClearControl();
 
             OpenPanelEdit(true);
+            rdoCancel.Enabled = false;
 
             SetProductUomTable();
 
@@ -227,6 +241,7 @@ namespace AllCashUFormsApp.View.Page
             ddlProUom.Enabled = true;
 
             rdoNormal.Checked = true;
+            rdoCancel.Enabled = false;
 
             msg = "end frmProductInfo=>btnCopy_Click";
             msg.WriteLog(this.GetType());
@@ -251,6 +266,11 @@ namespace AllCashUFormsApp.View.Page
 
             txtProductRefCode.Focus();
 
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+                rdoCancel.Enabled = true;
+            else
+                rdoCancel.Enabled = false;
+
             msg = "end frmProductInfo=>btnEdit_Click";
             msg.WriteLog(this.GetType());
         }
@@ -259,6 +279,8 @@ namespace AllCashUFormsApp.View.Page
         {
             string msg = "start frmProductInfo=>btnCancel_Click";
             msg.WriteLog(this.GetType());
+
+            Cursor.Current = Cursors.WaitCursor;
 
             flagNew = true;
 
@@ -282,6 +304,8 @@ namespace AllCashUFormsApp.View.Page
             SelectProductDetails(null);
 
             SetControl_PanelSearch();
+
+            Cursor.Current = Cursors.Default;
 
             msg = "end frmProductInfo=>btnCancel_Click";
             msg.WriteLog(this.GetType());
@@ -314,6 +338,8 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
 
+                Cursor.Current = Cursors.WaitCursor;
+
                 var PrdList = bu.SelectProductList(txtProductID.Text);
 
                 if (flagNew == true)
@@ -322,9 +348,11 @@ namespace AllCashUFormsApp.View.Page
                         return;
                 }
 
+                var ProductUomSet = bu.GetProductUomSet_Single(txtProductID.Text); //adisorn 10/08/2022
+
                 if (PrdList != null && PrdList.Count > 0) //Remove OldData tbl_ProductUomSet , tbl_ProductPriceGroup
                 {
-                    Remove_ProductUomSet();
+                    Remove_ProductUomSet(ProductUomSet);
                     Remove_ProductPriceGroup();
                 }
 
@@ -347,6 +375,21 @@ namespace AllCashUFormsApp.View.Page
                         PrdUomSet.UomSetName = PrdUom.FirstOrDefault(x => x.ProductUomID == _Unit).ProductUomName;
                         PrdUomSet.BaseQty = Convert.ToInt32(BaseQty);
                         PrdUomSet.Weight = Convert.ToDecimal(grdPrdUom.Rows[i].Cells["colWeight"].Value);
+
+
+                        if (ProductUomSet.Count > 0) //26-07-2022 Adisorn ดึงUomCode จากหน่วยเก่า มาใช้
+                        {
+                            var uomCode = ProductUomSet.FirstOrDefault(x => x.UomSetID == _Unit);
+                            if (uomCode != null)
+                                PrdUomSet.UomCode = uomCode.UomCode;
+                            else
+                                PrdUomSet.UomCode = "";
+                        }
+                        else
+                        {
+                            PrdUomSet.UomCode = "";
+                        }
+                        
                         PrePareSave_ProductUomSet(PrdUomSet);
                         PrdUomSetList.Add(PrdUomSet);
 
@@ -373,7 +416,7 @@ namespace AllCashUFormsApp.View.Page
 
                 if (PrdUomSetList.Count > 0)//SaveProductUomSet
                 {
-                    foreach (var data in PrdUomSetList)
+                    foreach (var data in PrdUomSetList)     
                     {
                         ret.Add(bu.UpdateData(data));
                     }
@@ -406,9 +449,12 @@ namespace AllCashUFormsApp.View.Page
                 {
                     this.ShowProcessErr();
                 }
+
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 ex.Message.ShowErrorMessage();
             }
 
@@ -1045,12 +1091,24 @@ namespace AllCashUFormsApp.View.Page
 
             if (rdoC.Checked == true)
                 btnAdd.Enabled = false;
+
+            //09/09/2022 adisorn -> admin and superadmin will delete customer data only 
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+                btnRemove.Enabled = true;
+            else
+                btnRemove.Enabled = false;
         }
 
         private void SelectProductDetails(DataGridViewCellEventArgs e)
         {
             try
             {
+                //09/09/2022 adisorn -> admin and superadmin will delete customer data only 
+                if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+                    btnRemove.Enabled = true;
+                else
+                    btnRemove.Enabled = false;
+
                 DataGridViewRow gridViewRow = null;
 
                 if (e != null)
@@ -1271,13 +1329,12 @@ namespace AllCashUFormsApp.View.Page
             return ret;
         }
 
-        private void Remove_ProductUomSet()
+        private void Remove_ProductUomSet(List<tbl_ProductUomSet> ProductUomSets)
         {
             int ret = 0;
-            var PrdUomSetList = bu.GetProductUOMSet(x => x.ProductID == txtProductID.Text);
-            if (PrdUomSetList.Count > 0)
+            if (ProductUomSets.Count > 0)
             {
-                foreach (var data in PrdUomSetList)
+                foreach (var data in ProductUomSets)
                 {
                     ret = bu.RemoveData(data);
                 }
@@ -1347,7 +1404,8 @@ namespace AllCashUFormsApp.View.Page
             PrdUomSet.ProductID = txtProductID.Text;
 
             PrdUomSet.StandardCost = null;
-            PrdUomSet.UomCode = "";
+
+            //PrdUomSet.UomCode = "";//Fix
 
             PrdUomSet.BaseUomID = Convert.ToInt32(ddlProUom.SelectedValue);
             PrdUomSet.BaseUomName = ddlProUom.Text;
@@ -1384,6 +1442,11 @@ namespace AllCashUFormsApp.View.Page
 
                 prdData.EdDate = null;
                 prdData.EdUser = null;
+
+                prdData.ProductLine = 0;
+                prdData.ProductBrandID = 0;
+
+                prdData.ProductImg = null; //ไม่Upload Image
             }
 
             if (PrdUomSetList.Count > 0)
@@ -1428,11 +1491,6 @@ namespace AllCashUFormsApp.View.Page
             prdData.FlagNew = false;
             prdData.FlagEdit = false;
 
-            prdData.ProductImg = null; //ไม่Upload Image
-
-            prdData.ProductBrandID = 0;
-            prdData.ProductLine = 0;
-
             decimal _sellPrice = 0;
             prdData.SellPrice = _sellPrice.ToDecimalN2();
 
@@ -1443,5 +1501,47 @@ namespace AllCashUFormsApp.View.Page
         }
 
         #endregion
+
+        private void btnUpdateProduct_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                if (Connection.ConnectionString.Contains("DB_SDSS_UNI_CENTER"))
+                {
+                    //print no load customer data
+                }
+                else
+                    bu.GetAllData();
+
+                bu.tbl_AdmFormList = bu.GetAllFromMenu();
+                bu.tbl_DocumentType = bu.GetDocumentType();
+                bu.tbl_MstMenu = bu.GetAllMenuData();
+
+                //prod.GetAllData();
+                bu.tbl_ProductUom = bu.GetUOM();
+                bu.tbl_ProductUomSet = bu.GetUOMSet();
+                bu.tbl_DiscountType = bu.GetDiscountType();
+
+                //edit by sailom .k 14/12/2021------------------------------------------
+                bu.tbl_Branchs = bu.GetBranch();
+                bu.tbl_Companies = bu.GetAllCompany();
+                bu.tbl_ProductPriceGroup = bu.GetProductPriceGroup();
+                //edit by sailom .k 14/12/2021------------------------------------------
+
+                bu.tbl_SalArea = bu.GetAllSaleArea();
+                bu.tbl_SalAreaDistrict = bu.GetAllSaleAreaDistrict();
+                bu.tbl_Product = bu.GetProductNonFlag(); //for support when user open old document have a cancel product!! last edit by sailom.k 05/05/2022
+                bu.tbl_ProductGroup = bu.GetProductGroup();
+                bu.tbl_ProductSubGroup = bu.GetProductSubGroup();
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                Cursor.Current = Cursors.Default;
+            }
+        }
     }
 }

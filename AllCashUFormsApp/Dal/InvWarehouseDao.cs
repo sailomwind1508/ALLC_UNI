@@ -14,28 +14,28 @@ namespace AllCashUFormsApp
 {
     public static class InvWarehouseDao
     {
-        public static int ReCalc(this tbl_InvWarehouse tbl_InvWarehouse, string whid, string prodIDs)
-        {
-            try
-            {
-                int ret = 0;
+        //public static int ReCalc(this tbl_InvWarehouse tbl_InvWarehouse, string whid, string prodIDs)
+        //{
+        //    try
+        //    {
+        //        int ret = 0;
 
-                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
-                sqlParmas.Add("@WHID", whid);
-                sqlParmas.Add("@ProductIDs", prodIDs);
+        //        Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+        //        sqlParmas.Add("@WHID", whid);
+        //        sqlParmas.Add("@ProductIDs", prodIDs);
 
-                string sql = "proc_calc_invwarehouse";
+        //        string sql = "proc_calc_invwarehouse";
 
-                ret = My_DataTable_Extensions.ExecuteSQLScalar(sql, CommandType.StoredProcedure, sqlParmas);
+        //        ret = My_DataTable_Extensions.ExecuteSQLScalar(sql, CommandType.StoredProcedure, sqlParmas);
 
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(null);
-                return 0;
-            }
-        }
+        //        return ret;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.WriteLog(null);
+        //        return 0;
+        //    }
+        //}
 
         public static List<tbl_InvWarehouse> Select(this tbl_InvWarehouse tbl_InvWarehouse, string whID)
         {
@@ -300,6 +300,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_InvWarehouse);
             }
 
@@ -560,6 +561,7 @@ namespace AllCashUFormsApp
                                 trans.Rollback();
                                 conn.Close();
                                 ret = 0;
+                                ex.WriteLog(null);
                             }
                         }
                     }

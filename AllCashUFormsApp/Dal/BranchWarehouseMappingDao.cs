@@ -22,7 +22,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(null);
             }
 
             return list;
@@ -38,7 +38,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
-
+                ex.WriteLog(null);
             }
 
             return dt;

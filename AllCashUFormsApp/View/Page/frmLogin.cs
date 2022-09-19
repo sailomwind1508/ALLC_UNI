@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -53,6 +54,20 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
+            //frmLogin loginForm = new frmLogin();
+            //Application.Run(loginForm);
+
+            //if (loginForm.UserSuccessfullyAuthenticated)
+            //{
+            //    // MainForm is defined elsewhere
+            //    Application.Run(new MainForm());
+            //}
+
+            //this.Hide();
+            //frmLogin sistema = new frmLogin();
+            //Application.Run(sistema);
+            //this.Close();
+
             this.SetTitleForm();
             depoList = bu.GetConfigData();
 
@@ -116,7 +131,13 @@ namespace AllCashUFormsApp.View.Page
 
                         Helper.tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower() && x.Password == txtPassword.Text);
 
-                        cust.GetAllData();
+                        if (Connection.ConnectionString.Contains("DB_SDSS_UNI_CENTER"))
+                        {
+                            //print no load customer data
+                        }
+                        else
+                            cust.GetAllData();
+
                         bu.tbl_AdmFormList = bu.GetAllFromMenu();
                         bu.tbl_DocumentType = bu.GetDocumentType();
                         bu.tbl_MstMenu = bu.GetAllMenuData();
@@ -254,7 +275,7 @@ namespace AllCashUFormsApp.View.Page
             {
                 try
                 {
-                    l_oConnection.Open();                   
+                    l_oConnection.Open();
                     l_oConnection.Close();
                 }
                 catch (SqlException)
@@ -268,6 +289,12 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            //Process[] p = Process.GetProcessesByName("U-Force Back-End");
+            //foreach (var item in p)
+            //{
+            //    item.Kill();
+            //}
+
             Application.Exit();
         }
 

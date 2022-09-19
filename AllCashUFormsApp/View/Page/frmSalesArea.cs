@@ -29,17 +29,6 @@ namespace AllCashUFormsApp.View.Page
         public frmSalesArea()
         {
             InitializeComponent();
-            this.Load += frmSalesArea_Load;
-
-            treeView1.AfterCheck += treeView1_AfterCheck;
-
-            btnSave.Click += btnSave_Click;
-            btnClose.Click += btnClose_Click;
-
-            grdProvince.CellClick += grdProvince_CellClick;
-            grdProvince.RowPostPaint += grdProvince_RowPostPaint;
-
-            this.FormClosed += frmSalesArea_FormClosed;
         }
 
         #region Private_Method
@@ -75,71 +64,97 @@ namespace AllCashUFormsApp.View.Page
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
 
+            var dtProvince = new DataTable("Province");
+            dtProvince.Columns.Add("ProvinceCode", typeof(string));
+            dtProvince.Columns.Add("ProvinceName", typeof(string));
+            dtProvince.Columns.Add("ProvinceID", typeof(int));
+
             var provinceDT = bu.GetProvinceFromSalAreaDistrict();
-            provinceDT.Rows.Add("", "");
-            grdProvince.DataSource = provinceDT;
 
             if (provinceDT.Rows.Count > 0)
+            {
+                foreach (DataRow r in provinceDT.Rows)
+                {
+                    dtProvince.Rows.Add(r["ProvinceCode"], r["ProvinceName"], r["ProvinceID"]);
+                }
+            }
+
+            dtProvince.Rows.Add(null, null , null);
+
+            grdProvince.DataSource = dtProvince;
+
+            if (dtProvince.Rows.Count > 0)
                 btnSave.Enabled = true;
         }
 
-        private void SetProvinceData()
+        private void SetProvinceData(int rowIndex)
         {
-            string _key = grdProvince.CurrentRow.Cells["colProvinceID"].Value.ToString();
-            string _value = grdProvince.CurrentRow.Cells["colProvinceCode"].Value.ToString() + ":" + grdProvince.CurrentRow.Cells["colProvinceName"].Value.ToString();
+            //string _key = grdProvince.CurrentRow.Cells["colProvinceID"].Value.ToString();
+            //string _value = grdProvince.CurrentRow.Cells["colProvinceCode"].Value.ToString() + ":" + grdProvince.CurrentRow.Cells["colProvinceName"].Value.ToString();
+            string _key = grdProvince.Rows[rowIndex].Cells["colProvinceID"].Value.ToString();
+            string _value = grdProvince.Rows[rowIndex].Cells["colProvinceCode"].Value.ToString() + ":" + grdProvince.Rows[rowIndex].Cells["colProvinceName"].Value.ToString();
 
             treeView1.Nodes.Add(_key, _value);
+            if (treeView1.Nodes.Count == 0)
+            {
+                treeView1.Nodes[0].Checked = tempSalAreaDistrict.Rows.Count > 0 ? true : false;
+            }
+            else
+            {
+                var lastnode = treeView1.Nodes.Find(_key, true);
+                treeView1.Nodes[lastnode[0].Index].Checked = tempSalAreaDistrict.Rows.Count > 0 ? true : false;
+            }
 
-            treeView1.Nodes[0].Checked = tempSalAreaDistrict.Rows.Count > 0 ? true : false;
         }
 
-        private void SetAreaData()
+        private void SetDataToTreeView()
         {
+            //Area
+            int indexProvince = 0;
+            string _areaID = "";
+
             for (int i = 0; i < tempArea.Count; i++)
             {
                 string _ProvinceID1 = tempArea[i].ProvinceID.ToString();
-                int index = treeView1.Nodes.IndexOfKey(_ProvinceID1);
+                indexProvince = treeView1.Nodes.IndexOfKey(_ProvinceID1);
 
-                string _key = tempArea[i].AreaID.ToString();
+                _areaID = tempArea[i].AreaID.ToString();
                 string _value = tempArea[i].AreaCode + ":" + tempArea[i].AreaName;
 
-                treeView1.Nodes[index].Nodes.Add(_key, _value);
+                treeView1.Nodes[indexProvince].Nodes.Add(_areaID, _value);
 
                 DataRow r = tempSalAreaDistrict.AsEnumerable().FirstOrDefault(x => x.Field<string>("AreaCode") == tempArea[i].AreaCode);
-                treeView1.Nodes[index].Nodes[i == 0 ? 0 : i].Checked = r != null ? true : false;
+                treeView1.Nodes[indexProvince].Nodes[i == 0 ? 0 : i].Checked = r != null ? true : false;
             }
-        }
 
-        private void SetDistrictData()
-        {
+            //District
             for (int i = 0; i < tempDistrict.Count; i++)
             {
                 string _DistrictID = tempDistrict[i].DistrictID.ToString();
                 string _AreaID = tempDistrict[i].AreaID.ToString();
                 string _FullName = tempDistrict[i].DistrictCode + ":" + tempDistrict[i].DistrictName;
 
-                int AreaIndex = treeView1.Nodes[0].Nodes.IndexOfKey(_AreaID);
+                int AreaIndex = treeView1.Nodes[indexProvince].Nodes.IndexOfKey(_AreaID);
 
                 DataRow r = tempSalAreaDistrict.AsEnumerable().FirstOrDefault(x => x.Field<string>("DistrictCode") == tempDistrict[i].DistrictCode);
 
-                treeView1.Nodes[0].Nodes[AreaIndex].Nodes.Add(_DistrictID, _FullName);
+                treeView1.Nodes[indexProvince].Nodes[AreaIndex].Nodes.Add(_DistrictID, _FullName);
 
-                if (treeView1.Nodes[0].Nodes[AreaIndex].FirstNode == null)
+                if (treeView1.Nodes[indexProvince].Nodes[AreaIndex].FirstNode == null)
                 {
-                    treeView1.Nodes[0].Nodes[AreaIndex].Nodes[0].Checked = r != null ? true : false;
+                    treeView1.Nodes[indexProvince].Nodes[AreaIndex].Nodes[0].Checked = r != null ? true : false;
                 }
                 else
                 {
-                    treeView1.Nodes[0].Nodes[AreaIndex].LastNode.Checked = r != null ? true : false;
+                    treeView1.Nodes[indexProvince].Nodes[AreaIndex].LastNode.Checked = r != null ? true : false;
                 }
             }
         }
 
-        private void SetTreeViewData()
+        private void SetTreeViewData(int rowIndex = 0)
         {
-            SetProvinceData();
-            SetAreaData();
-            SetDistrictData();
+            SetProvinceData(rowIndex);
+            SetDataToTreeView();
         }
 
         private void SelectDetails(DataGridViewCellEventArgs e)
@@ -162,6 +177,8 @@ namespace AllCashUFormsApp.View.Page
                     _columnIndex = grdProvince.CurrentCell.ColumnIndex;
                     _rowIndex = grdProvince.CurrentRow.Index;
                 }
+
+                Cursor.Current = Cursors.WaitCursor;
 
                 if (grdProvince.Columns[_columnIndex].Name == "colSearch")
                 {
@@ -197,8 +214,33 @@ namespace AllCashUFormsApp.View.Page
                             var dt = (DataTable)grdProvince.DataSource;
                             dt.Rows[_rowIndex].Delete();
                             dt.Rows.Add(_ProvinceCode, _ProvinceName, Convert.ToInt32(_ProvinceID));
-                            dt.Rows.Add("", "", null);
+                            dt.Rows.Add(null, null, null);
                             grdProvince.DataSource = dt;
+
+                            if (grdProvince.RowCount > 1)
+                            {
+                                tempArea = null;
+                                tempDistrict = null;
+                                tempSalAreaDistrict = null;
+                                treeView1.Nodes.Clear();
+
+                                string _WHID = bu.tbl_Branchs[0].BranchID + "V01";
+                                for (int i = 0; i < grdProvince.RowCount; i++)
+                                {
+                                    string _colName = grdProvince.Rows[i].Cells[0].Value.ToString();
+                                    if (!string.IsNullOrEmpty(_colName))
+                                    {
+                                        int _ProvinceID = Convert.ToInt32(grdProvince.Rows[i].Cells["colProvinceID"].Value);
+                                        tempSalAreaDistrict = bu.GetSalAreaDistrictByProvince(_ProvinceID, _WHID);
+
+                                        tempArea = bu.GetMstArea(x => x.FlagDel == false && x.ProvinceID == _ProvinceID);
+                                        List<int> filterAreaID = tempArea.Select(x => x.AreaID).ToList();
+                                        tempDistrict = bu.GetMstDistrict(x => filterAreaID.Contains(Convert.ToInt32(x.AreaID)));
+
+                                        SetTreeViewData(i);
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -210,38 +252,60 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(grdProvince.CurrentRow.Cells[0].Value.ToString()))
+                    {
+                        return;
+                    }
+
                     tempArea = null;
                     tempDistrict = null;
                     tempSalAreaDistrict = null;
                     treeView1.Nodes.Clear();
 
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    branch = bu.GetBranch();
+                    branch = bu.tbl_Branchs;
 
                     if (branch.Count > 0)
                     {
                         string _WHID = branch[0].BranchID + "V01";
 
-                        string colName = grdProvince.CurrentRow.Cells[_columnIndex].Value.ToString();
-                        if (!string.IsNullOrEmpty(colName))
+                        if (grdProvince.RowCount > 1)
                         {
-                            //ถ้าไม่มีข้อมูล ให้เช็ค ว่าจังหวัดนั้น WHID = '' 
-                            int _ProvinceID = Convert.ToInt32(grdProvince.CurrentRow.Cells["colProvinceID"].Value);
-                            tempSalAreaDistrict = bu.GetSalAreaDistrictByProvince(_ProvinceID, _WHID);
+                            for (int i = 0; i < grdProvince.RowCount; i++)
+                            {
+                                string _colName = grdProvince.Rows[i].Cells[0].Value.ToString();
+                                if (!string.IsNullOrEmpty(_colName))
+                                {
+                                    int _ProvinceID = Convert.ToInt32(grdProvince.Rows[i].Cells["colProvinceID"].Value);
+                                    tempSalAreaDistrict = bu.GetSalAreaDistrictByProvince(_ProvinceID, _WHID);
 
-                            tempArea = bu.GetMstArea(x => x.FlagDel == false && x.ProvinceID == _ProvinceID);
-                            List<int> filterAreaID = tempArea.Select(x => x.AreaID).ToList();
-                            tempDistrict = bu.GetMstDistrict(x => filterAreaID.Contains(Convert.ToInt32(x.AreaID)));
+                                    tempArea = bu.GetMstArea(x => x.FlagDel == false && x.ProvinceID == _ProvinceID);
+                                    List<int> filterAreaID = tempArea.Select(x => x.AreaID).ToList();
+                                    tempDistrict = bu.GetMstDistrict(x => filterAreaID.Contains(Convert.ToInt32(x.AreaID)));
 
-                            SetTreeViewData();
+                                    SetTreeViewData(i);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            string colName = grdProvince.CurrentRow.Cells[_columnIndex].Value.ToString();
+                            if (!string.IsNullOrEmpty(colName))
+                            {
+                                //ถ้าไม่มีข้อมูล ให้เช็ค ว่าจังหวัดนั้น WHID = '' 
+                                int _ProvinceID = Convert.ToInt32(grdProvince.CurrentRow.Cells["colProvinceID"].Value);
+                                tempSalAreaDistrict = bu.GetSalAreaDistrictByProvince(_ProvinceID, _WHID);
+
+                                tempArea = bu.GetMstArea(x => x.FlagDel == false && x.ProvinceID == _ProvinceID);
+                                List<int> filterAreaID = tempArea.Select(x => x.AreaID).ToList();
+                                tempDistrict = bu.GetMstDistrict(x => filterAreaID.Contains(Convert.ToInt32(x.AreaID)));
+
+                                SetTreeViewData(grdProvince.CurrentRow.Index);
+                            }
                         }
                     }
-
-                    Cursor.Current = Cursors.Default;
                 }
-
-
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -252,138 +316,19 @@ namespace AllCashUFormsApp.View.Page
         private List<TreeNode> CheckedNodes()
         {
             List<TreeNode> checked_nodes = new List<TreeNode>();
-
-            for (int i = 0; i < treeView1.Nodes[0].Nodes.Count; i++)
+            for (int i = 0; i < treeView1.Nodes.Count; i++)
             {
-                if (treeView1.Nodes[0].Nodes[i].Checked == true)
+                for (int x = 0; x < treeView1.Nodes[i].Nodes.Count; x++)
                 {
-                    checked_nodes.Add(treeView1.Nodes[0].Nodes[i]);
-                }
-            }
-
-            return checked_nodes;
-        }
-
-        private void Save()
-        {
-            List<int> ret = new List<int>();
-            string msg = "";
-
-            try
-            {
-                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-                string title = "ยืนยันการบันทึก!!";
-
-                if (!cfMsg.ConfirmMessageBox(title))
-                    return;
-
-                List<TreeNode> AreaTreeNode = CheckedNodes();
-
-                if (AreaTreeNode.Count == 0)
-                {
-                    msg = "กรุณาเลือกเขตการขาย !!";
-                    msg.ShowWarningMessage();
-                    return;
-                }
-
-                Cursor.Current = Cursors.WaitCursor;
-
-                string _WHID = "";
-                if (branch.Count > 0)
-                {
-                    _WHID = branch[0].BranchID + "V01";
-                }
-
-                int ret2 = bu.DeleteByWHID(_WHID); //ลบแค่ V01 ,ไม่ต้องสนว่าจะมีข้อมูล
-
-                var list = new List<tbl_SalAreaDistrict>();
-
-                for (int i = 0; i < AreaTreeNode.Count; i++)
-                {
-                    int indexArea = AreaTreeNode[i].Index;
-
-                    for (int x = 0; x < treeView1.Nodes[0].Nodes[indexArea].Nodes.Count; x++)//District
+                    if (treeView1.Nodes[i].Nodes[x].Checked == true)
                     {
-                        if (!treeView1.Nodes[0].Nodes[indexArea].Nodes[x].Checked)
-                            continue;
-
-                        List<char> areaText = treeView1.Nodes[0].Nodes[indexArea].Nodes[x].Parent.Text.ToCharArray().ToList();
-                        string _AreaName = "";
-
-                        for (int y = 0; y < areaText.Count; y++)
-                        {
-                            string text = areaText[y].ToString();
-                            if (!TempCode.Contains(text) && text != ":")
-                            {
-                                _AreaName += text;
-                            }
-                        }
-
-                        List<char> districtText = treeView1.Nodes[0].Nodes[indexArea].Nodes[x].Text.ToCharArray().ToList();
-                        string _DistrictCode = "";
-                        string _DistrictName = "";
-
-                        for (int z = 0; z < districtText.Count; z++)
-                        {
-                            string text = districtText[z].ToString();
-
-                            if (!TempCode.Contains(text) && text != ":")
-                            {
-                                _DistrictName += text;
-                            }
-                            else if (TempCode.Contains(text))
-                            {
-                                _DistrictCode += text;
-                            }
-                        }
-
-                        var data = new tbl_SalAreaDistrict();
-                        data.ProvinceName = grdProvince.CurrentRow.Cells["colProvinceName"].Value.ToString();
-                        data.SalAreaID = "";
-                        data.WHID = _WHID;
-
-                        data.AreaName = _AreaName;
-
-                        data.DistrictCode = _DistrictCode;
-                        data.DistrictID = Convert.ToInt32(treeView1.Nodes[0].Nodes[indexArea].Nodes[x].Name);
-                        data.DistrictName = _DistrictName;
-
-                        data.PostalCode = "";
-                        data.FlagSend = false;
-
-                        list.Add(data);
+                        checked_nodes.Add(treeView1.Nodes[i].Nodes[x]);
                     }
                 }
-
-                var dt = PrePareSave_SalAreaDistrict(list, _WHID);
-
-                foreach (DataRow r in dt.Rows)
-                {
-                    ret.Add(bu.InsertSalAreaDistrict(r));
-                }
-
-                if (ret.All(x => x == 1))
-                {
-                    Cursor.Current = Cursors.Default;
-
-                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-
-                    SelectDetails(null);
-                }
-                else
-                {
-                    Cursor.Current = Cursors.Default;
-                    this.ShowProcessErr();
-                }
-
-
             }
-            catch (Exception ex)
-            {
-                Cursor.Current = Cursors.Default;
-                ex.Message.ShowErrorMessage();
-            }
+            
+
+            return checked_nodes;
         }
 
         private void SetSalAreaDistrict_Table(DataTable dt)
@@ -466,7 +411,110 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Save();
+            int ret = new int();
+            string msg = "";
+
+            try
+            {
+                string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+                string title = "ยืนยันการบันทึก!!";
+
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                List<TreeNode> AreaTreeNode = CheckedNodes();
+
+                if (AreaTreeNode.Count == 0)
+                {
+                    msg = "กรุณาเลือกเขตการขาย !!";
+                    msg.ShowWarningMessage();
+                    return;
+                }
+
+                Cursor.Current = Cursors.WaitCursor;
+
+                string _WHID = "";
+
+                if (bu.tbl_Branchs.Count > 0)
+                {
+                    _WHID = bu.tbl_Branchs[0].BranchID + "V01";
+                }
+
+                int ret2 = bu.DeleteByWHID(_WHID); //ลบแค่ V01 ,ไม่ต้องสนว่าจะมีข้อมูล
+
+                var list = new List<tbl_SalAreaDistrict>();
+
+                var cloneDt = (DataTable)grdProvince.DataSource;
+
+                for (int i = 0; i < AreaTreeNode.Count; i++)
+                {
+                    string[] arrProvince = AreaTreeNode[i].Parent.Text.Split(':');
+
+                    var dr = cloneDt.AsEnumerable().FirstOrDefault(x => x.Field<string>("ProvinceName") == arrProvince[1]);
+
+                    var indexNode = treeView1.Nodes.IndexOfKey(dr[2].ToString());//ProvinceID
+                    int indexArea = AreaTreeNode[i].Index;
+                    for (int x = 0; x < treeView1.Nodes[indexNode].Nodes[indexArea].Nodes.Count; x++)//District
+                    {
+                        if (!treeView1.Nodes[indexNode].Nodes[indexArea].Nodes[x].Checked)
+                            continue;
+
+                        string[] arrArea = treeView1.Nodes[indexNode].Nodes[indexArea].Nodes[x].Parent.Text.Split(':');
+                        string _AreaName = arrArea[1];
+
+                        string[] arrDistrict = treeView1.Nodes[indexNode].Nodes[indexArea].Nodes[x].Text.Split(':');
+                        string _DistrictCode = arrDistrict[0];
+                        string _DistrictName = arrDistrict[1];
+
+                        var data = new tbl_SalAreaDistrict();
+                        data.ProvinceName = arrProvince[1];
+                        data.SalAreaID = "";
+                        data.WHID = _WHID;
+
+                        data.AreaName = _AreaName;
+
+                        data.DistrictCode = _DistrictCode;
+                        data.DistrictID = Convert.ToInt32(treeView1.Nodes[indexNode].Nodes[indexArea].Nodes[x].Name);
+                        data.DistrictName = _DistrictName;
+
+                        data.PostalCode = "";
+                        data.FlagSend = false;
+
+                        list.Add(data);
+                    }
+                }
+
+                var dt = PrePareSave_SalAreaDistrict(list, _WHID);
+
+                ret = bu.InsertSalAreaDistrict(dt);
+
+                if (ret > 0)
+                {
+                    Cursor.Current = Cursors.Default;
+
+                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+
+                    SelectDetails(null);
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                    this.ShowProcessErr();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void grdProvince_DataSourceChanged(object sender, EventArgs e)
+        {
+            SelectDetails(null);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

@@ -248,7 +248,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         var _row = string.Join("|", new string[] { row["Latitude"].ToString(), row["Longitude"].ToString()
                         , _CustImage, row["CustName"].ToString(), _billTo, row["MarkerImage"].ToString()
-                        , row["Telephone"].ToString() });
+                        , row["Telephone"].ToString(), row["Seq"].ToString() });
                         listRow.Add(_row);
                     }
 

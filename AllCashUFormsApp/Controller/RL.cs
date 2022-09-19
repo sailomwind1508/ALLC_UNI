@@ -50,6 +50,7 @@ namespace AllCashUFormsApp.Controller
                 }
                 catch (Exception ex)
                 {
+                    ex.WriteLog(this.GetType());
                 }
 
                 if (checkManualUpdate == 0)

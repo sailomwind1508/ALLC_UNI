@@ -563,6 +563,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_ArCustomer.GetType());
                 return null;
             }
         }
@@ -578,6 +579,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_ArCustomer.GetType());
                 return null;
             }
         }
@@ -593,6 +595,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_ArCustomer.GetType());
                 return null;
             }
         }
@@ -733,6 +736,7 @@ namespace AllCashUFormsApp
                     ,REPLACE(REPLACE([CustName],',',''), '|', '') AS CustName
                     ,REPLACE(REPLACE(ISNULL([BillTo],''),',',''), '|', '') AS BillTo
                     ,REPLACE(REPLACE(ISNULL([Telephone],''),',',''), '|', '') AS Telephone
+                    ,t1.Seq
                     ,Latitude
                     ,Longitude
                     ,t2.SalAreaName ";
@@ -854,6 +858,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(tbl_ArCustomer.GetType());
                 ret = false;
             }
 

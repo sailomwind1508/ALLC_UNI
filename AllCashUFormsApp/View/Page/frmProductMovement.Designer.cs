@@ -48,6 +48,7 @@
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.pnlTL = new System.Windows.Forms.Panel();
             this.chkAllMM = new System.Windows.Forms.CheckBox();
+            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,8 +68,6 @@
             this.lblBranchCode = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -78,6 +77,7 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -191,10 +191,10 @@
             // 
             this.pnlTR.BackColor = System.Drawing.Color.Azure;
             this.pnlTR.Controls.Add(this.grbPrdMMType);
-            this.pnlTR.Controls.Add(this.label3);
             this.pnlTR.Controls.Add(this.dtpToDate);
-            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Controls.Add(this.dtpFromDate);
+            this.pnlTR.Controls.Add(this.label3);
+            this.pnlTR.Controls.Add(this.label8);
             this.pnlTR.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlTR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTR.Location = new System.Drawing.Point(728, 0);
@@ -240,7 +240,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 33);
+            this.label3.Location = new System.Drawing.Point(28, 33);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 16);
             this.label3.TabIndex = 106;
@@ -259,7 +259,7 @@
             // 
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(35, 9);
+            this.label8.Location = new System.Drawing.Point(42, 9);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(44, 16);
             this.label8.TabIndex = 104;
@@ -281,21 +281,21 @@
             this.pnlTL.Controls.Add(this.ccbProductCode);
             this.pnlTL.Controls.Add(this.btnClear);
             this.pnlTL.Controls.Add(this.btnSearch);
-            this.pnlTL.Controls.Add(this.label2);
             this.pnlTL.Controls.Add(this.txtToWHCode);
             this.pnlTL.Controls.Add(this.btnToWHCode);
             this.pnlTL.Controls.Add(this.ddlProductSubGroup);
             this.pnlTL.Controls.Add(this.ddlProductGroup);
-            this.pnlTL.Controls.Add(this.label1);
-            this.pnlTL.Controls.Add(this.lblEmpCode);
             this.pnlTL.Controls.Add(this.txtFromWHCode);
             this.pnlTL.Controls.Add(this.btnFromWHCode);
-            this.pnlTL.Controls.Add(this.lblWHCode);
-            this.pnlTL.Controls.Add(this.label6);
             this.pnlTL.Controls.Add(this.txtBranchName);
             this.pnlTL.Controls.Add(this.txtBranchCode);
             this.pnlTL.Controls.Add(this.btnSearchBranchCode);
+            this.pnlTL.Controls.Add(this.lblEmpCode);
+            this.pnlTL.Controls.Add(this.lblWHCode);
+            this.pnlTL.Controls.Add(this.label6);
             this.pnlTL.Controls.Add(this.lblBranchCode);
+            this.pnlTL.Controls.Add(this.label2);
+            this.pnlTL.Controls.Add(this.label1);
             this.pnlTL.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlTL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlTL.Location = new System.Drawing.Point(0, 0);
@@ -308,13 +308,27 @@
             this.chkAllMM.AutoSize = true;
             this.chkAllMM.BackColor = System.Drawing.Color.PaleTurquoise;
             this.chkAllMM.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkAllMM.Location = new System.Drawing.Point(535, 28);
+            this.chkAllMM.Location = new System.Drawing.Point(563, 27);
             this.chkAllMM.Name = "chkAllMM";
             this.chkAllMM.Size = new System.Drawing.Size(112, 20);
             this.chkAllMM.TabIndex = 127;
             this.chkAllMM.Text = "ดึงข้อมูลทุกคลัง";
             this.chkAllMM.UseVisualStyleBackColor = false;
             this.chkAllMM.CheckedChanged += new System.EventHandler(this.chkAllMM_CheckedChanged);
+            // 
+            // ccbProductCode
+            // 
+            this.ccbProductCode.CheckOnClick = true;
+            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.ccbProductCode.DropDownHeight = 1;
+            this.ccbProductCode.FormattingEnabled = true;
+            this.ccbProductCode.IntegralHeight = false;
+            this.ccbProductCode.Location = new System.Drawing.Point(89, 77);
+            this.ccbProductCode.Name = "ccbProductCode";
+            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
+            this.ccbProductCode.TabIndex = 108;
+            this.ccbProductCode.ValueSeparator = ", ";
+            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
             // 
             // btnClear
             // 
@@ -324,7 +338,7 @@
             this.btnClear.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClear.Location = new System.Drawing.Point(631, 75);
+            this.btnClear.Location = new System.Drawing.Point(631, 76);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(67, 26);
             this.btnClear.TabIndex = 126;
@@ -341,7 +355,7 @@
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(558, 75);
+            this.btnSearch.Location = new System.Drawing.Point(559, 76);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 26);
             this.btnSearch.TabIndex = 125;
@@ -353,7 +367,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(328, 31);
+            this.label2.Location = new System.Drawing.Point(331, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 16);
             this.label2.TabIndex = 123;
@@ -361,10 +375,10 @@
             // 
             // txtToWHCode
             // 
-            this.txtToWHCode.Location = new System.Drawing.Point(369, 28);
+            this.txtToWHCode.Location = new System.Drawing.Point(364, 28);
             this.txtToWHCode.MaxLength = 15;
             this.txtToWHCode.Name = "txtToWHCode";
-            this.txtToWHCode.Size = new System.Drawing.Size(123, 23);
+            this.txtToWHCode.Size = new System.Drawing.Size(156, 23);
             this.txtToWHCode.TabIndex = 121;
             // 
             // btnToWHCode
@@ -375,7 +389,7 @@
             this.btnToWHCode.ForeColor = System.Drawing.SystemColors.Control;
             this.btnToWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnToWHCode.Image")));
             this.btnToWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnToWHCode.Location = new System.Drawing.Point(494, 28);
+            this.btnToWHCode.Location = new System.Drawing.Point(522, 28);
             this.btnToWHCode.Name = "btnToWHCode";
             this.btnToWHCode.Size = new System.Drawing.Size(35, 23);
             this.btnToWHCode.TabIndex = 122;
@@ -388,9 +402,9 @@
             this.ddlProductSubGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlProductSubGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlProductSubGroup.FormattingEnabled = true;
-            this.ddlProductSubGroup.Location = new System.Drawing.Point(369, 52);
+            this.ddlProductSubGroup.Location = new System.Drawing.Point(410, 52);
             this.ddlProductSubGroup.Name = "ddlProductSubGroup";
-            this.ddlProductSubGroup.Size = new System.Drawing.Size(186, 24);
+            this.ddlProductSubGroup.Size = new System.Drawing.Size(215, 24);
             this.ddlProductSubGroup.TabIndex = 120;
             // 
             // ddlProductGroup
@@ -400,14 +414,14 @@
             this.ddlProductGroup.FormattingEnabled = true;
             this.ddlProductGroup.Location = new System.Drawing.Point(89, 52);
             this.ddlProductGroup.Name = "ddlProductGroup";
-            this.ddlProductGroup.Size = new System.Drawing.Size(159, 24);
+            this.ddlProductGroup.Size = new System.Drawing.Size(219, 24);
             this.ddlProductGroup.TabIndex = 119;
             this.ddlProductGroup.SelectedIndexChanged += new System.EventHandler(this.ddlProductGroup_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(267, 55);
+            this.label1.Location = new System.Drawing.Point(313, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(99, 16);
             this.label1.TabIndex = 118;
@@ -416,7 +430,7 @@
             // lblEmpCode
             // 
             this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(7, 55);
+            this.lblEmpCode.Location = new System.Drawing.Point(14, 55);
             this.lblEmpCode.Name = "lblEmpCode";
             this.lblEmpCode.Size = new System.Drawing.Size(75, 16);
             this.lblEmpCode.TabIndex = 117;
@@ -449,7 +463,7 @@
             // lblWHCode
             // 
             this.lblWHCode.AutoSize = true;
-            this.lblWHCode.Location = new System.Drawing.Point(9, 31);
+            this.lblWHCode.Location = new System.Drawing.Point(16, 31);
             this.lblWHCode.Name = "lblWHCode";
             this.lblWHCode.Size = new System.Drawing.Size(73, 16);
             this.lblWHCode.TabIndex = 113;
@@ -458,7 +472,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 80);
+            this.label6.Location = new System.Drawing.Point(16, 80);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 16);
             this.label6.TabIndex = 109;
@@ -466,11 +480,11 @@
             // 
             // txtBranchName
             // 
-            this.txtBranchName.Location = new System.Drawing.Point(255, 4);
+            this.txtBranchName.Location = new System.Drawing.Point(252, 4);
             this.txtBranchName.MaxLength = 200;
             this.txtBranchName.Name = "txtBranchName";
             this.txtBranchName.ReadOnly = true;
-            this.txtBranchName.Size = new System.Drawing.Size(300, 23);
+            this.txtBranchName.Size = new System.Drawing.Size(305, 23);
             this.txtBranchName.TabIndex = 2;
             // 
             // txtBranchCode
@@ -500,7 +514,7 @@
             // lblBranchCode
             // 
             this.lblBranchCode.AutoSize = true;
-            this.lblBranchCode.Location = new System.Drawing.Point(35, 7);
+            this.lblBranchCode.Location = new System.Drawing.Point(42, 7);
             this.lblBranchCode.Name = "lblBranchCode";
             this.lblBranchCode.Size = new System.Drawing.Size(47, 16);
             this.lblBranchCode.TabIndex = 99;
@@ -532,24 +546,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ccbProductCode
-            // 
-            this.ccbProductCode.CheckOnClick = true;
-            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.ccbProductCode.DropDownHeight = 1;
-            this.ccbProductCode.FormattingEnabled = true;
-            this.ccbProductCode.IntegralHeight = false;
-            this.ccbProductCode.Location = new System.Drawing.Point(89, 77);
-            this.ccbProductCode.Name = "ccbProductCode";
-            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
-            this.ccbProductCode.TabIndex = 108;
-            this.ccbProductCode.ValueSeparator = ", ";
-            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
             // 
             // btnClose
             // 
@@ -728,6 +724,10 @@
             this.btnSave.Text = "บันทึก";
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // frmProductMovement
             // 

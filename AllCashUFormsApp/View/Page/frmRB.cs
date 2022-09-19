@@ -418,6 +418,8 @@ namespace AllCashUFormsApp.View.Page
             //CheckCancelDoc(po.DocStatus);
             bool checkEditMode = bu.CheckExistsPR(rbDocNo);
             pr.DocStatus.CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
+
+            CreateGridBtnList();
         }
 
         private void BindPRMaster(tbl_PRMaster pr)
@@ -785,7 +787,8 @@ namespace AllCashUFormsApp.View.Page
                     invMm.ProductID = prDt.ProductID;
                     invMm.ProductName = prDt.ProductName;
                     invMm.RefDocNo = prDt.DocNo;
-                    invMm.TrnDate = crDate.ToDateTimeFormat();
+                    //invMm.TrnDate = crDate.ToDateTimeFormat();
+                    invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat();//last edit by sailom .k 10/08/2022 
                     invMm.TrnType = "T";
                     invMm.DocTypeCode = pr.DocTypeCode;
 
@@ -1489,11 +1492,26 @@ namespace AllCashUFormsApp.View.Page
         {
             FormHelper.ShowPrintingReportName = true; //edit by sailom .k 07/01/2022
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@DocNo", txdDocNo.Text);
-            //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rpt", "Form_RB", _params);
+            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
+            string title = "ยืนยันการพิมพ์!!";
+            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-            this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rdlc", "Form_RB", _params); //Reporting service by sailom 30/11/2021
+            if (confirmResult == DialogResult.Yes)
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rpt", "Form_RB", _params);
+
+                this.OpenReportingReportsNonPreViewPopup("ใบโอนย้ายสินค้า", "Form_RB.rdlc", "Form_RB", _params); //Reporting service by sailom 30/11/2021
+            }
+            else
+            {
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("@DocNo", txdDocNo.Text);
+                //this.OpenCrystalReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rpt", "Form_RB", _params);
+
+                this.OpenReportingReportsPopup("ใบโอนย้ายสินค้า", "Form_RB.rdlc", "Form_RB", _params); //Reporting service by sailom 30/11/2021
+            }
         }
 
         private void btnPrintCrys_Click(object sender, EventArgs e)
@@ -1778,6 +1796,160 @@ namespace AllCashUFormsApp.View.Page
         {
             if (e.KeyCode == Keys.Enter)
                 BindRBFromPOData(txtPODoc.Text, "IV", false);
+        }
+
+        private void CreateGridBtnList()
+        {
+            contextMenuStrip1 = new ContextMenuStrip();
+
+            contextMenuStrip1.Items.Clear();
+            contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(grdMenu_Opening);
+
+            grdList.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        void grdMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Acquire references to the owning control and item.
+            Control c = contextMenuStrip1.SourceControl as Control;
+            ToolStripDropDownItem tsi = contextMenuStrip1.OwnerItem as ToolStripDropDownItem;
+
+            // Clear the ContextMenuStrip control's Items collection.
+            contextMenuStrip1.Items.Clear();
+
+            // Populate the ContextMenuStrip control with its default items.
+            var printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.copyBtn).ImageToByte();
+
+            List<tbl_MstMenu> menuList = new List<tbl_MstMenu>();
+            tbl_MstMenu m = new tbl_MstMenu();
+            m.MenuID = 300;
+            m.MenuName = "prdDetails";
+            m.MenuText = "รายละเอียดสินค้า";
+            m.FormName = "prdDetails";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.depo).ImageToByte();
+            m = new tbl_MstMenu();
+            m.MenuID = 301;
+            m.MenuName = "prdStock";
+            m.MenuText = "ตรวจสอบสินค้าเคลื่อนไหว";
+            m.FormName = "prdStock";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            printImage = new Bitmap(AllCashUFormsApp.Properties.Resources.invoiceFull).ImageToByte();
+            m = new tbl_MstMenu();
+            m.MenuID = 302;
+            m.MenuName = "repStock";
+            m.MenuText = "รายงานสินค้าคงเหลือ แยกตามคลัง";
+            m.FormName = "repStock";
+            m.MenuImage = printImage;
+            menuList.Add(m);
+
+            foreach (var item in menuList)
+            {
+                contextMenuStrip1.Items.Add(item.MenuText, item.MenuImage.byteArrayToImage(), ToolGrdStripMenuItem_Click);
+            }
+
+            // Set Cancel to false. 
+            // It is optimized to true based on empty entry.
+            e.Cancel = false;
+        }
+
+        private void ToolGrdStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string menuStripTxt = ((System.Windows.Forms.ToolStripItem)sender).Text;
+            if (grdList.CurrentCell.RowIndex != -1 && grdList.CurrentCell.ColumnIndex != -1)
+            {
+                int rowIndex = grdList.CurrentCell.RowIndex;
+                int colIndex = grdList.CurrentCell.ColumnIndex;
+                string productID = grdList.Rows[rowIndex].Cells[0].EditedFormattedValue.ToString();
+
+                if (!string.IsNullOrEmpty(productID))
+                {
+                    switch (menuStripTxt)
+                    {
+                        case "รายละเอียดสินค้า":
+                            {
+                                MainForm mfrm = null;
+                                foreach (Form f in Application.OpenForms)
+                                {
+                                    if (f.Name.ToLower() == "mainform")
+                                    {
+                                        mfrm = (MainForm)f;
+                                    }
+                                }
+
+                                frmProductInfo frm = new frmProductInfo();
+                                frm.MdiParent = mfrm;
+                                frm.StartPosition = FormStartPosition.CenterParent;
+                                frm.WindowState = FormWindowState.Maximized;
+                                frm.Show();
+                                frm.BindProductInfo(productID);
+                            }
+                            break;
+                        case "ตรวจสอบสินค้าเคลื่อนไหว":
+                            {
+                                MainForm mfrm = null;
+                                foreach (Form f in Application.OpenForms)
+                                {
+                                    if (f.Name.ToLower() == "mainform")
+                                    {
+                                        mfrm = (MainForm)f;
+                                    }
+                                }
+
+                                frmProductMovement frm = new frmProductMovement();
+                                frm.MdiParent = mfrm;
+                                frm.StartPosition = FormStartPosition.CenterParent;
+                                frm.WindowState = FormWindowState.Maximized;
+                                frm.Show();
+                                frm.BindProductMovement(txtFromWHCode.Text, txtFromWHCode.Text, productID, true);
+
+                            }
+                            break;
+                        case "รายงานสินค้าคงเหลือ แยกตามคลัง":
+                            {
+                                var cDate = DateTime.Now.AddDays(1);
+                                Dictionary<string, object> _params = new Dictionary<string, object>();
+                                var whid = txtFromWHCode.Text.Length < 6 ? (bu.tbl_Branchs[0].BranchID + txtFromWHCode.Text) : txtFromWHCode.Text;
+
+                                _params.Add("@DateFr", cDate);
+                                _params.Add("@DateTo", cDate);
+                                _params.Add("@YearFr", -1);
+                                _params.Add("@MonthFr", -1);
+                                _params.Add("@YearTo", -1);
+                                _params.Add("@MonthTo", -1);
+                                //Doc Status--------------------------------------
+                                _params.Add("@DocStatus", "4");
+                                _params.Add("@BranchID", bu.tbl_Branchs[0].BranchID);
+                                _params.Add("@WHID", whid);
+                                //WHID--------------------------------------
+                                //ProductSubGroupID--------------------------------------
+                                _params.Add("@ProductSubGroupID", "");
+                                //ProductSubGroupID--------------------------------------
+                                //ProductID--------------------------------------
+                                _params.Add("@ProductID", productID);
+                                //ProductID--------------------------------------
+                                
+                                _params.Add("@FromWH", whid);
+                                _params.Add("@ToWH", whid);
+                                //FromWH And ToWH--------------------------------------
+                                //SalAreaID--------------------------------------
+                                _params.Add("@SalAreaID", "");
+                                //SalAreaID--------------------------------------
+                                //ShopTypeID--------------------------------------
+                                _params.Add("@ShopTypeID", 0);
+
+                                this.OpenExcelReportsPopup(menuStripTxt, "proc_RPTStock.XSLT", "proc_RPTStock_XSLT", _params, true);
+                            }
+                            break;
+                        default: break;
+                    }
+                }
+            }
+
         }
     }
 }

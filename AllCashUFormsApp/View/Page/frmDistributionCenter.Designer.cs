@@ -333,10 +333,11 @@
             this.txtSearchMKT = new System.Windows.Forms.TextBox();
             this.label71 = new System.Windows.Forms.Label();
             this.panel30 = new System.Windows.Forms.Panel();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.grdSaleDistrictList = new System.Windows.Forms.DataGridView();
             this.panel35 = new System.Windows.Forms.Panel();
             this.lblDistrictCount = new System.Windows.Forms.Label();
             this.label83 = new System.Windows.Forms.Label();
-            this.grdSaleDistrictList = new System.Windows.Forms.DataGridView();
             this.pnlMKT = new System.Windows.Forms.Panel();
             this.label68 = new System.Windows.Forms.Label();
             this.lblWHID = new System.Windows.Forms.Label();
@@ -436,8 +437,9 @@
             this.panel27.SuspendLayout();
             this.panel28.SuspendLayout();
             this.panel30.SuspendLayout();
-            this.panel35.SuspendLayout();
+            this.panel12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdSaleDistrictList)).BeginInit();
+            this.panel35.SuspendLayout();
             this.pnlMKT.SuspendLayout();
             this.panel21.SuspendLayout();
             this.panel20.SuspendLayout();
@@ -4070,14 +4072,41 @@
             // 
             // panel30
             // 
+            this.panel30.Controls.Add(this.panel12);
             this.panel30.Controls.Add(this.panel35);
-            this.panel30.Controls.Add(this.grdSaleDistrictList);
             this.panel30.Controls.Add(this.pnlMKT);
             this.panel30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel30.Location = new System.Drawing.Point(0, 0);
             this.panel30.Name = "panel30";
             this.panel30.Size = new System.Drawing.Size(444, 399);
             this.panel30.TabIndex = 0;
+            // 
+            // panel12
+            // 
+            this.panel12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel12.Controls.Add(this.grdSaleDistrictList);
+            this.panel12.Location = new System.Drawing.Point(0, 204);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(444, 171);
+            this.panel12.TabIndex = 202;
+            // 
+            // grdSaleDistrictList
+            // 
+            this.grdSaleDistrictList.AllowUserToAddRows = false;
+            this.grdSaleDistrictList.AllowUserToResizeColumns = false;
+            this.grdSaleDistrictList.AllowUserToResizeRows = false;
+            this.grdSaleDistrictList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdSaleDistrictList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdSaleDistrictList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.grdSaleDistrictList.Location = new System.Drawing.Point(0, 0);
+            this.grdSaleDistrictList.MultiSelect = false;
+            this.grdSaleDistrictList.Name = "grdSaleDistrictList";
+            this.grdSaleDistrictList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdSaleDistrictList.Size = new System.Drawing.Size(444, 171);
+            this.grdSaleDistrictList.TabIndex = 11;
+            this.grdSaleDistrictList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSaleDistrictList_RowPostPaint);
             // 
             // panel35
             // 
@@ -4109,22 +4138,6 @@
             this.label83.Size = new System.Drawing.Size(83, 16);
             this.label83.TabIndex = 2;
             this.label83.Text = "จำนวนรายการ";
-            // 
-            // grdSaleDistrictList
-            // 
-            this.grdSaleDistrictList.AllowUserToAddRows = false;
-            this.grdSaleDistrictList.AllowUserToResizeColumns = false;
-            this.grdSaleDistrictList.AllowUserToResizeRows = false;
-            this.grdSaleDistrictList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdSaleDistrictList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdSaleDistrictList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.grdSaleDistrictList.Location = new System.Drawing.Point(0, 204);
-            this.grdSaleDistrictList.MultiSelect = false;
-            this.grdSaleDistrictList.Name = "grdSaleDistrictList";
-            this.grdSaleDistrictList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdSaleDistrictList.Size = new System.Drawing.Size(444, 195);
-            this.grdSaleDistrictList.TabIndex = 11;
-            this.grdSaleDistrictList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSaleDistrictList_RowPostPaint);
             // 
             // pnlMKT
             // 
@@ -4186,6 +4199,7 @@
             this.ddlWHID.Size = new System.Drawing.Size(139, 24);
             this.ddlWHID.TabIndex = 5;
             this.ddlWHID.SelectedIndexChanged += new System.EventHandler(this.ddlWHID_SelectedIndexChanged);
+            this.ddlWHID.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ddlWHID_MouseClick);
             // 
             // panel21
             // 
@@ -4573,9 +4587,10 @@
             this.panel28.ResumeLayout(false);
             this.panel28.PerformLayout();
             this.panel30.ResumeLayout(false);
+            this.panel12.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdSaleDistrictList)).EndInit();
             this.panel35.ResumeLayout(false);
             this.panel35.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdSaleDistrictList)).EndInit();
             this.pnlMKT.ResumeLayout(false);
             this.pnlMKT.PerformLayout();
             this.panel21.ResumeLayout(false);
@@ -4920,5 +4935,6 @@
         private System.Windows.Forms.Button btnSearchWarehouse;
         private System.Windows.Forms.Button btnSearchVan;
         private System.Windows.Forms.Button btnSearchMKT;
+        private System.Windows.Forms.Panel panel12;
     }
 }

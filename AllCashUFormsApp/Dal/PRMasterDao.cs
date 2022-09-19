@@ -406,6 +406,7 @@ namespace AllCashUFormsApp
             }
             catch (Exception ex)
             {
+                ex.WriteLog(null);
                 //ex.WriteLog(tbl_PRMaster);
             }
 
@@ -458,7 +459,7 @@ namespace AllCashUFormsApp
                         {
                             foreach (PropertyInfo tbl_PRMasterItem in tbl_PRMaster.GetType().GetProperties())
                             {
-                                if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name == tbl_PRMasterItem.Name)
+                                if (updateDataItem.Name.ToLower() != "autoid" && updateDataItem.Name.ToLower() != "empid" && updateDataItem.Name == tbl_PRMasterItem.Name) //last edit by adisorn 08/08/2022
                                 {
                                     var value = tbl_PRMasterItem.GetValue(tbl_PRMaster, null);
 

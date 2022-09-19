@@ -88,5 +88,16 @@ namespace AllCashUFormsApp.Controller
         {
             return (new tbl_PayDetail()).SelectPayDetail_MaxID();
         }
+
+        public List<tbl_POMaster> GetPOMaster_ByWHID(string _DocDate, string _WHID)
+        {
+            return (new tbl_POMaster()).GetPOMaster_ByWHID(_DocDate, _WHID);
+        }
+
+        public int UpdateDatePOMaster(List<tbl_POMaster> tbl_POMaster)
+        {
+            return tbl_POMaster.UpdateDatePOMaster();
+        }
+
     }
 }

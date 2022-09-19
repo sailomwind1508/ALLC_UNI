@@ -504,7 +504,7 @@ namespace AllCashUFormsApp.View.Page
                 lblReportHeader.Text = e.Node.Text;
 
                 List<string> set1 = new List<string>() { "Node2", "Node3", "Node20", "Node34", "Node50_2" };
-                List<string> set2 = new List<string>() { "Node56", "Node12", "Node43", "Node44", "Node55" };
+                List<string> set2 = new List<string>() { "Node56", "Node12", "Node43", "Node44", "Node55", "Node14-1", "Node14-2", "count_cust_c", "count_cust_dt", "Rep_Customer_Sales_Yearly" };
                 List<string> set3 = new List<string>() { "Node45", "Node51", "Node53", "Node11", "Node29", "Rep_PreOrder_POStatus_XSLT" };
                 List<string> set4 = new List<string>() { "Node4", "Node5", "Node8", "Node9", "proc_StockMovement_ByWH", "NodeRLSumm", "Rep_BillDuplicate", "proc_StockMovement_ByWH_RefCode" };
                 List<string> set5 = new List<string>() { "Node34_Bath", "Node34_Carton", "Node34_Unit", "Node48", "Node40", "NodeBill", "NodeBaht", "NodeBahtExcVat", "NodeBrick", "NodeCarton", };
@@ -538,6 +538,11 @@ namespace AllCashUFormsApp.View.Page
                     if (new List<string>() { "Node56", "Node12" }.Contains(e.Node.Name)) //Disable Rang
                     {
                         EnableDailyCycleCtrl(true, false, true, false, false, true, false);
+                    }
+
+                    if (new List<string> { "Node14-1", "Node14-2", "count_cust_c", "count_cust_dt", "Rep_Customer_Sales_Yearly" }.Contains(e.Node.Name))
+                    {
+                        EnableBranchWarehouse(true, true, false);
                     }
                 }
                 else if (set3.Contains(e.Node.Name))//Set 3 รายวัน/รายรอบ+Dis+S+R---------------
@@ -626,6 +631,7 @@ namespace AllCashUFormsApp.View.Page
                     EnableBranchWarehouse(true, true, false);
                     EnableSaleArea(true, true);
                     EnableShopType(true, true);
+                    
                 }
                 else if (set10.Contains(e.Node.Name))//Set10 รายวัน+Dis+FWH+TWH+S+R-------------
                 {
@@ -921,6 +927,11 @@ namespace AllCashUFormsApp.View.Page
                     case "รายงานยอดขายแยกตามลูกค้า(Bath)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_ActualSale_By_Customer_Bath.xslt", "Rep_ActualSale_By_Customer_Bath_XSLT", _params, true); } break;
                     case "รายงานสถานะ (Pre-Order)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_PreOrder_POStatus.xslt", "Rep_PreOrder_POStatus_XSLT", _params, true); } break;
                     case "รายงานยอดขายแยกตามประเภทแวน": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Sales_By_VanType.xslt", "Rep_SaleTarget_XSLT", _params, true); } break;
+                    case "รายงานลูกค้าใหม่(จำนวน)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_New_Customer.xslt", "Rep_New_Customer_XSLT", _params, true); } break;
+                    case "รายงานลูกค้าใหม่(รายการ)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_New_Customer_Detail.xslt", "Rep_New_Customer_Detail_XSLT", _params, true); } break;
+                    case "รายงานร้านค้าจัดกลุ่มตามตำบล(จำนวน)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Count_Cust_By_Branch.xslt", "Rep_Count_Cust_By_Branch_XSLT", _params, true); } break;
+                    case "รายงานร้านค้าจัดกลุ่มตามตำบล(รายละเอียด)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Customer_Detail_By_Branch.xslt", "Rep_Customer_Detail_By_Branch_XSLT", _params, true); } break;
+                    case "รายงานยอดขายแยกตามร้านค้า(รายปี)": { this.OpenExcelReportsPopup(reportNameTxt, "Rep_Customer_Sales_Yearly.xslt", "Rep_Customer_Sales_Yearly", _params, true); } break;
 
                     default:
                         break;

@@ -11,6 +11,25 @@ namespace AllCashUFormsApp
 {
     public static class MstAreaDao
     {
+        public static List<tbl_MstArea> SelectSingle(this tbl_MstArea tbl_MstArea, string areaName)
+        {
+            List<tbl_MstArea> list = new List<tbl_MstArea>();
+            try
+            {
+                string sql = "";
+                sql += " SELECT * FROM [dbo].[tbl_MstArea] WHERE AreaName = '" + areaName + "' ";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_MstArea), sql);
+                list = dynamicListReturned.Cast<tbl_MstArea>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_MstArea.GetType());
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// select data
         /// </summary>
