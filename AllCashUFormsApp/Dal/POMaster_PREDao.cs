@@ -72,6 +72,50 @@ namespace AllCashUFormsApp
             return result;
         }
 
+        /// <summary>
+        /// for support max docno from tablet sales transaction by sailom .k 21/11/2022
+        /// </summary>
+        /// <param name="tbl_POMaster_PRE"></param>
+        /// <param name="docTypeCode"></param>
+        /// <param name="whid"></param>
+        /// <param name="docdate"></param>
+        /// <returns></returns>
+        public static List<tbl_POMaster_PRE> SelectNewMaxAutoID(this tbl_POMaster_PRE tbl_POMaster, string docTypeCode, string whid, DateTime docdate)
+        {
+            List<tbl_POMaster_PRE> list = new List<tbl_POMaster_PRE>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    if (docTypeCode.Trim() == "IV")
+                    {
+                        sql += @" SELECT * FROM dbo.tbl_POMaster_PRE 
+                                WHERE CrDate = 
+                                (
+	                                SELECT MAX(CrDate) 
+	                                FROM dbo.tbl_POMaster_PRE 
+                                    WHERE ISNULL(DocRef, '') = '' ";
+                        sql += "    AND DocTypeCode = '" + docTypeCode.Trim() + "' ";
+                        sql += "    AND WHID = '" + whid + "' ";
+                        sql += "    AND DocDate = '" + docdate.ToString("yyyyMMdd", new CultureInfo("en-US")) + "' ";
+                        sql += " ) ";
+                    }
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster_PRE), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster_PRE>().ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
         public static List<tbl_POMaster_PRE> SelectMaxAutoID(this tbl_POMaster_PRE tbl_POMaster, string whid, string docTypeCode = "")
         {
             List<tbl_POMaster_PRE> list = new List<tbl_POMaster_PRE>();
@@ -603,6 +647,139 @@ namespace AllCashUFormsApp
             }
 
             msg = "end POMaster_PREDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkInsert(this tbl_POMaster_PRE tbl_POMaster_PRE)
+        {
+            string msg = "start POMaster_PREDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            List<tbl_POMaster_PRE> tbl_POMaster_PREs = new List<tbl_POMaster_PRE>();
+            tbl_POMaster_PREs.Add(tbl_POMaster_PRE);
+
+            var table = tbl_POMaster_PREs.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_POMaster_PRE";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end POMaster_PREDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this tbl_POMaster_PRE tbl_POMaster_PRE)
+        {
+            string msg = "start POMaster_PREDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_POMaster_PRE WHERE DocNo = '" + tbl_POMaster_PRE.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_POMaster_PRE.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end POMaster_PREDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this tbl_POMaster_PRE tbl_POMaster_PRE)
+        {
+            string msg = "start POMaster_PREDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_POMaster_PRE WHERE DocNo = '" + tbl_POMaster_PRE.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end POMaster_PREDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this tbl_POMaster_PRE tbl_POMaster_PRE, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start POMaster_PREDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_POMaster_PRE();
+                var docNo = tbl_POMaster_PRE.DocNo;
+                updateData = db.tbl_POMaster_PRE.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_POMaster_PRE.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_POMaster_PRE.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end POMaster_PREDao=>PerformUpdate";
             msg.WriteLog(null);
 
             return ret;

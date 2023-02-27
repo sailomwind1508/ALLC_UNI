@@ -154,6 +154,22 @@ namespace AllCashUFormsApp.View.Page
             allProdSubGroup = bu.tbl_ProductSubGroup;
 
             ClearPromotionTemp();
+
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+            {
+                btnRecovery.Visible = true;
+                btnRecovery.Enabled = true;
+                txtRecoDocNo.Visible = true;
+                txtRecoDocNo.Enabled = true;
+
+                txtRecoDocNo.DisableTextBox(false);
+                txtRecoDocNo.BackColor = Color.White;
+            }
+            else
+            {
+                btnRecovery.Visible = false;
+                txtRecoDocNo.Visible = false;
+            }
         }
 
         private void ClearPromotionTemp()
@@ -182,11 +198,16 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPOMaster(po);
             }
+
             if (poDts != null && poDts.Count > 0)
             {
                 BindPODetail(poDts);
 
                 CalculateTotal(true); //for support pre-order by sailom.k 12/04/2022
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
@@ -211,13 +232,13 @@ namespace AllCashUFormsApp.View.Page
             btnGenCustIVNo.Enabled = ddlDocStatus.SelectedValue.ToString() == "4" && string.IsNullOrEmpty(txtCustInvNO.Text);
 
             btnGenRB.Enabled = po.DocStatus == "5";
-
+            btnCopy.Enabled = btnCancel.Enabled;
             btnShowVE.Enabled = !string.IsNullOrEmpty(txtCustInvNO.Text);
             btnCustInfo.Enabled = !string.IsNullOrEmpty(txtCustomerID.Text);
 
             CreateGridBtnList();
 
-            if (Helper.tbl_Users.RoleID == 10)
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
             {
                 btnRecovery.Visible = true;
                 btnRecovery.Enabled = true;
@@ -236,7 +257,7 @@ namespace AllCashUFormsApp.View.Page
 
             //last edit by sailom .k 15/07/2022---------------------------------------------------------------------------------
             var cust = bu.GetCustomer(x => x.CustomerID == po.CustomerID);
-            if (cust != null)
+            if (cust != null && cust.Count > 0)
             {
                 txtCustName.Text = cust[0].CustShortName != cust[0].CustName ? cust[0].CustName : cust[0].CustShortName;
             }
@@ -394,7 +415,7 @@ namespace AllCashUFormsApp.View.Page
         public void BindSearchProduct(DataTable productDT, int rowIndex)
         {
             validateNewRow = true;
-            if (Helper.tbl_Users.RoleID != 10) //allow super admin add duplicate item for support promotion 24022021
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //allow super admin add duplicate item for support promotion 24022021
             {
                 grdList.ValidateDuplicateSKU(productDT.Rows[0]["ProductID"].ToString(), 0, rowIndex, ref validateNewRow);
             }
@@ -753,6 +774,8 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 excVat = excVat.ToDecimalN2();
+
+                txnAmount.Text = amount.ToDecimalN2().ToStringN2(); // last edit by sailom.k 07/11/2022
 
                 //edit by sailom 19/04/2022
                 var _incVat = Convert.ToDecimal(txnAmount.Text);
@@ -1130,7 +1153,7 @@ namespace AllCashUFormsApp.View.Page
             if (checkEditMode)
                 po.DocNo = txdDocNo.Text;
             else
-                po.DocNo = bu.GenDocNoPreEx(docTypeCode, txtWHCode.Text);
+                po.DocNo = bu.GenDocNewNoPreEx(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
 
             //last edit by sailom.k 06/07/2022--------------------------------------------
             if (!string.IsNullOrEmpty(po.DocNo))
@@ -1925,7 +1948,7 @@ namespace AllCashUFormsApp.View.Page
                 invMm.ProductID = poDt.ProductID;
                 invMm.ProductName = poDt.ProductName;
                 invMm.RefDocNo = poDt.DocNo;
-                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat(); //for support pre-order by sailom .k 05/04/2021 //Helper.tbl_Users.RoleID == 10 ? dtpDocDate.Value.ToDateTimeFormat() : crDate.ToDateTimeFormat(); //31012021
+                invMm.TrnDate = dtpDocDate.Value.ToDateTimeFormat(); //for support pre-order by sailom .k 05/04/2021 //Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10 ? dtpDocDate.Value.ToDateTimeFormat() : crDate.ToDateTimeFormat(); //31012021
                 invMm.TrnType = "S";
                 invMm.DocTypeCode = po.DocTypeCode;
                 invMm.WHID = po.WHID;
@@ -2411,13 +2434,22 @@ namespace AllCashUFormsApp.View.Page
                 ivDt.OrderQty = unitQty;
                 ivDt.ReceivedQty = unitQty;
 
+                //last edit by sailom k. 14 / 12 / 2022-------------- -
+                //ivDt.OrderUom = _podt.OrderUom; //25012021
+
+                //ivDt.OrderQty = _podt.OrderQty.Value;
+                //ivDt.ReceivedQty = _podt.OrderQty.Value;
+                //last edit by sailom k. 14 / 12 / 2022-------------- -
+
                 decimal unitPrice = 0;
-                Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == tmpOrderUom && x.ProductID == _podt.ProductID);
+                Func<tbl_ProductPriceGroup, bool> tbl_ProductPriceGroupPre = (x => x.ProductUomID == _podt.OrderUom && x.ProductID == _podt.ProductID);// (x => x.ProductUomID == tmpOrderUom && x.ProductID == _podt.ProductID);
+
                 var prdPriceGroup = allProductPrice.FirstOrDefault(tbl_ProductPriceGroupPre); //29012021
                 if (prdPriceGroup != null)
                     unitPrice = prdPriceGroup.SellPriceVat.Value;
 
                 ivDt.UnitPrice = unitPrice;
+                //ivDt.UnitPrice = _podt.UnitPrice; //last edit by sailom k. 14/12/2022---------------
 
                 ivDt.RejectedQty = 0;
                 ivDt.StockedQty = 0;
@@ -2471,8 +2503,11 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                if (!ValidateSave())
-                    return;
+                if (ddlDocStatus.SelectedValue.ToString() != "5")
+                {
+                    if (!ValidateSave())
+                        return;
+                }
 
                 string docno = string.Empty;
                 bool editFlag = true;
@@ -2588,9 +2623,9 @@ namespace AllCashUFormsApp.View.Page
 
                     //ValidateInputShelf();
 
-                    docno = bu.GenDocNoPreEx(docTypeCode, txtWHCode.Text);
+                    docno = bu.GenDocNewNoPreEx(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
                     editFlag = false;
-                    bu.PrepareDocRunning(docTypeCode);
+                    bu.PrepareDocRunning(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
 
                     PreparePOMaster(editFlag);
 
@@ -2656,7 +2691,7 @@ namespace AllCashUFormsApp.View.Page
                     //    //การสร้างใบ RL กรณีเปิดบิลจากหลังบ้านต้องสร้าง RL ใบใหม่เสมอ ซึ่งจะไม่นำไปรวมกับ RL ที่มาจาก table pre-order(tablet) เพราะ ถือว่า pre-order นั้นสมบูรณ์แล้ว หากเปิดจากหลังบ้านคือการรับ diff-shot จากกรณีขนส่งทำสินค้าที่ต้องคืนคลัง 1000 หาย เท่านั้น
                     //    //หากยกเลิกบิลขายที่มาจาก การเปิดบิลขายหลังบ้าน ระบบจะ cancel PO และ RL โดยให้ถือว่าไม่มีการขายในระบบ
                     //    //var docNo = bu.GenerateRL(_cDate, dtpDocDate.Value, whid, Helper.tbl_Users.Username, docno); //วันที่ในใบเบิกจะต้องเท่ากับ วันที่ admin ทำการยืนยันเอกสาร PO by sailom .k 11/03/2022 confirm by P'Jang Acc
-                        
+
                     //    var docNo = bu.GenerateCancelRL(dtpDocDate.Value, whid, Helper.tbl_Users.Username, docno); //วันที่ในใบเบิกจะต้องเท่ากับ วันที่ admin ทำการยืนยันเอกสาร PO by sailom .k 11/03/2022 confirm by P'Jang Acc
                     //    if (!string.IsNullOrEmpty(docNo))
                     //    {
@@ -2945,7 +2980,7 @@ namespace AllCashUFormsApp.View.Page
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
             //for support pre-order edit by sailom.k 02/04/2022
-            //if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
+            //if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && dtpDocDate.Value != null && docDate < cDate)
             //{
             //    string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
             //    message.ShowWarningMessage();
@@ -2954,9 +2989,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu) && !string.IsNullOrEmpty(txtCustInvNO.Text))  //for pre-order by sailom .k 05/04/2022
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu) && !string.IsNullOrEmpty(txtCustInvNO.Text))  //for pre-order by sailom .k 05/04/2022
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     ret = false;
                 }
@@ -3137,6 +3172,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmTabletSalesPre_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -3151,7 +3188,7 @@ namespace AllCashUFormsApp.View.Page
         {
             if (bu.tbl_POMaster != null)
             {
-                if (Helper.tbl_Users.RoleID != 10 && bu.tbl_POMaster.FlagSend == true && !string.IsNullOrEmpty(txtCustInvNO.Text))  //for pre-order by sailom .k 05/04/2022
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && bu.tbl_POMaster.FlagSend == true && !string.IsNullOrEmpty(txtCustInvNO.Text))  //for pre-order by sailom .k 05/04/2022
                 {
                     string message = "ไม่สามารถแก้ไขเอกสารได้ เนื่องจากได้ส่งข้อมูลเข้า Data Center แล้ว";
                     message.ShowWarningMessage();
@@ -3336,7 +3373,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchDoc_Click(object sender, EventArgs e)
         {
-            this.OpenIVDocPopup("ใบกำกับสินค้า/กำกับภาษี", "IVPre");
+            bool isShowAll = chkShowAll.Checked;
+            this.OpenIVDocPopup("ใบกำกับสินค้า/กำกับภาษี", "IVPre", isShowAll);
         }
 
         private void btnSearchWHCode_Click(object sender, EventArgs e)
@@ -3578,7 +3616,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         validateNewRow = true;
 
-                        if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                        if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //aloow super admin add duplicate item for support promotion 24022021
                         {
                             var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
                             if (!checkDup)
@@ -3646,7 +3684,7 @@ namespace AllCashUFormsApp.View.Page
                         {
                             validateNewRow = true;
 
-                            if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //aloow super admin add duplicate item for support promotion 24022021
                             {
                                 var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
                                 if (!checkDup)
@@ -4044,17 +4082,17 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnRecovery_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txdDocNo.Text))
+            if (!string.IsNullOrEmpty(txtRecoDocNo.Text))
             {
                 string cfMsg = "ต้องการกู้คืนข้อมูลใช่หรือไม่?";
                 string title = "ยืนยันการกู้คืน!!";
                 if (!cfMsg.ConfirmMessageBox(title))
                     return;
 
-                var ret = bu.RecoveryPO(txdDocNo.Text, Helper.tbl_Users.Username);
+                var ret = bu.RecoveryPO(txtRecoDocNo.Text, Helper.tbl_Users.Username, true);
                 if (ret == "1")
                 {
-                    BindTabletSalesData(txdDocNo.Text);
+                    BindTabletSalesData(txtRecoDocNo.Text);
 
                     string message = "กู้ข้อมูลสำเร็จ!!!";
                     message.ShowInfoMessage();
@@ -4068,7 +4106,7 @@ namespace AllCashUFormsApp.View.Page
             else
             {
                 string message = "กรุณาเลือกเลขที่เอกสารก่อน!!!";
-                txdDocNo.Focus();
+                txtRecoDocNo.Focus();
                 message.ShowWarningMessage();
             }
         }

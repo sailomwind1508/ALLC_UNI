@@ -97,8 +97,8 @@ namespace AllCashUFormsApp.View.Page
                 txtBillTo.Text = po.Address;
 
                 Dictionary<string, string> shList = new Dictionary<string, string>();
-                bu.GetCustomerShelf(po.CustomerID).AsEnumerable().ToList().ForEach(x => shList.Add(x.Field<string>("ShelfID"), x.Field<string>("ShelfIDName")));
-                ddlShelf.BindDropdownList(shList, "key", "value");
+                bu.GetCustomerShelf(po.DocNo, po.CustomerID).AsEnumerable().ToList().ForEach(x => shList.Add(x.Field<string>("ShelfID"), x.Field<string>("ShelfIDName")));
+                ddlShelf.BindDropdownListFC(shList, "key", "value");
                 //ddlShelf.DisplayMember = "Text";
                 //ddlShelf.ValueMember = "Value";
                 //foreach (var item in shList)
@@ -206,6 +206,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmCancelPOItem_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -233,7 +235,10 @@ namespace AllCashUFormsApp.View.Page
                         shelfID = text;
                     }
 
-                    bu.CallCancelPOItem(txdDocNo.Text, shelfID, txtFromProductCode.Text, self);
+                    if (!string.IsNullOrEmpty(shelfID))
+                        bu.CallCancelPOItem(txdDocNo.Text, shelfID, txtFromProductCode.Text, self);
+                    else
+                        bu.CallCancelPOProductItem(txdDocNo.Text, txtFromProductCode.Text, self);
 
                     if (!isCancel)
                         isComplete = true;

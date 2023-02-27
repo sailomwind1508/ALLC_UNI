@@ -41,9 +41,20 @@ namespace AllCashUFormsApp.View.Page
             this.panel3 = new System.Windows.Forms.Panel();
             this.spliCustomerMap = new System.Windows.Forms.SplitContainer();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.btnUpdateLL = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.groupLatLong = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
+            this.txtLatLong = new System.Windows.Forms.TextBox();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.btnSearchMap = new System.Windows.Forms.Button();
+            this.panel11 = new System.Windows.Forms.Panel();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
@@ -70,6 +81,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnMark3 = new System.Windows.Forms.Button();
             this.btnMark2 = new System.Windows.Forms.Button();
             this.btnMark1 = new System.Windows.Forms.Button();
+            this.btnOpenCustomer = new System.Windows.Forms.Button();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -91,7 +103,11 @@ namespace AllCashUFormsApp.View.Page
             this.spliCustomerMap.Panel2.SuspendLayout();
             this.spliCustomerMap.SuspendLayout();
             this.panel8.SuspendLayout();
+            this.panel10.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.groupLatLong.SuspendLayout();
             this.panel9.SuspendLayout();
+            this.panel11.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -197,19 +213,31 @@ namespace AllCashUFormsApp.View.Page
             // 
             // spliCustomerMap.Panel2
             // 
-            this.spliCustomerMap.Panel2.Controls.Add(this.webBrowser1);
+            this.spliCustomerMap.Panel2.Controls.Add(this.panel11);
             this.spliCustomerMap.Size = new System.Drawing.Size(1864, 676);
-            this.spliCustomerMap.SplitterDistance = 259;
+            this.spliCustomerMap.SplitterDistance = 360;
             this.spliCustomerMap.TabIndex = 6;
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.treeView1);
+            this.panel8.Controls.Add(this.panel10);
+            this.panel8.Controls.Add(this.panel7);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(0, 39);
+            this.panel8.Location = new System.Drawing.Point(0, 41);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(255, 633);
+            this.panel8.Size = new System.Drawing.Size(356, 631);
             this.panel8.TabIndex = 1;
+            // 
+            // panel10
+            // 
+            this.panel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel10.Controls.Add(this.treeView1);
+            this.panel10.Location = new System.Drawing.Point(0, 0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(356, 486);
+            this.panel10.TabIndex = 2;
             // 
             // treeView1
             // 
@@ -217,36 +245,163 @@ namespace AllCashUFormsApp.View.Page
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(255, 633);
+            this.treeView1.Size = new System.Drawing.Size(356, 486);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.btnOpenCustomer);
+            this.panel7.Controls.Add(this.btnUpdateLL);
+            this.panel7.Controls.Add(this.btnSearch);
+            this.panel7.Controls.Add(this.groupLatLong);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel7.Location = new System.Drawing.Point(0, 484);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(356, 147);
+            this.panel7.TabIndex = 1;
+            // 
+            // btnUpdateLL
+            // 
+            this.btnUpdateLL.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnUpdateLL.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUpdateLL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdateLL.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdateLL.Image")));
+            this.btnUpdateLL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdateLL.Location = new System.Drawing.Point(174, 8);
+            this.btnUpdateLL.Name = "btnUpdateLL";
+            this.btnUpdateLL.Size = new System.Drawing.Size(68, 46);
+            this.btnUpdateLL.TabIndex = 281;
+            this.btnUpdateLL.Text = "บันทึกพิกัด";
+            this.btnUpdateLL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnUpdateLL.UseVisualStyleBackColor = false;
+            this.btnUpdateLL.Click += new System.EventHandler(this.btnUpdateLL_Click);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
+            this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearch.Location = new System.Drawing.Point(174, 57);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(68, 48);
+            this.btnSearch.TabIndex = 280;
+            this.btnSearch.Text = "ค้นหาพิกัด";
+            this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // groupLatLong
+            // 
+            this.groupLatLong.Controls.Add(this.label2);
+            this.groupLatLong.Controls.Add(this.label1);
+            this.groupLatLong.Controls.Add(this.txtCustomerID);
+            this.groupLatLong.Controls.Add(this.txtLatLong);
+            this.groupLatLong.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.groupLatLong.Location = new System.Drawing.Point(5, 3);
+            this.groupLatLong.Name = "groupLatLong";
+            this.groupLatLong.Size = new System.Drawing.Size(163, 140);
+            this.groupLatLong.TabIndex = 279;
+            this.groupLatLong.TabStop = false;
+            this.groupLatLong.Text = "แก้ไขพิกัดร้านค้า : ";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.label2.Location = new System.Drawing.Point(5, 92);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(77, 16);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "รหัสร้านค้า : ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.label1.Location = new System.Drawing.Point(6, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 16);
+            this.label1.TabIndex = 27;
+            this.label1.Text = "พิกัด : ";
+            // 
+            // txtCustomerID
+            // 
+            this.txtCustomerID.Location = new System.Drawing.Point(5, 111);
+            this.txtCustomerID.MaxLength = 50;
+            this.txtCustomerID.Multiline = true;
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.Size = new System.Drawing.Size(151, 23);
+            this.txtCustomerID.TabIndex = 26;
+            // 
+            // txtLatLong
+            // 
+            this.txtLatLong.Location = new System.Drawing.Point(5, 39);
+            this.txtLatLong.MaxLength = 200;
+            this.txtLatLong.Multiline = true;
+            this.txtLatLong.Name = "txtLatLong";
+            this.txtLatLong.Size = new System.Drawing.Size(151, 48);
+            this.txtLatLong.TabIndex = 26;
+            // 
             // panel9
             // 
+            this.panel9.Controls.Add(this.btnRefresh);
             this.panel9.Controls.Add(this.btnSearchMap);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(255, 39);
+            this.panel9.Size = new System.Drawing.Size(356, 41);
             this.panel9.TabIndex = 0;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
+            this.btnRefresh.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRefresh.Location = new System.Drawing.Point(135, 0);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(120, 39);
+            this.btnRefresh.TabIndex = 1;
+            this.btnRefresh.Text = "ย้อนกลับ";
+            this.btnRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // btnSearchMap
             // 
             this.btnSearchMap.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnSearchMap.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSearchMap.BackgroundImage")));
             this.btnSearchMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSearchMap.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSearchMap.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSearchMap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearchMap.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.btnSearchMap.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchMap.Image")));
             this.btnSearchMap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSearchMap.Location = new System.Drawing.Point(0, 0);
             this.btnSearchMap.Name = "btnSearchMap";
-            this.btnSearchMap.Size = new System.Drawing.Size(255, 39);
+            this.btnSearchMap.Size = new System.Drawing.Size(129, 39);
             this.btnSearchMap.TabIndex = 0;
-            this.btnSearchMap.Text = "                       ดูแผนที่";
+            this.btnSearchMap.Text = "ดูแผนที่";
+            this.btnSearchMap.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchMap.UseVisualStyleBackColor = false;
             this.btnSearchMap.Click += new System.EventHandler(this.btnSearchMap_Click);
+            // 
+            // panel11
+            // 
+            this.panel11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel11.Controls.Add(this.webBrowser1);
+            this.panel11.Location = new System.Drawing.Point(3, 4);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(1492, 669);
+            this.panel11.TabIndex = 2;
             // 
             // webBrowser1
             // 
@@ -254,8 +409,9 @@ namespace AllCashUFormsApp.View.Page
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(1597, 672);
+            this.webBrowser1.Size = new System.Drawing.Size(1492, 669);
             this.webBrowser1.TabIndex = 1;
+            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
             // panel2
             // 
@@ -578,6 +734,23 @@ namespace AllCashUFormsApp.View.Page
             this.btnMark1.Text = "1";
             this.btnMark1.UseVisualStyleBackColor = false;
             // 
+            // btnOpenCustomer
+            // 
+            this.btnOpenCustomer.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnOpenCustomer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnOpenCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpenCustomer.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnOpenCustomer.Image = global::AllCashUFormsApp.Properties.Resources.search;
+            this.btnOpenCustomer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnOpenCustomer.Location = new System.Drawing.Point(174, 108);
+            this.btnOpenCustomer.Name = "btnOpenCustomer";
+            this.btnOpenCustomer.Size = new System.Drawing.Size(81, 29);
+            this.btnOpenCustomer.TabIndex = 282;
+            this.btnOpenCustomer.Text = "ดูร้านค้า";
+            this.btnOpenCustomer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnOpenCustomer.UseVisualStyleBackColor = false;
+            this.btnOpenCustomer.Click += new System.EventHandler(this.btnOpenCustomer_Click);
+            // 
             // btnClose
             // 
             this.btnClose.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -675,6 +848,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnPrint.Text = "พิมพ์";
             this.btnPrint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // btnRemove
             // 
@@ -782,7 +956,12 @@ namespace AllCashUFormsApp.View.Page
             ((System.ComponentModel.ISupportInitialize)(this.spliCustomerMap)).EndInit();
             this.spliCustomerMap.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.groupLatLong.ResumeLayout(false);
+            this.groupLatLong.PerformLayout();
             this.panel9.ResumeLayout(false);
+            this.panel11.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -838,5 +1017,17 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Button btnMark3;
         private System.Windows.Forms.Button btnMark2;
         private System.Windows.Forms.Button btnMark1;
+        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.TextBox txtCustomerID;
+        private System.Windows.Forms.Button btnUpdateLL;
+        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.GroupBox groupLatLong;
+        private System.Windows.Forms.TextBox txtLatLong;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Button btnOpenCustomer;
     }
 }

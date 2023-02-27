@@ -327,5 +327,112 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static DataTable SelectSingle(this tbl_ProductPriceGroup tbl_ProductPriceGroup, string ProductID, int PriceGroupID)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = "SELECT * FROM tbl_ProductPriceGroup WHERE 1=1 ";
+
+                if (!string.IsNullOrEmpty(ProductID))
+                    sql += " AND ProductID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + ProductID + "', ',')) ";
+
+                if (PriceGroupID != 0)
+                    sql += " AND PriceGroupID = " + PriceGroupID;
+
+                dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+
+            return dt;
+        }
+
+        public static int Remove_ProductPriceGroup(this tbl_ProductPriceGroup tbl_ProductPriceGroup, string ProductID, int PriceGroupID)
+        {
+            int ret = 0;
+            try
+            {
+                string sql = "";
+
+                if (!string.IsNullOrEmpty(ProductID))
+                {
+                    sql += "DELETE FROM tbl_ProductPriceGroup";
+                    sql += " WHERE PriceGroupID = " + PriceGroupID;
+                    sql += " AND ProductID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + ProductID + "', ','))";
+                    My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);
+                }
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(tbl_ProductPriceGroup.GetType());
+            }
+
+            return ret;
+        }
+
+        public static int UpdateDataList(this List<tbl_ProductPriceGroup> list)
+        {
+            string msg = "start ProductPriceGroupDao=>UpdateDataList";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    foreach (var item in list)
+                    {
+                        var updateData = db.tbl_ProductPriceGroup.FirstOrDefault(x => x.PriceGroupID == item.PriceGroupID
+                        && x.ProductID == item.ProductID
+                        && x.ProductUomID == item.ProductUomID);
+
+                        if (updateData != null)
+                        {
+                            foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                            {
+                                foreach (PropertyInfo tbl_ProductPriceGroupItem in list.GetType().GetProperties())
+                                {
+                                    if (updateDataItem.Name == tbl_ProductPriceGroupItem.Name)
+                                    {
+                                        var value = tbl_ProductPriceGroupItem.GetValue(list, null);
+
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
+                                }
+                            }
+                            db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        }
+                        else
+                        {
+                            db.tbl_ProductPriceGroup.Attach(item);
+                            db.tbl_ProductPriceGroup.Add(item);
+                        }
+                    }
+
+                    db.SaveChanges();
+                    ret = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(tbl_ProductPriceGroups.GetType());
+            }
+
+            msg = "end ProductPriceGroupDao=>UpdateDataList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
     }
 }

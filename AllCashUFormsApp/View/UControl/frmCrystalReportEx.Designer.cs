@@ -51,6 +51,7 @@ namespace AllCashUFormsApp.View.UControl
             this.ClientSize = new System.Drawing.Size(1008, 609);
             this.Controls.Add(this.crystalReportViewer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimizeBox = false;
             this.Name = "frmCrystalReportEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmCrystalReportEx";

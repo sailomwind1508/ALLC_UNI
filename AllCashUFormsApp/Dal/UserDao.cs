@@ -114,12 +114,15 @@ namespace AllCashUFormsApp
                             {
                                 if (updateDataItem.Name == tbl_UsersItem.Name)
                                 {
-                                    var value = tbl_UsersItem.GetValue(tbl_Users, null);
+                                    if (updateDataItem.Name != "UserID")
+                                    {
+                                        var value = tbl_UsersItem.GetValue(tbl_Users, null);
 
-                                    Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
-                                    object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+                                        Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
 
-                                    updateDataItem.SetValue(updateData, safeValue, null);
+                                        updateDataItem.SetValue(updateData, safeValue, null);
+                                    }
                                 }
                             }
                         }

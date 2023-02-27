@@ -29,6 +29,34 @@ namespace AllCashUFormsApp.Controller
             this.tbl_IVDetails = new List<tbl_IVDetail>();
         }
 
+        public bool ValidateSendToHQ(DateTime docDate)
+        {
+            bool ret = false; //true = no send, false = sent
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_EndDay_Verify_SendToHQ";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocDate", docDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    if (newTable.Rows[0][0].ToString() == "0") //0 = no send to HQ, 1 = sent to HQ
+                        ret = true;
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return false;
+            }
+        }
+
         public List<tbl_IVDetail> GetIVDetails(DateTime docDate)
         {
             return new tbl_IVDetail().Select(docDate);
@@ -63,6 +91,33 @@ namespace AllCashUFormsApp.Controller
         public int UpdatePOMasterSQL(string sqlCmd)
         {
             return tbl_POMaster.UpdateSQL(sqlCmd);
+        }
+
+        public int UpdatePODetailsSQL(string sqlCmd)
+        {
+            return (new tbl_PODetail()).UpdateSQL(sqlCmd);
+
+        }
+        public int ExecuteSQLCommand(string sqlCmd)
+        {
+            string msg = "start ExecuteSQLCommand";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                ret = My_DataTable_Extensions.ExecuteSQLScalar(sqlCmd, CommandType.Text);
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(this.GetType());
+            }
+
+            msg = "end ExecuteSQLCommand";
+            msg.WriteLog(null);
+
+            return ret;
         }
 
         public int UpdatePOCustInvNO(tbl_POMaster tbl_POMaster)

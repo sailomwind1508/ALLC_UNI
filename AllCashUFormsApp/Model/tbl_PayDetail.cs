@@ -19,6 +19,7 @@ namespace AllCashUFormsApp.Model
         public string WHID { get; set; }
         public decimal Send { get; set; }
         public decimal Deposit { get; set; }
+        public Nullable<decimal> AllMoneyCredit { get; set; }
         public decimal TotalSale { get; set; }
         public System.DateTime CrDate { get; set; }
         public string CrUser { get; set; }
@@ -28,5 +29,6 @@ namespace AllCashUFormsApp.Model
         public bool FlagSend { get; set; }
         public decimal Transfer { get; set; }
         public decimal Cheque { get; set; }
+
     }
 }

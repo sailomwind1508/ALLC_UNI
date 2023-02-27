@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchProductType));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchProductType));
             this.grdList = new System.Windows.Forms.DataGridView();
+            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colProductTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblgridCount = new System.Windows.Forms.Label();
             this.lblQtyList = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnAccept = new System.Windows.Forms.Button();
-            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colProductTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProductTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,6 +58,34 @@
             this.grdList.Name = "grdList";
             this.grdList.Size = new System.Drawing.Size(526, 435);
             this.grdList.TabIndex = 24;
+            // 
+            // colSelect
+            // 
+            this.colSelect.FillWeight = 30F;
+            this.colSelect.HeaderText = "";
+            this.colSelect.Name = "colSelect";
+            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colSelect.Width = 30;
+            // 
+            // colProductTypeID
+            // 
+            this.colProductTypeID.DataPropertyName = "ProductTypeID";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductTypeID.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colProductTypeID.HeaderText = "ลำดับ";
+            this.colProductTypeID.Name = "colProductTypeID";
+            this.colProductTypeID.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colProductTypeID.Width = 120;
+            // 
+            // colProductTypeName
+            // 
+            this.colProductTypeName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colProductTypeName.DataPropertyName = "ProductTypeName";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colProductTypeName.HeaderText = "ประเภทสินค้า";
+            this.colProductTypeName.MaxInputLength = 50;
+            this.colProductTypeName.Name = "colProductTypeName";
             // 
             // lblgridCount
             // 
@@ -133,34 +161,6 @@
             this.btnAccept.UseVisualStyleBackColor = false;
             this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
-            // colSelect
-            // 
-            this.colSelect.FillWeight = 30F;
-            this.colSelect.HeaderText = "";
-            this.colSelect.Name = "colSelect";
-            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSelect.Width = 30;
-            // 
-            // colProductTypeID
-            // 
-            this.colProductTypeID.DataPropertyName = "ProductTypeID";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductTypeID.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colProductTypeID.HeaderText = "ลำดับ";
-            this.colProductTypeID.Name = "colProductTypeID";
-            this.colProductTypeID.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colProductTypeID.Width = 120;
-            // 
-            // colProductTypeName
-            // 
-            this.colProductTypeName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colProductTypeName.DataPropertyName = "ProductTypeName";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductTypeName.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colProductTypeName.HeaderText = "ประเภทสินค้า";
-            this.colProductTypeName.MaxInputLength = 50;
-            this.colProductTypeName.Name = "colProductTypeName";
-            // 
             // frmSearchProductType
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -175,6 +175,7 @@
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;

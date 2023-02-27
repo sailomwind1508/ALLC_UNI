@@ -266,6 +266,8 @@ namespace AllCashUFormsApp.View.Page
 
             CreatePrintBtnList();
             InitialData();
+
+            //btnCancelEndDay.Enabled = Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10;
         }
 
         public void SetDefaultGridViewEvent(DataGridView grd)
@@ -899,7 +901,7 @@ namespace AllCashUFormsApp.View.Page
                 if (verifyVECust.Rows.Count > 0)
                 {
                     string cfMsg = "พบร้านค้าที่ยังไม่ออกใบกำกับภาษีเต็มรูป!!! \n";
-                    cfMsg += "- กด 'Yes' เพื่อปิดวัน \n- กด 'No' เพื่อออกใบกำกับภาษี \n" + "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    cfMsg += "- กด 'Yes' เพื่อปิดวัน \n- กด 'No' เพื่อออกใบกำกับภาษี \n" + "หากปิกวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!! \n ***ทุกครั้งที่มีการปิดวันใหม่ ต้องส่งข้อมูลเข้า Data Center ใหม่และแจ้งทาง IT เสมอ***";
                     string title = "ยืนยันการปิดวัน";
 
                     if (cfMsg.ConfirmMessageBox(title))
@@ -922,7 +924,7 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
-                    string cfMsg = "หากปิดวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!!";
+                    string cfMsg = "หากปิดวันแล้ว จะไม่สามารถแก้ไขเอกสารของวันที่ " + dtpDocDate.Value.ToDateTimeFormatString() + " ได้อีก!!! \n ***ทุกครั้งที่มีการปิดวันใหม่ ต้องส่งข้อมูลเข้า Data Center ใหม่และแจ้งทาง IT เสมอ***";
                     string title = "ยืนยันการปิดวัน";
                     bool confirmMsg = cfMsg.ConfirmMessageBox(title);
                     if (confirmMsg)
@@ -1318,53 +1320,98 @@ namespace AllCashUFormsApp.View.Page
                 if (ivMasters.Count > 0)
                 {
                     List<int> _letIVs = new List<int>();
+                    string sqlCmdBuilder = "";
                     foreach (var ivMstItem in ivMasters)
                     {
                         bu.tbl_IVMaster = ivMstItem;
                         string docNo = bu.tbl_IVMaster.DocNo;
 
-                        ret = bu.RemovePOIVMaster(bu.tbl_IVMaster); //remove iv master
+                        sqlCmdBuilder += " DELETE FROM tbl_IVMaster WHERE DocNo = '" + docNo + "' ";
 
-                        if (ret == 1)
-                        {
-                            bu.tbl_IVDetails = allIVDetails.Where(x => x.DocNo == docNo).ToList(); //bu.GetIVDetails(x => x.DocNo == docNo);
-                            if (bu.tbl_IVDetails != null && bu.tbl_IVDetails.Count > 0)
-                                ret = bu.RemovePOIVDetails(bu.tbl_IVDetails); //remove iv details
-                        }
+                        sqlCmdBuilder += " DELETE FROM tbl_IVDetail WHERE DocNo = '" + docNo + "' ";
 
-                        if (ret == 1)
+                        var tbl_POMasters = new List<tbl_POMaster>();
+                        tbl_POMasters = allPOMaster.Where(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo).ToList();// bu.GetPOMaster(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo);
+                        if (tbl_POMasters.Count > 0)
                         {
-                            var tbl_POMasters = new List<tbl_POMaster>();
-                            tbl_POMasters = allPOMaster.Where(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo).ToList();// bu.GetPOMaster(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo);
-                            if (tbl_POMasters.Count > 0)
+                            List<int> _letPOs = new List<int>();
+                            foreach (tbl_POMaster poItem in tbl_POMasters)
                             {
-                                List<int> _letPOs = new List<int>();
-                                foreach (tbl_POMaster poItem in tbl_POMasters)
-                                {
-                                    poItem.CustInvNO = "";
-                                    poItem.EdUser = user;
-                                    poItem.EdDate = cDate;
+                                poItem.CustInvNO = "";
+                                poItem.EdUser = user;
+                                poItem.EdDate = cDate;
 
-                                    //_letPOs.Add(bu.UpdatePOMaster(poItem)); //update po master
+                                sqlCmdBuilder += " UPDATE dbo.tbl_POMaster ";
+                                sqlCmdBuilder += " SET CustInvNO = '', ";
+                                sqlCmdBuilder += "    FlagSend = 0, ";
+                                sqlCmdBuilder += "    EdUser = '" + poItem.EdUser + "', ";
+                                sqlCmdBuilder += "    EdDate = GETDATE() ";
+                                sqlCmdBuilder += " WHERE DocNo = '" + poItem.DocNo + "' ";
 
-                                    //edit by sailom 14-06-2021
-                                    string sql = "";
-                                    sql += " UPDATE dbo.tbl_POMaster ";
-                                    sql += " SET CustInvNO = '', ";
-                                    sql += "    EdUser = '" + poItem.EdUser + "', ";
-                                    sql += "    EdDate = GETDATE() ";
-                                    sql += " WHERE DocNo = '" + poItem.DocNo + "' ";
-                                    _letPOs.Add(bu.UpdatePOMasterSQL(sql));
-                                }
-
-                                ret = _letPOs.All(x => x == 1) ? 1 : 0;
+                                sqlCmdBuilder += " UPDATE dbo.tbl_PODetail ";
+                                sqlCmdBuilder += " SET FlagSend = 0, ";
+                                sqlCmdBuilder += "    EdUser = '" + poItem.EdUser + "', ";
+                                sqlCmdBuilder += "    EdDate = GETDATE() ";
+                                sqlCmdBuilder += " WHERE DocNo = '" + poItem.DocNo + "' ";
                             }
-
-                            _letIVs.Add(ret);
                         }
+
+                        //bu.tbl_IVMaster = ivMstItem;
+                        //string docNo = bu.tbl_IVMaster.DocNo;
+
+                        //ret = bu.RemovePOIVMaster(bu.tbl_IVMaster); //remove iv master
+
+                        //if (ret == 1)
+                        //{
+                        //    bu.tbl_IVDetails = allIVDetails.Where(x => x.DocNo == docNo).ToList(); //bu.GetIVDetails(x => x.DocNo == docNo);
+                        //    if (bu.tbl_IVDetails != null && bu.tbl_IVDetails.Count > 0)
+                        //        ret = bu.RemovePOIVDetails(bu.tbl_IVDetails); //remove iv details
+                        //}
+
+                        //if (ret == 1)
+                        //{
+                        //    var tbl_POMasters = new List<tbl_POMaster>();
+                        //    tbl_POMasters = allPOMaster.Where(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo).ToList();// bu.GetPOMaster(x => x.DocTypeCode.Trim() == "IV" && x.DocDate.ToShortDateString() == conditionDate && x.CustInvNO == docNo);
+                        //    if (tbl_POMasters.Count > 0)
+                        //    {
+                        //        List<int> _letPOs = new List<int>();
+                        //        foreach (tbl_POMaster poItem in tbl_POMasters)
+                        //        {
+                        //            poItem.CustInvNO = "";
+                        //            poItem.EdUser = user;
+                        //            poItem.EdDate = cDate;
+
+                        //            //_letPOs.Add(bu.UpdatePOMaster(poItem)); //update po master
+
+                        //            //edit by sailom 14-06-2021
+                        //            string sql = "";
+                        //            sql += " UPDATE dbo.tbl_POMaster ";
+                        //            sql += " SET CustInvNO = '', ";
+                        //            sql += "    FlagSend = 0, ";
+                        //            sql += "    EdUser = '" + poItem.EdUser + "', ";
+                        //            sql += "    EdDate = GETDATE() ";
+                        //            sql += " WHERE DocNo = '" + poItem.DocNo + "' ";
+                        //            _letPOs.Add(bu.UpdatePOMasterSQL(sql));
+
+                        //            //edit by sailom 24/10/2022
+                        //            sql = "";
+                        //            sql += " UPDATE dbo.tbl_PODetail ";
+                        //            sql += " SET FlagSend = 0, ";
+                        //            sql += "    EdUser = '" + poItem.EdUser + "', ";
+                        //            sql += "    EdDate = GETDATE() ";
+                        //            sql += " WHERE DocNo = '" + poItem.DocNo + "' ";
+                        //            _letPOs.Add(bu.UpdatePODetailsSQL(sql));
+                        //        }
+
+                        //        ret = _letPOs.All(x => x == 1) ? 1 : 0;
+                        //    }
+
+                        //    _letIVs.Add(ret);
+                        //}
                     }
 
-                    ret = _letIVs.All(x => x == 1) ? 1 : 0;
+                    _letIVs.Add(bu.ExecuteSQLCommand(sqlCmdBuilder));
+                    ret = _letIVs.All(x => x != 0) ? 1 : 0;
                 }
 
                 //PO Tab--------------------------------------------------------------------------------------
@@ -1399,9 +1446,9 @@ namespace AllCashUFormsApp.View.Page
                                 List<int> _letODs = new List<int>();
                                 foreach (tbl_POMaster poItem in tbl_POMasters)
                                 {
-                                    poItem.DocRef = "";
-                                    poItem.EdUser = user;
-                                    poItem.EdDate = cDate;
+                                    //poItem.DocRef = "";
+                                    //poItem.EdUser = user;
+                                    //poItem.EdDate = cDate;
 
                                     //_letODs.Add(bu.UpdatePOMaster(poItem)); //update po master
 
@@ -1409,6 +1456,7 @@ namespace AllCashUFormsApp.View.Page
                                     string sql = "";
                                     sql += " UPDATE dbo.tbl_POMaster ";
                                     sql += " SET DocRef = '', ";
+                                    sql += "    FlagSend = 0, ";
                                     sql += "    EdUser = '" + poItem.EdUser + "', ";
                                     sql += "    EdDate = GETDATE() ";
                                     sql += " WHERE DocNo = '" + poItem.DocNo + "' ";
@@ -1440,9 +1488,9 @@ namespace AllCashUFormsApp.View.Page
                             string rlDocNo = cell8.Value.ToString();
                             bu.tbl_PRMaster = allPRMaster.FirstOrDefault(x => x.DocNo == rlDocNo); // bu.GetPRMaster(rlDocNo);
                             var rl = bu.tbl_PRMaster;
-                            rl.EdDate = cDate;
-                            rl.EdUser = user;
-                            rl.DocRef = "";
+                            //rl.EdDate = cDate;
+                            //rl.EdUser = user;
+                            //rl.DocRef = "";
 
                             //_letRLs.Add(bu.UpdatePRMaster(rl));
 
@@ -1450,6 +1498,7 @@ namespace AllCashUFormsApp.View.Page
                             string sql = "";
                             sql += " UPDATE dbo.tbl_PRMaster ";
                             sql += " SET DocRef = '', ";
+                            sql += "    FlagSend = 0, ";
                             sql += "    EdUser = '" + rl.EdUser + "', ";
                             sql += "    EdDate = GETDATE() ";
                             sql += " WHERE DocNo = '" + rl.DocNo + "' ";
@@ -1476,15 +1525,16 @@ namespace AllCashUFormsApp.View.Page
                             string rbDocNo = cell8.Value.ToString();
                             bu.tbl_PRMaster = allPRMaster.FirstOrDefault(x => x.DocNo == rbDocNo); //bu.GetPRMaster(rlDocNo);
                             var rb = bu.tbl_PRMaster;
-                            rb.EdDate = cDate;
-                            rb.EdUser = user;
-                            rb.DocRef = "";
+                            //rb.EdDate = cDate;
+                            //rb.EdUser = user;
+                            //rb.DocRef = "";
 
                             //_letRBs.Add(bu.UpdatePRMaster(rb));
                             //edit by sailom 14-06-2021
                             string sql = "";
                             sql += " UPDATE dbo.tbl_PRMaster ";
                             sql += " SET DocRef = '', ";
+                            sql += "    FlagSend = 0, ";
                             sql += "    EdUser = '" + rb.EdUser + "', ";
                             sql += "    EdDate = GETDATE() ";
                             sql += " WHERE DocNo = '" + rb.DocNo + "' ";
@@ -2003,6 +2053,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmEndDay_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -2039,6 +2091,8 @@ namespace AllCashUFormsApp.View.Page
                 btnCancelEndDay.Enabled = btnEndDay.Enabled;
             }
 
+            //btnCancelEndDay.Enabled = Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10;
+
             Cursor.Current = Cursors.Default;
             MemoryManagement.FlushMemory();
         }
@@ -2055,6 +2109,18 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnEndDay_Click(object sender, EventArgs e)
         {
+            //for reduce support work!! last edit by sailom.k 09/01/2023
+            //if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value))
+            //{
+            //    if (!bu.ValidateSendToHQ(dtpDocDate.Value))
+            //    {
+            //        string message = "ไม่สามารถทำรายการได้ เนื่องจากส่งข้อมูลเข้า Data Center แล้ว !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
+            //        message.ShowWarningMessage();
+            //        return;
+            //    }
+
+            //}
+
             BindEndDayData(dtpDocDate.Value, false); //for support case when click end-day after create VE on po-form last edit by sailom
 
             CloseEndDay();
@@ -2065,6 +2131,16 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnCancelEndDay_Click(object sender, EventArgs e)
         {
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value))
+            {
+                if (!bu.ValidateSendToHQ(dtpDocDate.Value))
+                {
+                    string message = "ไม่สามารถทำรายการได้ เนื่องจากส่งข้อมูลเข้า Data Center แล้ว!!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
+                    message.ShowWarningMessage();
+                    return;
+                }
+            }
+
             CancelEndDay();
 
             MemoryManagement.FlushMemory();

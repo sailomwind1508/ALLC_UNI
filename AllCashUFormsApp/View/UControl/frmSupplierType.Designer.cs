@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSupplierType));
             this.panel7 = new System.Windows.Forms.Panel();
             this.SplitContainerForDesign = new System.Windows.Forms.SplitContainer();
@@ -202,10 +202,10 @@
             // colEdDate
             // 
             this.colEdDate.DataPropertyName = "EdDate";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            dataGridViewCellStyle3.Format = "dd/MM/yyyy";
-            dataGridViewCellStyle3.NullValue = null;
-            this.colEdDate.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colEdDate.DefaultCellStyle = dataGridViewCellStyle1;
             this.colEdDate.HeaderText = "วันที่แก้ไข";
             this.colEdDate.Name = "colEdDate";
             this.colEdDate.ReadOnly = true;
@@ -214,8 +214,8 @@
             // colEdUser
             // 
             this.colEdUser.DataPropertyName = "EdUser";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.colEdUser.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.75F);
+            this.colEdUser.DefaultCellStyle = dataGridViewCellStyle2;
             this.colEdUser.HeaderText = "แก้ไขโดย";
             this.colEdUser.MaxInputLength = 50;
             this.colEdUser.Name = "colEdUser";
@@ -642,6 +642,7 @@
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimizeBox = false;
             this.Name = "frmSupplierType";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "กลุ่มสินค้า";

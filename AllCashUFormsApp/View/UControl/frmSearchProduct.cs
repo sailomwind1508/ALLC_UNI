@@ -13,6 +13,8 @@ namespace AllCashUFormsApp.View.UControl
     public partial class frmSearchProduct : Form
     {
         Product bu = new Product();
+        public static bool isMovement = false; //edit by sailom.k 21/10/2022
+        public static bool isReportPage = false; //edit by sailom.k 06/02/2023
         public frmSearchProduct()
         {
             InitializeComponent();
@@ -76,7 +78,13 @@ namespace AllCashUFormsApp.View.UControl
                     _ProductSubGroupID = frmReport._txtSubGroupPro2;
                 }
 
-                var dt = bu.GetProductData_Popup(_ProductSubGroupID, txtSearch.Text);
+                var dt = new DataTable();
+
+                if (isReportPage)
+                    dt = isMovement ? bu.GetProductDataMovementForReport_Popup(_ProductSubGroupID, txtSearch.Text) : bu.GetProductDataForReport_Popup(_ProductSubGroupID, txtSearch.Text); //edit by sailom.k 06/02/2023
+                else
+                    dt = isMovement ? bu.GetProductDataMovement_Popup(_ProductSubGroupID, txtSearch.Text) : bu.GetProductData_Popup(_ProductSubGroupID, txtSearch.Text); //edit by sailom.k 21/10/2022
+
                 grdList.DataSource = dt;
                 lblgridCount.Text = dt.Rows.Count.ToNumberFormat();
 
@@ -115,7 +123,23 @@ namespace AllCashUFormsApp.View.UControl
                     }
             }
             var joinString = string.Join(",", selectList);
-            frmReport._txtPro = joinString;
+
+            //edit by sailom.k 21/10/2022-------------------
+            //frmReport._txtPro = joinString;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f.Name.ToLower() == "frmReport".ToLower())
+                {
+                    frmReport._txtPro = joinString;
+                }
+                else if (f.Name.ToLower() == "frmProductMovement".ToLower())
+                {
+                    Form frm = (Form)f;
+                    ((frmProductMovement)frm).BindListProduct(joinString);
+                }
+            }
+            //edit by sailom.k 21/10/2022-------------------
+
             Cursor.Current = Cursors.Default;
             this.Close();
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -49,10 +50,14 @@ namespace AllCashUFormsApp.Controller
             bool ret = false;
             try
             {
-                //new tbl_Users().SelectAllWarmup();
+                Connection.GetConnectionStringsManual(); //last edit by sailom.k 18/10/2022
 
-                var users = (new tbl_Users()).Select(x => x.FlagDel == false && x.Username.ToLower() == username.ToLower() && x.Password == password);
-                ret = users.Count > 0;
+                //new tbl_Users().SelectAllWarmup();
+                if (IsDNSConnected()) //last edit by sailom.k 18/10/2022
+                {
+                    var users = (new tbl_Users()).Select(x => x.FlagDel == false && x.Username.ToLower() == username.ToLower() && x.Password == password);
+                    ret = users.Count > 0;
+                }
                 //if (users.Count > 0)
                 //{
                 //    ret = users.Any(x => x.FlagDel == false && x.Username.ToLower() == username.ToLower() && x.Password == password); //01-06-2021 by sailom
@@ -60,37 +65,33 @@ namespace AllCashUFormsApp.Controller
             }
             catch (Exception ex)
             {
-                ex.WriteLog(this.GetType());
+                //ex.WriteLog(this.GetType());
+                throw ex;
             }
 
             return ret;
         }
 
-        public Dictionary<string, string> GetConfigData()
+        private bool IsDNSConnected()
         {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-            ret.Add("=== เลือก ===", "");
-            try
+            bool ret = true;
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(Connection.ConnectionString);
+            builder.ConnectTimeout = 5;
+            using (var connection = new SqlConnection(builder.ToString()))
             {
-                var conStrList = ConfigurationManager.ConnectionStrings;
-                List<string> depoList = new List<string>();
-
-                foreach (var item in conStrList)
+                try
                 {
-                    string name = ((ConnectionStringSettings)item).Name;
-                    if (name.Contains("UNI"))
-                    {
-                        string depoName = name.Substring(4, (name.Length - 4));
-                        ret.Add(depoName, item.ToString());
-                    }
+                    connection.Open();
+                    connection.Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-            }
+                catch (SqlException ex)
+                {
+                    ret = false;
+                    throw ex;                    
+                }
 
-            return ret;
+                return ret;
+            }
         }
 
         public List<tbl_Users> GetAllData()

@@ -98,8 +98,14 @@ namespace AllCashUFormsApp
                     string sql = "";
                     if (docTypeCode.Trim() == "V")
                     {
-                        sql += " SELECT * FROM dbo.tbl_IVMaster WHERE DocNo = (SELECT MAX(DocNo) FROM dbo.tbl_IVMaster "; //last edit by sailom .k 10/09/2022
-                        sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+                        //sql += " SELECT * FROM dbo.tbl_IVMaster WHERE CrDate = (SELECT MAX(CrDate) FROM dbo.tbl_IVMaster "; //last edit by sailom .k 25/11/2022
+                        //sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "') ";
+
+                        //sql += @" SELECT * FROM dbo.tbl_IVMaster WHERE CrDate = (SELECT TOP 1 ti.CrDate FROM tbl_IVMaster ti
+                        //    WHERE ti.DocTypeCode = 'V' ORDER BY ti.DocDate DESC, ti.CrDate DESC) "; //last edit by sailom.k 15/12/2022
+
+                        sql += @" SELECT * FROM dbo.tbl_IVMaster WHERE CAST(SUBSTRING(DocNo, 3, LEN(DocNo)) AS INT) = 
+                                (SELECT MAX(CAST(SUBSTRING(ti.DocNo, 3, LEN(ti.DocNo)) AS INT)) FROM tbl_IVMaster ti WHERE ti.DocTypeCode = 'V') ";  //last edit by sailom.k 17/12/2022                       
                     }
                     else
                     {
@@ -461,6 +467,139 @@ namespace AllCashUFormsApp
             }
 
             msg = "end IVMasterDao=>Delete";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkInsert(this tbl_IVMaster tbl_IVMaster)
+        {
+            string msg = "start IVMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            List<tbl_IVMaster> tbl_IVMasters = new List<tbl_IVMaster>();
+            tbl_IVMasters.Add(tbl_IVMaster);
+
+            var table = tbl_IVMasters.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_IVMaster";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end IVMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this tbl_IVMaster tbl_IVMaster)
+        {
+            string msg = "start IVMasterDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_IVMaster WHERE DocNo = '" + tbl_IVMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_IVMaster.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end IVMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this tbl_IVMaster tbl_IVMaster)
+        {
+            string msg = "start IVMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_IVMaster WHERE DocNo = '" + tbl_IVMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end IVMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this tbl_IVMaster tbl_IVMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start IVMasterDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_IVMaster();
+                var docNo = tbl_IVMaster.DocNo;
+                updateData = db.tbl_IVMaster.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_IVMaster.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_IVMaster.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end IVMasterDao=>PerformUpdate";
             msg.WriteLog(null);
 
             return ret;

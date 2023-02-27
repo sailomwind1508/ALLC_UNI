@@ -31,10 +31,11 @@ namespace AllCashUFormsApp.View.Page
 
         Func<tbl_BranchWarehouse, bool> fbiPredicate = null;
         private string[] productArr = null;
-        private static List<string> selectProdect = new List<string>();
+        private static List<string> selectProduct = new List<string>();
         static DataTable tmpDTData = new DataTable();
         string excelName = "";
         bool isPopup = false;
+        public static string listProds = "";
 
         public frmProductMovement()
         {
@@ -44,7 +45,7 @@ namespace AllCashUFormsApp.View.Page
             searchFromBWHControls = new List<Control> { txtFromWHCode };
             searchToBWHControls = new List<Control> { txtToWHCode };
 
-            readOnlyControls = new string[] { txtBranchCode.Name }.ToList();
+            readOnlyControls = new string[] { txtBranchCode.Name, txtProID.Name }.ToList();
 
             ccbProductCode.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ccb_ItemCheck);
         }
@@ -53,18 +54,18 @@ namespace AllCashUFormsApp.View.Page
         {
             isPopup = flagPopup;
 
-            if (ccbProductCode.Items.Count == 0)
-            {
-                BindCcb();
-            }
+            //if (ccbProductCode.Items.Count == 0)
+            //{
+            //    BindCcb();
+            //}
 
             var allProduct = bu.tbl_Product.Where(x => x.ProductID == productID).ToList();
             productArr = allProduct.Select(x => x.ProductCode + ":" + x.ProductName).ToArray();
 
-            ccbProductCode.Text = productArr[0];
+            //ccbProductCode.Text = productArr[0];
 
-            selectProdect = new List<string>();
-            selectProdect.Add(productID);
+            selectProduct = new List<string>();
+            selectProduct.Add(productID);
 
             txtFromWHCode.Text = fromWHID;
             txtToWHCode.Text = toWHID;
@@ -197,7 +198,7 @@ namespace AllCashUFormsApp.View.Page
 
                     DataTable dt = new DataTable();
 
-                    dt = bu.GetDataTable(fwhid, twhid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
+                    dt = bu.GetDataTable(fwhid, twhid, prdGroupID, prdSupGroupID, selectProduct, fDate, tDate);
 
                     if (dt != null)
                     {
@@ -251,7 +252,7 @@ namespace AllCashUFormsApp.View.Page
 
                         MemoryManagement.FlushMemory();
 
-                        dt = bu.GetDataTable_Details(fwhid, twhid, prdGroupID, prdSupGroupID, selectProdect, fDate, tDate);
+                        dt = bu.GetDataTable_Details(fwhid, twhid, prdGroupID, prdSupGroupID, selectProduct, fDate, tDate);
 
                         MemoryManagement.FlushMemory();
 
@@ -311,7 +312,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void GetProductList()
         {
-            selectProdect = new List<string>();
+            selectProduct = new List<string>();
 
             //txtOut.AppendText("DropdownClosed\r\n");
             //txtOut.AppendText(string.Format("value changed: {0}\r\n", ccbProductCode.ValueChanged));
@@ -331,7 +332,7 @@ namespace AllCashUFormsApp.View.Page
                 foreach (var item in selPrdList)
                 {
                     var _prdCode = item.Split(':')[0].ToString().Replace(" ", string.Empty);
-                    selectProdect.Add(_prdCode);
+                    selectProduct.Add(_prdCode);
                 }
             }
             //txtOut.AppendText(sb.ToString());
@@ -373,6 +374,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmProductMovement_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -469,7 +472,7 @@ namespace AllCashUFormsApp.View.Page
             foreach (DataRow r in tmpDTData.Rows)
             {
                 var tmpDate = r["เวลา"].ToString().Split('/');
-                var tmpDate2 = string.Join("/", tmpDate[1], tmpDate[0], tmpDate[2]);
+                var tmpDate2 = string.Join("-", tmpDate[2], tmpDate[1], tmpDate[0]);  //last edit by sailom .k 27-09/2022 // string.Join("/", tmpDate[1], tmpDate[0], tmpDate[2]);
                 DateTime _dateTime = Convert.ToDateTime(tmpDate2);
                 _dt.Rows.Add(r["รหัสสินค้า"], r["ชื่อสินค้า"]
                     , _dateTime.ToString("dd/MM/yyyy", new CultureInfo("en-US"))
@@ -548,8 +551,18 @@ namespace AllCashUFormsApp.View.Page
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (!isPopup)
-                GetProductList();
+            //if (!isPopup)
+            //    GetProductList();
+
+            if (!string.IsNullOrEmpty(txtProID.Text))
+            {
+                selectProduct = new List<string>();
+                var selPrdList = txtProID.Text.Split(',');
+                foreach (var item in selPrdList)
+                {
+                    selectProduct.Add(item);
+                }
+            }
 
             tmpDTData = new DataTable();
             if (rdoSummary.Checked)
@@ -586,9 +599,11 @@ namespace AllCashUFormsApp.View.Page
         {
             InitPage();
 
-            ccbProductCode.Items.Clear();
-            ccbProductCode.Text = string.Empty;
-            BindCcb();
+            txtProID.Text = string.Empty;
+
+            //ccbProductCode.Items.Clear();
+            //ccbProductCode.Text = string.Empty;
+            //BindCcb();
         }
 
         private void grdList_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -634,6 +649,27 @@ namespace AllCashUFormsApp.View.Page
             //    msg.ShowInfoMessage();
             //    return;
             //}
+        }
+
+        private void ccbProductCode_Click(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        public void BindListProduct(string txt)
+        {
+            listProds = txt;
+            if (!string.IsNullOrEmpty(txt))
+                txtProID.Text = listProds;
+        }
+
+        private void txtProID_Click(object sender, EventArgs e)
+        {
+            frmSearchProduct _frm = new frmSearchProduct();
+            frmSearchProduct.isMovement = true;
+            frmSearchProduct.isReportPage = false; //edit by sailom.k 06/02/2023
+            _frm.ShowDialog();
         }
     }
 }

@@ -51,6 +51,10 @@ namespace AllCashUFormsApp
         PreOrder,
         CustomerPre,
         IVPrePO,
-        PromotionProduct
+        PromotionProduct,
+        AllBranchOD,
+        AllBranchRL,
+        AllBranchRB,
+        AllDocData
     }
 }

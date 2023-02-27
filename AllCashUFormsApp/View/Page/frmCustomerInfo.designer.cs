@@ -30,18 +30,18 @@ namespace AllCashUFormsApp.View.Page
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerInfo));
             this.pnlBackGround = new System.Windows.Forms.Panel();
             this.splitCustomerCenter = new System.Windows.Forms.SplitContainer();
@@ -49,12 +49,12 @@ namespace AllCashUFormsApp.View.Page
             this.grdList = new System.Windows.Forms.DataGridView();
             this.colCustomerID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCustName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSeq = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colImageCustomer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colShopTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSalAreaID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSalAreaName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSeq = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colFlagMember = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colBillTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTelephone = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,7 +73,7 @@ namespace AllCashUFormsApp.View.Page
             this.txtBranchName = new System.Windows.Forms.TextBox();
             this.txtBranchCode = new System.Windows.Forms.TextBox();
             this.btnChangeSeq = new System.Windows.Forms.Button();
-            this.chkBoxPresale = new System.Windows.Forms.CheckBox();
+            this.chkShelf = new System.Windows.Forms.CheckBox();
             this.ddlShopType = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.ddlSalArea = new System.Windows.Forms.ComboBox();
@@ -257,18 +257,18 @@ namespace AllCashUFormsApp.View.Page
             this.grdList.AllowUserToAddRows = false;
             this.grdList.AllowUserToDeleteRows = false;
             this.grdList.AllowUserToResizeRows = false;
-            dataGridViewCellStyle37.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.grdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCustomerID,
             this.colCustName,
+            this.colSeq,
             this.colImageCustomer,
             this.colShopTypeName,
             this.colSalAreaID,
             this.colSalAreaName,
             this.colWHID,
-            this.colSeq,
             this.colFlagMember,
             this.colBillTo,
             this.colTelephone,
@@ -291,12 +291,13 @@ namespace AllCashUFormsApp.View.Page
             this.grdList.DragOver += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragOver);
             this.grdList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
             this.grdList.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseMove);
+            this.grdList.Validating += new System.ComponentModel.CancelEventHandler(this.grdList_Validating);
             // 
             // colCustomerID
             // 
             this.colCustomerID.DataPropertyName = "CustomerID";
-            dataGridViewCellStyle38.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colCustomerID.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colCustomerID.DefaultCellStyle = dataGridViewCellStyle14;
             this.colCustomerID.HeaderText = "รหัสลูกค้า";
             this.colCustomerID.MaxInputLength = 20;
             this.colCustomerID.Name = "colCustomerID";
@@ -308,8 +309,8 @@ namespace AllCashUFormsApp.View.Page
             // colCustName
             // 
             this.colCustName.DataPropertyName = "CustName";
-            dataGridViewCellStyle39.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colCustName.DefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colCustName.DefaultCellStyle = dataGridViewCellStyle15;
             this.colCustName.HeaderText = "ชื่อลูกค้า";
             this.colCustName.MaxInputLength = 200;
             this.colCustName.Name = "colCustName";
@@ -317,6 +318,20 @@ namespace AllCashUFormsApp.View.Page
             this.colCustName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.colCustName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colCustName.Width = 130;
+            // 
+            // colSeq
+            // 
+            this.colSeq.DataPropertyName = "Seq";
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSeq.DefaultCellStyle = dataGridViewCellStyle16;
+            this.colSeq.HeaderText = "ลำดับ";
+            this.colSeq.MaxInputLength = 15;
+            this.colSeq.Name = "colSeq";
+            this.colSeq.ReadOnly = true;
+            this.colSeq.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colSeq.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colSeq.Width = 60;
             // 
             // colImageCustomer
             // 
@@ -330,8 +345,8 @@ namespace AllCashUFormsApp.View.Page
             // colShopTypeName
             // 
             this.colShopTypeName.DataPropertyName = "ShopTypeName";
-            dataGridViewCellStyle40.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle17;
             this.colShopTypeName.HeaderText = "ประเภทร้านค้า";
             this.colShopTypeName.MaxInputLength = 50;
             this.colShopTypeName.Name = "colShopTypeName";
@@ -342,8 +357,8 @@ namespace AllCashUFormsApp.View.Page
             // colSalAreaID
             // 
             this.colSalAreaID.DataPropertyName = "SalAreaID";
-            dataGridViewCellStyle41.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSalAreaID.DefaultCellStyle = dataGridViewCellStyle41;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSalAreaID.DefaultCellStyle = dataGridViewCellStyle18;
             this.colSalAreaID.HeaderText = "รหัสตลาด";
             this.colSalAreaID.MaxInputLength = 20;
             this.colSalAreaID.Name = "colSalAreaID";
@@ -355,8 +370,8 @@ namespace AllCashUFormsApp.View.Page
             // colSalAreaName
             // 
             this.colSalAreaName.DataPropertyName = "SalAreaName";
-            dataGridViewCellStyle42.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSalAreaName.DefaultCellStyle = dataGridViewCellStyle42;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSalAreaName.DefaultCellStyle = dataGridViewCellStyle19;
             this.colSalAreaName.HeaderText = "ชื่อตลาด";
             this.colSalAreaName.MaxInputLength = 50;
             this.colSalAreaName.Name = "colSalAreaName";
@@ -367,28 +382,14 @@ namespace AllCashUFormsApp.View.Page
             // colWHID
             // 
             this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle43.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle43;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle20;
             this.colWHID.HeaderText = "รหัสคลัง";
             this.colWHID.MaxInputLength = 20;
             this.colWHID.Name = "colWHID";
             this.colWHID.ReadOnly = true;
             this.colWHID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.colWHID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colSeq
-            // 
-            this.colSeq.DataPropertyName = "Seq";
-            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle44.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSeq.DefaultCellStyle = dataGridViewCellStyle44;
-            this.colSeq.HeaderText = "ลำดับ";
-            this.colSeq.MaxInputLength = 15;
-            this.colSeq.Name = "colSeq";
-            this.colSeq.ReadOnly = true;
-            this.colSeq.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSeq.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colSeq.Width = 60;
             // 
             // colFlagMember
             // 
@@ -402,8 +403,8 @@ namespace AllCashUFormsApp.View.Page
             // colBillTo
             // 
             this.colBillTo.DataPropertyName = "BillTo";
-            dataGridViewCellStyle45.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colBillTo.DefaultCellStyle = dataGridViewCellStyle45;
+            dataGridViewCellStyle21.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colBillTo.DefaultCellStyle = dataGridViewCellStyle21;
             this.colBillTo.HeaderText = "ที่อยู่";
             this.colBillTo.MaxInputLength = 500;
             this.colBillTo.Name = "colBillTo";
@@ -413,8 +414,8 @@ namespace AllCashUFormsApp.View.Page
             // colTelephone
             // 
             this.colTelephone.DataPropertyName = "Telephone";
-            dataGridViewCellStyle46.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colTelephone.DefaultCellStyle = dataGridViewCellStyle46;
+            dataGridViewCellStyle22.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colTelephone.DefaultCellStyle = dataGridViewCellStyle22;
             this.colTelephone.HeaderText = "เบอร์โทรศัพท์";
             this.colTelephone.MaxInputLength = 20;
             this.colTelephone.Name = "colTelephone";
@@ -425,8 +426,8 @@ namespace AllCashUFormsApp.View.Page
             // colLatitude
             // 
             this.colLatitude.DataPropertyName = "Latitude";
-            dataGridViewCellStyle47.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colLatitude.DefaultCellStyle = dataGridViewCellStyle47;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colLatitude.DefaultCellStyle = dataGridViewCellStyle23;
             this.colLatitude.HeaderText = "ละติจูด";
             this.colLatitude.MaxInputLength = 500;
             this.colLatitude.Name = "colLatitude";
@@ -436,8 +437,8 @@ namespace AllCashUFormsApp.View.Page
             // colLongitude
             // 
             this.colLongitude.DataPropertyName = "Longitude";
-            dataGridViewCellStyle48.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colLongitude.DefaultCellStyle = dataGridViewCellStyle48;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colLongitude.DefaultCellStyle = dataGridViewCellStyle24;
             this.colLongitude.HeaderText = "ลองติจูด";
             this.colLongitude.MaxInputLength = 500;
             this.colLongitude.Name = "colLongitude";
@@ -489,7 +490,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlSearch.Controls.Add(this.txtBranchName);
             this.pnlSearch.Controls.Add(this.txtBranchCode);
             this.pnlSearch.Controls.Add(this.btnChangeSeq);
-            this.pnlSearch.Controls.Add(this.chkBoxPresale);
+            this.pnlSearch.Controls.Add(this.chkShelf);
             this.pnlSearch.Controls.Add(this.ddlShopType);
             this.pnlSearch.Controls.Add(this.label2);
             this.pnlSearch.Controls.Add(this.ddlSalArea);
@@ -568,7 +569,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.chkChangeSaleArea.AutoSize = true;
             this.chkChangeSaleArea.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkChangeSaleArea.Location = new System.Drawing.Point(239, 109);
+            this.chkChangeSaleArea.Location = new System.Drawing.Point(239, 133);
             this.chkChangeSaleArea.Name = "chkChangeSaleArea";
             this.chkChangeSaleArea.Size = new System.Drawing.Size(93, 20);
             this.chkChangeSaleArea.TabIndex = 416;
@@ -586,7 +587,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(493, 6);
+            this.btnSearch.Location = new System.Drawing.Point(494, 6);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 24);
             this.btnSearch.TabIndex = 216;
@@ -643,15 +644,15 @@ namespace AllCashUFormsApp.View.Page
             this.btnChangeSeq.UseVisualStyleBackColor = false;
             this.btnChangeSeq.Click += new System.EventHandler(this.btnChangeSeq_Click);
             // 
-            // chkBoxPresale
+            // chkShelf
             // 
-            this.chkBoxPresale.AutoSize = true;
-            this.chkBoxPresale.Location = new System.Drawing.Point(239, 87);
-            this.chkBoxPresale.Name = "chkBoxPresale";
-            this.chkBoxPresale.Size = new System.Drawing.Size(69, 20);
-            this.chkBoxPresale.TabIndex = 207;
-            this.chkBoxPresale.Text = "Presale";
-            this.chkBoxPresale.UseVisualStyleBackColor = true;
+            this.chkShelf.AutoSize = true;
+            this.chkShelf.Location = new System.Drawing.Point(239, 87);
+            this.chkShelf.Name = "chkShelf";
+            this.chkShelf.Size = new System.Drawing.Size(61, 20);
+            this.chkShelf.TabIndex = 207;
+            this.chkShelf.Text = "ชั้นวาง";
+            this.chkShelf.UseVisualStyleBackColor = true;
             // 
             // ddlShopType
             // 
@@ -958,6 +959,7 @@ namespace AllCashUFormsApp.View.Page
             this.listBox_Shelf.Name = "listBox_Shelf";
             this.listBox_Shelf.Size = new System.Drawing.Size(162, 68);
             this.listBox_Shelf.TabIndex = 413;
+            this.listBox_Shelf.DoubleClick += new System.EventHandler(this.listBox_Shelf_DoubleClick);
             // 
             // btnAddShelf
             // 
@@ -2098,7 +2100,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.TextBox txtBranchName;
         private System.Windows.Forms.TextBox txtBranchCode;
         private System.Windows.Forms.Button btnChangeSeq;
-        private System.Windows.Forms.CheckBox chkBoxPresale;
+        private System.Windows.Forms.CheckBox chkShelf;
         private System.Windows.Forms.ComboBox ddlShopType;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ddlSalArea;
@@ -2219,12 +2221,12 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Button btnMoveUp;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCustomerID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCustName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSeq;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colImageCustomer;
         private System.Windows.Forms.DataGridViewTextBoxColumn colShopTypeName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSalAreaID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSalAreaName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colWHID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colSeq;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colFlagMember;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBillTo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTelephone;

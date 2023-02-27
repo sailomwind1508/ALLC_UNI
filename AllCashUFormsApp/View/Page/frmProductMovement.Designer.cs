@@ -42,32 +42,34 @@
             this.grbPrdMMType = new System.Windows.Forms.GroupBox();
             this.rdoDetails = new System.Windows.Forms.RadioButton();
             this.rdoSummary = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
             this.dtpToDate = new System.Windows.Forms.DateTimePicker();
-            this.label8 = new System.Windows.Forms.Label();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.pnlTL = new System.Windows.Forms.Panel();
+            this.txtProID = new System.Windows.Forms.TextBox();
             this.chkAllMM = new System.Windows.Forms.CheckBox();
-            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.txtToWHCode = new System.Windows.Forms.TextBox();
             this.btnToWHCode = new System.Windows.Forms.Button();
             this.ddlProductSubGroup = new System.Windows.Forms.ComboBox();
             this.ddlProductGroup = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblEmpCode = new System.Windows.Forms.Label();
             this.txtFromWHCode = new System.Windows.Forms.TextBox();
             this.btnFromWHCode = new System.Windows.Forms.Button();
-            this.lblWHCode = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtBranchName = new System.Windows.Forms.TextBox();
             this.txtBranchCode = new System.Windows.Forms.TextBox();
             this.btnSearchBranchCode = new System.Windows.Forms.Button();
+            this.lblEmpCode = new System.Windows.Forms.Label();
+            this.lblWHCode = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.lblBranchCode = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.ccbProductCode = new CheckComboBoxTest.CheckedComboBox();
             this.btnClose = new AllCashUFormsApp.View.UControl.CloseButton(this.components);
             this.btnAdd = new AllCashUFormsApp.View.UControl.AddButton(this.components);
             this.btnExcel = new AllCashUFormsApp.View.UControl.ExcelButton(this.components);
@@ -77,7 +79,6 @@
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -236,6 +237,24 @@
             this.rdoSummary.Text = "แบบสรุปรวม";
             this.rdoSummary.UseVisualStyleBackColor = true;
             // 
+            // dtpToDate
+            // 
+            this.dtpToDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpToDate.CustomFormat = "dd/MM/yyyy";
+            this.dtpToDate.Location = new System.Drawing.Point(85, 28);
+            this.dtpToDate.Name = "dtpToDate";
+            this.dtpToDate.Size = new System.Drawing.Size(163, 23);
+            this.dtpToDate.TabIndex = 105;
+            // 
+            // dtpFromDate
+            // 
+            this.dtpFromDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpFromDate.CustomFormat = "dd/MM/yyyy";
+            this.dtpFromDate.Location = new System.Drawing.Point(85, 4);
+            this.dtpFromDate.Name = "dtpFromDate";
+            this.dtpFromDate.Size = new System.Drawing.Size(163, 23);
+            this.dtpFromDate.TabIndex = 10;
+            // 
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -245,15 +264,6 @@
             this.label3.Size = new System.Drawing.Size(58, 16);
             this.label3.TabIndex = 106;
             this.label3.Text = "ถึงวันที่ : ";
-            // 
-            // dtpToDate
-            // 
-            this.dtpToDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtpToDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpToDate.Location = new System.Drawing.Point(85, 28);
-            this.dtpToDate.Name = "dtpToDate";
-            this.dtpToDate.Size = new System.Drawing.Size(163, 23);
-            this.dtpToDate.TabIndex = 105;
             // 
             // label8
             // 
@@ -265,18 +275,10 @@
             this.label8.TabIndex = 104;
             this.label8.Text = "วันที่ : ";
             // 
-            // dtpFromDate
-            // 
-            this.dtpFromDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtpFromDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpFromDate.Location = new System.Drawing.Point(85, 4);
-            this.dtpFromDate.Name = "dtpFromDate";
-            this.dtpFromDate.Size = new System.Drawing.Size(163, 23);
-            this.dtpFromDate.TabIndex = 10;
-            // 
             // pnlTL
             // 
             this.pnlTL.BackColor = System.Drawing.Color.Azure;
+            this.pnlTL.Controls.Add(this.txtProID);
             this.pnlTL.Controls.Add(this.chkAllMM);
             this.pnlTL.Controls.Add(this.ccbProductCode);
             this.pnlTL.Controls.Add(this.btnClear);
@@ -303,6 +305,17 @@
             this.pnlTL.Size = new System.Drawing.Size(722, 106);
             this.pnlTL.TabIndex = 20;
             // 
+            // txtProID
+            // 
+            this.txtProID.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.txtProID.Location = new System.Drawing.Point(89, 79);
+            this.txtProID.MaxLength = 5000;
+            this.txtProID.Name = "txtProID";
+            this.txtProID.ReadOnly = true;
+            this.txtProID.Size = new System.Drawing.Size(468, 23);
+            this.txtProID.TabIndex = 128;
+            this.txtProID.Click += new System.EventHandler(this.txtProID_Click);
+            // 
             // chkAllMM
             // 
             this.chkAllMM.AutoSize = true;
@@ -316,20 +329,6 @@
             this.chkAllMM.UseVisualStyleBackColor = false;
             this.chkAllMM.CheckedChanged += new System.EventHandler(this.chkAllMM_CheckedChanged);
             // 
-            // ccbProductCode
-            // 
-            this.ccbProductCode.CheckOnClick = true;
-            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.ccbProductCode.DropDownHeight = 1;
-            this.ccbProductCode.FormattingEnabled = true;
-            this.ccbProductCode.IntegralHeight = false;
-            this.ccbProductCode.Location = new System.Drawing.Point(89, 77);
-            this.ccbProductCode.Name = "ccbProductCode";
-            this.ccbProductCode.Size = new System.Drawing.Size(466, 24);
-            this.ccbProductCode.TabIndex = 108;
-            this.ccbProductCode.ValueSeparator = ", ";
-            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
-            // 
             // btnClear
             // 
             this.btnClear.BackColor = System.Drawing.Color.PaleTurquoise;
@@ -338,7 +337,7 @@
             this.btnClear.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClear.Location = new System.Drawing.Point(631, 76);
+            this.btnClear.Location = new System.Drawing.Point(631, 78);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(67, 26);
             this.btnClear.TabIndex = 126;
@@ -355,7 +354,7 @@
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(559, 76);
+            this.btnSearch.Location = new System.Drawing.Point(559, 78);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 26);
             this.btnSearch.TabIndex = 125;
@@ -363,15 +362,6 @@
             this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearch.UseVisualStyleBackColor = false;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(331, 33);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 16);
-            this.label2.TabIndex = 123;
-            this.label2.Text = "ถึง : ";
             // 
             // txtToWHCode
             // 
@@ -418,24 +408,6 @@
             this.ddlProductGroup.TabIndex = 119;
             this.ddlProductGroup.SelectedIndexChanged += new System.EventHandler(this.ddlProductGroup_SelectedIndexChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(313, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 16);
-            this.label1.TabIndex = 118;
-            this.label1.Text = "กลุ่มย่อยสินค้า : ";
-            // 
-            // lblEmpCode
-            // 
-            this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(14, 55);
-            this.lblEmpCode.Name = "lblEmpCode";
-            this.lblEmpCode.Size = new System.Drawing.Size(75, 16);
-            this.lblEmpCode.TabIndex = 117;
-            this.lblEmpCode.Text = "กลุ่มสินค้า : ";
-            // 
             // txtFromWHCode
             // 
             this.txtFromWHCode.Location = new System.Drawing.Point(89, 28);
@@ -459,24 +431,6 @@
             this.btnFromWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnFromWHCode.UseVisualStyleBackColor = false;
             this.btnFromWHCode.Click += new System.EventHandler(this.btnSearchFromWHCode_Click);
-            // 
-            // lblWHCode
-            // 
-            this.lblWHCode.AutoSize = true;
-            this.lblWHCode.Location = new System.Drawing.Point(16, 31);
-            this.lblWHCode.Name = "lblWHCode";
-            this.lblWHCode.Size = new System.Drawing.Size(73, 16);
-            this.lblWHCode.TabIndex = 113;
-            this.lblWHCode.Text = "คลังสินค้า : ";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 80);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 16);
-            this.label6.TabIndex = 109;
-            this.label6.Text = "รหัสสินค้า : ";
             // 
             // txtBranchName
             // 
@@ -511,6 +465,33 @@
             this.btnSearchBranchCode.UseVisualStyleBackColor = false;
             this.btnSearchBranchCode.Click += new System.EventHandler(this.btnSearchBranchCode_Click);
             // 
+            // lblEmpCode
+            // 
+            this.lblEmpCode.AutoSize = true;
+            this.lblEmpCode.Location = new System.Drawing.Point(14, 55);
+            this.lblEmpCode.Name = "lblEmpCode";
+            this.lblEmpCode.Size = new System.Drawing.Size(75, 16);
+            this.lblEmpCode.TabIndex = 117;
+            this.lblEmpCode.Text = "กลุ่มสินค้า : ";
+            // 
+            // lblWHCode
+            // 
+            this.lblWHCode.AutoSize = true;
+            this.lblWHCode.Location = new System.Drawing.Point(16, 31);
+            this.lblWHCode.Name = "lblWHCode";
+            this.lblWHCode.Size = new System.Drawing.Size(73, 16);
+            this.lblWHCode.TabIndex = 113;
+            this.lblWHCode.Text = "คลังสินค้า : ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(16, 80);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(73, 16);
+            this.label6.TabIndex = 109;
+            this.label6.Text = "รหัสสินค้า : ";
+            // 
             // lblBranchCode
             // 
             this.lblBranchCode.AutoSize = true;
@@ -519,6 +500,24 @@
             this.lblBranchCode.Size = new System.Drawing.Size(47, 16);
             this.lblBranchCode.TabIndex = 99;
             this.lblBranchCode.Text = "เดโป้ : ";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(331, 33);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 16);
+            this.label2.TabIndex = 123;
+            this.label2.Text = "ถึง : ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(313, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(99, 16);
+            this.label1.TabIndex = 118;
+            this.label1.Text = "กลุ่มย่อยสินค้า : ";
             // 
             // panel1
             // 
@@ -546,6 +545,25 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(782, 28);
             this.panel5.TabIndex = 17;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // ccbProductCode
+            // 
+            this.ccbProductCode.CheckOnClick = true;
+            this.ccbProductCode.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.ccbProductCode.DropDownHeight = 1;
+            this.ccbProductCode.FormattingEnabled = true;
+            this.ccbProductCode.IntegralHeight = false;
+            this.ccbProductCode.Location = new System.Drawing.Point(559, 2);
+            this.ccbProductCode.Name = "ccbProductCode";
+            this.ccbProductCode.Size = new System.Drawing.Size(135, 24);
+            this.ccbProductCode.TabIndex = 108;
+            this.ccbProductCode.ValueSeparator = ", ";
+            this.ccbProductCode.Visible = false;
+            this.ccbProductCode.DropDownClosed += new System.EventHandler(this.ccb_DropDownClosed);
             // 
             // btnClose
             // 
@@ -605,6 +623,7 @@
             this.btnExcel.Text = "Import Excel";
             this.btnExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnExcel.UseVisualStyleBackColor = false;
+            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
             // 
             // btnEdit
             // 
@@ -725,10 +744,6 @@
             this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSave.UseVisualStyleBackColor = false;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // frmProductMovement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -812,5 +827,6 @@
         private System.Windows.Forms.DataGridView grdList;
         private CheckComboBoxTest.CheckedComboBox ccbProductCode;
         private System.Windows.Forms.CheckBox chkAllMM;
+        private System.Windows.Forms.TextBox txtProID;
     }
 }

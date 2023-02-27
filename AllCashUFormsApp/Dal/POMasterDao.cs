@@ -267,7 +267,6 @@ namespace AllCashUFormsApp
 
                     List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
                     list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
-
                 }
 
                 //using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
@@ -294,16 +293,17 @@ namespace AllCashUFormsApp
                     string sql = "";
                     if (docTypeCode.Trim() == "IV")
                     {
-                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        //sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster "; //edit by sailom.k 19/11/2022
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE CrDate = (SELECT MAX(CrDate) FROM dbo.tbl_POMaster ";
                         sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND ISNULL(DocRef, '') = '' )";
                     }
                     else
                     {
-                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster ";
+                        //sql += " SELECT * FROM dbo.tbl_POMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_POMaster "; //edit by sailom.k 19/11/2022
+                        sql += " SELECT * FROM dbo.tbl_POMaster WHERE CrDate = (SELECT MAX(CrDate) FROM dbo.tbl_POMaster ";
                         sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' )";
                     }
                     
-
                     List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
                     list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
        
@@ -313,6 +313,50 @@ namespace AllCashUFormsApp
                 //{
                 //    list = db.tbl_POMaster.Where(predicate).OrderBy(x => x.DocNo).AsQueryable().ToList();
                 //}
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// for support max docno from tablet sales transaction by sailom .k 21/11/2022
+        /// </summary>
+        /// <param name="tbl_POMaster"></param>
+        /// <param name="docTypeCode"></param>
+        /// <param name="whid"></param>
+        /// <param name="docdate"></param>
+        /// <returns></returns>
+        public static List<tbl_POMaster> SelectNewMaxAutoID(this tbl_POMaster tbl_POMaster, string docTypeCode, string whid, DateTime docdate)
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    if (docTypeCode.Trim() == "IV")
+                    {
+                        sql += @" SELECT * FROM dbo.tbl_POMaster 
+                                WHERE CrDate = 
+                                (
+	                                SELECT MAX(CrDate) 
+	                                FROM dbo.tbl_POMaster 
+                                    WHERE ISNULL(DocRef, '') = '' ";
+                        sql += "    AND DocTypeCode = '" + docTypeCode.Trim() + "' ";
+                        sql += "    AND WHID = '" + whid + "' ";
+                        sql += "    AND DocDate = '" + docdate.ToString("yyyyMMdd", new CultureInfo("en-US")) + "' ";
+                        sql += " ) ";
+                    }
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_POMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+
+                }
             }
             catch (Exception ex)
             {
@@ -922,6 +966,157 @@ namespace AllCashUFormsApp
             msg.WriteLog(null);
 
             return ret1;
+        }
+
+        public static int BulkInsert(this tbl_POMaster tbl_POMaster)
+        {
+            string msg = "start POMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            List<tbl_POMaster> tbl_POMasters = new List<tbl_POMaster>();
+            tbl_POMasters.Add(tbl_POMaster);
+
+            var table = tbl_POMasters.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_POMaster";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end POMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this tbl_POMaster tbl_POMaster)
+        {
+            string msg = "start POMasterDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_POMaster WHERE DocNo = '" + tbl_POMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_POMaster.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end POMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this tbl_POMaster tbl_POMaster)
+        {
+            string msg = "start POMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_POMaster WHERE DocNo = '" + tbl_POMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end POMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this tbl_POMaster tbl_POMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start POMasterDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_POMaster();
+                var docNo = tbl_POMaster.DocNo;
+                updateData = db.tbl_POMaster.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_POMaster.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_POMaster.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end POMasterDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static List<tbl_POMaster> GetPOMaster_AllBranch(this tbl_POMaster tbl_POMaster, Dictionary<string, object> Params)
+        {
+            List<tbl_POMaster> list = new List<tbl_POMaster>();
+            try
+            {
+                string sql = "proc_POMaster_GetData_AllBranch";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteStoreToList(typeof(tbl_POMaster), sql, Params);
+                list = dynamicListReturned.Cast<tbl_POMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_POMaster != null ? tbl_POMaster.GetType() : null);
+            }
+
+            return list;
         }
     }
 }

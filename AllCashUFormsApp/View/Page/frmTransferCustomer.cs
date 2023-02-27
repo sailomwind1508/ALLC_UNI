@@ -129,15 +129,15 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                var tbl_BranchWarehouse = bu.GetBranchWarehouse(x => x.WHName == txtWHName.Text);
+                Cursor.Current = Cursors.WaitCursor;
 
+                var tbl_BranchWarehouse = bu.GetBranchWarehouse(x => x.WHName == txtWHName.Text);
                 string _SalAreaID = ddlSalArea.SelectedValue.ToString() != "" ? ddlSalArea.SelectedValue.ToString() : "";
 
                 Dictionary<string, object> _params = new Dictionary<string, object>();
                 _params.Add("@SalAreaID", _SalAreaID);
                 _params.Add("@CustName", txtSearch.Text.Trim());
                 _params.Add("@WHID", tbl_BranchWarehouse != null ? tbl_BranchWarehouse.WHID : "");
-
                 var dt = bu.GetTransferCustomerData(_params);
 
                 DataTable _dt = new DataTable();
@@ -164,12 +164,13 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 lblTFCount.Text = grdList.Rows.Count.ToNumberFormat();
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 ex.Message.ShowErrorMessage();
             }
-
         }
 
         private void PrePareData(DataTable dt)
@@ -418,6 +419,8 @@ namespace AllCashUFormsApp.View.Page
                 if (!cfMsg.ConfirmMessageBox(title))
                     return;
 
+                Cursor.Current = Cursors.WaitCursor;
+
                 var tbl_ArCustomerList = new List<tbl_ArCustomer>();
 
                 var ListCustomerID = new List<string>();
@@ -447,12 +450,12 @@ namespace AllCashUFormsApp.View.Page
                         //cData[i].Seq = Convert.ToInt16(r["Seq"]);
                         //cData[i].EdDate = DateTime.Now;
                         //cData[i].EdUser = Helper.tbl_Users.Username;
-
                     }
                     foreach (var data in cData)
                     {
                         ret = bu.UpdateData(data);
                     }
+
                     if (ret == 1)
                     {
                         DataTable temp = new DataTable();
@@ -477,10 +480,13 @@ namespace AllCashUFormsApp.View.Page
                     {
                         this.ShowProcessErr();
                     }
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 ex.Message.ShowErrorMessage();
             }
         }
@@ -498,6 +504,8 @@ namespace AllCashUFormsApp.View.Page
         #region Event
         private void frmTransferCustomer_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
@@ -679,6 +687,20 @@ namespace AllCashUFormsApp.View.Page
 
             if (!string.IsNullOrEmpty(msg))
             {
+                msg.ShowWarningMessage();
+                return;
+            }
+
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@EdDate", DateTime.Now);
+            _params.Add("@UserName", Helper.tbl_Users.Username);
+            _params.Add("@AddCustQty", grdList2.RowCount);
+
+            bool ret = false;
+            ret = bu.CheckLimit_UpdateCustomer(_params);
+            if (!ret)
+            {
+                msg = "จำกัดโอนย้ายร้านค้า ไม่เกิน 1000 ร้านค้า ต่อวัน ";
                 msg.ShowWarningMessage();
                 return;
             }

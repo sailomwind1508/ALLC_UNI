@@ -28,6 +28,8 @@ namespace AllCashUFormsApp.View.Page
         #region Private Event
         private void frmCustomerShelf_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
@@ -50,9 +52,7 @@ namespace AllCashUFormsApp.View.Page
                 btnCancel.Enabled = false;
 
                 if (tempShelf.Rows.Count > 0)
-                {
                     btnEdit.Enabled = true;
-                }
 
                 SelectDetail(null);
             }
@@ -83,6 +83,7 @@ namespace AllCashUFormsApp.View.Page
 
             pnlSearch.OpenControl(false, PanelSearchControls.ToArray());
             txtShelfID.DisableTextBox(false);
+            txtImagePath.DisableTextBox(false);
             txtShelfID.Select();
         }
 
@@ -113,7 +114,10 @@ namespace AllCashUFormsApp.View.Page
                 var Shelf = new tbl_ArCustomerShelf();
                 Shelf.AutoID = Convert.ToInt32(txtAutoID.Text.Trim());
                 Shelf.ShelfID = txtShelfID.Text.Trim();
+                Shelf.ImagePath = txtImagePath.Text.Trim();
                 ret = bu.UpdateCustomerShelf(Shelf);
+
+                Cursor.Current = Cursors.Default;
 
                 if (ret == 1)
                 {
@@ -128,8 +132,6 @@ namespace AllCashUFormsApp.View.Page
                 {
                     this.ShowProcessErr();
                 }
-
-                Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
             {
@@ -153,9 +155,7 @@ namespace AllCashUFormsApp.View.Page
             btnCancel.Enabled = false;
 
             if (grdCustomerShelf.Rows.Count > 0)
-            {
                 btnEdit.Enabled = true;
-            }
 
             SelectDetail(null);
         }
@@ -175,7 +175,6 @@ namespace AllCashUFormsApp.View.Page
             var headerPic = menuBU.GetAllData().FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
             if (headerPic != null)
             {
-
                 FormPic.Image = headerPic.MenuImage.byteArrayToImage();
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
@@ -214,9 +213,7 @@ namespace AllCashUFormsApp.View.Page
                     grdRows = grdCustomerShelf.Rows[e.RowIndex];
                 }
                 else
-                {
                     grdRows = grdCustomerShelf.CurrentRow;
-                }
 
                 if (grdRows != null)
                 {
@@ -237,6 +234,7 @@ namespace AllCashUFormsApp.View.Page
                     txtProductID.Text = r["ProductID"].ToString().Trim();
                     txtProductName.Text = r["ProductName"].ToString().Trim();
                     txtShelfID.Text = r["ShelfID"].ToString().Trim();
+                    txtImagePath.Text = r["ImagePath"].ToString().Trim();
                 }
             }
             catch (Exception ex)
@@ -269,6 +267,5 @@ namespace AllCashUFormsApp.View.Page
             else
                 return;
         }
-
     }
 }

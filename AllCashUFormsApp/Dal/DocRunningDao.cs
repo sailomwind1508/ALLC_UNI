@@ -48,7 +48,7 @@ namespace AllCashUFormsApp
             try
             {
                 DataTable dt = new DataTable();
-                string sql = "SELECT FROM tbl_DocRunning";
+                string sql = "SELECT * FROM tbl_DocRunning";
 
                 List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_DocRunning), sql);
                 list = dynamicListReturned.Cast<tbl_DocRunning>().ToList();

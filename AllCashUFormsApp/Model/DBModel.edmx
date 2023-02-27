@@ -51,7 +51,7 @@
           <Property Name="DefaultValue" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_AmtArCustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_AmtArCustomer">
           <Key>
             <PropertyRef Name="CycleNo" />
@@ -111,7 +111,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomer' does no
           <Property Name="WHType" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomerDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_AmtArCustomerDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_AmtArCustomerDetail">
           <Key>
             <PropertyRef Name="CustomerID" />
@@ -261,6 +261,22 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomerDetail' d
           <Property Name="CustImage" Type="text" />
           <Property Name="Remark" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="tbl_ArCustomerMapping">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustName" Type="nvarchar" MaxLength="200" />
+          <Property Name="RefCustomerID" Type="nvarchar" MaxLength="50" />
+          <Property Name="RefCustName" Type="nvarchar" MaxLength="200" />
+          <Property Name="BillTo" Type="nvarchar" MaxLength="200" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="50" />
+          <Property Name="WHID" Type="nvarchar" MaxLength="20" />
+          <Property Name="SaleAreaID" Type="nvarchar" MaxLength="20" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="EdDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="tbl_ArCustomerShelf">
           <Key>
             <PropertyRef Name="AutoID" />
@@ -349,6 +365,14 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomerDetail' d
           <Property Name="State" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Country" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_BranchCycle">
+          <Key>
+            <PropertyRef Name="BranchID" />
+          </Key>
+          <Property Name="BranchID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="BranchName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CycleFlag" Type="bit" />
+        </EntityType>
         <EntityType Name="tbl_BranchGroup">
           <Key>
             <PropertyRef Name="BranchGroupID" />
@@ -388,7 +412,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_AmtArCustomerDetail' d
           <Property Name="SaleTypeID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_BranchWarehouseMapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_BranchWarehouseMapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_BranchWarehouseMapping">
           <Key>
             <PropertyRef Name="WHIDFrom" />
@@ -424,7 +448,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_BranchWarehouseMapping
           <Property Name="FlagSend" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFixedHolidays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_CfgFixedHolidays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_CfgFixedHolidays">
           <Key>
             <PropertyRef Name="month" />
@@ -438,7 +462,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFixedHolidays' does
           <Property Name="FlagSend" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFloatingHolidays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_CfgFloatingHolidays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_CfgFloatingHolidays">
           <Key>
             <PropertyRef Name="month" />
@@ -516,6 +540,33 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFloatingHolidays' d
           <Property Name="EdUser" Type="varchar" MaxLength="50" />
           <Property Name="IsShow" Type="bit" Nullable="false" />
           <Property Name="FlagSend" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_CoreCard">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="WHID" Type="nvarchar" MaxLength="50" />
+          <Property Name="CauseName" Type="nvarchar" MaxLength="350" />
+          <Property Name="ProductSubGroupName" Type="nvarchar" MaxLength="550" />
+          <Property Name="1" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="2" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="3" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="4" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="5" Type="decimal" Precision="18" Scale="4" />
+        </EntityType>
+        <EntityType Name="tbl_CoreCardReason">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="nvarchar" MaxLength="50" />
+          <Property Name="WHID" Type="nvarchar" MaxLength="10" />
+          <Property Name="VisitDate" Type="datetime" />
+          <Property Name="CauseName" Type="nvarchar" MaxLength="150" />
+          <Property Name="VisitTime" Type="int" />
+          <Property Name="SalesOrder" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="tbl_CustQA">
           <Key>
@@ -904,12 +955,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFloatingHolidays' d
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="DocStatus" />
-            <PropertyRef Name="DocDate" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="EmpID" />
-            <PropertyRef Name="SalAreaID" />
           </Key>
           <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DocNo" Type="varchar" MaxLength="50" Nullable="false" />
@@ -1020,7 +1065,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_CfgFloatingHolidays' d
           <Property Name="CountDis" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_MstGrade' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_MstGrade">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1098,6 +1143,40 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
           <Property Name="ProvinceCode" Type="nvarchar" MaxLength="6" />
           <Property Name="ProvinceName" Type="nvarchar" MaxLength="50" />
           <Property Name="ProvinceSAPCode" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_MstWorkDate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tbl_MstWorkDate">
+          <Key>
+            <PropertyRef Name="CycleID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="EndDate" />
+          </Key>
+          <Property Name="CycleID" Type="int" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="EdUser" Type="nvarchar" MaxLength="150" />
+          <Property Name="EdDate" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_MstWorkDate_HIS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tbl_MstWorkDate_HIS">
+          <Key>
+            <PropertyRef Name="CycleID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="EndDate" />
+          </Key>
+          <Property Name="CycleID" Type="int" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="CrUser" Type="nvarchar" MaxLength="150" />
+          <Property Name="CrDate" Type="datetime" />
+          <Property Name="EdUser" Type="nvarchar" MaxLength="150" />
+          <Property Name="EdDate" Type="datetime" />
         </EntityType>
         <EntityType Name="tbl_PaidDetail">
           <Key>
@@ -1257,10 +1336,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="EmpID" />
-            <PropertyRef Name="SalAreaID" />
           </Key>
           <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DocNo" Type="varchar" MaxLength="50" Nullable="false" />
@@ -1322,9 +1397,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="SalAreaID" />
           </Key>
           <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DocNo" Type="varchar" MaxLength="50" Nullable="false" />
@@ -1459,6 +1531,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
         </EntityType>
         <EntityType Name="tbl_PRMaster">
           <Key>
+            <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
           </Key>
           <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
@@ -1704,7 +1777,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
           <Key>
             <PropertyRef Name="QuestionnaireDetailsID" />
           </Key>
-          <Property Name="QuestionnaireDetailsID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionnaireDetailsID" Type="int" Nullable="false" />
           <Property Name="QuestionnaireID" Type="int" />
           <Property Name="Seq" Type="int" />
           <Property Name="Question" Type="nvarchar" MaxLength="150" />
@@ -1727,7 +1800,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_MstGrade' does not hav
           <Property Name="Ending" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_ReportGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_ReportGroup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_ReportGroup">
           <Key>
             <PropertyRef Name="GroupID" />
@@ -1738,7 +1811,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_ReportGroup' does not 
           <Property Name="Status" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_ReportMenu' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.tbl_ReportMenu' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbl_ReportMenu">
           <Key>
             <PropertyRef Name="ReportID" />
@@ -2531,7 +2604,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.tbl_ReportMenu' does not h
           <Property Name="Qty" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Temp_Rep_Visit_Per_Day_PO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.Temp_Rep_Visit_Per_Day_PO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Temp_Rep_Visit_Per_Day_PO">
           <Key>
             <PropertyRef Name="WHID" />
@@ -2547,7 +2620,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Temp_Rep_Visit_Per_Day_PO'
           <Property Name="SaleQty" Type="decimal" Precision="38" Scale="18" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.AllSaleEmployeeView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.AllSaleEmployeeView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AllSaleEmployeeView">
           <Key>
             <PropertyRef Name="WHID" />
@@ -2561,7 +2634,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.AllSaleEmployeeView' does 
           <Property Name="FullName" Type="varchar" MaxLength="162" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ArCustomerView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.ArCustomerView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ArCustomerView">
           <Key>
             <PropertyRef Name="CustomerID" />
@@ -2625,11 +2698,10 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ArCustomerView' does not h
           <Property Name="PostalCode" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetBranchWarehouse' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetBranchWarehouse' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetBranchWarehouse">
           <Key>
             <PropertyRef Name="WHID" />
-            <PropertyRef Name="BranchID" />
             <PropertyRef Name="WHType" />
             <PropertyRef Name="WHSeq" />
             <PropertyRef Name="EmpID" />
@@ -2638,7 +2710,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetBranchWarehouse' does n
             <PropertyRef Name="EmpIDCard" />
           </Key>
           <Property Name="WHID" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="BranchID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="BranchID" Type="varchar" MaxLength="20" />
           <Property Name="WHType" Type="int" Nullable="false" />
           <Property Name="WHName" Type="varchar" MaxLength="50" />
           <Property Name="WHSeq" Type="varchar" MaxLength="10" Nullable="false" />
@@ -2653,7 +2725,21 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetBranchWarehouse' does n
           <Property Name="SaleTypeID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetCust_Routing' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetCoreCardReason' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GetCoreCardReason">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="nvarchar" MaxLength="50" />
+          <Property Name="WHID" Type="nvarchar" MaxLength="10" />
+          <Property Name="VisitDate" Type="varchar" MaxLength="30" />
+          <Property Name="CauseName" Type="nvarchar" MaxLength="150" />
+          <Property Name="VisitTime" Type="int" />
+          <Property Name="SalesOrder" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetCust_Routing' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetCust_Routing">
           <Key>
             <PropertyRef Name="Number" />
@@ -2675,7 +2761,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetCust_Routing' does not 
           <Property Name="Longitude" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetProduct' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetProduct' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetProduct">
           <Key>
             <PropertyRef Name="Number" />
@@ -2706,7 +2792,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetProduct' does not have 
           <Property Name="SaleTypeID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetPromotion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetPromotion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetPromotion">
           <Key>
             <PropertyRef Name="PromotionID" />
@@ -2742,7 +2828,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetPromotion' does not hav
           <Property Name="SaleTypeID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetProvinceAndDistrict' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetProvinceAndDistrict' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetProvinceAndDistrict">
           <Key>
             <PropertyRef Name="DistrictID" />
@@ -2762,7 +2848,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetProvinceAndDistrict' do
           <Property Name="WHID" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetSetting' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetSetting' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetSetting">
           <Key>
             <PropertyRef Name="cfgName" />
@@ -2772,7 +2858,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetSetting' does not have 
           <Property Name="cfgValue" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetStock">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -2791,7 +2877,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetStock' does not have a 
           <Property Name="ToWHID" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTotalBill' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetTotalBill' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetTotalBill">
           <Key>
             <PropertyRef Name="DocNo" />
@@ -2810,7 +2896,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTotalBill' does not hav
           <Property Name="TotalDue" Type="decimal" Precision="15" Scale="5" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTwoBill' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetTwoBill' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetTwoBill">
           <Key>
             <PropertyRef Name="DocNo" />
@@ -2854,7 +2940,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTwoBill' does not have 
           <Property Name="WHID" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTwoStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.GetTwoStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="GetTwoStock">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -2878,7 +2964,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.GetTwoStock' does not have
           <Property Name="StockQty" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ProductView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.ProductView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProductView">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -2948,7 +3034,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ProductView' does not have
           <Property Name="SaleTypeID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ReceiveTabletDataView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.ReceiveTabletDataView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ReceiveTabletDataView">
           <Key>
             <PropertyRef Name="WHID" />
@@ -2960,7 +3046,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ReceiveTabletDataView' doe
           <Property Name="FlagReceive" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ReceiveTabletDataView_Lastest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.ReceiveTabletDataView_Lastest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ReceiveTabletDataView_Lastest">
           <Key>
             <PropertyRef Name="WHID" />
@@ -2972,7 +3058,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.ReceiveTabletDataView_Last
           <Property Name="FlagReceive" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Rpt_DSR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.Rpt_DSR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Rpt_DSR">
           <Key>
             <PropertyRef Name="WHID" />
@@ -2997,7 +3083,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Rpt_DSR' does not have a p
           <Property Name="BoughtPerDay" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Rpt_DSR_KPI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.Rpt_DSR_KPI' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Rpt_DSR_KPI">
           <Key>
             <PropertyRef Name="WHID" />
@@ -3018,7 +3104,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.Rpt_DSR_KPI' does not have
           <Property Name="Invoice" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.SaleEmployeeView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.SaleEmployeeView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SaleEmployeeView">
           <Key>
             <PropertyRef Name="EmpID" />
@@ -3034,7 +3120,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.SaleEmployeeView' does not
           <Property Name="WHID" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_BankNote' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_BankNote' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_BankNote">
           <Key>
             <PropertyRef Name="WHID" />
@@ -3057,7 +3143,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_BankNote' does not have 
           <Property Name="FlagDel" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CountVisit_UBON' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_CountVisit_UBON' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_CountVisit_UBON">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -3067,7 +3153,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CountVisit_UBON' does no
           <Property Name="DocDate" Type="date" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CUSTOMERDT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_CUSTOMERDT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_CUSTOMERDT">
           <Key>
             <PropertyRef Name="Address" />
@@ -3095,7 +3181,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CUSTOMERDT' does not hav
           <Property Name="U_rounting" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CUSTOMERHD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_CUSTOMERHD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_CUSTOMERHD">
           <Key>
             <PropertyRef Name="CustomerSAPCode" />
@@ -3139,7 +3225,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_CUSTOMERHD' does not hav
           <Property Name="U_department" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_GetVanStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_GetVanStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_GetVanStock">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -3161,7 +3247,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_GetVanStock' does not ha
           <Property Name="WHID" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_SummaryRL' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_SummaryRL">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -3176,7 +3262,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL' does not have
           <Property Name="PckQty" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL_Get' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_SummaryRL_Get' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_SummaryRL_Get">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -3192,7 +3278,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL_Get' does not 
           <Property Name="RLPckQty" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL_Stock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_SummaryRL_Stock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_SummaryRL_Stock">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -3207,7 +3293,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_SummaryRL_Stock' does no
           <Property Name="PckQty" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_ALL_CASH_UNI_KRI.dbo.V_UBNDashboard' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_UBNDashboard">
           <Key>
             <PropertyRef Name="BillNo" />
@@ -3234,9 +3320,11 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_ApSupplier" EntityType="Self.tbl_ApSupplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ApSupplierType" EntityType="Self.tbl_ApSupplierType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ArCustomer" EntityType="Self.tbl_ArCustomer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ArCustomerMapping" EntityType="Self.tbl_ArCustomerMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ArCustomerShelf" EntityType="Self.tbl_ArCustomerShelf" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ArCustomerType" EntityType="Self.tbl_ArCustomerType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Branch" EntityType="Self.tbl_Branch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_BranchCycle" EntityType="Self.tbl_BranchCycle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BranchGroup" EntityType="Self.tbl_BranchGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BranchWarehouse" EntityType="Self.tbl_BranchWarehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Cause" EntityType="Self.tbl_Cause" Schema="dbo" store:Type="Tables" />
@@ -3245,6 +3333,8 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_CfgPosMachine" EntityType="Self.tbl_CfgPosMachine" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CfgSetting" EntityType="Self.tbl_CfgSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Company" EntityType="Self.tbl_Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CoreCard" EntityType="Self.tbl_CoreCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_CoreCardReason" EntityType="Self.tbl_CoreCardReason" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_CustQA" EntityType="Self.tbl_CustQA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Department" EntityType="Self.tbl_Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_DiscountType" EntityType="Self.tbl_DiscountType" Schema="dbo" store:Type="Tables" />
@@ -3440,6 +3530,28 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
     [tbl_MstGrade].[FlagSend] AS [FlagSend]
     FROM [dbo].[tbl_MstGrade] AS [tbl_MstGrade]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="tbl_MstWorkDate" EntityType="Self.tbl_MstWorkDate" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tbl_MstWorkDate].[CycleID] AS [CycleID], 
+    [tbl_MstWorkDate].[Year] AS [Year], 
+    [tbl_MstWorkDate].[StartDate] AS [StartDate], 
+    [tbl_MstWorkDate].[EndDate] AS [EndDate], 
+    [tbl_MstWorkDate].[EdUser] AS [EdUser], 
+    [tbl_MstWorkDate].[EdDate] AS [EdDate]
+    FROM [dbo].[tbl_MstWorkDate] AS [tbl_MstWorkDate]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="tbl_MstWorkDate_HIS" EntityType="Self.tbl_MstWorkDate_HIS" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tbl_MstWorkDate_HIS].[CycleID] AS [CycleID], 
+    [tbl_MstWorkDate_HIS].[Year] AS [Year], 
+    [tbl_MstWorkDate_HIS].[StartDate] AS [StartDate], 
+    [tbl_MstWorkDate_HIS].[EndDate] AS [EndDate], 
+    [tbl_MstWorkDate_HIS].[CrUser] AS [CrUser], 
+    [tbl_MstWorkDate_HIS].[CrDate] AS [CrDate], 
+    [tbl_MstWorkDate_HIS].[EdUser] AS [EdUser], 
+    [tbl_MstWorkDate_HIS].[EdDate] AS [EdDate]
+    FROM [dbo].[tbl_MstWorkDate_HIS] AS [tbl_MstWorkDate_HIS]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="tbl_ReportGroup" EntityType="Self.tbl_ReportGroup" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [tbl_ReportGroup].[GroupID] AS [GroupID], 
@@ -3544,6 +3656,17 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
     [GetBranchWarehouse].[EmpIDCard] AS [EmpIDCard], 
     [GetBranchWarehouse].[SaleTypeID] AS [SaleTypeID]
     FROM [dbo].[GetBranchWarehouse] AS [GetBranchWarehouse]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="GetCoreCardReason" EntityType="Self.GetCoreCardReason" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GetCoreCardReason].[AutoID] AS [AutoID], 
+    [GetCoreCardReason].[CustomerID] AS [CustomerID], 
+    [GetCoreCardReason].[WHID] AS [WHID], 
+    [GetCoreCardReason].[VisitDate] AS [VisitDate], 
+    [GetCoreCardReason].[CauseName] AS [CauseName], 
+    [GetCoreCardReason].[VisitTime] AS [VisitTime], 
+    [GetCoreCardReason].[SalesOrder] AS [SalesOrder]
+    FROM [dbo].[GetCoreCardReason] AS [GetCoreCardReason]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="GetCust_Routing" EntityType="Self.GetCust_Routing" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -3954,9 +4077,11 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_ApSupplier" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ApSupplier" />
           <EntitySet Name="tbl_ApSupplierType" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ApSupplierType" />
           <EntitySet Name="tbl_ArCustomer" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomer" />
+          <EntitySet Name="tbl_ArCustomerMapping" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomerMapping" />
           <EntitySet Name="tbl_ArCustomerShelf" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomerShelf" />
           <EntitySet Name="tbl_ArCustomerType" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomerType" />
           <EntitySet Name="tbl_Branch" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_Branch" />
+          <EntitySet Name="tbl_BranchCycle" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_BranchCycle" />
           <EntitySet Name="tbl_BranchGroup" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_BranchGroup" />
           <EntitySet Name="tbl_BranchWarehouse" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_BranchWarehouse" />
           <EntitySet Name="tbl_Cause" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_Cause" />
@@ -3965,6 +4090,8 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_CfgPosMachine" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CfgPosMachine" />
           <EntitySet Name="tbl_CfgSetting" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CfgSetting" />
           <EntitySet Name="tbl_Company" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_Company" />
+          <EntitySet Name="tbl_CoreCard" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CoreCard" />
+          <EntitySet Name="tbl_CoreCardReason" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CoreCardReason" />
           <EntitySet Name="tbl_CustQA" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CustQA" />
           <EntitySet Name="tbl_Department" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_Department" />
           <EntitySet Name="tbl_DiscountType" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_DiscountType" />
@@ -3998,10 +4125,10 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_PaidDetail" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PaidDetail" />
           <EntitySet Name="tbl_PaidMaster" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PaidMaster" />
           <EntitySet Name="tbl_PayDetail" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PayDetail" />
+          <EntitySet Name="tbl_PayMaster" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PayMaster" />
           <EntitySet Name="tbl_PODetail" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PODetail" />
           <EntitySet Name="tbl_PODetail_PRE" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PODetail_PRE" />
           <EntitySet Name="tbl_POMaster" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster" />
-          <EntitySet Name="tbl_POMaster_PRE" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster_PRE" />
           <EntitySet Name="tbl_Position" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_Position" />
           <EntitySet Name="tbl_PRDetail" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PRDetail" />
           <EntitySet Name="tbl_PreSaleWarehouse" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PreSaleWarehouse" />
@@ -4069,12 +4196,15 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="tbl_CfgFixedHolidays" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CfgFixedHolidays" />
           <EntitySet Name="tbl_CfgFloatingHolidays" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_CfgFloatingHolidays" />
           <EntitySet Name="tbl_MstGrade" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_MstGrade" />
+          <EntitySet Name="tbl_MstWorkDate" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_MstWorkDate" />
+          <EntitySet Name="tbl_MstWorkDate_HIS" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_MstWorkDate_HIS" />
           <EntitySet Name="tbl_ReportGroup" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ReportGroup" />
           <EntitySet Name="tbl_ReportMenu" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_ReportMenu" />
           <EntitySet Name="Temp_Rep_Visit_Per_Day_PO" EntityType="DB_ALL_CASH_UNI_UBNModel.Temp_Rep_Visit_Per_Day_PO" />
           <EntitySet Name="AllSaleEmployeeViews" EntityType="DB_ALL_CASH_UNI_UBNModel.AllSaleEmployeeView" />
           <EntitySet Name="ArCustomerViews" EntityType="DB_ALL_CASH_UNI_UBNModel.ArCustomerView" />
           <EntitySet Name="GetBranchWarehouses" EntityType="DB_ALL_CASH_UNI_UBNModel.GetBranchWarehouse" />
+          <EntitySet Name="GetCoreCardReasons" EntityType="DB_ALL_CASH_UNI_UBNModel.GetCoreCardReason" />
           <EntitySet Name="GetCust_Routing" EntityType="DB_ALL_CASH_UNI_UBNModel.GetCust_Routing" />
           <EntitySet Name="GetProducts" EntityType="DB_ALL_CASH_UNI_UBNModel.GetProduct" />
           <EntitySet Name="GetPromotions" EntityType="DB_ALL_CASH_UNI_UBNModel.GetPromotion" />
@@ -4099,7 +4229,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySet Name="V_SummaryRL_Get" EntityType="DB_ALL_CASH_UNI_UBNModel.V_SummaryRL_Get" />
           <EntitySet Name="V_SummaryRL_Stock" EntityType="DB_ALL_CASH_UNI_UBNModel.V_SummaryRL_Stock" />
           <EntitySet Name="V_UBNDashboard" EntityType="DB_ALL_CASH_UNI_UBNModel.V_UBNDashboard" />
-          <EntitySet Name="tbl_PayMaster" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_PayMaster" />
+          <EntitySet Name="tbl_POMaster_PRE" EntityType="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster_PRE" />
         </EntityContainer>
         <EntityType Name="tbl_AdmControlList">
           <Key>
@@ -4257,6 +4387,22 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="CustImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="tbl_ArCustomerMapping">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="RefCustomerID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RefCustName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="BillTo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Telephone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WHID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SaleAreaID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="tbl_ArCustomerShelf">
           <Key>
             <PropertyRef Name="AutoID" />
@@ -4344,6 +4490,14 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="RunLength" Type="Int16" />
           <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tbl_BranchCycle">
+          <Key>
+            <PropertyRef Name="BranchID" />
+          </Key>
+          <Property Name="BranchID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BranchName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CycleFlag" Type="Boolean" />
         </EntityType>
         <EntityType Name="tbl_BranchGroup">
           <Key>
@@ -4472,6 +4626,33 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IsShow" Type="Boolean" Nullable="false" />
           <Property Name="FlagSend" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_CoreCard">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="WHID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CauseName" Type="String" MaxLength="350" FixedLength="false" Unicode="true" />
+          <Property Name="ProductSubGroupName" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="C1" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="C2" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="C3" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="C4" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="C5" Type="Decimal" Precision="18" Scale="4" />
+        </EntityType>
+        <EntityType Name="tbl_CoreCardReason">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WHID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="VisitDate" Type="DateTime" Precision="3" />
+          <Property Name="CauseName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="VisitTime" Type="Int32" />
+          <Property Name="SalesOrder" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="tbl_CustQA">
           <Key>
@@ -4860,12 +5041,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="DocStatus" />
-            <PropertyRef Name="DocDate" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="EmpID" />
-            <PropertyRef Name="SalAreaID" />
           </Key>
           <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DocNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -5086,6 +5261,24 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="Transfer" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
           <Property Name="Cheque" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
         </EntityType>
+        <EntityType Name="tbl_PayMaster">
+          <Key>
+            <PropertyRef Name="AutoID" />
+            <PropertyRef Name="DocNo" />
+          </Key>
+          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BranchID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Docdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CrDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CrUser" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+          <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FlagDel" Type="Boolean" Nullable="false" />
+          <Property Name="FlagSend" Type="Boolean" Nullable="false" />
+          <Property Name="TotalSend" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+          <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="tbl_PODetail">
           <Key>
             <PropertyRef Name="DocNo" />
@@ -5165,10 +5358,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="EmpID" />
-            <PropertyRef Name="SalAreaID" />
           </Key>
           <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DocNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -5199,70 +5388,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="CustPONo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="OldAmount" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="Amount" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="OldExcVat" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="ExcVat" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="OldIncVat" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="IncVat" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="VatRate" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="VatAmt" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="Freight" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
-          <Property Name="DiscountType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="OldDiscount" Type="Decimal" Precision="14" Scale="2" />
-          <Property Name="Discount" Type="Decimal" Precision="14" Scale="2" />
-          <Property Name="TotalDue" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
-          <Property Name="ApprovedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ApprovedDate" Type="DateTime" Precision="3" />
-          <Property Name="PayType" Type="Byte" Nullable="false" />
-          <Property Name="CrDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CrUser" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EdDate" Type="DateTime" Precision="3" />
-          <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FlagDel" Type="Boolean" Nullable="false" />
-          <Property Name="FlagSend" Type="Boolean" Nullable="false" />
-          <Property Name="OldTotalCom" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
-          <Property Name="TotalCom" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
-          <Property Name="CNType" Type="Int16" />
-          <Property Name="DiscountRate" Type="Decimal" Nullable="false" Precision="14" Scale="2" />
-        </EntityType>
-        <EntityType Name="tbl_POMaster_PRE">
-          <Key>
-            <PropertyRef Name="AutoID" />
-            <PropertyRef Name="DocNo" />
-            <PropertyRef Name="DocTypeCode" />
-            <PropertyRef Name="WHID" />
-            <PropertyRef Name="SalAreaID" />
-          </Key>
-          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DocNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="RevisionNo" Type="Byte" Nullable="false" />
-          <Property Name="DocTypeCode" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="DocStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DocDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DocRef" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="StatusInOut" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="SupplierID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SuppName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="WHID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="EmpID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SaleEmpID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="SalAreaID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ContactName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ContactTel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Shipto" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="CreditDay" Type="Int16" />
-          <Property Name="DueDate" Type="DateTime" Precision="3" />
-          <Property Name="CustomerID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CustType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CustName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CustInvNO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CustInvDate" Type="DateTime" Precision="3" />
-          <Property Name="CustPODate" Type="DateTime" Precision="3" />
-          <Property Name="CustPONo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="OldAmount" Type="Decimal" Precision="15" Scale="5" />
           <Property Name="Amount" Type="Decimal" Precision="15" Scale="5" />
           <Property Name="OldExcVat" Type="Decimal" Precision="15" Scale="5" />
@@ -5367,6 +5492,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
         </EntityType>
         <EntityType Name="tbl_PRMaster">
           <Key>
+            <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
           </Key>
           <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
@@ -5612,13 +5738,13 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Key>
             <PropertyRef Name="QuestionnaireDetailsID" />
           </Key>
-          <Property Name="QuestionnaireDetailsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionnaireDetailsID" Type="Int32" Nullable="false" />
           <Property Name="QuestionnaireID" Type="Int32" />
           <Property Name="Seq" Type="Int32" />
           <Property Name="Question" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="NextQuestionnaireID" Type="Int32" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-          <Property Name="NextQuestionnaireID" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_RemainingStock">
           <Key>
@@ -6570,6 +6696,36 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="FlagDel" Type="Boolean" Nullable="false" />
           <Property Name="FlagSend" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_MstWorkDate">
+          <Key>
+            <PropertyRef Name="CycleID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="EndDate" />
+          </Key>
+          <Property Name="CycleID" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EdUser" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_MstWorkDate_HIS">
+          <Key>
+            <PropertyRef Name="CycleID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="EndDate" />
+          </Key>
+          <Property Name="CycleID" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CrUser" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CrDate" Type="DateTime" Precision="3" />
+          <Property Name="EdUser" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EdDate" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="tbl_ReportGroup">
           <Key>
             <PropertyRef Name="GroupID" />
@@ -6683,7 +6839,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
         <EntityType Name="GetBranchWarehouse">
           <Key>
             <PropertyRef Name="WHID" />
-            <PropertyRef Name="BranchID" />
             <PropertyRef Name="WHType" />
             <PropertyRef Name="WHSeq" />
             <PropertyRef Name="EmpID" />
@@ -6692,7 +6847,7 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
             <PropertyRef Name="EmpIDCard" />
           </Key>
           <Property Name="WHID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="BranchID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BranchID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="WHType" Type="Int32" Nullable="false" />
           <Property Name="WHName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="WHSeq" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
@@ -6705,6 +6860,18 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="POSNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="EmpIDCard" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="SaleTypeID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="GetCoreCardReason">
+          <Key>
+            <PropertyRef Name="AutoID" />
+          </Key>
+          <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WHID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="VisitDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="CauseName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="VisitTime" Type="Int32" />
+          <Property Name="SalesOrder" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="GetCust_Routing">
           <Key>
@@ -7232,23 +7399,66 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <Property Name="ProductRefCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="tbl_PayMaster">
+        <EntityType Name="tbl_POMaster_PRE">
           <Key>
             <PropertyRef Name="AutoID" />
             <PropertyRef Name="DocNo" />
           </Key>
           <Property Name="AutoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DocNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BranchID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Docdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RevisionNo" Type="Byte" Nullable="false" />
+          <Property Name="DocTypeCode" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="DocStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DocDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DocRef" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatusInOut" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="SupplierID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SuppName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WHID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmpID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SaleEmpID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SalAreaID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ContactTel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Shipto" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CreditDay" Type="Int16" />
+          <Property Name="DueDate" Type="DateTime" Precision="3" />
+          <Property Name="CustomerID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CustType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CustName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CustInvNO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CustInvDate" Type="DateTime" Precision="3" />
+          <Property Name="CustPODate" Type="DateTime" Precision="3" />
+          <Property Name="CustPONo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Remark" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="OldAmount" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="Amount" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="OldExcVat" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="ExcVat" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="OldIncVat" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="IncVat" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="VatRate" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="VatAmt" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="Freight" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="DiscountType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OldDiscount" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="TotalDue" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="ApprovedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ApprovedDate" Type="DateTime" Precision="3" />
+          <Property Name="PayType" Type="Byte" Nullable="false" />
           <Property Name="CrDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CrUser" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="EdDate" Type="DateTime" Precision="3" />
           <Property Name="EdUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FlagDel" Type="Boolean" Nullable="false" />
           <Property Name="FlagSend" Type="Boolean" Nullable="false" />
-          <Property Name="TotalSend" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
-          <Property Name="Remark" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="OldTotalCom" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="TotalCom" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="CNType" Type="Int16" />
+          <Property Name="DiscountRate" Type="Decimal" Nullable="false" Precision="14" Scale="2" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -7418,6 +7628,23 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbl_ArCustomerMapping">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomerMapping">
+              <MappingFragment StoreEntitySet="tbl_ArCustomerMapping">
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="SaleAreaID" ColumnName="SaleAreaID" />
+                <ScalarProperty Name="WHID" ColumnName="WHID" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="BillTo" ColumnName="BillTo" />
+                <ScalarProperty Name="RefCustName" ColumnName="RefCustName" />
+                <ScalarProperty Name="RefCustomerID" ColumnName="RefCustomerID" />
+                <ScalarProperty Name="CustName" ColumnName="CustName" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tbl_ArCustomerShelf">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_ArCustomerShelf">
               <MappingFragment StoreEntitySet="tbl_ArCustomerShelf">
@@ -7505,6 +7732,15 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
                 <ScalarProperty Name="BranchName" ColumnName="BranchName" />
                 <ScalarProperty Name="BranchRefCode" ColumnName="BranchRefCode" />
                 <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_BranchCycle">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_BranchCycle">
+              <MappingFragment StoreEntitySet="tbl_BranchCycle">
+                <ScalarProperty Name="CycleFlag" ColumnName="CycleFlag" />
+                <ScalarProperty Name="BranchName" ColumnName="BranchName" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -7642,6 +7878,35 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
                 <ScalarProperty Name="CompanyCode" ColumnName="CompanyCode" />
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CoreCard">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_CoreCard">
+              <MappingFragment StoreEntitySet="tbl_CoreCard">
+                <ScalarProperty Name="C5" ColumnName="5" />
+                <ScalarProperty Name="C4" ColumnName="4" />
+                <ScalarProperty Name="C3" ColumnName="3" />
+                <ScalarProperty Name="C2" ColumnName="2" />
+                <ScalarProperty Name="C1" ColumnName="1" />
+                <ScalarProperty Name="ProductSubGroupName" ColumnName="ProductSubGroupName" />
+                <ScalarProperty Name="CauseName" ColumnName="CauseName" />
+                <ScalarProperty Name="WHID" ColumnName="WHID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_CoreCardReason">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_CoreCardReason">
+              <MappingFragment StoreEntitySet="tbl_CoreCardReason">
+                <ScalarProperty Name="SalesOrder" ColumnName="SalesOrder" />
+                <ScalarProperty Name="VisitTime" ColumnName="VisitTime" />
+                <ScalarProperty Name="CauseName" ColumnName="CauseName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="WHID" ColumnName="WHID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -8275,6 +8540,24 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PayMaster">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_PayMaster">
+              <MappingFragment StoreEntitySet="tbl_PayMaster">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="TotalSend" ColumnName="TotalSend" />
+                <ScalarProperty Name="FlagSend" ColumnName="FlagSend" />
+                <ScalarProperty Name="FlagDel" ColumnName="FlagDel" />
+                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="CrUser" ColumnName="CrUser" />
+                <ScalarProperty Name="CrDate" ColumnName="CrDate" />
+                <ScalarProperty Name="Docdate" ColumnName="Docdate" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+                <ScalarProperty Name="DocNo" ColumnName="DocNo" />
+                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tbl_PODetail">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_PODetail">
               <MappingFragment StoreEntitySet="tbl_PODetail">
@@ -8350,67 +8633,6 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySetMapping Name="tbl_POMaster">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster">
               <MappingFragment StoreEntitySet="tbl_POMaster">
-                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
-                <ScalarProperty Name="CNType" ColumnName="CNType" />
-                <ScalarProperty Name="TotalCom" ColumnName="TotalCom" />
-                <ScalarProperty Name="OldTotalCom" ColumnName="OldTotalCom" />
-                <ScalarProperty Name="FlagSend" ColumnName="FlagSend" />
-                <ScalarProperty Name="FlagDel" ColumnName="FlagDel" />
-                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
-                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
-                <ScalarProperty Name="CrUser" ColumnName="CrUser" />
-                <ScalarProperty Name="CrDate" ColumnName="CrDate" />
-                <ScalarProperty Name="PayType" ColumnName="PayType" />
-                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
-                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
-                <ScalarProperty Name="TotalDue" ColumnName="TotalDue" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="OldDiscount" ColumnName="OldDiscount" />
-                <ScalarProperty Name="DiscountType" ColumnName="DiscountType" />
-                <ScalarProperty Name="Freight" ColumnName="Freight" />
-                <ScalarProperty Name="VatAmt" ColumnName="VatAmt" />
-                <ScalarProperty Name="VatRate" ColumnName="VatRate" />
-                <ScalarProperty Name="IncVat" ColumnName="IncVat" />
-                <ScalarProperty Name="OldIncVat" ColumnName="OldIncVat" />
-                <ScalarProperty Name="ExcVat" ColumnName="ExcVat" />
-                <ScalarProperty Name="OldExcVat" ColumnName="OldExcVat" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="OldAmount" ColumnName="OldAmount" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="CustPONo" ColumnName="CustPONo" />
-                <ScalarProperty Name="CustPODate" ColumnName="CustPODate" />
-                <ScalarProperty Name="CustInvDate" ColumnName="CustInvDate" />
-                <ScalarProperty Name="CustInvNO" ColumnName="CustInvNO" />
-                <ScalarProperty Name="CustName" ColumnName="CustName" />
-                <ScalarProperty Name="CustType" ColumnName="CustType" />
-                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="CreditDay" ColumnName="CreditDay" />
-                <ScalarProperty Name="Shipto" ColumnName="Shipto" />
-                <ScalarProperty Name="ContactTel" ColumnName="ContactTel" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="SalAreaID" ColumnName="SalAreaID" />
-                <ScalarProperty Name="SaleEmpID" ColumnName="SaleEmpID" />
-                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
-                <ScalarProperty Name="WHID" ColumnName="WHID" />
-                <ScalarProperty Name="SuppName" ColumnName="SuppName" />
-                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
-                <ScalarProperty Name="StatusInOut" ColumnName="StatusInOut" />
-                <ScalarProperty Name="DocRef" ColumnName="DocRef" />
-                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
-                <ScalarProperty Name="DocStatus" ColumnName="DocStatus" />
-                <ScalarProperty Name="DocTypeCode" ColumnName="DocTypeCode" />
-                <ScalarProperty Name="RevisionNo" ColumnName="RevisionNo" />
-                <ScalarProperty Name="DocNo" ColumnName="DocNo" />
-                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_POMaster_PRE">
-            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster_PRE">
-              <MappingFragment StoreEntitySet="tbl_POMaster_PRE">
                 <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
                 <ScalarProperty Name="CNType" ColumnName="CNType" />
                 <ScalarProperty Name="TotalCom" ColumnName="TotalCom" />
@@ -8800,9 +9022,9 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
           <EntitySetMapping Name="tbl_QuestionnaireDetails">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_QuestionnaireDetails">
               <MappingFragment StoreEntitySet="tbl_QuestionnaireDetails">
-                <ScalarProperty Name="NextQuestionnaireID" ColumnName="NextQuestionnaireID" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="NextQuestionnaireID" ColumnName="NextQuestionnaireID" />
                 <ScalarProperty Name="Question" ColumnName="Question" />
                 <ScalarProperty Name="Seq" ColumnName="Seq" />
                 <ScalarProperty Name="QuestionnaireID" ColumnName="QuestionnaireID" />
@@ -9744,6 +9966,32 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MstWorkDate">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_MstWorkDate">
+              <MappingFragment StoreEntitySet="tbl_MstWorkDate">
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="CycleID" ColumnName="CycleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MstWorkDate_HIS">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_MstWorkDate_HIS">
+              <MappingFragment StoreEntitySet="tbl_MstWorkDate_HIS">
+                <ScalarProperty Name="EdDate" ColumnName="EdDate" />
+                <ScalarProperty Name="EdUser" ColumnName="EdUser" />
+                <ScalarProperty Name="CrDate" ColumnName="CrDate" />
+                <ScalarProperty Name="CrUser" ColumnName="CrUser" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="CycleID" ColumnName="CycleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tbl_ReportGroup">
             <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_ReportGroup">
               <MappingFragment StoreEntitySet="tbl_ReportGroup">
@@ -9858,6 +10106,19 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
                 <ScalarProperty Name="WHType" ColumnName="WHType" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
                 <ScalarProperty Name="WHID" ColumnName="WHID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GetCoreCardReasons">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.GetCoreCardReason">
+              <MappingFragment StoreEntitySet="GetCoreCardReason">
+                <ScalarProperty Name="SalesOrder" ColumnName="SalesOrder" />
+                <ScalarProperty Name="VisitTime" ColumnName="VisitTime" />
+                <ScalarProperty Name="CauseName" ColumnName="CauseName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="WHID" ColumnName="WHID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="AutoID" ColumnName="AutoID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -10305,19 +10566,62 @@ warning 6002: The table/view 'DB_ALL_CASH_UNI_SNK.dbo.V_UBNDashboard' does not h
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tbl_PayMaster">
-            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_PayMaster">
-              <MappingFragment StoreEntitySet="tbl_PayMaster">
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="TotalSend" ColumnName="TotalSend" />
+          <EntitySetMapping Name="tbl_POMaster_PRE">
+            <EntityTypeMapping TypeName="DB_ALL_CASH_UNI_UBNModel.tbl_POMaster_PRE">
+              <MappingFragment StoreEntitySet="tbl_POMaster_PRE">
+                <ScalarProperty Name="DiscountRate" ColumnName="DiscountRate" />
+                <ScalarProperty Name="CNType" ColumnName="CNType" />
+                <ScalarProperty Name="TotalCom" ColumnName="TotalCom" />
+                <ScalarProperty Name="OldTotalCom" ColumnName="OldTotalCom" />
                 <ScalarProperty Name="FlagSend" ColumnName="FlagSend" />
                 <ScalarProperty Name="FlagDel" ColumnName="FlagDel" />
                 <ScalarProperty Name="EdUser" ColumnName="EdUser" />
                 <ScalarProperty Name="EdDate" ColumnName="EdDate" />
                 <ScalarProperty Name="CrUser" ColumnName="CrUser" />
                 <ScalarProperty Name="CrDate" ColumnName="CrDate" />
-                <ScalarProperty Name="Docdate" ColumnName="Docdate" />
-                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+                <ScalarProperty Name="PayType" ColumnName="PayType" />
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="TotalDue" ColumnName="TotalDue" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="OldDiscount" ColumnName="OldDiscount" />
+                <ScalarProperty Name="DiscountType" ColumnName="DiscountType" />
+                <ScalarProperty Name="Freight" ColumnName="Freight" />
+                <ScalarProperty Name="VatAmt" ColumnName="VatAmt" />
+                <ScalarProperty Name="VatRate" ColumnName="VatRate" />
+                <ScalarProperty Name="IncVat" ColumnName="IncVat" />
+                <ScalarProperty Name="OldIncVat" ColumnName="OldIncVat" />
+                <ScalarProperty Name="ExcVat" ColumnName="ExcVat" />
+                <ScalarProperty Name="OldExcVat" ColumnName="OldExcVat" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="OldAmount" ColumnName="OldAmount" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="CustPONo" ColumnName="CustPONo" />
+                <ScalarProperty Name="CustPODate" ColumnName="CustPODate" />
+                <ScalarProperty Name="CustInvDate" ColumnName="CustInvDate" />
+                <ScalarProperty Name="CustInvNO" ColumnName="CustInvNO" />
+                <ScalarProperty Name="CustName" ColumnName="CustName" />
+                <ScalarProperty Name="CustType" ColumnName="CustType" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="CreditDay" ColumnName="CreditDay" />
+                <ScalarProperty Name="Shipto" ColumnName="Shipto" />
+                <ScalarProperty Name="ContactTel" ColumnName="ContactTel" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="SalAreaID" ColumnName="SalAreaID" />
+                <ScalarProperty Name="SaleEmpID" ColumnName="SaleEmpID" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="WHID" ColumnName="WHID" />
+                <ScalarProperty Name="SuppName" ColumnName="SuppName" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="StatusInOut" ColumnName="StatusInOut" />
+                <ScalarProperty Name="DocRef" ColumnName="DocRef" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocStatus" ColumnName="DocStatus" />
+                <ScalarProperty Name="DocTypeCode" ColumnName="DocTypeCode" />
+                <ScalarProperty Name="RevisionNo" ColumnName="RevisionNo" />
                 <ScalarProperty Name="DocNo" ColumnName="DocNo" />
                 <ScalarProperty Name="AutoID" ColumnName="AutoID" />
               </MappingFragment>

@@ -25,6 +25,645 @@ namespace AllCashUFormsApp.View.Page
             InitializeComponent();
             Validate_PriceGroup.Add(txtPriceGroupCode, lbl_Code);
         }
+
+        #region Event Method
+        private void chkBoxSelectBranch_CheckedChanged(object sender, EventArgs e)
+        {
+            if (grdBranch.Rows.Count > 0)
+            {
+                for (int i = 0; i < grdBranch.Rows.Count; i++)
+                {
+                    //bool ChkBranch = Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value);
+                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
+
+                    if (OnlineStatus == true && chkBoxSelectBranch.Checked == true)
+                        grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
+                    else
+                        grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
+                }
+            }
+            else
+            {
+                chkBoxSelectBranch.Checked = false;
+            }
+        }
+
+        private void frmProductTable_Load(object sender, EventArgs e)
+        {
+            InitPage();
+            InitialData();
+        }
+
+        private void grdPriceGroup_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            SelectPriceGroupDetails(e);
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnSearch.PerformClick();
+        }
+
+        private void tabControl1_Click(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedTab.Text)
+            {
+                case "กลุ่มราคา":
+                    {
+                        btnRefresh_Branch.PerformClick();
+                        OpenPanelSearch(true);
+                        OpenPanelEdit(false);
+                        btnSearch.PerformClick();
+                        chkBoxSelectBranch.Checked = false;
+                    }
+                    break;
+                case "ตารางราคา":
+                    {
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(ddlPriceGroup);
+                        cbbList.Add(ddlProductGroup);
+                        cbbList.Add(ddlProductSubGroup);
+
+                        SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
+                        PrePareDataToCombobox(cbbList);
+                        //btnSearchPriceGroup.PerformClick(); ใน Combobox กลุ่มราคา มี Function ค้นหา
+                    }
+                    break;
+                case "ตารางค่าคอมมิชชั่น":
+                    {
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(cbbPriceGroup);
+                        cbbList.Add(cbbProductGroup);
+                        cbbList.Add(cbbProductSubGroup);
+
+                        SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
+                        PrePareDataToCombobox(cbbList);
+                        //btnSearchCommission.PerformClick(); ใน Combobox กลุ่มราคา มี Function ค้นหา
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ddlProductGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<ComboBox> cbbList = new List<ComboBox>();
+            cbbList.Add(ddlProductGroup);
+            cbbList.Add(ddlProductSubGroup);
+            BindDataToCombobox_ProductGroup(cbbList);
+        }
+
+        private void txtSearchProGroup_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnSearchPriceGroup.PerformClick();
+        }
+
+        private void txtSearchCommission_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                btnSearchCommission.PerformClick();
+        }
+
+        private void ddlPriceGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnSearchPriceGroup.PerformClick();
+        }
+
+        private void cbbPriceGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnSearchCommission.PerformClick();
+        }
+
+        private void cbbProductGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<ComboBox> cbbList = new List<ComboBox>();
+            cbbList.Add(cbbProductGroup);
+            cbbList.Add(cbbProductSubGroup);
+            BindDataToCombobox_ProductGroup(cbbList);
+        }
+
+        #endregion
+
+        #region Button Event
+        private void btnRefresh_Branch_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            RefreshBranch();
+
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void RefreshBranch()
+        {
+            var dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
+
+            DataTable newTable = new DataTable();
+            newTable.Columns.Add("ChkBranch", typeof(bool));
+            newTable.Columns.Add("BranchID", typeof(string));
+            newTable.Columns.Add("BranchRefCode", typeof(string));
+            newTable.Columns.Add("BranchName", typeof(string));
+            newTable.Columns.Add("Pic", typeof(Bitmap));
+            newTable.Columns.Add("OnlineStatus", typeof(bool));
+
+            Bitmap wifi_Img = new Bitmap(Properties.Resources.addBtn); // new Resource Image
+            Bitmap power_off_lmg = new Bitmap(Properties.Resources.closeBtn);
+
+            foreach (DataRow r in dtBranch.Rows)
+            {
+                Bitmap colPic = Convert.ToBoolean(r["OnlineStatus"]) == true ? wifi_Img : power_off_lmg;
+                newTable.Rows.Add(false
+                    , r["BranchID"].ToString(), r["BranchRefCode"].ToString(), r["BranchName"].ToString()
+                    , colPic, r["OnlineStatus"]);
+            }
+
+            grdBranch.DataSource = newTable;
+
+            //if (grdBranch.Rows.Count > 0)
+            //grdBranch.CreateCheckBoxHeaderColumn_Copy("colChkBranch","colOnlineStatus");
+
+            for (int i = 0; i < grdBranch.Rows.Count; i++)
+            {
+                bool flagOn = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
+                if (flagOn == false) //= true can edit row data
+                    grdBranch.Rows[i].Cells["colChkBranch"].ReadOnly = true;
+            }
+
+            lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            Search();
+        }
+
+        private void Search()
+        {
+            txtPriceGroupCode.Text = "";
+            txtPriceGroupName.Text = "";
+
+            if (grdBranch.RowCount == 0)
+                return;
+
+            var dt = bu.GetPriceGroupData(txtSearch.Text, rdoN.Checked ? 0 : 1);
+            grdPriceGroup.DataSource = dt;
+            lbl_qty_groupPrice.Text = dt.Rows.Count.ToNumberFormat();
+
+            if (dt.Rows.Count > 0)
+                grdPriceGroup.CreateCheckBoxHeaderColumn("colChkPriceGroup");
+
+            SelectPriceGroupDetails(null);
+            SetButtonAfterBindGrid(grdPriceGroup.Rows.Count);
+
+            if (rdoC.Checked)
+                btnAdd.Enabled = false;
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnCopy.Enabled = false;
+            btnPrint.Enabled = false;
+
+            switch (tabControl1.SelectedTab.Text)
+            {
+                case "กลุ่มราคา":
+                    {
+                        OpenPanelSearch(false);
+                        OpenPanelEdit();
+                        txtPriceGroupCode.DisableTextBox(true);
+                    }
+                    break;
+                case "ตารางราคา":
+                    {
+                        SetColumnsGridView(false);
+
+                        SetColorDataGridView(grdPrdPriceGroup);
+
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(ddlPriceGroup);
+                        cbbList.Add(ddlProductGroup);
+                        cbbList.Add(ddlProductSubGroup);
+                        SetPanelSearch(false, cbbList, txtSearchProGroup, btnSearchPriceGroup);
+                    }
+                    break;
+                case "ตารางค่าคอมมิชชั่น":
+                    {
+                        grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.White;
+                        grdCommission.Columns["colComPrice_t3"].ReadOnly = false;
+
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(cbbPriceGroup);
+                        cbbList.Add(cbbProductGroup);
+                        cbbList.Add(cbbProductSubGroup);
+                        SetPanelSearch(false, cbbList, txtSearchCommission, btnSearchCommission);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedTab.Text)
+            {
+                case "กลุ่มราคา":
+                    {
+                        OpenPanelEdit(false);
+                        OpenPanelSearch();
+
+                        grdPriceGroup.Enabled = true;
+                        btnSearch.PerformClick();
+                    }
+                    break;
+                case "ตารางราคา":
+                    {
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(ddlPriceGroup);
+                        cbbList.Add(ddlProductGroup);
+                        cbbList.Add(ddlProductSubGroup);
+                        SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
+
+                        SetColorDataGridView(grdPrdPriceGroup, false);
+                        SetColumnsGridView(true);
+                        btnSearchPriceGroup.PerformClick();
+                    }
+                    break;
+                case "ตารางค่าคอมมิชชั่น":
+                    {
+                        List<ComboBox> cbbList = new List<ComboBox>();
+                        cbbList.Add(cbbPriceGroup);
+                        cbbList.Add(cbbProductGroup);
+                        cbbList.Add(cbbProductSubGroup);
+                        SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
+
+                        grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
+                        grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
+
+                        btnSearchCommission.PerformClick();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            string tabName = tabControl1.SelectedTab.Text.ToString();
+
+            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
+            btnCopy.Enabled = false;
+
+            if (tabName == "กลุ่มราคา")
+            {
+                OpenPanelSearch(false);
+                OpenPanelEdit(true);
+
+                txtPriceGroupCode.Text = "";
+                txtPriceGroupName.Text = "";
+
+                dtpStartDate.Value = DateTime.Now;
+                dtpEndDate.Value = DateTime.Now;
+
+                SetPriceGroupCode(); //AutoID
+
+                txtPriceGroupCode.DisableTextBox(true);
+                grdPriceGroup.Enabled = false;
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (!ValidateSave(tabControl1.SelectedTab.Text))
+                return;
+
+            string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
+            string title = "ยืนยันการบันทึก!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                switch (tabControl1.SelectedTab.Text)
+                {
+                    case "กลุ่มราคา":
+                        SavePriceGroup();
+                        break;
+                    case "ตารางราคา":
+                        SaveProductPriceGroup();
+                        break;
+                    case "ตารางค่าคอมมิชชั่น":
+                        UpdateProductPriceGroup();
+                        break;
+                    default:
+                        break;
+                }
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
+            string title = "ทำการยืนยัน!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                switch (tabControl1.SelectedTab.Text)
+                {
+                    case "กลุ่มราคา":
+                        RemovePriceGroup();
+                        break;
+                    case "ตารางราคา":
+                        RemoveProductPriceGroupWithSQL();//adisorn 17-10-2022 
+                        break;
+                    case "ตารางค่าคอมมิชชั่น":
+                        UpdateProductPriceGroup(true);
+                        break;
+                    default:
+                        break;
+                }
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowErrorMessage();
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            grdPriceGroup.DataSource = new DataGridView();
+            grdBranch.DataSource = new DataGridView();
+            grdPrdPriceGroup.DataSource = new DataGridView();
+            this.Close();
+        }
+
+        private void btnSendData_Click(object sender, EventArgs e)
+        {
+            string msg = "";
+
+            if (ValidateBranchCheck() == false)
+                msg += "เลือกศูนย์ที่ต้องการส่งข้อมูล !!\n";
+
+            if (ValidatePriceGroupTL1() == true)
+                msg += "เลือกข้อมูลตารางสินค้าที่ต้องการส่งข้อมูล !!\n";
+
+            if (!string.IsNullOrEmpty(msg))
+            {
+                msg.ShowWarningMessage();
+                return;
+            }
+
+            string cfMsg = "ต้องการส่งข้อมูลใช่หรือไม่?";
+            string title = "ยืนยันการส่ง!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            bool ret = false;
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            List<string> BranchID_List = new List<string>();
+            SelectBranchList(BranchID_List);
+            var allBranchID = string.Join(",", BranchID_List);
+
+            List<string> PrdPriceGroupID_List = new List<string>();
+            List<string> ProductID_List = new List<string>();
+            SelectPrdPriceGroupList(PrdPriceGroupID_List, ProductID_List);
+
+            var allPrdGroupID = string.Join(",", PrdPriceGroupID_List);
+            var allProductID = string.Join(",", ProductID_List);
+
+            List<string> TLPriceGroupID = new List<string>();
+            SelectTLPriceGroup(TLPriceGroupID);
+            var allTLPriceGroupID = string.Join(",", TLPriceGroupID);
+
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("@BranchIDs", allBranchID);
+            _params.Add("@PrdPriceGroupIDs", allPrdGroupID);//ProductPriceGroup
+            _params.Add("@ProductIDs", allProductID);//14
+            _params.Add("@PriceGroupIDs", allTLPriceGroupID);
+
+            ret = bu.CallSendAllProductPriceGroupData(_params);
+
+            Cursor.Current = Cursors.Default;
+            if (ret)
+            {
+                msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
+                msg.ShowInfoMessage();
+            }
+            else
+            {
+                msg = "ส่งข้อมูลล้มเหลว!!";
+                msg.ShowErrorMessage();
+            }
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedTab.Text)
+            {
+                case "กลุ่มราคา":
+                    {
+                    }
+                    break;
+                case "ตารางราคา":
+                    {
+                        frmWait wait = new frmWait();
+                        wait.Show();
+
+                        string dir = @"C:\AllCashExcels";
+
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
+                        var _newTable = new DataTable("Sheet1");
+                        _newTable.Columns.Add("ชื่อกลุ่มสินค้า", typeof(string));
+                        _newTable.Columns.Add("รหัสสินค้า", typeof(string));
+                        _newTable.Columns.Add("ชื่อสินค้า", typeof(string));
+                        _newTable.Columns.Add("หน่วย", typeof(string));
+                        _newTable.Columns.Add("ก่อนภาษี(ราคาขาย)", typeof(decimal));
+                        _newTable.Columns.Add("รวมภาษี(ราคาขาย)", typeof(decimal));
+                        _newTable.Columns.Add("ก่อนภาษี(ราคาซื้อ)", typeof(decimal));
+
+                        foreach (DataRow r in tmpDTData.Rows)
+                        {
+                            _newTable.Rows.Add(r["ProductGroupName"], r["ProductID"], r["ProductName"], r["UomSetName"], r["SellPrice"], r["SellPriceVat"], r["BuyPrice"]);
+                        }
+
+                        string cDate = DateTime.Now.ToString("yyMMddhhmmss");
+                        string _excelName = dir + @"\" + string.Join("", "รายงานตารางราคาสินค้า", '_', cDate) + ".xls";
+                        My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { _newTable }, _excelName, "รายงานตารางราคาสินค้า");
+
+                        wait.Hide();
+                        wait.Dispose();
+                        wait.Close();
+                    }
+                    break;
+                case "ตารางค่าคอมมิชชั่น":
+                    {
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void btnSearchPriceGroup_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            SearchPriceGroup();
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void SearchPriceGroup()
+        {
+            int PriceGroupID = Convert.ToInt32(ddlPriceGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlPriceGroup.SelectedValue);
+            int ProductGroupID = Convert.ToInt32(ddlProductGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlProductGroup.SelectedValue);
+            int ProductSubGroupID = Convert.ToInt32(ddlProductSubGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlProductSubGroup.SelectedValue);
+
+            var dtProData = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchProGroup.Text, true);
+
+            //DataTable dtProPriceGroup = PriceGroupID == 0 ? bu.GetProductPriceGroup(null).ToDataTable() : bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
+            var dtProPriceGroup = bu.GetProductPriceGroup("", PriceGroupID);
+
+            DataTable newTable = new DataTable();
+            SetProductPriceGroup_Table(newTable);
+
+            var tmp = dtProPriceGroup.AsEnumerable().ToList();
+
+            decimal Price = 0;
+
+            foreach (DataRow r in dtProData.Rows)
+            {
+                string proID = r["ProductID"].ToString();
+                int UomSetID = Convert.ToInt32(r["UomSetID"]);
+                DataRow item;
+
+                if (dtProPriceGroup.Rows.Count > 0) // tbl_ProductPriceGroup มีข้อมูล
+                {
+                    if (PriceGroupID == 0) //กลุ่มราคา = "==เลือก==" ให้หยุดทำงาน
+                        break;
+                    else  //เช็คว่า มีข้อมูลใน tbl_ProductPriceGroup
+                    {
+                        item = tmp.FirstOrDefault(x => x.Field<string>("ProductID") == proID && x.Field<int>("ProductUomID") == UomSetID && x.Field<int>("PriceGroupID") == PriceGroupID);
+                    }
+                    if (item != null) //มีข้อมูล
+                    {
+                        newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
+                            , proID, r["ProductName"], r["ProductGroupName"]
+                            , r["UomSetID"], r["UomSetName"]
+                            , item["PriceGroupID"], item["SellPrice"]
+                            , item["SellPriceVat"], item["BuyPrice"]);
+                    }
+                    else //ไม่มีข้อมูล
+                    {
+                        newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
+                            , proID, r["ProductName"], r["ProductGroupName"]
+                            , r["UomSetID"], r["UomSetName"]
+                            , PriceGroupID, Price.ToDecimalN2()
+                            , Price.ToDecimalN2(), Price.ToDecimalN2());
+                    }
+                }
+                else // tbl_ProductPriceGroup ไม่มีข้อมูล
+                {
+                    if (PriceGroupID > 0)//กลุ่มราคา ไม่เท่ากับ "==เลือก==" 
+                    {
+                        newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
+                             , proID, r["ProductName"], r["ProductGroupName"]
+                             , r["UomSetID"], r["UomSetName"]
+                             , PriceGroupID, Price.ToDecimalN2()
+                             , Price.ToDecimalN2(), Price.ToDecimalN2());
+                    }
+                }
+            }
+
+            grdPrdPriceGroup.DataSource = newTable;
+            tmpDTData.TableName = "Sheet1";
+            tmpDTData = newTable;
+            label1.Text = newTable.Rows.Count.ToNumberFormat();
+
+            SetButtonAfterBindGrid(grdPrdPriceGroup.RowCount);
+            btnAdd.Enabled = false;
+            SetColumnsGridView(true);
+        }
+
+        private void btnSearchCommission_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            int PriceGroupID = Convert.ToInt32(cbbPriceGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbPriceGroup.SelectedValue);
+            int ProductGroupID = Convert.ToInt32(cbbProductGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductGroup.SelectedValue);
+            int ProductSubGroupID = Convert.ToInt32(cbbProductSubGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductSubGroup.SelectedValue);
+
+            var dtPrdUomset = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchCommission.Text, false);
+
+            DataTable dtProPriceGroup = bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
+
+            DataTable newTable = new DataTable();
+            SetProductPriceGroup_Table(newTable);
+            newTable.Columns.Add("ComPrice", typeof(decimal));
+
+            if (dtProPriceGroup.Rows.Count > 0)
+            {
+                var tmp = dtProPriceGroup.AsEnumerable().ToList();
+
+                foreach (DataRow r in dtPrdUomset.Rows)
+                {
+                    string proID = r["ProductID"].ToString();
+                    int UomSetID = Convert.ToInt32(r["UomSetID"]);
+                    DataRow item;
+
+                    if (dtProPriceGroup.Rows.Count > 0) // tbl_ProductPriceGroup มีข้อมูล
+                    {
+                        if (PriceGroupID == 0) //กลุ่มราคา = "==เลือก==" ให้หยุดทำงาน
+                            break;
+
+                        item = tmp.FirstOrDefault(x => x.Field<string>("ProductID") == proID
+                                    && x.Field<int>("ProductUomID") == UomSetID
+                                    && x.Field<int>("PriceGroupID") == PriceGroupID
+                                    && (x.Field<decimal>("SellPrice") > 0
+                                    || x.Field<decimal>("SellPriceVat") > 0
+                                    || x.Field<decimal>("BuyPrice") > 0));
+
+                        if (item != null) //มีข้อมูล
+                        {
+                            newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"], proID, r["ProductName"], r["ProductGroupName"], r["UomSetID"], r["UomSetName"]
+                                , item["PriceGroupID"], item["SellPrice"], item["SellPriceVat"], item["BuyPrice"], item["ComPrice"]);
+                        }
+                    }
+                }
+            }
+
+            grdCommission.DataSource = newTable;
+            grdCommission.Columns["colComPrice_t3"].ReadOnly = newTable.Rows.Count > 0 ? false : true;
+            label1.Text = newTable.Rows.Count.ToNumberFormat();
+
+            SetButtonAfterBindGrid(grdCommission.RowCount);
+            Cursor.Current = Cursors.Default;
+        }
+        #endregion
+
+        #region Private Method
         private void InitPage()
         {
             var menu = bu.tbl_AdmFormList.FirstOrDefault(x => x.FormName.ToLower() == this.Name.ToLower());
@@ -41,99 +680,28 @@ namespace AllCashUFormsApp.View.Page
                 FormPic.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
-        private void BindBranchData()
-        {
-            DataTable dtBranch = new DataTable();
 
-            dtBranch = bu.Get_proc_SendProductInfo_GetDataTable();
-
-            DataTable newTable = new DataTable();
-
-            newTable.Columns.Add("ChkBranch", typeof(bool));
-            newTable.Columns.Add("BranchID", typeof(string));
-            newTable.Columns.Add("BranchRefCode", typeof(string));
-            newTable.Columns.Add("BranchName", typeof(string));
-            newTable.Columns.Add("Pic", typeof(Bitmap));
-            newTable.Columns.Add("OnlineStatus", typeof(bool));
-
-            Bitmap wifi_Img = new Bitmap(Properties.Resources.addBtn); // new Resource Image
-            Bitmap power_off_lmg = new Bitmap(Properties.Resources.closeBtn);
-
-            foreach (DataRow r in dtBranch.Rows)
-            {
-                Bitmap colPic = Convert.ToBoolean(r["OnlineStatus"]) == true ? wifi_Img : power_off_lmg;
-                newTable.Rows.Add(false
-                    , r["BranchID"].ToString()
-                    , r["BranchRefCode"].ToString()
-                    , r["BranchName"].ToString()
-                    , colPic
-                    , r["OnlineStatus"]);
-            }
-
-            grdBranch.DataSource = newTable;
-
-            //if (grdBranch.Rows.Count > 0)
-            //{
-            //    grdBranch.CreateCheckBoxHeaderColumn_Copy("colChkBranch","colOnlineStatus");
-            //}
-
-            for (int i = 0; i < grdBranch.Rows.Count; i++)
-            {
-                bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-                // OnlineStatus = true คือ แก้ไขได้
-                if (OnlineStatus == false)
-                {
-                    grdBranch.Rows[i].Cells["colChkBranch"].ReadOnly = true;
-                }
-            }
-
-            lblgrdQty.Text = newTable.Rows.Count.ToNumberFormat();
-        }
-        private void StatusVisible(bool visible)
-        {
-            lbl_Status.Visible = visible;
-            btnN.Visible = visible;
-        }
-        private void PrePareDataToCombobox(List<ComboBox> cbbList)
-        {
-            var PriceGroup = bu.GetPriceGroup(x => x.FlagDel == false).OrderBy(x => x.PriceGroupID).ToList();
-            var PriceGroupList = new List<tbl_PriceGroup>();
-            PriceGroupList.Add(new tbl_PriceGroup { PriceGroupID = -1, PriceGroupName = "==เลือก==" });
-            PriceGroupList.AddRange(PriceGroup);
-            cbbList[0].BindDropdownList(PriceGroupList, "PriceGroupName", "PriceGroupID", 1);
-
-            var PrdGroup = bu.GetProductGroup(); // NEW 
-            var PrdGroupList = new List<tbl_ProductGroup>();
-            PrdGroupList.Add(new tbl_ProductGroup { ProductGroupID = -1, ProductGroupName = "==เลือก==" });
-            PrdGroupList.AddRange(PrdGroup);
-            cbbList[1].BindDropdownList(PrdGroupList, "ProductGroupName", "ProductGroupID");
-
-            var PrdSubGroup = new List<tbl_ProductSubGroup>();
-            PrdSubGroup.Add(new tbl_ProductSubGroup { ProductSubGroupID = -1, ProductSubGroupName = "==เลือก==" });
-            cbbList[2].BindDropdownList(PrdSubGroup, "ProductSubGroupName", "ProductSubGroupID");
-        }
         private void InitialData()
         {
             dtpStartDate.SetDateTimePickerFormat();
             dtpEndDate.SetDateTimePickerFormat();
-
             dtpStartDate.Value = DateTime.Now;
             dtpEndDate.Value = DateTime.Now;
-
             grdBranch.AutoGenerateColumns = false;
             grdPriceGroup.AutoGenerateColumns = false;
             grdCommission.AutoGenerateColumns = false;
-
             grdBranch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grdPriceGroup.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            StatusVisible(false);
+            //btnRefresh_Branch.PerformClick();
 
-            btnRefresh_Branch.PerformClick();
+            RefreshBranch();
 
             //grdBranch.CreateCheckBoxHeaderColumn("colChkBranch");
 
-            btnSearch.PerformClick();
+            //btnSearch.PerformClick();
+            Search();
+
             OpenPanelEdit(false);
 
             grdPrdPriceGroup.AutoGenerateColumns = false;
@@ -152,52 +720,17 @@ namespace AllCashUFormsApp.View.Page
                 cbbList.Add(cbbProductSubGroup);
                 PrePareDataToCombobox(cbbList);
 
-                BindPriceGroupData();
-                BindPrdPriceGroupData();
+                //btnSearch.PerformClick();
+                //btnSearchPriceGroup.PerformClick();
+
+                Search();
+                SearchPriceGroup();
             }
 
             string msg = "สามารถใช้ได้เมื่อต่อ CENTER DB เท่านั้น !!";
             msg.ShowWarningMessage();
         }
-        private void frmProductTable_Load(object sender, EventArgs e)
-        {
-            InitPage();
-            InitialData();
-        }
-        private void BindPriceGroupData()
-        {
-            if (grdBranch.RowCount > 0)
-            {
-                int flagDel = rdoN.Checked ? 0 : 1;
 
-                DataTable dtPriceGroup = bu.GetPriceGroupData(txtSearch.Text, flagDel);
-
-                grdPriceGroup.DataSource = dtPriceGroup;
-                lbl_qty_groupPrice.Text = dtPriceGroup.Rows.Count.ToNumberFormat();
-
-                if (dtPriceGroup.Rows.Count > 0)
-                {
-                    grdPriceGroup.CreateCheckBoxHeaderColumn("colChkPriceGroup");
-                }
-
-                SetButtonAfterBindGrid(grdPriceGroup.Rows.Count);
-
-                StatusVisible(false);
-
-                if (rdoC.Checked == true && grdPriceGroup.Rows.Count > 0)
-                {
-                    StatusVisible(true);
-                }
-                if (rdoC.Checked == true)
-                {
-                    btnAdd.Enabled = false;
-                }
-            }
-        }
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            BindPriceGroupData();
-        }
         private void SelectPriceGroupDetails(DataGridViewCellEventArgs e)
         {
             DataGridViewRow grdRows = null;
@@ -205,18 +738,17 @@ namespace AllCashUFormsApp.View.Page
             if (e != null)
             {
                 if (e.RowIndex == -1)
-                {
                     return;
-                }
                 else
-                {
                     grdRows = grdPriceGroup.Rows[e.RowIndex];
-                }
             }
             else
             {
                 grdRows = grdPriceGroup.CurrentRow;
             }
+
+            txtPriceGroupCode.Text = "";
+            txtPriceGroupName.Text = "";
 
             if (grdRows != null)
             {
@@ -224,148 +756,32 @@ namespace AllCashUFormsApp.View.Page
                 txtPriceGroupName.Text = grdRows.Cells["colPriceGroupName"].Value.ToString();
 
                 if (!string.IsNullOrEmpty(grdRows.Cells["colStartDate"].Value.ToString()))
-                {
                     dtpStartDate.Value = Convert.ToDateTime(grdRows.Cells["colStartDate"].Value);
-                }
 
                 if (!string.IsNullOrEmpty(grdRows.Cells["colEndDate"].Value.ToString()))
-                {
                     dtpEndDate.Value = Convert.ToDateTime(grdRows.Cells["colEndDate"].Value);
-                }
-
             }
         }
-        private void grdPriceGroup_CellClick(object sender, DataGridViewCellEventArgs e)
+
+        private void PrePareDataToCombobox(List<ComboBox> cbbList)
         {
-            SelectPriceGroupDetails(e);
+            var PriceGroup = bu.GetPriceGroup(x => x.FlagDel == false).OrderBy(x => x.PriceGroupID).ToList();
+            var PriceGroupList = new List<tbl_PriceGroup>();
+            PriceGroupList.Add(new tbl_PriceGroup { PriceGroupID = -1, PriceGroupName = "==เลือก==" });
+            PriceGroupList.AddRange(PriceGroup);
+            cbbList[0].BindDropdownList(PriceGroupList, "PriceGroupName", "PriceGroupID", 1);
+
+            var PrdGroup = bu.GetProductGroup();
+            var PrdGroupList = new List<tbl_ProductGroup>();
+            PrdGroupList.Add(new tbl_ProductGroup { ProductGroupID = -1, ProductGroupName = "==เลือก==" });
+            PrdGroupList.AddRange(PrdGroup);
+            cbbList[1].BindDropdownList(PrdGroupList, "ProductGroupName", "ProductGroupID");
+
+            var PrdSubGroup = new List<tbl_ProductSubGroup>();
+            PrdSubGroup.Add(new tbl_ProductSubGroup { ProductSubGroupID = -1, ProductSubGroupName = "==เลือก==" });
+            cbbList[2].BindDropdownList(PrdSubGroup, "ProductSubGroupName", "ProductSubGroupID");
         }
-        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdBranch.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void grdPriceGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdPriceGroup.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void grdPriceGroup_SelectionChanged(object sender, EventArgs e)
-        {
-            SelectPriceGroupDetails(null);
-        }
-        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BindPriceGroupData();
-            }
-        }
-        private void rdoN_CheckedChanged(object sender, EventArgs e)
-        {
-            BindPriceGroupData();
-        }
-        private void rdoC_CheckedChanged(object sender, EventArgs e)
-        {
-            BindPriceGroupData();
-        }
-        private void tab2_ReadOnlyColumnsGridView(bool Readonly)
-        {
-            grdPrdPriceGroup.Columns["colSellPrice_t2"].ReadOnly = Readonly;
-            grdPrdPriceGroup.Columns["colSellPriceVat_t2"].ReadOnly = Readonly;
-            grdPrdPriceGroup.Columns["colBuyPrice_t2"].ReadOnly = Readonly;
-        }
-        private void SetColorDataGridView(DataGridView grd, bool flagEnable = true)
-        {
-            if (flagEnable == true)
-            {
-                grd.Columns["colSellPrice_t2"].DefaultCellStyle.BackColor = Color.White;
-                grd.Columns["colSellPriceVat_t2"].DefaultCellStyle.BackColor = Color.White;
-                grd.Columns["colBuyPrice_t2"].DefaultCellStyle.BackColor = Color.White;
-            }
-            else
-            {
-                grd.Columns["colSellPrice_t2"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
-                grd.Columns["colSellPriceVat_t2"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
-                grd.Columns["colBuyPrice_t2"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
-            }
-        }
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
 
-            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-
-            if (tabName == "กลุ่มราคา")
-            {
-                OpenPanelSearch(false);
-                OpenPanelEdit();
-                txtPriceGroupCode.DisableTextBox(true);
-            }
-            else if (tabName == "ตารางราคา")
-            {
-                tab2_ReadOnlyColumnsGridView(false);
-
-                SetColorDataGridView(grdPrdPriceGroup);
-
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(ddlPriceGroup);
-                cbbList.Add(ddlProductGroup);
-                cbbList.Add(ddlProductSubGroup);
-                SetPanelSearch(false, cbbList, txtSearchProGroup, btnSearchPriceGroup);
-            }
-            else if (tabName == "ตารางค่าคอมมิชชั่น")
-            {
-                grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.White;
-
-                grdCommission.Columns["colComPrice_t3"].ReadOnly = false;
-
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(cbbPriceGroup);
-                cbbList.Add(cbbProductGroup);
-                cbbList.Add(cbbProductSubGroup);
-                SetPanelSearch(false, cbbList, txtSearchCommission, btnSearchCommission);
-            }
-        }
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
-
-            if (tabName == "กลุ่มราคา")
-            {
-                txtPriceGroupCode.Text = "";
-                txtPriceGroupName.Text = "";
-
-                OpenPanelEdit(false);
-                OpenPanelSearch();
-
-                grdPriceGroup.Enabled = true;
-
-                btnSearch.PerformClick();
-            }
-            else if (tabName == "ตารางราคา")
-            {
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(ddlPriceGroup);
-                cbbList.Add(ddlProductGroup);
-                cbbList.Add(ddlProductSubGroup);
-                SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
-
-                SetColorDataGridView(grdPrdPriceGroup, false);
-                tab2_ReadOnlyColumnsGridView(true);
-                btnSearchPriceGroup.PerformClick();
-            }
-            else if (tabName == "ตารางค่าคอมมิชชั่น")
-            {
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(cbbPriceGroup);
-                cbbList.Add(cbbProductGroup);
-                cbbList.Add(cbbProductSubGroup);
-                SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
-
-                grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
-                grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
-
-                btnSearchCommission.PerformClick();
-            }
-        }
         private void OpenPanelSearch(bool Enable = true)
         {
             txtSearch.DisableTextBox(!Enable);
@@ -373,6 +789,7 @@ namespace AllCashUFormsApp.View.Page
             rdoC.Enabled = Enable;
             btnSearch.Enabled = Enable;
         }
+
         private void OpenPanelEdit(bool Enable = true)
         {
             txtPriceGroupCode.DisableTextBox(!Enable);
@@ -380,112 +797,20 @@ namespace AllCashUFormsApp.View.Page
             dtpStartDate.Enabled = Enable;
             dtpEndDate.Enabled = Enable;
         }
-        private void FormatRunningNo_PriceGroup()
+
+        private void SetPriceGroupCode()
         {
             var PriceGroupList = bu.GetPriceGroup();
+
+            txtPriceGroupCode.Text = "00";
 
             if (PriceGroupList != null && PriceGroupList.Count > 0)
             {
                 int maxPGcode = Convert.ToInt32(PriceGroupList.Select(x => x.PriceGroupCode).Max()) + 1;
-
                 txtPriceGroupCode.Text = maxPGcode.ToString("00");
             }
-            else
-            {
-                txtPriceGroupCode.Text = "00";
-            }
         }
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
 
-            btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
-
-            if (tabName == "กลุ่มราคา")
-            {
-                OpenPanelSearch(false);
-                OpenPanelEdit(true);
-
-                txtPriceGroupCode.Text = "";
-                txtPriceGroupName.Text = "";
-
-                dtpStartDate.Value = DateTime.Now;
-                dtpEndDate.Value = DateTime.Now;
-
-                FormatRunningNo_PriceGroup(); //AutoID
-
-                txtPriceGroupCode.DisableTextBox(true);
-                grdPriceGroup.Enabled = false;
-            }
-        }
-        private void tabControl1_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
-
-            if (tabName == "กลุ่มราคา")
-            {
-                BindBranchData();
-
-                OpenPanelSearch(true);
-                OpenPanelEdit(false);
-
-                btnSearch.PerformClick();
-
-                chkBoxSelectBranch.Checked = false;
-
-                BindPriceGroupData();
-            }
-            else if (tabName == "ตารางราคา")
-            {
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(ddlPriceGroup);
-                cbbList.Add(ddlProductGroup);
-                cbbList.Add(ddlProductSubGroup);
-
-                SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
-
-                PrePareDataToCombobox(cbbList);
-
-                btnSearchPriceGroup.PerformClick();
-            }
-            else if (tabName == "ตารางค่าคอมมิชชั่น")
-            {
-                List<ComboBox> cbbList = new List<ComboBox>();
-                cbbList.Add(cbbPriceGroup);
-                cbbList.Add(cbbProductGroup);
-                cbbList.Add(cbbProductSubGroup);
-
-                SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
-
-                PrePareDataToCombobox(cbbList);
-
-                btnSearchCommission.PerformClick();
-            }
-        }
-        private void chkBoxSelectBranch_CheckedChanged(object sender, EventArgs e)
-        {
-            if (grdBranch.Rows.Count > 0)
-            {
-                for (int i = 0; i < grdBranch.Rows.Count; i++)
-                {
-                    //bool ChkBranch = Convert.ToBoolean(grdBranch.Rows[i].Cells["colChkBranch"].Value);
-                    bool OnlineStatus = Convert.ToBoolean(grdBranch.Rows[i].Cells["colOnlineStatus"].Value);
-
-                    if (OnlineStatus == true && chkBoxSelectBranch.Checked == true)
-                    {
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = true;
-                    }
-                    else
-                    {
-                        grdBranch.Rows[i].Cells["colChkBranch"].Value = false;
-                    }
-                }
-            }
-            else
-            {
-                chkBoxSelectBranch.Checked = false;
-            }
-        }
         private bool ValidateSave(string tabName)
         {
             bool ret = true;
@@ -506,6 +831,7 @@ namespace AllCashUFormsApp.View.Page
             }
             return ret;
         }
+
         private void PrePareEdit_PriceGroup(bool flagRemove, tbl_PriceGroup tbl_PriceGroups)
         {
             tbl_PriceGroups.PriceGroupCode = txtPriceGroupCode.Text;
@@ -521,323 +847,189 @@ namespace AllCashUFormsApp.View.Page
 
             tbl_PriceGroups.FlagSend = Convert.ToBoolean(grdPriceGroup.CurrentRow.Cells["colFlagSend"].Value);
 
-            if (flagRemove == true)
-            {
+            if (flagRemove)
                 tbl_PriceGroups.FlagDel = true;
-            }
         }
-        private void Remove_ProductPriceGroup(bool flagRemove = false)
+
+        private int RemoveProductPriceGroupWithSQL()
         {
-            try
+            int ret = 0;
+            List<string> listProductID = new List<string>();
+            for (int i = 0; i < grdPrdPriceGroup.RowCount; i++)
             {
-                int ret = 0;
-
-                var ProductPriceGroup = new tbl_ProductPriceGroup();
-                var ProductPriceGroupList = new List<tbl_ProductPriceGroup>();
-
-                int PriceGroupID = Convert.ToInt32(ddlPriceGroup.SelectedValue);
-                int ProductGroupID = ddlProductGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlProductGroup.SelectedValue);
-                int ProductSubGroupID = ddlProductSubGroup.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlProductSubGroup.SelectedValue);
-
-                var tbl_ProductPriceGroupList = new List<tbl_ProductPriceGroup>();
-
-                tbl_ProductPriceGroupList = bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID);
-
-                if (ProductGroupID == 0 && ProductSubGroupID == 0) // ถ้าค้นหา แค่กลุ่มราคา ให้ ลบทั้งหมดที่เป็นกลุ่มราคานั้น 
-                {
-                    foreach (var item in tbl_ProductPriceGroupList)
-                    {
-                        ProductPriceGroupList.Add(item);
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < grdPrdPriceGroup.Rows.Count; i++)
-                    {
-                        string ProID = grdPrdPriceGroup.Rows[i].Cells["colProductID_t2"].Value.ToString();
-                        int UomSetID = Convert.ToInt32(grdPrdPriceGroup.Rows[i].Cells["colUomSetID_t2"].Value);
-
-                        var item = tbl_ProductPriceGroupList.FirstOrDefault(x => x.ProductID == ProID && x.ProductUomID == UomSetID);
-
-                        if (item != null)
-                        {
-                            ProductPriceGroupList.Add(item);
-                        }
-                    }
-                }
-
-                foreach (var item in ProductPriceGroupList)   //ลบ ข้อมูลเก่า  -x- Update ไม่ได้ -x-
-                {
-                    ret = bu.RemoveProductPriceGroup(item);
-                }
-
-                if (flagRemove == true)
-                {
-                    if (ret == 1)
-                    {
-                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                        msg.ShowInfoMessage();
-                        btnSearchPriceGroup.PerformClick();
-                    }
-                    else
-                    {
-                        this.ShowProcessErr();
-                        return;
-                    }
-                }
+                string _ProductID = grdPrdPriceGroup.Rows[i].Cells["colProductID_t2"].Value.ToString();
+                listProductID.Add(_ProductID.Trim());
             }
-            catch (Exception ex)
-            {
-                ex.Message.ShowErrorMessage();
-            }
+
+            string AllProductID = string.Join(",", listProductID.Distinct());
+            int _PriceGroupID = Convert.ToInt32(ddlPriceGroup.SelectedValue);
+
+            ret = bu.Remove_ProductPriceGroup(AllProductID, _PriceGroupID);
+            return ret;
         }
+
         private void SaveProductPriceGroup()
         {
-            try
+            int ret = 0;
+            DateTime _CrDate = DateTime.Now;
+            //RemoveData_ProductPriceGroup(); //ลบข้อมูลก่อน ทำการ Insert ใหม่
+            RemoveProductPriceGroupWithSQL(); //adisorn 17/10/2022
+
+            var list = new List<tbl_ProductPriceGroup>();
+            for (int i = 0; i < grdPrdPriceGroup.RowCount; i++)
             {
-                int ret = 0;
+                var data = new tbl_ProductPriceGroup();
+                data.PriceGroupID = Convert.ToInt32(grdPrdPriceGroup.Rows[i].Cells["colPriceGroupID_t2"].Value);
+                data.ProductID = grdPrdPriceGroup.Rows[i].Cells["colProductID_t2"].Value.ToString();
+                data.ProductUomID = Convert.ToInt32(grdPrdPriceGroup.Rows[i].Cells["colUomSetID_t2"].Value);
 
-                Remove_ProductPriceGroup(); //ลบข้อมูลก่อน ทำการ Insert ใหม่
+                data.SellPrice = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colSellPrice_t2"].Value).ToDecimalN2();
+                data.BuyPrice = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colBuyPrice_t2"].Value).ToDecimalN2();
+                data.SellPriceVat = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colSellPriceVat_t2"].Value).ToDecimalN2();
 
-                var ProductPriceGroup = new tbl_ProductPriceGroup();
-                var ProductPriceGroupList = new List<tbl_ProductPriceGroup>();
+                data.CrDate = _CrDate;
+                data.CrUser = Helper.tbl_Users.Username;
 
-                decimal Price = 0;
+                data.BuyPriceVat = 0; //ไม่มีข้อมูลในตารางให้กรอก
+                data.ComPrice = 0; //ไม่มีข้อมูลในตารางให้กรอก
 
-                for (int i = 0; i < grdPrdPriceGroup.Rows.Count; i++)
-                {
-                    ProductPriceGroup.PriceGroupID = Convert.ToInt32(grdPrdPriceGroup.Rows[i].Cells["colPriceGroupID_t2"].Value);
-                    ProductPriceGroup.ProductID = grdPrdPriceGroup.Rows[i].Cells["colProductID_t2"].Value.ToString();
-                    ProductPriceGroup.ProductUomID = Convert.ToInt32(grdPrdPriceGroup.Rows[i].Cells["colUomSetID_t2"].Value);
-
-                    ProductPriceGroup.SellPrice = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colSellPrice_t2"].Value).ToDecimalN2();
-                    ProductPriceGroup.BuyPrice = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colBuyPrice_t2"].Value).ToDecimalN2();
-                    ProductPriceGroup.SellPriceVat = Convert.ToDecimal(grdPrdPriceGroup.Rows[i].Cells["colSellPriceVat_t2"].Value).ToDecimalN2();
-
-                    ProductPriceGroup.CrDate = DateTime.Now;
-                    ProductPriceGroup.CrUser = Helper.tbl_Users.Username;
-
-                    ProductPriceGroup.EdDate = null; //
-                    ProductPriceGroup.EdUser = null; //
-
-                    ProductPriceGroup.FlagDel = false; //
-                    ProductPriceGroup.FlagSend = false;
-
-                    ProductPriceGroup.FlagNew = false;
-                    ProductPriceGroup.FlagEdit = false;
-
-                    ProductPriceGroup.BuyPriceVat = Price.ToDecimalN2(); //ไม่มีข้อมูลในตารางให้กรอก
-                    ProductPriceGroup.ComPrice = Price.ToDecimalN2();//ไม่มีข้อมูลในตารางให้กรอก
-
-                    ret = bu.UpdateProductPriceGroupData(ProductPriceGroup);
-                }
-
-                if (ret == 1)
-                {
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-
-                    List<ComboBox> cbbList = new List<ComboBox>();
-                    cbbList.Add(ddlPriceGroup);
-                    cbbList.Add(ddlProductGroup);
-                    cbbList.Add(ddlProductSubGroup);
-                    SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
-
-                    btnSearchPriceGroup.PerformClick();
-
-                    tab2_ReadOnlyColumnsGridView(true);
-
-                    SetColorDataGridView(grdPrdPriceGroup, false);
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
+                list.Add(data);
             }
-            catch (Exception ex)
+            ret = bu.UpdateProductPriceGroupData(list); //adisorn 17/10/2022 
+            if (ret == 1)
             {
-                ex.Message.ShowErrorMessage();
+                string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                msg.ShowInfoMessage();
+
+                List<ComboBox> cbbList = new List<ComboBox>();
+                cbbList.Add(ddlPriceGroup);
+                cbbList.Add(ddlProductGroup);
+                cbbList.Add(ddlProductSubGroup);
+                SetPanelSearch(true, cbbList, txtSearchProGroup, btnSearchPriceGroup);
+
+                btnSearchPriceGroup.PerformClick();
+
+                SetColumnsGridView(true);
+                SetColorDataGridView(grdPrdPriceGroup, false);
+            }
+            else
+            {
+                this.ShowProcessErr();
             }
         }
+
         private void SavePriceGroup()
         {
-            try
+            int ret = 0;
+
+            var tbl_PriceGroup = new tbl_PriceGroup();
+            var priceGroupList = bu.GetPriceGroup(x => x.PriceGroupCode == txtPriceGroupCode.Text);
+
+            if (tbl_PriceGroup != null)
             {
-                int ret = 0;
-
-                var tbl_PriceGroup = new tbl_PriceGroup();
-                var tbl_PriceGroupList = bu.GetPriceGroup();
-
-                if (tbl_PriceGroupList.Count > 0)
-                {
-                    tbl_PriceGroup = tbl_PriceGroupList.FirstOrDefault(x => x.PriceGroupCode == txtPriceGroupCode.Text);
-                }
-
-                if (tbl_PriceGroup != null)
-                {
-                    PrePareEdit_PriceGroup(false, tbl_PriceGroup);
-                }
-                else
-                {
-                    tbl_PriceGroup = new tbl_PriceGroup();
-                    if (tbl_PriceGroupList.Count > 0)
-                    {
-                        tbl_PriceGroup.PriceGroupID = tbl_PriceGroupList.Select(x => x.PriceGroupID).Max() + 1;
-                    }
-                    else
-                    {
-                        tbl_PriceGroup.PriceGroupID = 1;
-                    }
-
-                    tbl_PriceGroup.PriceGroupCode = txtPriceGroupCode.Text;
-                    tbl_PriceGroup.PriceGroupName = txtPriceGroupName.Text;
-
-                    tbl_PriceGroup.CrDate = DateTime.Now;
-                    tbl_PriceGroup.CrUser = Helper.tbl_Users.Username;
-
-                    tbl_PriceGroup.EdDate = null;
-                    tbl_PriceGroup.EdUser = null;
-
-                    tbl_PriceGroup.StartDate = dtpStartDate.Value;
-                    tbl_PriceGroup.EndDate = dtpEndDate.Value;
-
-                    tbl_PriceGroup.BranchID = grdBranch.CurrentRow.Cells["colBranchID"].Value.ToString();
-
-                    tbl_PriceGroup.FlagDel = false;
-                    tbl_PriceGroup.FlagSend = false;
-                }
-
-                ret = bu.UpdatePriceGroupData(tbl_PriceGroup);
-
-                if (ret == 1)
-                {
-                    txtPriceGroupCode.Clear();
-                    txtPriceGroupName.Clear();
-
-                    dtpStartDate.Value = DateTime.Now;
-                    dtpEndDate.Value = DateTime.Now;
-
-                    OpenPanelEdit(false);
-                    OpenPanelSearch(true);
-
-                    btnSearch.PerformClick();
-
-                    grdPriceGroup.Enabled = true;
-
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
+                PrePareEdit_PriceGroup(false, tbl_PriceGroup);
             }
-            catch (Exception ex)
+            else
             {
-                ex.Message.ShowErrorMessage();
+                int _PriceGroupID = 1;
+
+                if (priceGroupList.Count > 0)
+                    _PriceGroupID = priceGroupList.Select(x => x.PriceGroupID).Max() + 1;
+
+                tbl_PriceGroup.PriceGroupID = _PriceGroupID;
+                tbl_PriceGroup.PriceGroupCode = txtPriceGroupCode.Text;
+                tbl_PriceGroup.PriceGroupName = txtPriceGroupName.Text;
+
+                tbl_PriceGroup.CrDate = DateTime.Now;
+                tbl_PriceGroup.CrUser = Helper.tbl_Users.Username;
+
+                tbl_PriceGroup.StartDate = dtpStartDate.Value;
+                tbl_PriceGroup.EndDate = dtpEndDate.Value;
+
+                tbl_PriceGroup.BranchID = bu.tbl_Branchs[0].BranchID;
+            }
+
+            ret = bu.UpdatePriceGroupData(tbl_PriceGroup);
+
+            if (ret == 1)
+            {
+                dtpStartDate.Value = DateTime.Now;
+                dtpEndDate.Value = DateTime.Now;
+
+                OpenPanelEdit(false);
+                OpenPanelSearch(true);
+
+                btnSearch.PerformClick();
+
+                grdPriceGroup.Enabled = true;
+
+                string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                msg.ShowInfoMessage();
+            }
+            else
+            {
+                this.ShowProcessErr();
             }
         }
-        private void Save_Edit_ProPriceGroup(bool flagRemove = false)
+
+        private void UpdateProductPriceGroup(bool flagRemove = false)
         {
-            try
+            int ret = 0;
+
+            var _ProductPriceGroupList = bu.GetProductPriceGroup();
+
+            var tbl_ProductPriceGroup = new tbl_ProductPriceGroup();
+            var list = new List<tbl_ProductPriceGroup>();
+
+            for (int i = 0; i < grdCommission.RowCount; i++)
             {
-                int ret = 0;
+                int PriceGroupID = Convert.ToInt32(grdCommission.Rows[i].Cells["colPriceGroupID_t3"].Value);
+                string ProductID = grdCommission.Rows[i].Cells["colProductID_t3"].Value.ToString();
+                int ProductUomID = Convert.ToInt32(grdCommission.Rows[i].Cells["colUomSetID_t3"].Value);
 
-                var tbl_ProductPriceGroupList = bu.GetProductPriceGroup();
+                var item = _ProductPriceGroupList.FirstOrDefault(x => x.PriceGroupID == PriceGroupID && x.ProductID == ProductID && x.ProductUomID == ProductUomID);
 
-                var tbl_ProductPriceGroup = new tbl_ProductPriceGroup();
-                var _tbl_ProductPriceGroupList = new List<tbl_ProductPriceGroup>();
+                item.ComPrice = 0;
 
-                decimal price = 0;
+                if (flagRemove == false)
+                    item.ComPrice = Convert.ToDecimal(grdCommission.Rows[i].Cells["colComPrice_t3"].Value).ToDecimalN2();
 
-                for (int i = 0; i < grdCommission.Rows.Count; i++)
-                {
-                    int PriceGroupID = Convert.ToInt32(grdCommission.Rows[i].Cells["colPriceGroupID_t3"].Value);
-                    string ProductID = grdCommission.Rows[i].Cells["colProductID_t3"].Value.ToString();
-                    int ProductUomID = Convert.ToInt32(grdCommission.Rows[i].Cells["colUomSetID_t3"].Value);
+                item.EdDate = DateTime.Now;
+                item.EdUser = Helper.tbl_Users.Username;
 
-                    var item = tbl_ProductPriceGroupList.FirstOrDefault(x => x.PriceGroupID == PriceGroupID && x.ProductID == ProductID && x.ProductUomID == ProductUomID);
-
-                    if (flagRemove == true)
-                    {
-                        item.ComPrice = price.ToDecimalN2();
-                    }
-                    else
-                    {
-                        item.ComPrice = Convert.ToDecimal(grdCommission.Rows[i].Cells["colComPrice_t3"].Value).ToDecimalN2();
-                    }
-
-                    item.EdDate = DateTime.Now;
-                    item.EdUser = Helper.tbl_Users.Username;
-
-                    _tbl_ProductPriceGroupList.Add(item);
-                }
-
-                foreach (var item in _tbl_ProductPriceGroupList)
-                {
-                    ret = bu.UpdateProductPriceGroupData(item);
-                }
-
-                if (ret == 1)
-                {
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
-
-                    if (flagRemove == false)
-                    {
-                        List<ComboBox> cbbList = new List<ComboBox>();
-                        cbbList.Add(cbbPriceGroup);
-                        cbbList.Add(cbbProductGroup);
-                        cbbList.Add(cbbProductSubGroup);
-                        SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
-
-                        grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
-                        grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
-                    }
-
-                    btnSearchCommission.PerformClick();
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
+                list.Add(item);
             }
-            catch (Exception ex)
+
+            foreach (var item in list)
             {
-                ex.Message.ShowErrorMessage();
+                ret = bu.UpdateProductPriceGroupData(item);
+            }
+
+            if (ret == 1)
+            {
+                string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                msg.ShowInfoMessage();
+
+                if (flagRemove == false)
+                {
+                    List<ComboBox> cbbList = new List<ComboBox>();
+                    cbbList.Add(cbbPriceGroup);
+                    cbbList.Add(cbbProductGroup);
+                    cbbList.Add(cbbProductSubGroup);
+                    SetPanelSearch(true, cbbList, txtSearchCommission, btnSearchCommission);
+
+                    grdCommission.Columns["colComPrice_t3"].DefaultCellStyle.BackColor = Color.FromArgb(224, 224, 224);
+                    grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
+                }
+
+                btnSearchCommission.PerformClick();
+            }
+            else
+            {
+                this.ShowProcessErr();
             }
         }
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
 
-            if (!ValidateSave(tabName))
-            {
-                return;
-            }
-
-            string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
-            string title = "ยืนยันการบันทึก!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            if (tabName == "กลุ่มราคา")
-            {
-                SavePriceGroup();
-            }
-            else if (tabName == "ตารางราคา")
-            {
-                SaveProductPriceGroup();
-            }
-            else if (tabName == "ตารางค่าคอมมิชชั่น")
-            {
-                Save_Edit_ProPriceGroup();
-            }
-        }
         private void RemovePriceGroup()
         {
             try
@@ -848,104 +1040,26 @@ namespace AllCashUFormsApp.View.Page
                 PrePareEdit_PriceGroup(true, PriceGroupData);
 
                 ret = bu.UpdatePriceGroupData(PriceGroupData);
-
                 if (ret == 1)
                 {
                     string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
 
-                    txtPriceGroupCode.Clear();
-                    txtPriceGroupName.Clear();
-
                     btnSearch.PerformClick();
-
                     grdPriceGroup.Enabled = true;
                 }
                 else
                 {
                     this.ShowProcessErr();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-                string msg = ex.Message;
-                msg.ShowErrorMessage();
-            }
-        }
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            string tabName = tabControl1.SelectedTab.Text.ToString();
-
-            string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
-            string title = "ทำการยืนยัน!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            if (tabName == "กลุ่มราคา")
-            {
-                RemovePriceGroup();
-            }
-            else if (tabName == "ตารางราคา")
-            {
-                Remove_ProductPriceGroup(true);
-            }
-            else if (tabName == "ตารางค่าคอมมิชชั่น")
-            {
-                Save_Edit_ProPriceGroup(true);
-            }
-        }
-        private void ChangeStatus()
-        {
-            try
-            {
-                int ret = 0;
-
-                var PriceGroupList = bu.GetPriceGroup(x => x.PriceGroupCode == txtPriceGroupCode.Text);
-                var PriceGroup = PriceGroupList[0];
-
-                PrePareEdit_PriceGroup(false, PriceGroup);
-
-                PriceGroup.FlagDel = false;
-
-                ret = bu.UpdatePriceGroupData(PriceGroup);
-
-                if (ret == 1)
-                {
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว";
-                    msg.ShowInfoMessage();
-
-                    OpenPanelEdit(false);
-                    OpenPanelSearch(true);
-
-                    rdoN.PerformClick();
-                    rdoC.PerformClick();
-                }
-                else
-                {
-                    this.ShowProcessErr();
-                    return;
-                }
+                }               
             }
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
             }
         }
-        private void btnN_Click(object sender, EventArgs e)
-        {
-            ChangeStatus();
-        }
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            grdPriceGroup.DataSource = new DataGridView();
-            grdBranch.DataSource = new DataGridView();
-            grdPrdPriceGroup.DataSource = new DataGridView();
-            this.Close();
-        }
-        private void PrePareNewDataTable(DataTable newTable)
+
+        private void SetProductPriceGroup_Table(DataTable newTable)
         {
             newTable.Columns.Add("ProductGroupID", typeof(int));
             newTable.Columns.Add("ProductSubGroupID", typeof(int));
@@ -959,91 +1073,15 @@ namespace AllCashUFormsApp.View.Page
             newTable.Columns.Add("SellPriceVat", typeof(decimal));
             newTable.Columns.Add("BuyPrice", typeof(decimal));
         }
-        private void BindPrdPriceGroupData()
-        {
-            //if (grdBranch.RowCount > 0) //edit by sailom .k 17/12/2021
-            {
-                DataTable dtProData = new DataTable();
 
-                int PriceGroupID = Convert.ToInt32(ddlPriceGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlPriceGroup.SelectedValue);
-                int ProductGroupID = Convert.ToInt32(ddlProductGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlProductGroup.SelectedValue);
-                int ProductSubGroupID = Convert.ToInt32(ddlProductSubGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(ddlProductSubGroup.SelectedValue);
-
-                dtProData = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchProGroup.Text, true);
-
-                DataTable dtProPriceGroup = PriceGroupID == 0 ? bu.GetProductPriceGroup(null).ToDataTable() : bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
-
-                DataTable newTable = new DataTable();
-
-                PrePareNewDataTable(newTable);
-
-                var tmp = dtProPriceGroup.AsEnumerable().ToList();
-
-                decimal Price = 0;
-
-                foreach (DataRow r in dtProData.Rows)
-                {
-                    string proID = r["ProductID"].ToString();
-                    int UomSetID = Convert.ToInt32(r["UomSetID"]);
-                    DataRow item;
-
-                    if (dtProPriceGroup.Rows.Count > 0) // tbl_ProductPriceGroup มีข้อมูล
-                    {
-                        if (PriceGroupID == 0) //กลุ่มราคา = "==เลือก==" ให้หยุดทำงาน
-                        {
-                            break;
-                        }
-                        else  //เช็คว่า มีข้อมูลใน tbl_ProductPriceGroup
-                        {
-                            item = tmp.FirstOrDefault(x => x.Field<string>("ProductID") == proID
-                                    && x.Field<int>("ProductUomID") == UomSetID && x.Field<int>("PriceGroupID") == PriceGroupID);
-                        }
-                        if (item != null) //มีข้อมูล
-                        {
-                            newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
-                                , proID, r["ProductName"], r["ProductGroupName"]
-                                , r["UomSetID"], r["UomSetName"]
-                                , item["PriceGroupID"], item["SellPrice"]
-                                , item["SellPriceVat"], item["BuyPrice"]);
-                        }
-                        else //ไม่มีข้อมูล
-                        {
-                            newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
-                                , proID, r["ProductName"], r["ProductGroupName"]
-                                , r["UomSetID"], r["UomSetName"]
-                                , PriceGroupID, Price.ToDecimalN2()
-                                , Price.ToDecimalN2(), Price.ToDecimalN2());
-                        }
-                    }
-                    else // tbl_ProductPriceGroup ไม่มีข้อมูล
-                    {
-                        if (PriceGroupID > 0)//กลุ่มราคา ไม่เท่ากับ "==เลือก==" 
-                        {
-                            newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
-                                 , proID, r["ProductName"], r["ProductGroupName"]
-                                 , r["UomSetID"], r["UomSetName"]
-                                 , PriceGroupID, Price.ToDecimalN2()
-                                 , Price.ToDecimalN2(), Price.ToDecimalN2());
-                        }
-                    }
-                }
-
-                grdPrdPriceGroup.DataSource = newTable;
-                tmpDTData.TableName = "Sheet1";
-                tmpDTData = newTable;
-                label1.Text = newTable.Rows.Count.ToNumberFormat();
-
-                SetButtonAfterBindGrid(grdPrdPriceGroup.RowCount);
-
-                tab2_ReadOnlyColumnsGridView(true);
-            }
-        }
         private void SetButtonAfterBindGrid(int RowCount)
         {
             btnAdd.EnableButton(btnEdit, btnRemove, btnSave, btnCancel, btnCopy, btnPrint, "");
             btnAdd.Enabled = true;
             btnSave.Enabled = false;
             btnCancel.Enabled = false;
+            btnCopy.Enabled = false;
+            btnPrint.Enabled = false;
 
             if (RowCount > 0)
             {
@@ -1055,13 +1093,11 @@ namespace AllCashUFormsApp.View.Page
                 btnEdit.Enabled = false;
                 btnRemove.Enabled = false;
             }
-            //btnExcel.Enabled = false;
+
+            if (tabControl1.SelectedTab.Text == "ตารางราคา" && grdPrdPriceGroup.Rows.Count > 0)
+                btnPrint.Enabled = true;
         }
-        private void btnSearchPriceGroup_Click(object sender, EventArgs e)
-        {
-            BindPrdPriceGroupData();
-            btnPrint.Enabled = true;
-        }
+
         private void SetPanelSearch(bool flag, List<ComboBox> cbbList, TextBox txtSearch, Button btnSearch)
         {
             cbbList[0].Enabled = flag; //cbbPriceGroup
@@ -1070,208 +1106,16 @@ namespace AllCashUFormsApp.View.Page
             txtSearch.DisableTextBox(!flag);
             btnSearch.Enabled = flag;
         }
-        private void ddlProductGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            List<ComboBox> cbbList = new List<ComboBox>();
-            cbbList.Add(ddlProductGroup);
-            cbbList.Add(ddlProductSubGroup);
-            BindDataToCombobox_ProductGroup(cbbList);
-        }
-        private void grdPrdPriceGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdPrdPriceGroup.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void grdPrdPriceGroup_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            try
-            {
-                int[] numberCell = new int[] { 8, 9, 10 };
-                grdPrdPriceGroup.SetCellNumberOnly(sender, e, numberCell.ToList());
-            }
-            catch (Exception)
-            {
-            }
-        }
-        private void grdPrdPriceGroup_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            try
-            {
-                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
 
-                if (grdPrdPriceGroup.CurrentCell.ColumnIndex >= 8 && grdPrdPriceGroup.CurrentCell.ColumnIndex <= 10)
-                {
-                    tb.KeyPress -= grdPrdPriceGroup_KeyPress;
-                    tb.KeyPress += grdPrdPriceGroup_KeyPress;
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-        private void grdPrdPriceGroup_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridView_CellEndEdit(e, grdPrdPriceGroup);
-        }
-        private void txtSearchProGroup_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BindPrdPriceGroupData();
-            }
-        }
-        private void ddlPriceGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindPrdPriceGroupData();
-        }
-        private void grdPrdPriceGroup_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            grdPrdPriceGroup.SetCellPainting(sender, e, 4); //Merge Rows
-            grdPrdPriceGroup.SetCellPainting(sender, e, 5);
-            grdPrdPriceGroup.SetCellPainting(sender, e, 6);
-        }
-        private void grdPrdPriceGroup_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            grdPrdPriceGroup.SetCellFormatting(sender, e, 4); //ลบข้อมูลที่ซ้ำกัน แต่ยังไม่ Merge Rows
-            grdPrdPriceGroup.SetCellFormatting(sender, e, 5);
-            grdPrdPriceGroup.SetCellFormatting(sender, e, 6);
-        }
-        private void BindCommissionData()
-        {
-            //if (grdBranch.RowCount > 0)  //edit by sailom .k 17/12/2021
-            {
-                DataTable dtPrdUomset = new DataTable();
-
-                int PriceGroupID = Convert.ToInt32(cbbPriceGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbPriceGroup.SelectedValue);
-                int ProductGroupID = Convert.ToInt32(cbbProductGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductGroup.SelectedValue);
-                int ProductSubGroupID = Convert.ToInt32(cbbProductSubGroup.SelectedIndex) == 0 ? 0 : Convert.ToInt32(cbbProductSubGroup.SelectedValue);
-
-                dtPrdUomset = bu.GetPrdUomSetData(ProductGroupID, ProductSubGroupID, txtSearchCommission.Text, false);
-
-                DataTable dtProPriceGroup = bu.GetProductPriceGroup(x => x.PriceGroupID == PriceGroupID).ToDataTable();
-
-                DataTable newTable = new DataTable();
-
-                PrePareNewDataTable(newTable);
-
-                newTable.Columns.Add("ComPrice", typeof(decimal));
-
-                if (dtProPriceGroup.Rows.Count > 0)
-                {
-                    var tmp = dtProPriceGroup.AsEnumerable().ToList();
-
-                    //decimal Price = 0;
-
-                    foreach (DataRow r in dtPrdUomset.Rows)
-                    {
-                        string proID = r["ProductID"].ToString();
-                        int UomSetID = Convert.ToInt32(r["UomSetID"]);
-                        DataRow item;
-
-                        if (dtProPriceGroup.Rows.Count > 0) // tbl_ProductPriceGroup มีข้อมูล
-                        {
-                            if (PriceGroupID == 0) //กลุ่มราคา = "==เลือก==" ให้หยุดทำงาน
-                            {
-                                break;
-                            }
-                            else  //เช็คว่า มีข้อมูลใน tbl_ProductPriceGroup
-                            {
-                                item = tmp.FirstOrDefault(x => x.Field<string>("ProductID") == proID
-                                        && x.Field<int>("ProductUomID") == UomSetID && x.Field<int>("PriceGroupID") == PriceGroupID
-                                            && (x.Field<decimal>("SellPrice") > 0 || x.Field<decimal>("SellPriceVat") > 0 || x.Field<decimal>("BuyPrice") > 0));
-                            }
-                            if (item != null) //มีข้อมูล
-                            {
-                                newTable.Rows.Add(r["ProductGroupID"], r["ProductSubGroupID"]
-                                    , proID, r["ProductName"], r["ProductGroupName"]
-                                    , r["UomSetID"], r["UomSetName"]
-                                    , item["PriceGroupID"], item["SellPrice"]
-                                    , item["SellPriceVat"], item["BuyPrice"]
-                                    , item["ComPrice"]);
-                            }
-                        }
-                    }
-                }
-                grdCommission.DataSource = newTable;
-                label1.Text = newTable.Rows.Count.ToNumberFormat();
-
-                SetButtonAfterBindGrid(grdCommission.RowCount);
-
-                if (newTable.Rows.Count > 0)
-                {
-                    grdCommission.Columns["colComPrice_t3"].ReadOnly = false;
-                }
-                else
-                {
-                    grdCommission.Columns["colComPrice_t3"].ReadOnly = true;
-                }
-            }
-        }
-        private void btnSearchCommission_Click(object sender, EventArgs e)
-        {
-            BindCommissionData();
-        }
-        private void grdCommission_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            try
-            {
-                int[] numberCell = new int[] { 11 };
-
-                grdCommission.SetCellNumberOnly(sender, e, numberCell.ToList());
-            }
-            catch (Exception)
-            {
-
-            }
-        }
         private void DataGridView_CellEndEdit(DataGridViewCellEventArgs e, DataGridView grd)
         {
             string columns = grd.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
             if (string.IsNullOrEmpty(columns))
-            {
-                decimal price = 0;
-                grd.CurrentRow.Cells[e.ColumnIndex].Value = price.ToDecimalN2();
-            }
+                grd.CurrentRow.Cells[e.ColumnIndex].Value = 0.00;
             else
-            {
                 grd.CurrentRow.Cells[e.ColumnIndex].Value = Convert.ToDecimal(columns).ToDecimalN2();
-            }
         }
-        private void grdCommission_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {  //Commission ColumnIndex = 11
-            DataGridView_CellEndEdit(e, grdCommission);
-        }
-        private void grdCommission_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            grdCommission.SetCellFormatting(sender, e, 4);//2 proID 3 proName 4 progroup
-        }
-        private void grdCommission_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            grdCommission.SetCellPainting(sender, e, 4);
-        }
-        private void grdCommission_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            try
-            {
-                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
 
-                if (grdCommission.CurrentCell.ColumnIndex == 11)
-                {
-                    tb.KeyPress -= grdCommission_KeyPress;
-                    tb.KeyPress += grdCommission_KeyPress;
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-        private void grdCommission_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            grdCommission.SetRowPostPaint(sender, e, this.Font);
-        }
-        private void cbbPriceGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindCommissionData();
-        }
         private void BindDataToCombobox_ProductGroup(List<ComboBox> cbbList)
         {
             var PrdSubGroup = new List<tbl_ProductSubGroup>();
@@ -1285,17 +1129,7 @@ namespace AllCashUFormsApp.View.Page
 
             cbbList[1].BindDropdownList(PrdSubGroup, "ProductSubGroupName", "ProductSubGroupID");
         }
-        private void cbbProductGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            List<ComboBox> cbbList = new List<ComboBox>();
-            cbbList.Add(cbbProductGroup);
-            cbbList.Add(cbbProductSubGroup);
-            BindDataToCombobox_ProductGroup(cbbList);
-        }
-        private void btnRefresh_Branch_Click(object sender, EventArgs e)
-        {
-            BindBranchData();
-        }
+
         public bool ValidateBranchCheck()
         {
             bool ValidateBranch = false;
@@ -1321,6 +1155,7 @@ namespace AllCashUFormsApp.View.Page
 
             return ValidateBranch;
         }
+
         public bool ValidatePriceGroupTL1()
         {
             bool ValidatePriceGroup = false;
@@ -1340,6 +1175,7 @@ namespace AllCashUFormsApp.View.Page
 
             return ValidatePriceGroup;
         }
+
         private void SelectBranchList(List<string> selectList_Branch)
         {
             for (int i = 0; i < grdBranch.Rows.Count; i++)
@@ -1353,6 +1189,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
+
         private void SelectPrdPriceGroupList(List<string> PriceGroupID, List<string> ProductID)
         {
             for (int i = 0; i < grdPrdPriceGroup.Rows.Count; i++)
@@ -1363,6 +1200,7 @@ namespace AllCashUFormsApp.View.Page
                 ProductID.Add(_ProductIDs);
             }
         }
+
         private void SelectTLPriceGroup(List<string> PriceGroupID)
         {
 
@@ -1377,113 +1215,142 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
         }
-        private void btnSendData_Click(object sender, EventArgs e)
+
+        #endregion
+
+        #region AddOnGridView
+        private void SetColumnsGridView(bool flagRead)
         {
-            string msgCheckError = "";
-
-            if (ValidateBranchCheck() == false)
-            {
-                msgCheckError += "เลือกศูนย์ที่ต้องการส่งข้อมูล !!\n";
-            }
-
-            if (ValidatePriceGroupTL1() == true)
-            {
-                msgCheckError += "เลือกข้อมูลตารางสินค้าที่ต้องการส่งข้อมูล !!\n";
-            }
-
-            if (!string.IsNullOrEmpty(msgCheckError))
-            {
-                msgCheckError.ShowWarningMessage();
-                return;
-            }
-
-            string cfMsg = "ต้องการส่งข้อมูลใช่หรือไม่?";
-            string title = "ยืนยันการส่ง!!";
-
-            if (!cfMsg.ConfirmMessageBox(title))
-                return;
-
-            bool ret = false;
-
-            List<string> BranchID_List = new List<string>();
-            SelectBranchList(BranchID_List);
-            var allBranchID = string.Join(",", BranchID_List);
-
-            List<string> PrdPriceGroupID_List = new List<string>();
-            List<string> ProductID_List = new List<string>();
-            SelectPrdPriceGroupList(PrdPriceGroupID_List, ProductID_List);
-
-            var allPrdGroupID = string.Join(",", PrdPriceGroupID_List);
-            var allProductID = string.Join(",", ProductID_List);
-
-            List<string> TLPriceGroupID = new List<string>();
-            SelectTLPriceGroup(TLPriceGroupID);
-            var allTLPriceGroupID = string.Join(",", TLPriceGroupID);
-
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("@BranchIDs", allBranchID);
-            _params.Add("@PrdPriceGroupIDs", allPrdGroupID);//ProductPriceGroup
-            _params.Add("@ProductIDs", allProductID);//14
-            _params.Add("@PriceGroupIDs", allTLPriceGroupID);
-
-
-            ret = bu.CallSendAllProductPriceGroupData(_params);
-
-            if (ret == true)
-            {
-                string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
-                msg.ShowInfoMessage();
-            }
-            else
-            {
-                string msg = "ส่งข้อมูลล้มเหลว!!";
-                msg.ShowErrorMessage();
-                return;
-            }
-
+            grdPrdPriceGroup.Columns["colSellPrice_t2"].ReadOnly = flagRead;
+            grdPrdPriceGroup.Columns["colSellPriceVat_t2"].ReadOnly = flagRead;
+            grdPrdPriceGroup.Columns["colBuyPrice_t2"].ReadOnly = flagRead;
         }
+
+        private void SetColorDataGridView(DataGridView grd, bool flagColor = true)
+        {
+            grd.Columns["colSellPrice_t2"].DefaultCellStyle.BackColor = flagColor == true ? Color.White : Color.FromArgb(224, 224, 224);
+            grd.Columns["colSellPriceVat_t2"].DefaultCellStyle.BackColor = flagColor == true ? Color.White : Color.FromArgb(224, 224, 224);
+            grd.Columns["colBuyPrice_t2"].DefaultCellStyle.BackColor = flagColor == true ? Color.White : Color.FromArgb(224, 224, 224);
+        }
+
+        private void grdPrdPriceGroup_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            grdPrdPriceGroup.SetCellPainting(sender, e, 4); //Merge Rows
+            grdPrdPriceGroup.SetCellPainting(sender, e, 5);
+            grdPrdPriceGroup.SetCellPainting(sender, e, 6);
+        }
+
+        private void grdPrdPriceGroup_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            grdPrdPriceGroup.SetCellFormatting(sender, e, 4); //ลบข้อมูลที่ซ้ำกัน แต่ยังไม่ Merge Rows
+            grdPrdPriceGroup.SetCellFormatting(sender, e, 5);
+            grdPrdPriceGroup.SetCellFormatting(sender, e, 6);
+        }
+
+        private void grdPrdPriceGroup_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try
+            {
+                int[] numberCell = new int[] { 8, 9, 10 };
+                grdPrdPriceGroup.SetCellNumberOnly(sender, e, numberCell.ToList());
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void grdPrdPriceGroup_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            try
+            {
+                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
+
+                if (grdPrdPriceGroup.CurrentCell.ColumnIndex >= 8 && grdPrdPriceGroup.CurrentCell.ColumnIndex <= 10)
+                {
+                    tb.KeyPress -= grdPrdPriceGroup_KeyPress;
+                    tb.KeyPress += grdPrdPriceGroup_KeyPress;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void grdPrdPriceGroup_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView_CellEndEdit(e, grdPrdPriceGroup);
+        }
+
+        private void grdCommission_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            try
+            {
+                DataGridViewTextBoxEditingControl tb = (DataGridViewTextBoxEditingControl)e.Control;
+                if (grdCommission.CurrentCell.ColumnIndex == 11)
+                {
+                    tb.KeyPress -= grdCommission_KeyPress;
+                    tb.KeyPress += grdCommission_KeyPress;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void grdCommission_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {  //Commission ColumnIndex = 11
+            DataGridView_CellEndEdit(e, grdCommission);
+        }
+
+        private void grdCommission_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            grdCommission.SetCellFormatting(sender, e, 4);//2 proID 3 proName 4 progroup
+        }
+
+        private void grdCommission_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            grdCommission.SetCellPainting(sender, e, 4);
+        }
+
+        private void grdCommission_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try
+            {
+                int[] numberCell = new int[] { 11 };
+
+                grdCommission.SetCellNumberOnly(sender, e, numberCell.ToList());
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void grdBranch_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdBranch.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdPriceGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdPriceGroup.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdCommission_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdCommission.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        private void grdPrdPriceGroup_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            grdPrdPriceGroup.SetRowPostPaint(sender, e, this.Font);
+        }
+
+        #endregion
 
         private void frmProductTable_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
-        }
-
-        private void btnPrint_Click(object sender, EventArgs e)
-        {
-            frmWait wait = new frmWait();
-            wait.Show();
-
-            string dir = @"C:\AllCashExcels";
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            var _newTable = new DataTable("Sheet1");
-            _newTable.Columns.Add("ชื่อกลุ่มสินค้า", typeof(string));
-            _newTable.Columns.Add("รหัสสินค้า", typeof(string));
-            _newTable.Columns.Add("ชื่อสินค้า", typeof(string));
-            _newTable.Columns.Add("หน่วย", typeof(string));
-            _newTable.Columns.Add("ก่อนภาษี(ราคาขาย)", typeof(decimal));
-            _newTable.Columns.Add("รวมภาษี(ราคาขาย)", typeof(decimal));
-            _newTable.Columns.Add("ก่อนภาษี(ราคาซื้อ)", typeof(decimal));
-
-            foreach (DataRow r in tmpDTData.Rows)
-            {
-                _newTable.Rows.Add(r["ProductGroupName"], r["ProductID"], r["ProductName"]
-                    , r["UomSetName"], r["SellPrice"], r["SellPriceVat"], r["BuyPrice"]);
-
-            }
-
-            //string _excelName = dir + @"\" + excelName + ".xlsx";
-            string cDate = DateTime.Now.ToString("yyMMddhhmmss");
-            string _excelName = dir + @"\" + string.Join("", "รายงานตารางราคาสินค้า", '_', cDate) + ".xls";
-
-            My_DataTable_Extensions.ExportToExcelR2(new List<DataTable>() { _newTable }, _excelName, "รายงานตารางราคาสินค้า");
-
-            wait.Hide();
-            wait.Dispose();
-            wait.Close();
         }
     }
 }

@@ -31,12 +31,12 @@ namespace AllCashUFormsApp.View.UControl
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAppVersion));
             this.panel2 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnCencal = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lblcopyR2 = new System.Windows.Forms.Label();
             this.lblcopyR1 = new System.Windows.Forms.Label();
             this.lblMessage = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +56,16 @@ namespace AllCashUFormsApp.View.UControl
             this.panel2.Size = new System.Drawing.Size(425, 195);
             this.panel2.TabIndex = 100;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(159, 34);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(109, 99);
+            this.pictureBox1.TabIndex = 105;
+            this.pictureBox1.TabStop = false;
+            // 
             // btnCencal
             // 
             this.btnCencal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -66,7 +76,7 @@ namespace AllCashUFormsApp.View.UControl
             this.btnCencal.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnCencal.Image = ((System.Drawing.Image)(resources.GetObject("btnCencal.Image")));
             this.btnCencal.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCencal.Location = new System.Drawing.Point(238, 146);
+            this.btnCencal.Location = new System.Drawing.Point(217, 146);
             this.btnCencal.Name = "btnCencal";
             this.btnCencal.Size = new System.Drawing.Size(109, 38);
             this.btnCencal.TabIndex = 104;
@@ -85,7 +95,7 @@ namespace AllCashUFormsApp.View.UControl
             this.btnOK.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnOK.Image = ((System.Drawing.Image)(resources.GetObject("btnOK.Image")));
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOK.Location = new System.Drawing.Point(125, 146);
+            this.btnOK.Location = new System.Drawing.Point(104, 146);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(107, 38);
             this.btnOK.TabIndex = 103;
@@ -124,16 +134,6 @@ namespace AllCashUFormsApp.View.UControl
             this.lblMessage.TabIndex = 6;
             this.lblMessage.Text = "ตรวจพบโปรแกรมเวอร์ชั่น";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(175, 34);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(109, 99);
-            this.pictureBox1.TabIndex = 105;
-            this.pictureBox1.TabStop = false;
-            // 
             // frmAppVersion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -141,6 +141,7 @@ namespace AllCashUFormsApp.View.UControl
             this.ClientSize = new System.Drawing.Size(447, 216);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

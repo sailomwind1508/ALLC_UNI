@@ -252,6 +252,7 @@ namespace AllCashUFormsApp.View.Page
             this.SignaturePO = new System.Windows.Forms.DataGridViewImageColumn();
             this.panel17 = new System.Windows.Forms.Panel();
             this.pnlCompletePO = new System.Windows.Forms.Panel();
+            this.btnRollback = new System.Windows.Forms.Button();
             this.btnFixRL = new System.Windows.Forms.Button();
             this.btnSearchPODoc = new System.Windows.Forms.Button();
             this.txtDocNoPO = new System.Windows.Forms.TextBox();
@@ -276,7 +277,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.btnRollback = new System.Windows.Forms.Button();
+            this.btnReCalcRL = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
@@ -2507,6 +2508,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCompletePO.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCompletePO.BackColor = System.Drawing.Color.Azure;
+            this.pnlCompletePO.Controls.Add(this.btnReCalcRL);
             this.pnlCompletePO.Controls.Add(this.btnRollback);
             this.pnlCompletePO.Controls.Add(this.btnFixRL);
             this.pnlCompletePO.Controls.Add(this.btnSearchPODoc);
@@ -2524,6 +2526,26 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCompletePO.Name = "pnlCompletePO";
             this.pnlCompletePO.Size = new System.Drawing.Size(822, 113);
             this.pnlCompletePO.TabIndex = 22;
+            // 
+            // btnRollback
+            // 
+            this.btnRollback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRollback.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnRollback.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnRollback.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRollback.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.btnRollback.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRollback.Image = ((System.Drawing.Image)(resources.GetObject("btnRollback.Image")));
+            this.btnRollback.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRollback.Location = new System.Drawing.Point(670, 54);
+            this.btnRollback.Name = "btnRollback";
+            this.btnRollback.Size = new System.Drawing.Size(149, 49);
+            this.btnRollback.TabIndex = 199;
+            this.btnRollback.Text = "Rollback บิลขาย";
+            this.btnRollback.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRollback.UseVisualStyleBackColor = false;
+            this.btnRollback.Visible = false;
+            this.btnRollback.Click += new System.EventHandler(this.btnRollback_Click);
             // 
             // btnFixRL
             // 
@@ -2873,25 +2895,25 @@ namespace AllCashUFormsApp.View.Page
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // btnRollback
+            // btnReCalcRL
             // 
-            this.btnRollback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRollback.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnRollback.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnRollback.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRollback.Font = new System.Drawing.Font("Tahoma", 11F);
-            this.btnRollback.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnRollback.Image = ((System.Drawing.Image)(resources.GetObject("btnRollback.Image")));
-            this.btnRollback.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRollback.Location = new System.Drawing.Point(670, 54);
-            this.btnRollback.Name = "btnRollback";
-            this.btnRollback.Size = new System.Drawing.Size(149, 49);
-            this.btnRollback.TabIndex = 199;
-            this.btnRollback.Text = "Rollback บิลขาย";
-            this.btnRollback.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnRollback.UseVisualStyleBackColor = false;
-            this.btnRollback.Visible = false;
-            this.btnRollback.Click += new System.EventHandler(this.btnRollback_Click);
+            this.btnReCalcRL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReCalcRL.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnReCalcRL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnReCalcRL.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReCalcRL.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.btnReCalcRL.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnReCalcRL.Image = ((System.Drawing.Image)(resources.GetObject("btnReCalcRL.Image")));
+            this.btnReCalcRL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReCalcRL.Location = new System.Drawing.Point(538, 3);
+            this.btnReCalcRL.Name = "btnReCalcRL";
+            this.btnReCalcRL.Size = new System.Drawing.Size(145, 49);
+            this.btnReCalcRL.TabIndex = 200;
+            this.btnReCalcRL.Text = "Re-Calculate RL";
+            this.btnReCalcRL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnReCalcRL.UseVisualStyleBackColor = false;
+            this.btnReCalcRL.Visible = false;
+            this.btnReCalcRL.Click += new System.EventHandler(this.btnReCalcRL_Click);
             // 
             // frmPreOrder
             // 
@@ -3178,5 +3200,6 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.Button btnShowVE;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button btnRollback;
+        private System.Windows.Forms.Button btnReCalcRL;
     }
 }

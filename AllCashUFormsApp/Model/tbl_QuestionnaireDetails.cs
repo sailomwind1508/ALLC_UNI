@@ -18,8 +18,8 @@ namespace AllCashUFormsApp.Model
         public Nullable<int> QuestionnaireID { get; set; }
         public Nullable<int> Seq { get; set; }
         public string Question { get; set; }
+        public Nullable<int> NextQuestionnaireID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public Nullable<int> NextQuestionnaireID { get; set; }
     }
 }

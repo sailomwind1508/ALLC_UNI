@@ -120,13 +120,26 @@
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnRestart.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAnVJREFUSEvN
+        VUtPE1EU7k75KYo7El+rzgw+iDsxRu2KFcZADIiJOjNYTIzsXRBNNCaaEAgLnLkUHwulClQpgi6UlPLQ
+        KouKW+vues6Z03bmzgyZsNEv+dL2nu9893Xuaeq/wA2RPmC6RgbYz8zYjtbK4d2hb/xIi+VqVy1XLwNl
+        DMuWMK5kX6X3cloymEI/CubfIgzjuGk66cOcvjNg62ch4Y9ikIQ1yzXOsE00vJXvyrzOWuxO+Mwbx/Jg
+        /rIc+5Bt8O5Ml2oWSVjkRm+uYw/bNsEX2hDeeXFaLm9Ny/KvAnFi+XbAqE7bNcLjcPFs24Tp6mt+kS3a
+        5fvKpCxvz8VOMPKmW+bXnshBcSwwDl6rbOsB69wvQD5euEbGn7aey4+wE3WCQWHA+DPSoNYfQ16fNPaz
+        Pa7eyKiCuY0xSsa7GH7ZKR+9GwjEkQ8L/aRBrRozHf0828MEjj6gCj5XX1PyrelTgXE/MYaaL9WZcNx/
+        D/hDFaz8zFNyNncyMO7nUK6DNCvVfCiGLYXt4XG52gVVUPg6Qcn3Zi8Fxv28P9tDGtSqMVsY59ieXm+r
+        KhhdtCm5WHlKK1XjOFasOKQZLdqhuCXa97G9Bxgs+QXZqRMNg6UfOTny9iKVLhLLcwFLGGL4eVMcD5iH
+        yhQRddFYPYvfXTJClrbnifXfuIBheJBqnuVofWzbBLZcCG6qYtzJ+NIQHVV9Alw1tg+MqXroCOuRrQJh
+        C60NRL/DSR7xcSGjYsyaPaUdYrtoYMtFoZKYhNBJtU622RnYcrErRpjEUFuHiz3I6cmA5+j9/+qr0abE
+        El5o7JknBdY0PUYwQ9J3tc7/DVKpv7n2v1CPk6ACAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="panel1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABVYAAAAyCAYAAAC3ZID5AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6

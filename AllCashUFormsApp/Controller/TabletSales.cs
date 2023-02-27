@@ -58,33 +58,6 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
-        public string RecoveryPO(string docNo, string userName)
-        {
-            string ret = "";
-            try
-            {
-                DataTable newTable = new DataTable();
-                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
-                sqlParmas.Add("@DocNo", docNo);
-                sqlParmas.Add("@UserName", userName);
-
-                string sql = "proc_tbl_POMaster_Recovery";
-
-                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
-                if (newTable != null && newTable.Rows.Count > 0)
-                {
-                    ret = newTable.Rows[0][0].ToString();
-                }
-
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                ex.WriteLog(this.GetType());
-                return "";
-            }
-        }
-
         public string GenerateCancelRL(DateTime docdate, string whid, string userName, string docNos)
         {
             string ret = "";
@@ -120,20 +93,38 @@ namespace AllCashUFormsApp.Controller
             {
                 bool ret = false;
 
-                using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                //edit by sailom.k 26/09/2022----------------------------
+
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocNo", docNo);
+                string sql = "proc_update_v_customer_address";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
                 {
-                    con.Open();
-
-                    SqlCommand cmd = new SqlCommand("proc_update_v_customer_address", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 0;
-                    cmd.Parameters.Add(new SqlParameter("@DocNo", docNo));
-                    var result = cmd.ExecuteNonQuery();
-                    ret = true;
-
-                    con.Close();
-
+                    var result = newTable.Rows[0][0].ToString();
+                    if (result == "1")
+                    {
+                        ret = true;
+                    } 
                 }
+
+                
+                //using (SqlConnection con = new SqlConnection(Connection.ConnectionString))
+                //{
+                //    con.Open();
+
+                //    SqlCommand cmd = new SqlCommand("proc_update_v_customer_address", con);
+                //    cmd.CommandType = CommandType.StoredProcedure;
+                //    cmd.CommandTimeout = 0;
+                //    cmd.Parameters.Add(new SqlParameter("@DocNo", docNo));
+                //    var result = cmd.ExecuteNonQuery();
+                //    ret = true;
+
+                //    con.Close();
+
+                //}
 
                 return ret;
             }

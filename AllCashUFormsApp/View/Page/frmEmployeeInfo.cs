@@ -51,8 +51,8 @@ namespace AllCashUFormsApp.View.Page
 
             txtSearchEmp.KeyDown += txtSearchEmp_KeyDown;
             btnSearchEmp.Click += btnSearchEmp_Click;
-            rdoEmpN.CheckedChanged += rdoEmpN_CheckedChanged;
-            rdoEmpC.CheckedChanged += rdoEmpC_CheckedChanged;
+            //rdoEmpN.CheckedChanged += rdoEmpN_CheckedChanged;
+            //rdoEmpC.CheckedChanged += rdoEmpC_CheckedChanged;
             ddlDepartment.SelectedIndexChanged += ddlDepartment_SelectedIndexChanged;
             ddlPosition.SelectedIndexChanged += ddlPosition_SelectedIndexChanged;
 
@@ -85,7 +85,11 @@ namespace AllCashUFormsApp.View.Page
             btnCopy.Enabled = false;
 
             var titleList = new Dictionary<string, string>();
-            titleList = bu.GetAllTitleName();
+            //titleList = bu.GetAllTitleName();
+            titleList.Add("นาย", "นาย");
+            titleList.Add("นาง", "นาง");
+            titleList.Add("นางสาว", "นางสาว");
+            titleList.Add("คุณ", "คุณ");
             ddlTitleName.BindDropdownList(titleList, "key", "value");
 
             var departmentList = new List<tbl_Department>();
@@ -400,6 +404,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindEmployeeData_V2()
         {
+            pnlEmpDT.ClearControl();
+
             int _DepartmentID = ddlDepartment.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlDepartment.SelectedValue);
             int _PositionID = ddlPosition.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlPosition.SelectedValue);
 
@@ -429,18 +435,21 @@ namespace AllCashUFormsApp.View.Page
                 DataGridViewColumn col8 = grd.Columns[8];
                 DataGridViewColumn col9 = grd.Columns[9];
                 DataGridViewColumn col10 = grd.Columns[10];
+                DataGridViewColumn col11 = grd.Columns[11];
 
                 col0.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col1.SetColumnStyle(200, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col2.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col3.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                col1.SetColumnStyle(70, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                //col1.SortMode = DataGridViewColumnSortMode.NotSortable;
+                col2.SetColumnStyle(200, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                col3.SetColumnStyle(120, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col4.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
                 col5.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
-                col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
-                col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
-                col10.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0, new DataGridViewCheckBoxColumn());
+                col6.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                col7.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+                col8.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                col9.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0);
+                col10.SetColumnStyle(100, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleLeft, "", 0);
+                col11.SetColumnStyle(60, DataGridViewAutoSizeColumnMode.NotSet, DataGridViewContentAlignment.MiddleCenter, "", 0, new DataGridViewCheckBoxColumn());
             }
 
             lblEmpCount.Text = dt.Rows.Count.ToNumberFormat();
@@ -633,6 +642,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmEmployeeInfo_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 

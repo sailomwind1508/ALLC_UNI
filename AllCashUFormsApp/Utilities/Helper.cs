@@ -25,7 +25,9 @@ namespace AllCashUFormsApp
     {
         public static tbl_Users tbl_Users { get; set; }
         public static string ConnectionString { get; set; }
+        public static string Original_ConnectionString { get; set; }
         public static string BranchName { get; set; }
+        public static string Original_BranchName { get; set; }
         public static string user_name { get; set; }
 
         public static void WriteLog(this Exception ex, Type type)

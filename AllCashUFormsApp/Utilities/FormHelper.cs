@@ -33,7 +33,7 @@ namespace AllCashUFormsApp
     public static class FormHelper
     {
         static OD odBU = new OD();
-
+        public static string reportHeaderHpl { get; set; }
         static ObjectFactory objectFactory = new ObjectFactory();
         static ObjectType _objType;
 
@@ -59,6 +59,14 @@ namespace AllCashUFormsApp
         public static bool ShowPrintingReportName = true;
 
         //private static Form frm;
+
+        public static void AppendLine(this TextBox source, string value)
+        {
+            if (source.Text.Length == 0)
+                source.Text = value;
+            else
+                source.AppendText("\r\n" + value);
+        }
 
         public static void CreateAndSendMail(string reportName, string branchName, string date)
         {
@@ -752,6 +760,22 @@ namespace AllCashUFormsApp
             }
         }
 
+        public static void BindDropdownListFC<T>(this ComboBox ddl, Dictionary<T, T> obj, string valueMember, string displayMember, int? defaultSelectedIndex = null, Predicate<T> selectValue = null)
+        {
+            ddl.DataSource = obj.ToList();
+            ddl.DisplayMember = displayMember;
+            ddl.ValueMember = valueMember;
+
+            if (defaultSelectedIndex != null)
+            {
+                ddl.SelectedIndex = defaultSelectedIndex.Value;
+            }
+            if (selectValue != null)
+            {
+                ddl.SelectedValueDropdownList(selectValue);
+            }
+        }
+
         public static DialogResult ShowWarningMessage(this string msg)
         {
             return FlexibleMessageBox.Show(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -915,7 +939,7 @@ namespace AllCashUFormsApp
             btnCancel.Enabled = !btnAdd.Enabled;
             btnAdd.Enabled = !btnSave.Enabled && !btnEdit.Enabled;
 
-            btnCopy.Enabled = false;
+            btnCopy.Enabled = btnEdit.Enabled; // false; //last edit by sailom .k 29/09/2022
             btnPrint.Enabled = false;
         }
 
@@ -928,7 +952,7 @@ namespace AllCashUFormsApp
             btnCancel.Enabled = !btnAdd.Enabled;
             btnAdd.Enabled = !btnSave.Enabled && !btnEdit.Enabled;
 
-            btnCopy.Enabled = false;
+            btnCopy.Enabled = btnEdit.Enabled; // false; //last edit by sailom .k 29/09/2022
         }
 
         public static void ShowProcessErr(this Form frm)
@@ -1297,7 +1321,7 @@ namespace AllCashUFormsApp
             wait.Show();
 
             frmCrystalReport _frm = new frmCrystalReport();
-
+            _frm.reportHeader = reportHeaderHpl;
             _frm.PrepareExcelReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             //_frm.ShowDialog();
 
@@ -1313,7 +1337,7 @@ namespace AllCashUFormsApp
             wait.Show();
 
             frmCrystalReport _frm = new frmCrystalReport();
-
+            _frm.reportHeader = reportHeaderHpl;
             _frm.PrepareExcelReportWithDTPopup(popUPText, reportName, dt, autoGenExcel);
             //_frm.ShowDialog();
 
@@ -1329,7 +1353,7 @@ namespace AllCashUFormsApp
             wait.Show();
 
             frmCrystalReport _frm = new frmCrystalReport();
-
+            _frm.reportHeader = reportHeaderHpl;
             _frm.PrepareManualExcelReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             //_frm.ShowDialog();
 
@@ -1345,7 +1369,7 @@ namespace AllCashUFormsApp
             wait.Show();
 
             frmCrystalReport _frm = new frmCrystalReport();
-
+            _frm.reportHeader = reportHeaderHpl;
             _frm.PrepareManualExcelCenterReportPopup(popUPText, reportName, storeName, _params, autoGenExcel);
             //_frm.ShowDialog();
 
@@ -1468,7 +1492,8 @@ namespace AllCashUFormsApp
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatusImg", HeaderText = "", Name = "DocStatusImg", Width = 30, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter, ColoumnType = new DataGridViewImageColumn() });
             colList.Add(new DataGridColumn() { DataPropertyName = "DocStatus", HeaderText = "สถานะ", Name = "DocStatus", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
 
-            if (docTypeCode.Trim() == "RL")
+
+            if (docTypeCode.Trim() == "RL" || docTypeCode.Trim() == "AllBranchRL" || docTypeCode.Trim() == "AllDocData") //adisorn 10/10/2022
                 colList.Add(new DataGridColumn() { DataPropertyName = "WHID", HeaderText = "แวน", Name = "WHID", Width = 80, AutoSizeColumnMode = DataGridViewAutoSizeColumnMode.NotSet, Alignment = DataGridViewContentAlignment.MiddleCenter });
 
 
@@ -1596,7 +1621,7 @@ namespace AllCashUFormsApp
             {
                 _objType = ObjectType.Employee;
             }
-            else if (_controls[0].Name.Contains("CustomerID"))
+            else if (_controls[0].Name.Contains("CustomerID") || _controls[0].Name.Contains("CustomerCode"))
             {
                 _objType = ObjectType.Customer;
             }
@@ -2585,7 +2610,8 @@ namespace AllCashUFormsApp
                 }
                 else
                 {
-                    item.Mask = realDocTypeCode + digitStr;
+                    if (docTypeCode != "IV")
+                        item.Mask = realDocTypeCode + digitStr;
                 }
 
                 item.BackColor = Color.Turquoise;
@@ -2982,7 +3008,7 @@ namespace AllCashUFormsApp
             //var _btn = GetAll(ctrls, typeof(Button));
             //foreach (Button item in _btn)
             //{
-                
+
             //}
 
             //var grds = GetAll(ctrls, typeof(DataGridView));
@@ -3160,6 +3186,145 @@ namespace AllCashUFormsApp
             }
         }
 
+        /// <summary>
+        /// for support max docno from tablet sales transaction by sailom .k 21/11/2022
+        /// </summary>
+        /// <param name="bu"></param>
+        /// <param name="docTypeCode"></param>
+        /// <param name="whid"></param>
+        /// <param name="docdate"></param>
+        public static void PrepareManualDocRunning(this BaseControl bu, string docTypeCode, string whid, DateTime docdate)
+        {
+            bu.tbl_DocRunning.Clear();
+
+            var docRunList = bu.tbl_DocRunning;
+
+            CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
+
+            string year = "";
+            string month = "";
+            DateTime cDate = docdate; // Convert.ToDateTime(DateTime.Now, cultures);
+
+            year = cDate.ToString("yy", cultures);
+            month = cDate.Month.ToString();
+
+            Func<tbl_DocRunning, bool> tbl_DocRunningPre = (x => x.DocTypeCode.Replace(" ", string.Empty).Trim() == docTypeCode.Trim() && x.YearDoc.Replace(" ", string.Empty) == year && x.MonthDoc.Replace(" ", string.Empty) == month);
+            var docRunningList = bu.GetDocRunning(tbl_DocRunningPre);
+
+            //Func<tbl_POMaster, bool> tbl_POMasterPre = (x => x.DocTypeCode == docTypeCode);
+            //var poList = bu.GetPOMaster(tbl_POMasterPre);
+            var docList = new DocTypeCode().GenManualDocNo(docTypeCode, whid, docdate);
+            if (docList != null)
+            {
+                tbl_DocRunning docRunning = new tbl_DocRunning();
+                if (docRunningList != null && docRunningList.Count > 0)
+                {
+                    docRunning = docRunningList[0];
+                }
+                else
+                {
+                    docRunning.DocTypeCode = docTypeCode;
+                    docRunning.YearDoc = year;
+                    docRunning.MonthDoc = month;
+                    docRunning.WHCode = "";
+                    docRunning.FlagSend = false;
+                }
+
+                docRunning.DayDoc = "0"; // CountDocDate(poList).ToString();
+
+                string maxDocNo = docList;// bu.GenDocNo(docTypeCode); //GetMaxODDoc(bu, poList);
+                string runDoc = "";
+
+                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                if (tbl_DocumentType != null)
+                {
+                    int runLength = tbl_DocumentType.RunLength.Value;
+                    if (runLength != 0)
+                        runDoc = maxDocNo.Substring(maxDocNo.Length - runLength, runLength);
+                }
+
+                if (!string.IsNullOrEmpty(runDoc))
+                {
+                    int runningNo = Convert.ToInt32(runDoc) + 1;
+                    docRunning.RunDoc = runningNo;
+
+                    docRunning.ModifiledDate = cDate.ToDateTimeFormat();
+
+                    docRunList.Add(docRunning);
+                }
+            }
+        }
+
+        /// <summary>
+        /// for support max docno from tablet sales transaction by sailom .k 21/11/2022
+        /// </summary>
+        /// <param name="bu"></param>
+        /// <param name="docTypeCode"></param>
+        /// <param name="whid"></param>
+        /// <param name="docdate"></param>
+        public static void PrepareDocRunning(this BaseControl bu, string docTypeCode, string whid, DateTime docdate)
+        {
+            bu.tbl_DocRunning.Clear();
+
+            var docRunList = bu.tbl_DocRunning;
+
+            CultureInfo cultures = System.Globalization.CultureInfo.GetCultureInfo("th-TH");
+
+            string year = "";
+            string month = "";
+            DateTime cDate = DateTime.Now; // Convert.ToDateTime(DateTime.Now, cultures);
+
+            year = cDate.ToString("yy", cultures);
+            month = cDate.Month.ToString();
+
+            Func<tbl_DocRunning, bool> tbl_DocRunningPre = (x => x.DocTypeCode.Replace(" ", string.Empty).Trim() == docTypeCode.Trim() && x.YearDoc.Replace(" ", string.Empty) == year && x.MonthDoc.Replace(" ", string.Empty) == month);
+            var docRunningList = bu.GetDocRunning(tbl_DocRunningPre);
+
+            //Func<tbl_POMaster, bool> tbl_POMasterPre = (x => x.DocTypeCode == docTypeCode);
+            //var poList = bu.GetPOMaster(tbl_POMasterPre);
+            var docList = new DocTypeCode().GenDocNo(docTypeCode, whid, docdate);
+            if (docList != null)
+            {
+                tbl_DocRunning docRunning = new tbl_DocRunning();
+                if (docRunningList != null && docRunningList.Count > 0)
+                {
+                    docRunning = docRunningList[0];
+                }
+                else
+                {
+                    docRunning.DocTypeCode = docTypeCode;
+                    docRunning.YearDoc = year;
+                    docRunning.MonthDoc = month;
+                    docRunning.WHCode = "";
+                    docRunning.FlagSend = false;
+                }
+
+                docRunning.DayDoc = "0"; // CountDocDate(poList).ToString();
+
+                string maxDocNo = docList;// bu.GenDocNo(docTypeCode); //GetMaxODDoc(bu, poList);
+                string runDoc = "";
+
+                var tbl_DocumentType = (new tbl_DocumentType()).SelectAll().FirstOrDefault(x => x.DocTypeCode.Trim() == docTypeCode.Trim());
+                if (tbl_DocumentType != null)
+                {
+                    int runLength = tbl_DocumentType.RunLength.Value;
+                    if (runLength != 0)
+                        runDoc = maxDocNo.Substring(maxDocNo.Length - runLength, runLength);
+                }
+
+                if (!string.IsNullOrEmpty(runDoc))
+                {
+                    int runningNo = Convert.ToInt32(runDoc) + 1;
+                    docRunning.RunDoc = runningNo;
+
+                    docRunning.ModifiledDate = cDate.ToDateTimeFormat();
+
+                    docRunList.Add(docRunning);
+                }
+            }
+        }
+
+
         private static string GetMaxODDoc(BaseControl bu, List<tbl_POMaster> poList)
         {
             if (poList != null && poList.Count > 0)
@@ -3243,10 +3408,14 @@ namespace AllCashUFormsApp
                     if (!isValidateOverRecieve) //check unit price
                     {
                         var priceCell = grdList.Rows[i].Cells[_priceCell];
-                        if (prdCodeCell.IsNotNullOrEmptyCell() && priceCell.IsNotNullOrEmptyCell() && Convert.ToDecimal(priceCell.EditedFormattedValue.ToString()) <= 0)
+                        decimal value = 0;
+                        if (decimal.TryParse(priceCell.EditedFormattedValue.ToString(), out value))
                         {
-                            checkPrice.Add(false);
-                        }
+                            if (prdCodeCell.IsNotNullOrEmptyCell() && priceCell.IsNotNullOrEmptyCell() && Convert.ToDecimal(priceCell.EditedFormattedValue.ToString()) <= 0)
+                            {
+                                checkPrice.Add(false);
+                            }
+                        }  
                     }
 
                     if (isValidateOverRecieve)

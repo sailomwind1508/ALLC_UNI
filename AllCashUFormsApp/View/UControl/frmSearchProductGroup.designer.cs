@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchProductGroup));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSearchProductGroup));
             this.grdList = new System.Windows.Forms.DataGridView();
+            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colProductGroupCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductGroupName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblCountList = new System.Windows.Forms.Label();
             this.lblQtyList = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnAccept = new System.Windows.Forms.Button();
-            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colProductGroupCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProductGroupName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,6 +59,39 @@
             this.grdList.Size = new System.Drawing.Size(529, 453);
             this.grdList.TabIndex = 24;
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
+            // 
+            // colSelect
+            // 
+            this.colSelect.FillWeight = 30F;
+            this.colSelect.HeaderText = "";
+            this.colSelect.Name = "colSelect";
+            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colSelect.Width = 30;
+            // 
+            // colProductGroupCode
+            // 
+            this.colProductGroupCode.DataPropertyName = "ProductGroupCode";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductGroupCode.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colProductGroupCode.HeaderText = "รหัสสินค้า";
+            this.colProductGroupCode.MaxInputLength = 10;
+            this.colProductGroupCode.Name = "colProductGroupCode";
+            this.colProductGroupCode.ReadOnly = true;
+            this.colProductGroupCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colProductGroupCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colProductGroupCode.Width = 120;
+            // 
+            // colProductGroupName
+            // 
+            this.colProductGroupName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colProductGroupName.DataPropertyName = "ProductGroupName";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductGroupName.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colProductGroupName.HeaderText = "ชื่อสินค้า";
+            this.colProductGroupName.MaxInputLength = 50;
+            this.colProductGroupName.Name = "colProductGroupName";
+            this.colProductGroupName.ReadOnly = true;
+            this.colProductGroupName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // lblCountList
             // 
@@ -133,39 +166,6 @@
             this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAccept.UseVisualStyleBackColor = false;
             // 
-            // colSelect
-            // 
-            this.colSelect.FillWeight = 30F;
-            this.colSelect.HeaderText = "";
-            this.colSelect.Name = "colSelect";
-            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSelect.Width = 30;
-            // 
-            // colProductGroupCode
-            // 
-            this.colProductGroupCode.DataPropertyName = "ProductGroupCode";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductGroupCode.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colProductGroupCode.HeaderText = "รหัสสินค้า";
-            this.colProductGroupCode.MaxInputLength = 10;
-            this.colProductGroupCode.Name = "colProductGroupCode";
-            this.colProductGroupCode.ReadOnly = true;
-            this.colProductGroupCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colProductGroupCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colProductGroupCode.Width = 120;
-            // 
-            // colProductGroupName
-            // 
-            this.colProductGroupName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colProductGroupName.DataPropertyName = "ProductGroupName";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductGroupName.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colProductGroupName.HeaderText = "ชื่อสินค้า";
-            this.colProductGroupName.MaxInputLength = 50;
-            this.colProductGroupName.Name = "colProductGroupName";
-            this.colProductGroupName.ReadOnly = true;
-            this.colProductGroupName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // frmSearchProductGroup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -180,6 +180,7 @@
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;

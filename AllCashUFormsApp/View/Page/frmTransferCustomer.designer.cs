@@ -74,6 +74,7 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.grdList = new System.Windows.Forms.DataGridView();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.chkBoxALL1 = new System.Windows.Forms.CheckBox();
             this.ddlPresale = new System.Windows.Forms.CheckBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -92,7 +93,6 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.FormPic = new System.Windows.Forms.PictureBox();
             this.FormHeader = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -702,6 +702,15 @@
             this.panel7.Size = new System.Drawing.Size(630, 146);
             this.panel7.TabIndex = 0;
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(96, 84);
+            this.txtSearch.MaxLength = 300;
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(325, 23);
+            this.txtSearch.TabIndex = 244;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            // 
             // chkBoxALL1
             // 
             this.chkBoxALL1.AutoSize = true;
@@ -733,7 +742,7 @@
             this.btnSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(427, 82);
+            this.btnSearch.Location = new System.Drawing.Point(425, 82);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 26);
             this.btnSearch.TabIndex = 9;
@@ -903,15 +912,6 @@
             this.FormHeader.Size = new System.Drawing.Size(48, 17);
             this.FormHeader.TabIndex = 0;
             this.FormHeader.Text = "label8";
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(96, 84);
-            this.txtSearch.MaxLength = 300;
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(325, 23);
-            this.txtSearch.TabIndex = 244;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // frmTransferCustomer
             // 

@@ -580,7 +580,7 @@ namespace AllCashUFormsApp.View.Page
                 }
             }
 
-            btnFixRL.Visible = Helper.tbl_Users.RoleID == 10; //Fix RL when login with superadmin user by sailom.k 21/04/2022
+            btnFixRL.Visible = Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10; //Fix RL when login with superadmin user by sailom.k 21/04/2022
 
         }
 
@@ -673,6 +673,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmPreOrder_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
 
             grdList.DataSource = null;
@@ -697,9 +699,10 @@ namespace AllCashUFormsApp.View.Page
             if (isConfirmFTB)
                 btnCancel.PerformClick();
 
-            if (Helper.tbl_Users.RoleID == 10) //for super admin only
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10) //for super admin only
             {
                 btnRollback.Visible = true;
+                btnReCalcRL.Visible = true;
             }
         }
 
@@ -1023,9 +1026,9 @@ namespace AllCashUFormsApp.View.Page
                 }
 
                 //validate end day----------------------------
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     return;
                 }
@@ -1381,9 +1384,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPOMaster(po);
             }
+
             if (poDts != null && poDts.Count > 0)
             {
                 BindPODetailForEditItem(poDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             CreateGridBtnList();
@@ -1413,9 +1421,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPOMaster(po);
             }
+
             if (poDts != null && poDts.Count > 0)
             {
                 BindPODetail(poDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
@@ -1425,7 +1438,6 @@ namespace AllCashUFormsApp.View.Page
             //txtDocNoPOMst.DisableTextBox(false);
             //txtDocNoPOMst.BackColor = Color.Turquoise;
             btnReCalc.Enabled = false;
-            btnAdd.Enabled = false;
 
             btnSave.Enabled = false;
             btnCancel.Enabled = true;
@@ -1439,6 +1451,7 @@ namespace AllCashUFormsApp.View.Page
             rdoCurrent.Enabled = true;
             rdoAtDate.Enabled = true;
             btnAdd.Enabled = false;
+            btnCopy.Enabled = btnCancel.Enabled;
             //btnShowPromotion.Enabled = false;
 
             pnlCompletePO.OpenControl(true, readOnlyControls.ToArray(), cellEdit);
@@ -1610,12 +1623,14 @@ namespace AllCashUFormsApp.View.Page
                             if (_tmpUOM != null)
                             {
                                 var _totalPOQty = _poQty * _tmpUOM.BaseQty;
-
-                                int _stockQty = Convert.ToInt32(tmpStock1000.Rows[j]["ST1000Qty"]);
-                                if (_stockQty <= 0 || _stockQty < _totalPOQty)
+                                if (!string.IsNullOrEmpty(tmpStock1000.Rows[j]["ST1000Qty"].ToString()))
                                 {
-                                    //grdList.Rows[i].DefaultCellStyle.BackColor = Color.Red;
-                                    grdList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                                    int _stockQty = Convert.ToInt32(tmpStock1000.Rows[j]["ST1000Qty"]);
+                                    if (_stockQty <= 0 || _stockQty < _totalPOQty)
+                                    {
+                                        //grdList.Rows[i].DefaultCellStyle.BackColor = Color.Red;
+                                        grdList.Rows[i].DefaultCellStyle.ForeColor = Color.Red;
+                                    }
                                 }
                             }
                         }
@@ -1723,7 +1738,7 @@ namespace AllCashUFormsApp.View.Page
         public void BindSearchProduct(DataTable productDT, int rowIndex)
         {
             validateNewRow = true;
-            if (Helper.tbl_Users.RoleID != 10) //allow super admin add duplicate item for support promotion 24022021
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //allow super admin add duplicate item for support promotion 24022021
             {
                 grdList.ValidateDuplicateSKU(productDT.Rows[0]["ProductID"].ToString(), 0, rowIndex, ref validateNewRow);
             }
@@ -2421,7 +2436,7 @@ namespace AllCashUFormsApp.View.Page
             if (checkEditMode)
                 po.DocNo = txdDocNo.Text;
             else
-                po.DocNo = bu.GenDocNoPre(docTypeCode, txtWHCode.Text);
+                po.DocNo = bu.GenNewDocNoPre(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
 
             po.RevisionNo = 0;
             po.DocTypeCode = "IV";
@@ -2464,7 +2479,7 @@ namespace AllCashUFormsApp.View.Page
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
-                po.CustType = cust[0].CustomerTypeID.Value.ToString();
+                po.CustType = cust[0].CustomerTypeID == null ? "0" : cust[0].CustomerTypeID.Value.ToString(); //edit by sailom.k 07/02/2023
             }
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
             po.CustomerID = txtCustomerID.Text;
@@ -3557,8 +3572,8 @@ namespace AllCashUFormsApp.View.Page
                     {
                         po.Remark = cboRemark.Text;
                     }
-                    bu.tbl_POMaster.EdDate = DateTime.Now;
-                    bu.tbl_POMaster.EdUser = Helper.tbl_Users.Username;
+                    po.EdDate = DateTime.Now;
+                    po.EdUser = Helper.tbl_Users.Username;
 
                     //po.Remark = txtRemark.Text;
                     po.Comment = txtComment.Text;
@@ -3596,7 +3611,7 @@ namespace AllCashUFormsApp.View.Page
                                     var _receivedQty = Convert.ToDecimal(orderQtyCell.EditedFormattedValue);
 
                                     if (string.IsNullOrEmpty(docno)) //when create new order by copu function before confirm order
-                                        docno = bu.GenDocNoPre(docTypeCode, txtWHCode.Text);
+                                        docno = bu.GenNewDocNoPre(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
 
                                     docno = preBu.FilterDocNoWithAutoGenByPRD(docno, txtWHCode.Text, _productID, _orderUom, _receivedQty);
 
@@ -3619,7 +3634,7 @@ namespace AllCashUFormsApp.View.Page
 
                     CalcPromotion(true);
 
-                    bu.PrepareDocRunning(docTypeCode);
+                    bu.PrepareDocRunning(docTypeCode, txtWHCode.Text, dtpDocDate.Value);
 
                     PreparePOMaster(editFlag);
 
@@ -3897,7 +3912,7 @@ namespace AllCashUFormsApp.View.Page
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
             //for support pre-order edit by sailom.k 02/04/2022
-            //if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
+            //if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && dtpDocDate.Value != null && docDate < cDate)
             //{
             //    string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
             //    message.ShowWarningMessage();
@@ -3906,9 +3921,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     ret = false;
                 }
@@ -4043,7 +4058,8 @@ namespace AllCashUFormsApp.View.Page
                                             decimal whQty = 0;
 
                                             if (invWhItem != null && invWhItem.Count > 0)
-                                                whQty = invWhItem.Where(x => x.WHID == txtWHCode.Text && x.ProductID == productID).Sum(x => x.TrnQty);
+                                                whQty = invWhItem.Where(x => x.WHID == (txtWHCode.Text.Substring(0, 3) + "1000") && x.ProductID == productID).Sum(x => x.TrnQty); //last edit by sailom.k 18/01/2023
+                                            //whQty = invWhItem.Where(x => x.WHID == txtWHCode.Text && x.ProductID == productID).Sum(x => x.TrnQty);
 
                                             if (unitQty > whQty)
                                             {
@@ -4298,7 +4314,7 @@ namespace AllCashUFormsApp.View.Page
                     {
                         validateNewRow = true;
 
-                        if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                        if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //aloow super admin add duplicate item for support promotion 24022021
                         {
                             var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
                             if (!checkDup)
@@ -4340,7 +4356,7 @@ namespace AllCashUFormsApp.View.Page
                         {
                             validateNewRow = true;
 
-                            if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //aloow super admin add duplicate item for support promotion 24022021
                             {
                                 var checkDup = grd.ValidateDuplicateSKU(cell0.EditedFormattedValue.ToString(), 0, currentRowIndex, ref validateNewRow);
                                 if (!checkDup)
@@ -4800,8 +4816,8 @@ namespace AllCashUFormsApp.View.Page
                             po.DocNo = docNo;
                             po.DocStatus = "5";
                             po.Remark = "สินค้าคงคลังไม่เพียงพอ";
-                            bu.tbl_POMaster.EdDate = DateTime.Now;
-                            bu.tbl_POMaster.EdUser = Helper.tbl_Users.Username;
+                            po.EdDate = DateTime.Now;
+                            po.EdUser = Helper.tbl_Users.Username;
 
                             po.Comment = "ยกเลิก pre-order ก่อน confirm order";
 
@@ -5276,6 +5292,86 @@ namespace AllCashUFormsApp.View.Page
                 msg.ShowErrorMessage();
             }
 
+        }
+
+        private void btnReCalcRL_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (grdPO.RowCount > 0)
+                {
+                    string cfMsg = "ต้องการ Re-Calculate RL ใช่หรือไม่?";
+                    string title = "ยืนยันการ Re-Calculate!!";
+                    if (!cfMsg.ConfirmMessageBox(title))
+                        return;
+
+                    Cursor.Current = Cursors.WaitCursor;
+                    Dictionary<string, string> rlList = new Dictionary<string, string>();
+                    foreach (DataGridViewRow row in grdPO.Rows)
+                    {
+                        string _rlDocNo;
+                        string _whName = "";
+                        _rlDocNo = row.Cells["colRLDocNo"].Value.ToString();
+                        _whName = row.Cells["colWHNamePO"].Value.ToString();
+
+                        var sel = row.Cells["colSelectRowPO"].Value;
+
+                        if (row.Cells["colSelectRowPO"].IsNotNullOrEmptyCell())
+                        {
+                            bool chk = false;
+                            if (sel != null && bool.TryParse(sel.ToString(), out chk))
+                            {
+                                if (chk)
+                                {
+                                    if (!string.IsNullOrEmpty(_whName))
+                                    {
+                                        if (rlList.Count(x => x.Key == _rlDocNo) == 0)
+                                        {
+                                            var wh = bu.GetBranchWarehouse(x => x.WHName == _whName);
+                                            if (wh != null)
+                                                rlList.Add(_rlDocNo, wh.WHID);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (var item in rlList.Distinct().ToList())
+                    {
+                        string rlDocNo = "";
+                        string whid = "";
+                        rlDocNo = item.Key;
+                        whid = item.Value;
+
+                        bool ret = false;
+                        ret = preBu.ReCalcRL(whid, dtpDocDatePO.Value, rlDocNo);
+
+                        string msg = "";
+                        if (ret)
+                        {
+                            Cursor.Current = Cursors.Default;
+                            msg = "Re-Calculate RL เรียบร้อยแล้ว!!";
+                            msg.ShowInfoMessage();
+
+                        }
+                        else
+                        {
+                            Cursor.Current = Cursors.Default;
+                            msg = "Re-Calculate RL ไม่สำเร็จ!!";
+                            msg.ShowWarningMessage();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
         }
     }
 }

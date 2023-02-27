@@ -39,6 +39,11 @@ namespace AllCashUFormsApp.Controller
             return tbl_ArCustomerShelf.Update();
         }
 
+        public int UpdateShelf(tbl_ArCustomerShelf tbl_ArCustomerShelf)
+        {
+            return tbl_ArCustomerShelf.UpdateShelf();
+        }
+
         public int RemoveData(tbl_ArCustomerShelf tbl_ArCustomerShelf)
         {
             return tbl_ArCustomerShelf.Delete();
@@ -52,6 +57,16 @@ namespace AllCashUFormsApp.Controller
         public int UpdateCustomerShelf(tbl_ArCustomerShelf tbl_ArCustomerShelf)
         {
             return tbl_ArCustomerShelf.UpdateCustomerShelf();
+        }
+
+        public DataTable GetShelfData(Dictionary<string, object> _params)
+        {
+            return new tbl_ArCustomerShelf().GetShelfData(_params);
+        }
+
+        public int UpdateShelfManagement(Dictionary<string, object> _params)
+        {
+            return new tbl_ArCustomerShelf().UpdateShelfManagement(_params);
         }
     }
 }

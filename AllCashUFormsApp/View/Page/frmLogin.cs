@@ -68,6 +68,8 @@ namespace AllCashUFormsApp.View.Page
             //Application.Run(sistema);
             //this.Close();
 
+            //Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             this.SetTitleForm();
             depoList = bu.GetConfigData();
 
@@ -121,13 +123,15 @@ namespace AllCashUFormsApp.View.Page
                 Helper.BranchName = depoSel.Key;
 
                 Helper.ConnectionString = conStr; //Init connection string
+                Helper.Original_ConnectionString = conStr;
+                Helper.Original_BranchName = depoSel.Key;
 
                 if (bu.ValidateData(txtUserName.Text, txtPassword.Text, conStr))
                 {
                     bool resault = bu.VerifyData(txtUserName.Text, txtPassword.Text);
                     if (resault)
                     {
-                        Connection.GetConnectionStringsManual(); //for manual connect 04112020
+                        //Connection.GetConnectionStringsManual(); //for manual connect 04112020 //last edit by sailom.k 18/10/2022
 
                         Helper.tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower() && x.Password == txtPassword.Text);
 
@@ -233,7 +237,8 @@ namespace AllCashUFormsApp.View.Page
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                FlexibleMessageBox.Show("ไม่สามารถ connect server ศูนย์ได้!!! กรุณาติดต่อ IT : " + ex.Message, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string msg = "ไม่สามารถ connect server ศูนย์ได้!!! กรุณาติดต่อ IT : \n" + ex.Message;
+                FlexibleMessageBox.ShowLargeMsg(msg, "คำเตือน", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -271,12 +276,14 @@ namespace AllCashUFormsApp.View.Page
         private bool IsServerConnected()
         {
             var conStr = ConfigurationManager.AppSettings["CenterConnect"].ToString();
-            using (var l_oConnection = new SqlConnection(conStr))
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(conStr);
+            builder.ConnectTimeout = 5;
+            using (var connection = new SqlConnection(builder.ToString()))
             {
                 try
                 {
-                    l_oConnection.Open();
-                    l_oConnection.Close();
+                    connection.Open();
+                    connection.Close();
                 }
                 catch (SqlException)
                 {
@@ -285,6 +292,21 @@ namespace AllCashUFormsApp.View.Page
 
                 return true;
             }
+
+            //using (var l_oConnection = new SqlConnection(conStr))
+            //{
+            //    try
+            //    {
+            //        l_oConnection.Open();
+            //        l_oConnection.Close();
+            //    }
+            //    catch (SqlException)
+            //    {
+            //        return false;
+            //    }
+
+            //    return true;
+            //}
         }
 
         private void btnClose_Click(object sender, EventArgs e)

@@ -31,6 +31,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmVerifyDataToSAP_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
 
             InitialData();
@@ -476,6 +478,37 @@ namespace AllCashUFormsApp.View.Page
                 string msg = ex.Message;
                 msg.ShowErrorMessage();
             }
+        }
+
+        private void btnVerifyVE_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            progressBar1.Value = 0;
+
+            var dt = bu.VerifyVEDiffData();
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                string msg = "ตรวจพบข้อมูลรายละเอียด ใบกำกับภาษีเต็มรูป ที่มีปัญหา!!!";
+                msg.ShowErrorMessage();
+
+                grdResult.DataSource = dt;
+
+                lblRowCount.Text = dt.Rows.Count.ToNumberFormat();
+
+                progressBar1.Value = 100;
+            }
+            else
+            {
+                grdResult.DataSource = null;
+
+                lblRowCount.Text = dt.Rows.Count.ToNumberFormat();
+
+                string msg = "ไม่พบข้อมูลรายละเอียด ใบกำกับภาษีเต็มรูป ที่มีปัญหา!!!";
+                msg.ShowInfoMessage();
+
+                progressBar1.Value = 100;
+            }
+            Cursor.Current = Cursors.Default;
         }
     }
 }

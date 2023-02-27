@@ -131,5 +131,36 @@ namespace AllCashUFormsApp.Controller
             return dt;
         }
 
+        public virtual DataTable GetDataTable_AllBranch(Dictionary<string, object> Params)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+                string sql = "proc_OD_GetDataTable_AllBranch";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, Params);
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
+        public virtual DataTable GetAllDocData()
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+                string sql = "proc_GetAllDocData";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
     }
 }

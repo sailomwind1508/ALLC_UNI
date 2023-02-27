@@ -312,7 +312,7 @@
             this.btnSearchEmp.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearchEmp.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchEmp.Image")));
             this.btnSearchEmp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchEmp.Location = new System.Drawing.Point(371, 5);
+            this.btnSearchEmp.Location = new System.Drawing.Point(370, 5);
             this.btnSearchEmp.Name = "btnSearchEmp";
             this.btnSearchEmp.Size = new System.Drawing.Size(72, 26);
             this.btnSearchEmp.TabIndex = 16;
@@ -685,7 +685,7 @@
             this.txtLastName.MaxLength = 100;
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.ReadOnly = true;
-            this.txtLastName.Size = new System.Drawing.Size(227, 23);
+            this.txtLastName.Size = new System.Drawing.Size(228, 23);
             this.txtLastName.TabIndex = 6;
             // 
             // ddlDepo

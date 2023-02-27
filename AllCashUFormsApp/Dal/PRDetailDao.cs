@@ -629,5 +629,22 @@ namespace AllCashUFormsApp
 
             return ret;
         }
+
+        public static List<tbl_PRDetail> GetPRDetail_AllBranch(this tbl_PRDetail tbl_PRDetail, Dictionary<string, object> Params)
+        {
+            List<tbl_PRDetail> list = new List<tbl_PRDetail>();
+            try
+            {
+                string sql = "proc_PRDetail_GetData_AllBranch";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteStoreToList(typeof(tbl_PRDetail), sql, Params);
+                list = dynamicListReturned.Cast<tbl_PRDetail>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRDetail.GetType());
+            }
+
+            return list;
+        }
     }
 }

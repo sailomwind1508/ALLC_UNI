@@ -426,7 +426,7 @@ namespace AllCashUFormsApp
                                 bcp.WriteToServer(table);
                                 trans.Commit();
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
                                 trans.Rollback();
                                 conn.Close();

@@ -30,12 +30,13 @@ namespace AllCashUFormsApp.View.Page
         List<Control> searchBranchWHControlsEdit = new List<Control>();
         List<Control> searchBranchControl = new List<Control>();
 
+        List<tbl_ArCustomerShelf> listShelf = new List<tbl_ArCustomerShelf>();
+
         static DataTable dtCustomer;
         public static string shoptypeID = "";
         public static string pricegroupID = "";
 
-        public static string page = "";// Shelf
-        public static string shelfID = "";//Shelf
+        public static string page, shelfID, Comment, WarehouseID = "";// Shelf
 
         public static string _CustImage, _CustomerID;
 
@@ -86,6 +87,7 @@ namespace AllCashUFormsApp.View.Page
                     _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
                     imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
+                    //imgPathTmp = @"http://192.168.2.10/" + @"/CU";
                 }
 
                 if (preOrderFlag) //เป็นศูนย์ที่ใช้ IP //pre-order
@@ -136,6 +138,7 @@ namespace AllCashUFormsApp.View.Page
 
             printContextMenuStrip.Items.Add("รายงานชื่อร้านค้าซ้ำ", printImage.byteArrayToImage(), ToolStripMenuItem_Click);
             printContextMenuStrip.Items.Add("รายงานที่อยู่ซ้ำ", printImage.byteArrayToImage(), ToolStripMenuItem_Click);
+            printContextMenuStrip.Items.Add("รายงานชั้นวาง", printImage.byteArrayToImage(), ToolStripMenuItem_Click);
 
             // Set Cancel to false. 
             // It is optimized to true based on empty entry.
@@ -158,6 +161,25 @@ namespace AllCashUFormsApp.View.Page
                     {
                         _params = new Dictionary<string, object>();
                         this.OpenExcelReportsPopup("รายงานที่อยู่ซ้ำ", "GetCustomer_DuplicateAddress_XSLT.xslt", "proc_GetCustomer_DuplicateAddress", _params, true);
+                        break;
+                    }
+                case "รายงานชั้นวาง":
+                    {
+                        string WHID = ddlWH.SelectedIndex == 0 ? "" : ddlWH.SelectedValue.ToString();
+                        int shoptypeID = ddlShopType.SelectedIndex == 0 ? 0 : Convert.ToInt32(ddlShopType.SelectedValue);
+
+                        string SalAreaID = "";
+                        if (ddlSalArea.SelectedItem != null)
+                            SalAreaID = ddlSalArea.SelectedValue.ToString() == "-1" ? "" : ddlSalArea.SelectedValue.ToString();
+
+                        _params = new Dictionary<string, object>();
+
+                        _params.Add("@FlagDel", rdoN.Checked ? 0 : 1);
+                        _params.Add("@WHID", WHID);
+                        _params.Add("@SalAreaID", SalAreaID);
+                        _params.Add("@ShopTypeID", shoptypeID);
+                        _params.Add("@Search", txtSearch.Text);
+                        this.OpenExcelReportsPopup("รายงานชั้นวาง", "GetCustomerData_AND_Shelf_XSLT.xslt", "proc_GetCustomerData_AND_Shelf", _params, true);
                         break;
                     }
                 default:
@@ -206,7 +228,7 @@ namespace AllCashUFormsApp.View.Page
             btnExcel.Enabled = true;
 
             txtBranchName.DisableTextBox(true);
-            chkBoxPresale.Enabled = false;
+            chkShelf.Enabled = true;
 
             pnlEdit.OpenControl(false, PanelEditControls.ToArray()); //
 
@@ -255,6 +277,55 @@ namespace AllCashUFormsApp.View.Page
             txtSearch.Text = customerID;
 
             BindData();
+        }
+
+        public void BindCustomerInfo(List<string> customerIDList)
+        {
+            pnlEdit.ClearControl();
+            pnlEdit.OpenControl(false, PanelEditControls.ToArray());
+
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            string custIDs = string.Join(",", customerIDList);
+            _params.Add("@Search", custIDs);
+
+            dtCustomer = new DataTable();
+            dtCustomer = bu.GetCustomerByNames(_params);
+
+            if (dtCustomer.Rows.Count > 0)
+                dtCustomer.Columns["Seq"].ReadOnly = false; //last edit by adisorn 02/02/2022
+
+            DataTable newTable = new DataTable();
+            SetCustomerTable(newTable);
+
+            foreach (DataRow r in dtCustomer.Rows)
+            {
+
+                if (chkShelf.Checked) //adisorn 19-09-2022
+                {
+                    string _ShelfID = r["ShelfID"].ToString();
+                    if (!string.IsNullOrEmpty(_ShelfID))
+                    {
+                        int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
+                        newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
+                            , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
+                            , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
+                    }
+                }
+                else
+                {
+                    int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
+                    newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
+                        , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
+                        , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
+                }
+            }
+
+            grdList.DataSource = newTable;
+            lblQtyCount.Text = newTable.Rows.Count.ToNumberFormat();
+
+            SetGridView(); //SetFlagMember and ImageCustomer , set colour on row gridview
+            SetButtonAfterBindGridView();
+            SelectDetails(null);
         }
 
         private void SetCustomerTable(DataTable dt)
@@ -331,8 +402,10 @@ namespace AllCashUFormsApp.View.Page
                         if (!string.IsNullOrEmpty(r["FlagBill"].ToString()) && Convert.ToBoolean(r["FlagBill"]) == true)
                             chkRequestTaxBill.Checked = true;
 
+                        bool _FlagDel = false;
+                        _FlagDel = Convert.ToBoolean(r["FlagDel"]);
                         rdoNormal.Checked = true;
-                        if (Convert.ToBoolean(r["FlagDel"]) == true)
+                        if (_FlagDel == true)
                             rdoCancel.Checked = true;
 
                         dtpCrDate.Text = r["CrDate"].ToString();
@@ -393,7 +466,7 @@ namespace AllCashUFormsApp.View.Page
                         if (!string.IsNullOrEmpty(r["DistrictID"].ToString()))
                             SAM.DistrictID = Convert.ToInt32(r["DistrictID"]);
 
-                        PrePareAddShelf(CustomerID);
+                        PrePareAddShelf(CustomerID, _FlagDel);
 
                         picCustomerImg.Image = null;
                         _CustImage = ""; //ส่งURLไปยังหน้าโชว์รูปภาพร้านค้า
@@ -445,18 +518,20 @@ namespace AllCashUFormsApp.View.Page
             }
         }
 
-        private void PrePareAddShelf(string CustomerID)
+        private void PrePareAddShelf(string CustomerID, bool _FlagDel)
         {
             listBox_Shelf.Items.Clear();
 
-            var shelfList = buShelf.GetCustomerShelf(x => x.CustomerID == CustomerID && x.FlagDel == false);
+            listShelf = buShelf.GetCustomerShelf(x => x.CustomerID == CustomerID && x.FlagDel == _FlagDel);
 
-            if (shelfList.Count > 0)
+            if (listShelf.Count > 0)
             {
-                foreach (var item in shelfList)
+                foreach (var item in listShelf)
                 {
-                    string ShelfID = item.ShelfID.ToString();
-                    listBox_Shelf.Items.Add(ShelfID);
+                    if (item != null)
+                    {
+                        listBox_Shelf.Items.Add(item.ShelfID);
+                    }
                 }
                 listBox_Shelf.SelectedIndex = 0;
             }
@@ -545,6 +620,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void BindData()
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             pnlEdit.ClearControl();
             pnlEdit.OpenControl(false, PanelEditControls.ToArray());
 
@@ -564,7 +641,7 @@ namespace AllCashUFormsApp.View.Page
 
             dtCustomer = new DataTable();
             dtCustomer = bu.GetCustomerData(_params);
-
+          
             if (dtCustomer.Rows.Count > 0)
                 dtCustomer.Columns["Seq"].ReadOnly = false; //last edit by adisorn 02/02/2022
 
@@ -573,10 +650,25 @@ namespace AllCashUFormsApp.View.Page
 
             foreach (DataRow r in dtCustomer.Rows)
             {
-                int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
-                newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
-                    , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
-                    , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
+                
+                if (chkShelf.Checked) //adisorn 19-09-2022
+                {
+                    string _ShelfID = r["ShelfID"].ToString();
+                    if (!string.IsNullOrEmpty(_ShelfID))
+                    {
+                        int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
+                        newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
+                            , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
+                            , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
+                    }
+                }
+                else
+                {
+                    int _ImageCust = Convert.ToInt32(r["ImageCustomer"]);
+                    newTable.Rows.Add(r["CustomerID"], r["CustName"], _ImageCust
+                        , r["ShopTypeName"], r["SalAreaID"], r["SalAreaName"], r["WHID"], r["Seq"], r["FlagMember"]
+                        , r["Latitude"], r["Longitude"], r["BillTo"], r["Telephone"]);
+                }
             }
 
             grdList.DataSource = newTable;
@@ -585,6 +677,8 @@ namespace AllCashUFormsApp.View.Page
             SetGridView(); //SetFlagMember and ImageCustomer , set colour on row gridview
             SetButtonAfterBindGridView();
             SelectDetails(null);
+
+            Cursor.Current = Cursors.Default;
         }
 
         private void PrePareSaleArea(bool flagChange = false)
@@ -647,7 +741,7 @@ namespace AllCashUFormsApp.View.Page
             btnSaleEmp.Enabled = false;
 
             //edit Superadmin Only 
-            if (Helper.tbl_Users.RoleID == 10)  //adisorn 17-06-2022
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)  //adisorn 17-06-2022
             {
                 txtLatitude.DisableTextBox(false);
                 txtLongitude.DisableTextBox(false);
@@ -854,6 +948,8 @@ namespace AllCashUFormsApp.View.Page
         #region Method
         private void frmCustomer_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
@@ -890,7 +986,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            SelectDetails(e);
+            //SelectDetails(e);
         }
 
         private void txtWHCode_TextChanged(object sender, EventArgs e)
@@ -1085,6 +1181,8 @@ namespace AllCashUFormsApp.View.Page
                 if (!cfMsg.ConfirmMessageBox(title))
                     return;
 
+                Cursor.Current = Cursors.WaitCursor;
+
                 int ret = 0;
                 var Customer = new tbl_ArCustomer();
                 int flagDel = rdoN.Checked ? 0 : 1;
@@ -1141,6 +1239,8 @@ namespace AllCashUFormsApp.View.Page
 
                 ret = bu.UpdateData(Customer);
 
+                Cursor.Current = Cursors.Default;
+
                 if (ret == 1)
                 {
                     string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
@@ -1157,9 +1257,11 @@ namespace AllCashUFormsApp.View.Page
                 {
                     this.ShowProcessErr();
                 }
+
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 ex.Message.ShowErrorMessage();
             }
         }
@@ -1176,74 +1278,77 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
+                WarehouseID = txtWHCode.Text;
+                _CustomerID = txtCustomerID.Text;
+
                 page = "add";
                 frmShelf f = new frmShelf();
                 f.ShowDialog();
 
-                int ret = 0;
+                SelectDetails(null);
 
-                if (!string.IsNullOrEmpty(shelfID))
-                {
-                    var Shelf_List = new List<tbl_ArCustomerShelf>();
+                //int ret = 0;
 
-                    var custShelf = new tbl_ArCustomerShelf();
+                //if (!string.IsNullOrEmpty(shelfID))
+                //{
+                //    var Shelf_List = new List<tbl_ArCustomerShelf>();
 
-                    listBox_Shelf.Items.Add(shelfID);
+                //    var custShelf = new tbl_ArCustomerShelf();
 
-                    foreach (var item in listBox_Shelf.Items)
-                    {
-                        Shelf_List = buShelf.GetCustomerShelf(x => x.CustomerID == txtCustomerID.Text && x.FlagDel == false && x.ShelfID == item.ToString());
+                //    listBox_Shelf.Items.Add(shelfID);
 
-                        if (Shelf_List.Count == 0)
-                        {
-                            custShelf = new tbl_ArCustomerShelf();
+                //    foreach (var item in listBox_Shelf.Items)
+                //    {
+                //        Shelf_List = buShelf.GetCustomerShelf(x => x.CustomerID == txtCustomerID.Text && x.FlagDel == false && x.ShelfID == item.ToString());
 
-                            var CustShelfList = buShelf.GetCustShelf();
+                //        if (Shelf_List.Count == 0)
+                //        {
+                //            custShelf = new tbl_ArCustomerShelf();
 
-                            if (CustShelfList.Count > 0)
-                            {
-                                custShelf.AutoID = CustShelfList.Max(x => x.AutoID) + 1;
-                            }
-                            else
-                            {
-                                custShelf.AutoID = 0;
-                            }
+                //            var CustShelfList = buShelf.GetCustShelf();
 
-                            custShelf.CustomerID = txtCustomerID.Text;
-                            custShelf.ProductID = bu.GetProduct(x => x.ProductShortName.Contains("ชั้นวาง")).First().ProductID;
-                            custShelf.ShelfID = item.ToString();
-                            custShelf.WHID = txtWHCode.Text;
+                //            if (CustShelfList.Count > 0)
+                //                custShelf.AutoID = CustShelfList.Max(x => x.AutoID) + 1;
+                //            else
+                //                custShelf.AutoID = 0;
 
-                            custShelf.CrDate = DateTime.Now;
-                            custShelf.CrUser = Helper.tbl_Users.Username;
+                //            custShelf.CustomerID = txtCustomerID.Text;
+                //            custShelf.ProductID = bu.GetProduct(x => x.ProductShortName.Contains("ชั้นวาง")).First().ProductID;
+                //            custShelf.ShelfID = item.ToString();
+                //            custShelf.WHID = txtWHCode.Text;
 
-                            custShelf.FlagDel = false;
-                            custShelf.FlagSend = false;
-                            custShelf.FlagNew = true;
-                            custShelf.FlagEdit = false;
+                //            custShelf.CrDate = DateTime.Now;
+                //            custShelf.CrUser = Helper.tbl_Users.Username;
 
-                            ret = buShelf.UpdateData(custShelf);
-                        }
+                //            custShelf.FlagDel = false;
+                //            custShelf.FlagSend = false;
+                //            custShelf.FlagNew = true;
+                //            custShelf.FlagEdit = false;
 
-                    }
-                    if (ret == 1)
-                    {
-                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                        msg.ShowInfoMessage();
-                    }
-                    else
-                    {
-                        this.ShowProcessErr();
-                        return;
-                    }
-                }
+                //            if (item.ToString() == shelfID)
+                //            {
+                //                custShelf.ImagePath = Comment;
+                //            }
+
+                //            ret = buShelf.UpdateData(custShelf);
+                //        }
+
+                //    }
+                //    if (ret == 1)
+                //    {
+                //        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                //        msg.ShowInfoMessage();
+                //    }
+                //    else
+                //    {
+                //        this.ShowProcessErr();
+                //    }
+                //}
             }
-
             catch (Exception ex)
             {
                 ex.Message.ShowErrorMessage();
             }
-
         }
 
         private void btnRemoveShelf_Click(object sender, EventArgs e)
@@ -1276,6 +1381,7 @@ namespace AllCashUFormsApp.View.Page
                     string msg = "ลบข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
                     listBox_Shelf.Items.RemoveAt(listBox_Shelf.Items.IndexOf(listBox_Shelf.SelectedItem));
+                    SelectDetails(null);
                 }
                 else
                 {
@@ -1284,7 +1390,7 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
-                string msg = "กรุณาเลือกเลข Shelf ที่ต้องการลบ !!";
+                string msg = "กรุณาเลือกเลข Shelf ที่ต้องการลบ!!";
                 msg.ShowWarningMessage();
             }
         }
@@ -1295,6 +1401,8 @@ namespace AllCashUFormsApp.View.Page
             string title = "ทำการยืนยัน!!";
             if (!cfMsg.ConfirmMessageBox(title))
                 return;
+
+            Cursor.Current = Cursors.WaitCursor;
 
             int ret = 0;
             var cData = new tbl_ArCustomer();
@@ -1311,6 +1419,7 @@ namespace AllCashUFormsApp.View.Page
 
             ret = bu.UpdateData(cData);
 
+            Cursor.Current = Cursors.Default;
             if (ret == 1)
             {
                 string msg = "บันทึกข้อมูลเรียบร้อยแล้ว !!";
@@ -1385,8 +1494,8 @@ namespace AllCashUFormsApp.View.Page
                 var ListCustomerID = new List<string>();
                 for (int i = 0; i < grdList.RowCount; i++)
                 {
-                    string _CustomerID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
-                    ListCustomerID.Add(_CustomerID);
+                    string cID = grdList.Rows[i].Cells["colCustomerID"].Value.ToString();
+                    ListCustomerID.Add(cID);
                 }
 
                 var allCustomerID = string.Join(",", ListCustomerID);
@@ -1562,7 +1671,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void grdList_SelectionChanged(object sender, EventArgs e)
         {
-            //SelectDetails(null); //edit by sailom 24/10/2021
+            SelectDetails(null); //edit by sailom 24/10/2021
         }
 
         private void picCustomerImg_Click(object sender, EventArgs e)
@@ -1833,6 +1942,25 @@ namespace AllCashUFormsApp.View.Page
                           DragDropEffects.Move);
                 }
             }
+        }
+
+        private void listBox_Shelf_DoubleClick(object sender, EventArgs e)
+        {
+            //shelfID = listBox_Shelf.SelectedItem.ToString();
+            WarehouseID = txtWHCode.Text;
+            _CustomerID = txtCustomerID.Text;
+            shelfID = listShelf[listBox_Shelf.SelectedIndex].ShelfID;
+      
+            page = "edit";
+            frmShelf f = new frmShelf();
+            f.ShowDialog();
+
+            SelectDetails(null);
+        }
+
+        private void grdList_Validating(object sender, CancelEventArgs e)
+        {
+
         }
 
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)

@@ -463,6 +463,28 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+        public static int UpdateSQL(this tbl_PODetail tbl_PODetail, string sqlCmd)
+        {
+            string msg = "start PODetailDao=>UpdateSQL";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                ret = My_DataTable_Extensions.ExecuteSQLScalar(sqlCmd, CommandType.Text);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PODetail != null ? tbl_PODetail.GetType() : null);
+            }
+
+            msg = "end PODetailDao=>UpdateSQL";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+
         /// <summary>
         /// remove data
         /// </summary>
@@ -662,6 +684,23 @@ namespace AllCashUFormsApp
             msg.WriteLog(null);
 
             return ret;
+        }
+
+        public static List<tbl_PODetail> GetPODetail_AllBranch(this tbl_PODetail tbl_PODetail, Dictionary<string, object> Params)
+        {
+            List<tbl_PODetail> list = new List<tbl_PODetail>();
+            try
+            {
+                string sql = "proc_PODetail_GetData_AllBranch";
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteStoreToList(typeof(tbl_PODetail), sql, Params);
+                list = dynamicListReturned.Cast<tbl_PODetail>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PODetail.GetType());
+            }
+
+            return list;
         }
 
     }

@@ -27,6 +27,39 @@ namespace AllCashUFormsApp.Controller
             _rlDocTypePredicate = (x => x.DocTypeCode.Trim() == "RL");
         }
 
+        /// <summary>
+        /// Cancel RL stock invmovement from Back-End
+        /// </summary>
+        /// <param name="rlDocNo"></param>
+        /// <param name="edUser"></param>
+        /// <returns></returns>
+        public bool FixRLWhenCancel(string rlDocNo, string edUser)
+        {
+            bool ret = false;
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@RLDocNo", rlDocNo);
+                sqlParmas.Add("@EdUser", edUser); 
+
+                string sql = "proc_tbl_InvMovement_RL_Fix";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString() == "1";
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return false;
+            }
+        }
+
         public bool ManualUpdateInvWarehouse(DateTime docDate)
         {
             try
@@ -202,6 +235,22 @@ namespace AllCashUFormsApp.Controller
                 newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
                 return newTable;
 
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
+        public virtual DataTable GetDataTable_AllBranch(Dictionary<string, object> Params)
+        {
+            try
+            {
+                DataTable newTable = new DataTable();
+                string sql = "proc_RL_GetDataTable_AllBranch";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, Params);
+                return newTable;
             }
             catch (Exception ex)
             {

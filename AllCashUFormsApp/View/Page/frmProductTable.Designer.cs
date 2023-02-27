@@ -122,13 +122,15 @@
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.pnlEdit = new System.Windows.Forms.Panel();
-            this.btnN = new System.Windows.Forms.Button();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.rdoCancel = new System.Windows.Forms.RadioButton();
+            this.rdoNormal = new System.Windows.Forms.RadioButton();
+            this.label16 = new System.Windows.Forms.Label();
             this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.label9 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.lbl_Status = new System.Windows.Forms.Label();
             this.lbl_Date = new System.Windows.Forms.Label();
             this.txtPriceGroupName = new System.Windows.Forms.TextBox();
             this.lbl_Name = new System.Windows.Forms.Label();
@@ -215,6 +217,7 @@
             this.pnlSearch.SuspendLayout();
             this.panel8.SuspendLayout();
             this.pnlEdit.SuspendLayout();
+            this.panel14.SuspendLayout();
             this.tabPriceTable.SuspendLayout();
             this.pnlPG_Table_BackGround.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -694,7 +697,7 @@
             this.btnCancelSend.ForeColor = System.Drawing.Color.Black;
             this.btnCancelSend.Image = ((System.Drawing.Image)(resources.GetObject("btnCancelSend.Image")));
             this.btnCancelSend.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancelSend.Location = new System.Drawing.Point(132, 4);
+            this.btnCancelSend.Location = new System.Drawing.Point(128, 4);
             this.btnCancelSend.Name = "btnCancelSend";
             this.btnCancelSend.Size = new System.Drawing.Size(113, 42);
             this.btnCancelSend.TabIndex = 123;
@@ -711,7 +714,7 @@
             this.btnSendData.ForeColor = System.Drawing.Color.Black;
             this.btnSendData.Image = ((System.Drawing.Image)(resources.GetObject("btnSendData.Image")));
             this.btnSendData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSendData.Location = new System.Drawing.Point(13, 4);
+            this.btnSendData.Location = new System.Drawing.Point(11, 4);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(113, 42);
             this.btnSendData.TabIndex = 122;
@@ -806,7 +809,6 @@
             this.grdPriceGroup.TabIndex = 166;
             this.grdPriceGroup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdPriceGroup_CellClick);
             this.grdPriceGroup.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdPriceGroup_RowPostPaint);
-            this.grdPriceGroup.SelectionChanged += new System.EventHandler(this.grdPriceGroup_SelectionChanged);
             // 
             // colChkPriceGroup
             // 
@@ -976,7 +978,7 @@
             // 
             // pnlSearch
             // 
-            this.pnlSearch.BackColor = System.Drawing.Color.White;
+            this.pnlSearch.BackColor = System.Drawing.Color.Azure;
             this.pnlSearch.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlSearch.Controls.Add(this.btnSearch);
             this.pnlSearch.Controls.Add(this.txtSearch);
@@ -998,7 +1000,7 @@
             this.btnSearch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearch.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(624, 4);
+            this.btnSearch.Location = new System.Drawing.Point(415, 4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(68, 26);
             this.btnSearch.TabIndex = 222;
@@ -1010,10 +1012,10 @@
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtSearch.Location = new System.Drawing.Point(105, 6);
+            this.txtSearch.Location = new System.Drawing.Point(87, 6);
             this.txtSearch.MaxLength = 200;
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(513, 23);
+            this.txtSearch.Size = new System.Drawing.Size(322, 23);
             this.txtSearch.TabIndex = 221;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
@@ -1023,7 +1025,7 @@
             this.panel8.Controls.Add(this.rdoC);
             this.panel8.Controls.Add(this.rdoN);
             this.panel8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.panel8.Location = new System.Drawing.Point(105, 35);
+            this.panel8.Location = new System.Drawing.Point(88, 32);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(134, 25);
             this.panel8.TabIndex = 220;
@@ -1038,7 +1040,6 @@
             this.rdoC.TabIndex = 18;
             this.rdoC.Text = "ยกเลิก";
             this.rdoC.UseVisualStyleBackColor = true;
-            this.rdoC.CheckedChanged += new System.EventHandler(this.rdoC_CheckedChanged);
             // 
             // rdoN
             // 
@@ -1053,38 +1054,37 @@
             this.rdoN.TabStop = true;
             this.rdoN.Text = "ปกติ";
             this.rdoN.UseVisualStyleBackColor = false;
-            this.rdoN.CheckedChanged += new System.EventHandler(this.rdoN_CheckedChanged);
             // 
             // label26
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label26.Location = new System.Drawing.Point(38, 39);
+            this.label26.Location = new System.Drawing.Point(31, 36);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(61, 16);
+            this.label26.Size = new System.Drawing.Size(53, 16);
             this.label26.TabIndex = 219;
-            this.label26.Text = "สถานะ  : ";
+            this.label26.Text = "สถานะ :";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label27.Location = new System.Drawing.Point(30, 8);
+            this.label27.Location = new System.Drawing.Point(23, 8);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(69, 16);
+            this.label27.Size = new System.Drawing.Size(61, 16);
             this.label27.TabIndex = 218;
-            this.label27.Text = "คำค้นหา  : ";
+            this.label27.Text = "คำค้นหา :";
             // 
             // pnlEdit
             // 
             this.pnlEdit.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pnlEdit.Controls.Add(this.btnN);
+            this.pnlEdit.Controls.Add(this.panel14);
+            this.pnlEdit.Controls.Add(this.label16);
             this.pnlEdit.Controls.Add(this.dtpEndDate);
             this.pnlEdit.Controls.Add(this.dtpStartDate);
             this.pnlEdit.Controls.Add(this.label9);
             this.pnlEdit.Controls.Add(this.label12);
             this.pnlEdit.Controls.Add(this.label8);
-            this.pnlEdit.Controls.Add(this.lbl_Status);
             this.pnlEdit.Controls.Add(this.lbl_Date);
             this.pnlEdit.Controls.Add(this.txtPriceGroupName);
             this.pnlEdit.Controls.Add(this.lbl_Name);
@@ -1096,84 +1096,111 @@
             this.pnlEdit.Size = new System.Drawing.Size(836, 111);
             this.pnlEdit.TabIndex = 0;
             // 
-            // btnN
+            // panel14
             // 
-            this.btnN.Location = new System.Drawing.Point(105, 85);
-            this.btnN.Name = "btnN";
-            this.btnN.Size = new System.Drawing.Size(75, 23);
-            this.btnN.TabIndex = 208;
-            this.btnN.Text = "ปกติ";
-            this.btnN.UseVisualStyleBackColor = true;
-            this.btnN.Click += new System.EventHandler(this.btnN_Click);
+            this.panel14.BackColor = System.Drawing.Color.Azure;
+            this.panel14.Controls.Add(this.rdoCancel);
+            this.panel14.Controls.Add(this.rdoNormal);
+            this.panel14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.panel14.Location = new System.Drawing.Point(88, 78);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(134, 25);
+            this.panel14.TabIndex = 233;
+            // 
+            // rdoCancel
+            // 
+            this.rdoCancel.AutoSize = true;
+            this.rdoCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.rdoCancel.Location = new System.Drawing.Point(67, 3);
+            this.rdoCancel.Name = "rdoCancel";
+            this.rdoCancel.Size = new System.Drawing.Size(62, 20);
+            this.rdoCancel.TabIndex = 18;
+            this.rdoCancel.Text = "ยกเลิก";
+            this.rdoCancel.UseVisualStyleBackColor = true;
+            this.rdoCancel.Visible = false;
+            // 
+            // rdoNormal
+            // 
+            this.rdoNormal.AutoSize = true;
+            this.rdoNormal.BackColor = System.Drawing.Color.Azure;
+            this.rdoNormal.Checked = true;
+            this.rdoNormal.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.rdoNormal.Location = new System.Drawing.Point(4, 3);
+            this.rdoNormal.Name = "rdoNormal";
+            this.rdoNormal.Size = new System.Drawing.Size(50, 20);
+            this.rdoNormal.TabIndex = 17;
+            this.rdoNormal.TabStop = true;
+            this.rdoNormal.Text = "ปกติ";
+            this.rdoNormal.UseVisualStyleBackColor = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.label16.Location = new System.Drawing.Point(31, 82);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(53, 16);
+            this.label16.TabIndex = 232;
+            this.label16.Text = "สถานะ :";
             // 
             // dtpEndDate
             // 
             this.dtpEndDate.CustomFormat = "";
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpEndDate.Location = new System.Drawing.Point(313, 59);
+            this.dtpEndDate.Location = new System.Drawing.Point(295, 51);
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(114, 23);
-            this.dtpEndDate.TabIndex = 207;
+            this.dtpEndDate.TabIndex = 228;
             // 
             // dtpStartDate
             // 
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpStartDate.Location = new System.Drawing.Point(106, 59);
+            this.dtpStartDate.Location = new System.Drawing.Point(88, 51);
             this.dtpStartDate.Name = "dtpStartDate";
             this.dtpStartDate.Size = new System.Drawing.Size(114, 23);
-            this.dtpStartDate.TabIndex = 207;
+            this.dtpStartDate.TabIndex = 229;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label9.ForeColor = System.Drawing.Color.Red;
-            this.label9.Location = new System.Drawing.Point(47, 36);
+            this.label9.Location = new System.Drawing.Point(34, 30);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(16, 16);
-            this.label9.TabIndex = 205;
+            this.label9.TabIndex = 226;
             this.label9.Text = "*";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.label12.Location = new System.Drawing.Point(232, 62);
+            this.label12.Location = new System.Drawing.Point(214, 54);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(76, 16);
-            this.label12.TabIndex = 201;
-            this.label12.Text = "วันที่สิ้นสุด : ";
+            this.label12.Size = new System.Drawing.Size(72, 16);
+            this.label12.TabIndex = 222;
+            this.label12.Text = "วันที่สิ้นสุด :";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(44, 10);
+            this.label8.Location = new System.Drawing.Point(29, 7);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(16, 16);
-            this.label8.TabIndex = 206;
+            this.label8.TabIndex = 227;
             this.label8.Text = "*";
-            // 
-            // lbl_Status
-            // 
-            this.lbl_Status.AutoSize = true;
-            this.lbl_Status.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Status.Location = new System.Drawing.Point(42, 88);
-            this.lbl_Status.Name = "lbl_Status";
-            this.lbl_Status.Size = new System.Drawing.Size(57, 16);
-            this.lbl_Status.TabIndex = 201;
-            this.lbl_Status.Text = "สถานะ : ";
             // 
             // lbl_Date
             // 
             this.lbl_Date.AutoSize = true;
             this.lbl_Date.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Date.Location = new System.Drawing.Point(22, 62);
+            this.lbl_Date.Location = new System.Drawing.Point(10, 53);
             this.lbl_Date.Name = "lbl_Date";
-            this.lbl_Date.Size = new System.Drawing.Size(78, 16);
-            this.lbl_Date.TabIndex = 201;
-            this.lbl_Date.Text = "วันที่เริ่มต้น : ";
+            this.lbl_Date.Size = new System.Drawing.Size(74, 16);
+            this.lbl_Date.TabIndex = 223;
+            this.lbl_Date.Text = "วันที่เริ่มต้น :";
             // 
             // txtPriceGroupName
             // 
@@ -1181,21 +1208,21 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPriceGroupName.BackColor = System.Drawing.SystemColors.Window;
             this.txtPriceGroupName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtPriceGroupName.Location = new System.Drawing.Point(106, 33);
+            this.txtPriceGroupName.Location = new System.Drawing.Point(88, 27);
             this.txtPriceGroupName.MaxLength = 50;
             this.txtPriceGroupName.Name = "txtPriceGroupName";
-            this.txtPriceGroupName.Size = new System.Drawing.Size(510, 23);
-            this.txtPriceGroupName.TabIndex = 199;
+            this.txtPriceGroupName.Size = new System.Drawing.Size(509, 23);
+            this.txtPriceGroupName.TabIndex = 220;
             // 
             // lbl_Name
             // 
             this.lbl_Name.AutoSize = true;
             this.lbl_Name.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Name.Location = new System.Drawing.Point(59, 36);
+            this.lbl_Name.Location = new System.Drawing.Point(50, 30);
             this.lbl_Name.Name = "lbl_Name";
-            this.lbl_Name.Size = new System.Drawing.Size(41, 16);
-            this.lbl_Name.TabIndex = 202;
-            this.lbl_Name.Text = " ชื่อ : ";
+            this.lbl_Name.Size = new System.Drawing.Size(33, 16);
+            this.lbl_Name.TabIndex = 224;
+            this.lbl_Name.Text = "ชื่อ :";
             // 
             // txtPriceGroupCode
             // 
@@ -1203,21 +1230,21 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPriceGroupCode.BackColor = System.Drawing.SystemColors.Window;
             this.txtPriceGroupCode.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtPriceGroupCode.Location = new System.Drawing.Point(106, 7);
+            this.txtPriceGroupCode.Location = new System.Drawing.Point(87, 3);
             this.txtPriceGroupCode.MaxLength = 2;
             this.txtPriceGroupCode.Name = "txtPriceGroupCode";
             this.txtPriceGroupCode.Size = new System.Drawing.Size(510, 23);
-            this.txtPriceGroupCode.TabIndex = 200;
+            this.txtPriceGroupCode.TabIndex = 221;
             // 
             // lbl_Code
             // 
             this.lbl_Code.AutoSize = true;
             this.lbl_Code.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.lbl_Code.Location = new System.Drawing.Point(53, 9);
+            this.lbl_Code.Location = new System.Drawing.Point(44, 7);
             this.lbl_Code.Name = "lbl_Code";
-            this.lbl_Code.Size = new System.Drawing.Size(47, 16);
-            this.lbl_Code.TabIndex = 203;
-            this.lbl_Code.Text = " รหัส : ";
+            this.lbl_Code.Size = new System.Drawing.Size(39, 16);
+            this.lbl_Code.TabIndex = 225;
+            this.lbl_Code.Text = "รหัส :";
             // 
             // tabPriceTable
             // 
@@ -1246,9 +1273,9 @@
             // 
             this.panel10.Controls.Add(this.grdPrdPriceGroup);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(0, 94);
+            this.panel10.Location = new System.Drawing.Point(0, 88);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(1244, 449);
+            this.panel10.Size = new System.Drawing.Size(1244, 455);
             this.panel10.TabIndex = 168;
             // 
             // grdPrdPriceGroup
@@ -1274,7 +1301,7 @@
             this.grdPrdPriceGroup.Location = new System.Drawing.Point(0, 0);
             this.grdPrdPriceGroup.Name = "grdPrdPriceGroup";
             this.grdPrdPriceGroup.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.grdPrdPriceGroup.Size = new System.Drawing.Size(1244, 449);
+            this.grdPrdPriceGroup.Size = new System.Drawing.Size(1244, 455);
             this.grdPrdPriceGroup.TabIndex = 0;
             this.grdPrdPriceGroup.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdPrdPriceGroup_CellEndEdit);
             this.grdPrdPriceGroup.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdPrdPriceGroup_CellFormatting);
@@ -1412,7 +1439,7 @@
             this.pnlSearchTab2.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSearchTab2.Location = new System.Drawing.Point(0, 0);
             this.pnlSearchTab2.Name = "pnlSearchTab2";
-            this.pnlSearchTab2.Size = new System.Drawing.Size(1244, 94);
+            this.pnlSearchTab2.Size = new System.Drawing.Size(1244, 88);
             this.pnlSearchTab2.TabIndex = 167;
             // 
             // btnSearchPriceGroup
@@ -1423,7 +1450,7 @@
             this.btnSearchPriceGroup.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearchPriceGroup.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearchPriceGroup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchPriceGroup.Location = new System.Drawing.Point(571, 59);
+            this.btnSearchPriceGroup.Location = new System.Drawing.Point(546, 53);
             this.btnSearchPriceGroup.Name = "btnSearchPriceGroup";
             this.btnSearchPriceGroup.Size = new System.Drawing.Size(70, 26);
             this.btnSearchPriceGroup.TabIndex = 217;
@@ -1434,10 +1461,10 @@
             // 
             // txtSearchProGroup
             // 
-            this.txtSearchProGroup.Location = new System.Drawing.Point(99, 61);
+            this.txtSearchProGroup.Location = new System.Drawing.Point(91, 56);
             this.txtSearchProGroup.MaxLength = 200;
             this.txtSearchProGroup.Name = "txtSearchProGroup";
-            this.txtSearchProGroup.Size = new System.Drawing.Size(466, 23);
+            this.txtSearchProGroup.Size = new System.Drawing.Size(451, 23);
             this.txtSearchProGroup.TabIndex = 145;
             this.txtSearchProGroup.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchProGroup_KeyDown);
             // 
@@ -1445,7 +1472,7 @@
             // 
             this.ddlProductSubGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlProductSubGroup.FormattingEnabled = true;
-            this.ddlProductSubGroup.Location = new System.Drawing.Point(379, 33);
+            this.ddlProductSubGroup.Location = new System.Drawing.Point(356, 31);
             this.ddlProductSubGroup.Name = "ddlProductSubGroup";
             this.ddlProductSubGroup.Size = new System.Drawing.Size(186, 24);
             this.ddlProductSubGroup.TabIndex = 139;
@@ -1454,7 +1481,7 @@
             // 
             this.ddlPriceGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlPriceGroup.FormattingEnabled = true;
-            this.ddlPriceGroup.Location = new System.Drawing.Point(99, 6);
+            this.ddlPriceGroup.Location = new System.Drawing.Point(91, 6);
             this.ddlPriceGroup.Name = "ddlPriceGroup";
             this.ddlPriceGroup.Size = new System.Drawing.Size(159, 24);
             this.ddlPriceGroup.TabIndex = 138;
@@ -1464,7 +1491,7 @@
             // 
             this.ddlProductGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlProductGroup.FormattingEnabled = true;
-            this.ddlProductGroup.Location = new System.Drawing.Point(99, 33);
+            this.ddlProductGroup.Location = new System.Drawing.Point(91, 31);
             this.ddlProductGroup.Name = "ddlProductGroup";
             this.ddlProductGroup.Size = new System.Drawing.Size(159, 24);
             this.ddlProductGroup.TabIndex = 138;
@@ -1475,36 +1502,36 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(21, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 16);
+            this.label3.Size = new System.Drawing.Size(67, 16);
             this.label3.TabIndex = 136;
-            this.label3.Text = "กลุ่มราคา : ";
+            this.label3.Text = "กลุ่มราคา :";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(277, 36);
+            this.label4.Location = new System.Drawing.Point(261, 35);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(99, 16);
+            this.label4.Size = new System.Drawing.Size(95, 16);
             this.label4.TabIndex = 137;
-            this.label4.Text = "กลุ่มย่อยสินค้า : ";
+            this.label4.Text = "กลุ่มย่อยสินค้า :";
             // 
             // lblEmpCode
             // 
             this.lblEmpCode.AutoSize = true;
-            this.lblEmpCode.Location = new System.Drawing.Point(17, 36);
+            this.lblEmpCode.Location = new System.Drawing.Point(17, 33);
             this.lblEmpCode.Name = "lblEmpCode";
-            this.lblEmpCode.Size = new System.Drawing.Size(75, 16);
+            this.lblEmpCode.Size = new System.Drawing.Size(71, 16);
             this.lblEmpCode.TabIndex = 136;
-            this.lblEmpCode.Text = "กลุ่มสินค้า : ";
+            this.lblEmpCode.Text = "กลุ่มสินค้า :";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(41, 66);
+            this.label6.Location = new System.Drawing.Point(41, 58);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(51, 16);
+            this.label6.Size = new System.Drawing.Size(47, 16);
             this.label6.TabIndex = 132;
-            this.label6.Text = "ค้นหา : ";
+            this.label6.Text = "ค้นหา :";
             // 
             // panel9
             // 
@@ -1602,10 +1629,10 @@
             this.colBuyPrice_t3,
             this.colComPrice_t3});
             this.grdCommission.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdCommission.Location = new System.Drawing.Point(0, 94);
+            this.grdCommission.Location = new System.Drawing.Point(0, 89);
             this.grdCommission.Name = "grdCommission";
             this.grdCommission.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.grdCommission.Size = new System.Drawing.Size(1250, 484);
+            this.grdCommission.Size = new System.Drawing.Size(1250, 489);
             this.grdCommission.TabIndex = 168;
             this.grdCommission.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdCommission_CellEndEdit);
             this.grdCommission.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdCommission_CellFormatting);
@@ -1759,7 +1786,7 @@
             this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(1250, 94);
+            this.panel12.Size = new System.Drawing.Size(1250, 89);
             this.panel12.TabIndex = 170;
             // 
             // btnSearchCommission
@@ -1770,7 +1797,7 @@
             this.btnSearchCommission.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSearchCommission.Image = global::AllCashUFormsApp.Properties.Resources.search;
             this.btnSearchCommission.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchCommission.Location = new System.Drawing.Point(571, 58);
+            this.btnSearchCommission.Location = new System.Drawing.Point(554, 51);
             this.btnSearchCommission.Name = "btnSearchCommission";
             this.btnSearchCommission.Size = new System.Drawing.Size(70, 26);
             this.btnSearchCommission.TabIndex = 217;
@@ -1781,26 +1808,27 @@
             // 
             // txtSearchCommission
             // 
-            this.txtSearchCommission.Location = new System.Drawing.Point(99, 61);
+            this.txtSearchCommission.Location = new System.Drawing.Point(91, 56);
             this.txtSearchCommission.MaxLength = 200;
             this.txtSearchCommission.Name = "txtSearchCommission";
-            this.txtSearchCommission.Size = new System.Drawing.Size(466, 23);
+            this.txtSearchCommission.Size = new System.Drawing.Size(458, 23);
             this.txtSearchCommission.TabIndex = 145;
+            this.txtSearchCommission.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchCommission_KeyDown);
             // 
             // cbbProductSubGroup
             // 
             this.cbbProductSubGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbProductSubGroup.FormattingEnabled = true;
-            this.cbbProductSubGroup.Location = new System.Drawing.Point(379, 33);
+            this.cbbProductSubGroup.Location = new System.Drawing.Point(360, 30);
             this.cbbProductSubGroup.Name = "cbbProductSubGroup";
-            this.cbbProductSubGroup.Size = new System.Drawing.Size(186, 24);
+            this.cbbProductSubGroup.Size = new System.Drawing.Size(189, 24);
             this.cbbProductSubGroup.TabIndex = 139;
             // 
             // cbbPriceGroup
             // 
             this.cbbPriceGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbPriceGroup.FormattingEnabled = true;
-            this.cbbPriceGroup.Location = new System.Drawing.Point(99, 6);
+            this.cbbPriceGroup.Location = new System.Drawing.Point(91, 6);
             this.cbbPriceGroup.Name = "cbbPriceGroup";
             this.cbbPriceGroup.Size = new System.Drawing.Size(159, 24);
             this.cbbPriceGroup.TabIndex = 138;
@@ -1810,7 +1838,7 @@
             // 
             this.cbbProductGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbProductGroup.FormattingEnabled = true;
-            this.cbbProductGroup.Location = new System.Drawing.Point(99, 33);
+            this.cbbProductGroup.Location = new System.Drawing.Point(91, 31);
             this.cbbProductGroup.Name = "cbbProductGroup";
             this.cbbProductGroup.Size = new System.Drawing.Size(159, 24);
             this.cbbProductGroup.TabIndex = 138;
@@ -1821,36 +1849,36 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(21, 10);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(71, 16);
+            this.label11.Size = new System.Drawing.Size(67, 16);
             this.label11.TabIndex = 136;
-            this.label11.Text = "กลุ่มราคา : ";
+            this.label11.Text = "กลุ่มราคา :";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(277, 36);
+            this.label13.Location = new System.Drawing.Point(259, 34);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(99, 16);
+            this.label13.Size = new System.Drawing.Size(95, 16);
             this.label13.TabIndex = 137;
-            this.label13.Text = "กลุ่มย่อยสินค้า : ";
+            this.label13.Text = "กลุ่มย่อยสินค้า :";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(17, 36);
+            this.label14.Location = new System.Drawing.Point(17, 34);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(75, 16);
+            this.label14.Size = new System.Drawing.Size(71, 16);
             this.label14.TabIndex = 136;
-            this.label14.Text = "กลุ่มสินค้า : ";
+            this.label14.Text = "กลุ่มสินค้า :";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(41, 66);
+            this.label15.Location = new System.Drawing.Point(41, 58);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(51, 16);
+            this.label15.Size = new System.Drawing.Size(47, 16);
             this.label15.TabIndex = 132;
-            this.label15.Text = "ค้นหา : ";
+            this.label15.Text = "ค้นหา :";
             // 
             // panel3
             // 
@@ -1881,6 +1909,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmProductTable";
             this.Text = "4.4 ตารางราคาสินค้า";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmProductTable_FormClosed);
             this.Load += new System.EventHandler(this.frmProductTable_Load);
             this.pnlMenuPic.ResumeLayout(false);
@@ -1914,6 +1943,8 @@
             this.panel8.PerformLayout();
             this.pnlEdit.ResumeLayout(false);
             this.pnlEdit.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
             this.tabPriceTable.ResumeLayout(false);
             this.pnlPG_Table_BackGround.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
@@ -1967,13 +1998,6 @@
         private System.Windows.Forms.Panel pnlEdit2;
         private System.Windows.Forms.Panel pnlSearch;
         private System.Windows.Forms.Panel pnlEdit;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label lbl_Date;
-        private System.Windows.Forms.TextBox txtPriceGroupName;
-        private System.Windows.Forms.Label lbl_Name;
-        private System.Windows.Forms.TextBox txtPriceGroupCode;
-        private System.Windows.Forms.Label lbl_Code;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel6;
@@ -1987,12 +2011,7 @@
         private System.Windows.Forms.DataGridView grdPriceGroup;
         private System.Windows.Forms.Label lbl_qty_groupPrice;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.DateTimePicker dtpStartDate;
-        private System.Windows.Forms.DateTimePicker dtpEndDate;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox chkBoxSelectBranch;
-        private System.Windows.Forms.Button btnN;
-        private System.Windows.Forms.Label lbl_Status;
         private System.Windows.Forms.Panel pnlPG_Table_BackGround;
         private System.Windows.Forms.Panel pnlSearchTab2;
         private System.Windows.Forms.Panel panel9;
@@ -2068,5 +2087,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colOnlineStatus;
         private System.Windows.Forms.Button btnCancelSend;
         private System.Windows.Forms.Button btnSendData;
+        private System.Windows.Forms.DateTimePicker dtpEndDate;
+        private System.Windows.Forms.DateTimePicker dtpStartDate;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lbl_Date;
+        private System.Windows.Forms.TextBox txtPriceGroupName;
+        private System.Windows.Forms.Label lbl_Name;
+        private System.Windows.Forms.TextBox txtPriceGroupCode;
+        private System.Windows.Forms.Label lbl_Code;
+        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.RadioButton rdoCancel;
+        private System.Windows.Forms.RadioButton rdoNormal;
+        private System.Windows.Forms.Label label16;
     }
 }

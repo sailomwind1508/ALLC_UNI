@@ -49,6 +49,8 @@ namespace AllCashUFormsApp.View.Page
         }
         private void frmBrokenReason_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             txtRemarkRejectID.DisableTextBox(true);
             txtRemarkRejectName.DisableTextBox(true);
@@ -207,7 +209,7 @@ namespace AllCashUFormsApp.View.Page
             bool ret = true;
             List<string> errList = new List<string>();
 
-            if (ret) 
+            if (ret)
             {
                 errList.SetErrMessage(ValidateSaveCtrls);
             }
@@ -245,7 +247,7 @@ namespace AllCashUFormsApp.View.Page
 
                     PrdRemarkReject.RemarkRejectID = Convert.ToInt32(txtRemarkRejectID.Text);
                     PrdRemarkReject.RemarkRejectName = txtRemarkRejectName.Text;
-                   
+
                     PrdRemarkReject.EdDate = DateTime.Now;
                     PrdRemarkReject.EdUser = Helper.tbl_Users.Username;
                 }
@@ -312,10 +314,10 @@ namespace AllCashUFormsApp.View.Page
                     if (!cfMsg.ConfirmMessageBox(title))
                         return;
                 }
-               
+
                 int ret = 0;
 
-                var PrdRemarkReject = bu.GetProductRemarkReject(x=>x.RemarkRejectID == Convert.ToInt32(txtRemarkRejectID.Text));
+                var PrdRemarkReject = bu.GetProductRemarkReject(x => x.RemarkRejectID == Convert.ToInt32(txtRemarkRejectID.Text));
 
                 if (PrdRemarkReject.Count > 0)
                 {

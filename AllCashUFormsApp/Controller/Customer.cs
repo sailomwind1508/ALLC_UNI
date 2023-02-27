@@ -1,7 +1,9 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -308,7 +310,29 @@ namespace AllCashUFormsApp.Controller
 
         public DataTable GetCustomerData(Dictionary<string, object> _params)
         {
+            //DataTable dt = new DataTable();
+
+            ////check all money credit by sailom.k 22/02/2023
+            //BankNote bu = new BankNote();
+            //var wh = bu.GetAllBranchWarehouse();
+            //if (wh != null && wh.Count > 0)
+            //{
+            //    if (wh.Any(x => x.DriverEmpID == "allmoney_credit"))
+            //    {
+            //        dt = (new tbl_ArCustomer()).GetCustomerData_AllMoney(_params);
+            //    }
+            //    else
+            //        dt = (new tbl_ArCustomer()).GetCustomerData(_params);
+            //}
+
+            //return dt;
+
             return (new tbl_ArCustomer()).GetCustomerData(_params);
+        }
+
+        public DataTable GetCustomerByNames(Dictionary<string, object> _params)
+        {
+            return (new tbl_ArCustomer()).GetCustomerByNames(_params);
         }
 
         public DataTable GetCustomerImage(Dictionary<string, object> _params)
@@ -346,6 +370,11 @@ namespace AllCashUFormsApp.Controller
             return (new tbl_ArCustomer()).GetCustomerByWHID_DataTable(WHID, SalAreaID);
         }
 
+        public DataTable GetCustomerByWHID_DataTable(string WHID, string SalAreaID, string customerID)
+        {
+            return (new tbl_ArCustomer()).GetCustomerByWHID_DataTable(WHID, SalAreaID, customerID);
+        }
+
         public DataTable GetCountCustomer()
         {
             return (new tbl_ArCustomer()).GetCountCustomer();
@@ -359,6 +388,44 @@ namespace AllCashUFormsApp.Controller
         public bool ManualUpdateCustomerImage()
         {
             return new tbl_ArCustomer().ManualUpdateCustomerImage();
+        }
+
+        public bool UpdateCustomerLatLong(string customerID, string lat, string lon, string username)
+        {
+            bool ret = false;
+            try
+            {
+                DataTable newTable = new DataTable();
+
+                string sql = "proc_update_customer_latlong";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@CustomerID", customerID);
+                sqlParmas.Add("@Lat", lat);
+                sqlParmas.Add("@Long", lon);
+                sqlParmas.Add("@UserName", username);
+
+                var dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (dt != null && dt.Rows.Count != 0)
+                {
+                    if (dt.Rows[0][0].ToString() == "1")
+                    {
+                        ret = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        public bool CheckLimit_UpdateCustomer(Dictionary<string, object> _params)
+        {
+            return new tbl_ArCustomer().CheckLimit_UpdateCustomer(_params);
         }
     }
 }

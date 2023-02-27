@@ -172,9 +172,10 @@
 
 						<TR>
 							<TD CLASS="gridHeader">No.</TD>
-							<TD CLASS="gridHeader">ตลาด</TD>
+							<TD CLASS="gridHeader">ลำดับ</TD>
 							<TD CLASS="gridHeader">รหัสลูกค้า</TD>
 							<TD CLASS="gridHeader">ประเภทร้านค้า</TD>
+							<TD CLASS="gridHeader">AllMoneyCredit</TD>
 							<TD CLASS="gridHeader">ชื่อลูกค้า</TD>
 							<TD CLASS="gridHeader">ที่อยู่</TD>
 							<TD CLASS="gridHeader">ตำบล</TD>
@@ -208,6 +209,15 @@
 									<xsl:value-of select="ShopTypeName"/>
 								</TD>
 
+								<TD class="SearchResultItem">
+									<xsl:if test="BorrowerFlag=0">
+										No Credit
+									</xsl:if>
+									<xsl:if test="BorrowerFlag=1">
+										Credit
+									</xsl:if>
+								</TD>
+							
 								<TD class="SearchResultItem">
 									<xsl:value-of select="CustName"/>
 								</TD>

@@ -118,7 +118,7 @@
 			<BODY class="content">				
 				<TABLE>
 					<TR>
-						<TD class="stdPageHdr" colspan="8">รายงานส่งเงินประจำวัน</TD>
+						<TD class="stdPageHdr" colspan="9">รายงานส่งเงินประจำวัน</TD>
 					</TR>
 					<TR>
 						<TD class="SearchKey">Depot :</TD>
@@ -136,6 +136,7 @@
 						<TD CLASS="gridHeader">ยอดส่งเงินสด</TD>
 						<TD CLASS="gridHeader">ชำระบิลเครดิต</TD>
 						<TD CLASS="gridHeader">ยอดโอน</TD>
+						<TD CLASS="gridHeader">All Money Credit</TD>
 						<TD CLASS="gridHeader">ค่าธรรมเนียม</TD>
 						<TD CLASS="gridHeader">รวมส่งเงิน</TD>
 						<TD CLASS="gridHeader">รวมยอดขาย</TD>
@@ -156,16 +157,18 @@
 								</xsl:if>
 
 							</TD>
+
 							<TD class="SearchResultItem" align="Right">
 								<xsl:if test="Cheque=0">
 									-
 								</xsl:if>
-								<xsl:if test="Cheque!=0">
+								<xsl:if test="Cheque>0">
 									<xsl:value-of select='format-number(Cheque,"#,##0.00")'/>
 								</xsl:if>
 
 
 							</TD>
+
 							<TD class="SearchResultItem" align="Right">
 								<xsl:if test="Transfer=0">
 									-
@@ -175,12 +178,22 @@
 								</xsl:if>
 			
 							</TD>
+
 							<TD class="SearchResultItem" align="Right">
 								<xsl:if test="Deposit=0">
 									-
 								</xsl:if>
 								<xsl:if test="Deposit!=0">
 									<xsl:value-of select='format-number(Deposit,"#,##0.00")'/>
+								</xsl:if>
+
+							</TD>
+							<TD class="SearchResultItem" align="Right">
+								<xsl:if test="AllMoneyCredit=0">
+									-
+								</xsl:if>
+								<xsl:if test="AllMoneyCredit!=0">
+									<xsl:value-of select='format-number(AllMoneyCredit,"#,##0.00")'/>
 								</xsl:if>
 
 							</TD>
@@ -228,6 +241,9 @@
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Deposit),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
+							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/AllMoneyCredit),"#,##0.00")'/>
+						</TD>
+						<TD Class="subTotals" align="right">
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/TotalSend),"#,##0.00")'/>
 						</TD>
 						<TD Class="subTotals" align="right">
@@ -239,7 +255,7 @@
 					</TR >
 					<TR></TR>
 					<tr>
-						<td ColSpan="6"></td>
+						<td ColSpan="7"></td>
 						<td>รวมส่งจริง</td>
 						<td Class="subTotals" align="right">
 							<xsl:value-of select='format-number(sum(/NewDataSet/Rep_Bank_Note/Send),"#,##0.00")'/>

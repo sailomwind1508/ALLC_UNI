@@ -152,6 +152,8 @@ namespace AllCashUFormsApp.View.Page
 
             if (ddlDocStatus != null && ddlDocStatus.SelectedValue != null)
                 btnPrint.Enabled = ddlDocStatus.SelectedValue.ToString() == "4"; //Last edit by sailom.k 03/11/2021 request by admin UBN
+
+            btnPrint.Enabled = true;
         }
 
         private void CreatePrintBtnList()
@@ -225,8 +227,7 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@DocNo", txdDocNo.Text);
 
             string frmText = ((System.Windows.Forms.ToolStripItem)sender).Text;
-
-            if (isCyrsRpt)
+            if (isCyrsRpt && !string.IsNullOrEmpty(txdDocNo.Text))
             {
                 if (frmText == "พิมพ์ทั้งหมด")
                 {
@@ -257,321 +258,9 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
-            //else if (isPrintAll)
-            //{
-            //    var wh = bu.GetBranchWarehouse(txtWHCode.Text);
-            //    if (frmText == "พิมพ์ทั้งหมด")
-            //    {
-            //        _params = new Dictionary<string, object>();
-            //        _params.Add("@DocNo", txdDocNo.Text);
-
-            //        if (wh != null)
-            //        {
-            //            if (wh.DriverEmpID == "credit")
-            //            {
-            //                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-            //                this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-            //                _params = new Dictionary<string, object>();
-            //                _params.Add("@DocNo", txdDocNo.Text);
-            //                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-            //                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-            //            }
-            //            else
-            //            {
-            //                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-            //                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-            //            }
-            //        }
-
-            //        _params = new Dictionary<string, object>();
-            //        _params.Add("@DocNo", txdDocNo.Text);
-            //        if (wh != null)
-            //        {
-            //            if (wh.DriverEmpID == "credit")
-            //            {
-            //                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-            //                this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-            //                _params = new Dictionary<string, object>();
-            //                _params.Add("@DocNo", txdDocNo.Text);
-            //                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-            //                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-            //            }
-            //            else
-            //            {
-            //                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-            //                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-            //            }
-            //        }
-            //    }
-            //    else if (frmText == "พิมพ์ต้นฉบับ")
-            //    {
-            //        var _params2 = new Dictionary<string, object>();
-            //        var listIvDocNo = bu.GetAllInvVEMaster().Select(x => x.DocNo).ToList();//.Take(10).ToList();
-            //        _params2.Add("@DocNo", listIvDocNo);
-
-            //        if (wh != null)
-            //        {
-            //            //if (wh.DriverEmpID == "credit")
-            //            //{
-            //            //    _params2.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-            //            //    this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-            //            //    _params2 = new Dictionary<string, List<string>>();
-            //            //    _params2.Add("@DocNo", txdDocNo.Text);
-            //            //    _params2.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-            //            //    this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-            //            //}
-            //            //else
-            //            {
-            //                _params2.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-            //                this.OpenManyReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params2);
-            //            }
-            //        }
-            //    }
-            //    //else if (frmText == "พิมพ์สำเนา")
-            //    //{
-            //    //    _params = new Dictionary<string, object>();
-            //    //    //_params.Add("@DocNo", txdDocNo.Text);
-            //    //    _params.Add("@DocNo", "-1");
-            //    //    if (wh != null)
-            //    //    {
-            //    //        if (wh.DriverEmpID == "credit")
-            //    //        {
-            //    //            _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-            //    //            this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-            //    //            _params = new Dictionary<string, object>();
-            //    //            _params.Add("@DocNo", txdDocNo.Text);
-            //    //            _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-            //    //            this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-            //    //        }
-            //    //        else
-            //    //        {
-            //    //            _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-            //    //            this.OpenManyReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);////////////
-            //    //        }
-            //    //    }
-            //    //}
-            //    //else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
-            //    //{
-            //    //    if (!string.IsNullOrEmpty(txtCustPONo.Text))
-            //    //    {
-            //    //        _params = new Dictionary<string, object>();
-            //    //        _params.Add("@DocNo", txtCustPONo.Text);
-            //    //        this.OpenReportingReportsPopup("ใบกำกับภาษีอย่างย่อ", "Form_IV.rdlc", "Form_IV", _params); //Reporting service by sailom 30/11/2021
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        string message = "ไม่สามารถพิมพ์ใบกำกับภาษีอย่างย่อได้ !!!";
-            //    //        message.ShowWarningMessage();
-            //    //        return;
-            //    //    }
-            //    //}
-            //}
             else
             {
-                var wh = bu.GetBranchWarehouse(txtWHCode.Text);
-                if (frmText == "พิมพ์ทั้งหมด")
-                {
-                    string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
-                    string title = "ยืนยันการพิมพ์!!";
-                    var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                    if (confirmResult == DialogResult.Yes) //No Preview
-                    {
-                        if (wh != null)
-                        {
-                            if (wh.DriverEmpID == "credit")
-                            {
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-                                this.OpenReportingReportsNonPreViewPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-                                this.OpenReportingReportsNonPreViewPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-                                this.OpenReportingReportsNonPreViewPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-                                this.OpenReportingReportsNonPreViewPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                                this.OpenReportingReportsNonPreViewPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                                this.OpenReportingReportsNonPreViewPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        _params = new Dictionary<string, object>();
-                        _params.Add("@DocNo", txdDocNo.Text);
-
-                        if (wh != null)
-                        {
-                            if (wh.DriverEmpID == "credit")
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-                                this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-                                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-
-                        _params = new Dictionary<string, object>();
-                        _params.Add("@DocNo", txdDocNo.Text);
-                        if (wh != null)
-                        {
-                            if (wh.DriverEmpID == "credit")
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-                                this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-                                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-                    }
-                }
-                else if (frmText == "พิมพ์ต้นฉบับ")
-                {
-                    _params = new Dictionary<string, object>();
-                    _params.Add("@DocNo", txdDocNo.Text);
-
-                    if (wh != null)
-                    {
-                        if (wh.DriverEmpID == "credit")
-                        {
-                            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
-                            string title = "ยืนยันการพิมพ์!!";
-                            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                            if (confirmResult == DialogResult.Yes)
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-                                this.OpenReportingReportsNonPreViewPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-                                this.OpenReportingReportsNonPreViewPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี");
-                                this.OpenReportingReportsPopup("ต้นฉบับใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(ต้นฉบับ)");
-                                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-                        else
-                        {
-                            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
-                            string title = "ยืนยันการพิมพ์!!";
-                            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                            if (confirmResult == DialogResult.Yes)
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                                this.OpenReportingReportsNonPreViewPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "ต้นฉบับใบกำกับภาษี/ต้นฉบับใบเสร็จรับเงิน");
-                                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(ต้นฉบับ)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-                    }
-                }
-                else if (frmText == "พิมพ์สำเนา")
-                {
-                    _params = new Dictionary<string, object>();
-                    _params.Add("@DocNo", txdDocNo.Text);
-                    if (wh != null)
-                    {
-                        if (wh.DriverEmpID == "credit")
-                        {
-                            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
-                            string title = "ยืนยันการพิมพ์!!";
-                            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                            if (confirmResult == DialogResult.Yes)
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-                                this.OpenReportingReportsNonPreViewPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-                                this.OpenReportingReportsNonPreViewPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี");
-                                this.OpenReportingReportsPopup("สำเนาใบกำกับภาษี", "From_V.rdlc", "Form_V", _params);
-
-                                _params = new Dictionary<string, object>();
-                                _params.Add("@DocNo", txdDocNo.Text);
-                                _params.Add("@ReportType", "ใบเสร็จรับเงิน(สำเนา)");
-                                this.OpenReportingReportsPopup("ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-                        else
-                        {
-                            string cfMsg = "ต้องการพิมพ์โดยที่ไม่ดูรายงานใช่หรือไม่?";
-                            string title = "ยืนยันการพิมพ์!!";
-                            var confirmResult = FlexibleMessageBox.Show(cfMsg, title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
-                            if (confirmResult == DialogResult.Yes)
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                                this.OpenReportingReportsNonPreViewPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                            else
-                            {
-                                _params.Add("@ReportType", "สำเนาใบกำกับภาษี/สำเนาใบเสร็จรับเงิน");
-                                this.OpenReportingReportsPopup("ใบกำกับภาษีเต็มรูป/ใบเสร็จรับเงิน(สำเนา)", "From_V.rdlc", "Form_V", _params);
-                            }
-                        }
-                    }
-                }
-                else if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
+                if (frmText == "พิมพ์ใบกำกับภาษีอย่างย่อ")
                 {
                     if (!string.IsNullOrEmpty(txtCustPONo.Text))
                     {
@@ -599,6 +288,12 @@ namespace AllCashUFormsApp.View.Page
                         return;
                     }
                 }
+                else
+                {
+                    frmSearchVE frm = new frmSearchVE();
+                    frm.PreparePrintDocs(frmText);
+                    frm.ShowDialog();
+                }
             }
         }
 
@@ -623,9 +318,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindIVMaster(iv);
             }
+
             if (ivDts != null && ivDts.Count > 0)
             {
                 BindIVDetail(ivDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
@@ -796,7 +496,7 @@ namespace AllCashUFormsApp.View.Page
 
                 if (allPOMaster != null)
                 {
-                    var poMst = allPOMaster.FirstOrDefault(x => x.CustInvNO == txdDocNo.Text);
+                    var poMst = !string.IsNullOrEmpty(txtCustPONo.Text) ? allPOMaster.FirstOrDefault(x => x.DocNo == txtCustPONo.Text) : allPOMaster.FirstOrDefault(x => x.CustInvNO == txdDocNo.Text); //last edit by sailom.k 15/12/2022
                     if (poMst != null)
                     {
                         var poDT = allPODetails.FirstOrDefault(x => x.DocNo == poMst.DocNo && x.ProductID == obj[i].ProductID);
@@ -1204,7 +904,7 @@ namespace AllCashUFormsApp.View.Page
             if (cust != null && cust.Count > 0)
             {
                 po.CreditDay = cust[0].CreditDay;
-                po.CustType = cust[0].CustomerTypeID.Value.ToString();
+                po.CustType = cust[0].CustomerTypeID == null ? "0" : cust[0].CustomerTypeID.Value.ToString(); //edit by sailom.k 07/02/2023
             }
             po.DueDate = dtpDocDate.Value.AddDays(po.CreditDay.Value);
             po.CustomerID = txtCustomerID.Text;
@@ -1499,8 +1199,14 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                if (!ValidateSave())
-                    return;
+                //if (!ValidateSave())
+                //    return;
+
+                if (ddlDocStatus.SelectedValue.ToString() != "5")
+                {
+                    if (!ValidateSave())
+                        return;
+                }
 
                 string docno = string.Empty;
                 int ret = 0;
@@ -1513,6 +1219,7 @@ namespace AllCashUFormsApp.View.Page
                     if (!cfMsg.ConfirmMessageBox(title))
                         return;
 
+                    Cursor.Current = Cursors.WaitCursor;
                     bu = new VE();
 
                     docno = txdDocNo.Text;
@@ -1546,11 +1253,14 @@ namespace AllCashUFormsApp.View.Page
 
                         if (ret == 1)
                         {
-                            bu.tbl_IVMaster = null;
-                            bu.tbl_IVDetails.Clear();
-                            bu.tbl_POMaster.CustInvNO = "";
+                            if (bu.tbl_POMaster != null)
+                            {
+                                bu.tbl_IVMaster = null;
+                                bu.tbl_IVDetails.Clear();
+                                bu.tbl_POMaster.CustInvNO = "";
 
-                            ret = bu.UpdateData();
+                                ret = bu.UpdateData();
+                            }
                         }
                     }
                     else
@@ -1568,6 +1278,7 @@ namespace AllCashUFormsApp.View.Page
 
                     grdList.CellContentClick -= grdList_CellContentClick;
 
+                    Cursor.Current = Cursors.Default;
                     string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
                     msg.ShowInfoMessage();
 
@@ -1581,12 +1292,14 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else
                 {
+                    Cursor.Current = Cursors.Default;
                     this.ShowProcessErr();
                     return;
                 }
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 ex.WriteLog(this.GetType());
 
                 string msg = ex.Message;
@@ -1622,9 +1335,9 @@ namespace AllCashUFormsApp.View.Page
             bool ret = true;
             List<string> errList = new List<string>();
 
-            if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
             {
-                string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                 message.ShowWarningMessage();
                 ret = false;
             }
@@ -1681,6 +1394,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmVE_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -1825,7 +1540,7 @@ namespace AllCashUFormsApp.View.Page
 
         private void btnSearchDoc_Click(object sender, EventArgs e)
         {
-            this.OpenIVDocPopup("ใบกำกับภาษีขาย", docTypeCode);
+            this.OpenIVDocPopup("ใบกำกับภาษีขาย", docTypeCode);  
         }
 
         private void btnSearchWHCode_Click(object sender, EventArgs e)

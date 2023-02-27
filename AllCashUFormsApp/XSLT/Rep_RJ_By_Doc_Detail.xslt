@@ -97,19 +97,11 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					font-size: 10pt;
 					width: 100px;
 					}
-					.ColumnSize1 {
+					.ColumnCustomSize {
 					background-color: #FFFFFF;
 					color: Black;
 					border: solid thin Black;
 					font-size: 10pt;
-					width: 160px;
-					}
-					.ColumnSize2 {
-					background-color: #FFFFFF;
-					color: Black;
-					border: solid thin Black;
-					font-size: 10pt;
-					width: 600px;
 					}
 					.ResultItem {
 					background-color: #FFFFFF;
@@ -153,13 +145,13 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 			<table>
 				<Worksheet Name="รายวัน">
 					<TR>
-						<TD class="stdPageHdr" colspan="17">
+						<TD class="stdPageHdr" colspan="4">
 							<xsl:value-of select="Rep_RJ_By_Doc_Detail_XSLT/CompanyName" />
 						</TD>
 					</TR>
 					<TR>
-						<TD class="stdPageHdr" Colspan="5">
-							รายงานรายละเอียดขายสินค้า (แยกตามเอกสาร)
+						<TD class="stdPageHdr" Colspan="4">
+							รายงานรายละเอียดทำลายสินค้า
 						</TD>
 					</TR>
 					<TR>
@@ -175,7 +167,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						<TD class="ResultItem" style="font-weight: bold;text-align: center;" align="Center">
 							Date :
 						</TD>
-						<TD colspan="3" class="SearchResultItem" style="text-align: center;">
+						<TD colspan="2" class="SearchResultItem" style="text-align: center;">
 							<xsl:value-of select="Rep_RJ_By_Doc_Detail_XSLT/HDate" />
 						</TD>
 						
@@ -192,11 +184,11 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 					<thead>
 						<th class="SearchResultItem">วันที่</th>
 						<th class="SearchResultItem">เลขที่</th>
-						<th class="ColumnSize1">Last Edited</th>
-						<th class="SearchResultItem">ผู้จัดทำ</th>
+						<th class="ColumnCustomSize" width="160">Last Edited</th>
+						<th class="ColumnCustomSize" width="250">ผู้จัดทำ</th>
 						<th class="SearchResultItem">คลังต้นทาง</th>
 						<th class="SearchResultItem">คลังปลายทาง</th>
-						<th class="ColumnSize2">หมายเหตุ</th>
+						<th class="ColumnCustomSize" width="700">หมายเหตุ</th>
 
 						<th class="SearchResultItem">สถานะเอกสาร</th>
 						<xsl:apply-templates select="$prdNms"/>
@@ -243,13 +235,14 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 						<xsl:value-of select='DocNo'/>
 					</xsl:otherwise>
 				</xsl:choose>
-				
 			</td>
-			<td class="ColumnSize1">
+			
+			<td class="ColumnCustomSize" width="160">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="EdDate"/>
 			</td>
 			<td class="SearchResultItem">
+				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="EmpName"/>
 			</td>
 			<td class="SearchResultItem">
@@ -260,7 +253,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="WHIDTo"/>
 			</td>
-			<td class="ColumnSize2">
+			<td class="ColumnCustomSize" width="700">
 				<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
 				<xsl:value-of select="Remark"/>
 			</td>

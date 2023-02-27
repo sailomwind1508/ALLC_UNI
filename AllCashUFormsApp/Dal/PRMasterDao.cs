@@ -117,6 +117,33 @@ namespace AllCashUFormsApp
             return list;
         }
 
+        public static List<tbl_PRMaster> SelectNewVMaxAutoID(this tbl_PRMaster tbl_PRMaster, string docTypeCode, DateTime docDate)
+        {
+            List<tbl_PRMaster> list = new List<tbl_PRMaster>();
+            try
+            {
+                if (!string.IsNullOrEmpty(docTypeCode))
+                {
+                    string _docDate = docDate.ToString("yyyyMMdd", new CultureInfo("en-US"));
+
+                    DataTable dt = new DataTable();
+                    string sql = "";
+                    sql += " SELECT * FROM dbo.tbl_PRMaster WHERE AutoID = (SELECT MAX(AutoID) FROM dbo.tbl_PRMaster ";
+                    sql += " WHERE DocTypeCode = '" + docTypeCode.Trim() + "' AND DocNo NOT Like '%V%' AND CAST(DocDate AS DATE) = '" + _docDate + "' )  ";
+
+                    List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteSQLToList(typeof(tbl_PRMaster), sql);
+                    list = dynamicListReturned.Cast<tbl_PRMaster>().ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster.GetType());
+            }
+
+            return list;
+        }
+
         public static List<tbl_PRMaster> SelectMaxAutoID(this tbl_PRMaster tbl_PRMaster, string docTypeCode = "")
         {
             List<tbl_PRMaster> list = new List<tbl_PRMaster>();
@@ -544,6 +571,208 @@ namespace AllCashUFormsApp
 
             msg = "end PRMasterDao=>DeleteWithDB";
             msg.WriteLog(null);
+        }
+
+        public static int UpdateDatePRMaster(this List<tbl_PRMaster> tbl_PRMaster)
+        {
+            string msg = "start PRMasterDao=>UpdateDatePRMaster";
+            msg.WriteLog(null);
+
+            List<int> ret = new List<int>();
+            int ret1 = new int();
+
+            try
+            {
+                for (int i = 0; i < tbl_PRMaster.Count; i++)
+                {
+                    SqlConnection con = new SqlConnection(Connection.ConnectionString);
+                    string sql = "UPDATE tbl_PRMaster ";
+                    sql += "SET DocDate = @DocDate";
+                    sql += ", EdDate = @EdDate";
+                    sql += ", EdUser = @EdUser";
+                    sql += ", Remark = @Remark";
+                    sql += ", DocNo = @DocNo";
+
+                    sql += " WHERE DocNo = '" + tbl_PRMaster[i].Remark.Trim() + "'";
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@Remark", tbl_PRMaster[i].Remark.Trim());
+                    cmd.Parameters.AddWithValue("@DocDate", tbl_PRMaster[i].DocDate);
+                    cmd.Parameters.AddWithValue("@EdDate", tbl_PRMaster[i].EdDate);
+                    cmd.Parameters.AddWithValue("@EdUser", tbl_PRMaster[i].EdUser);
+                    cmd.Parameters.AddWithValue("@DocNo", tbl_PRMaster[i].DocNo);
+
+                    ret.Add(cmd.ExecuteNonQuery());
+                    con.Close();
+                }
+
+                if (ret.All(x => x == 1))
+                    ret1 = 1;
+                else
+                    ret1 = 0;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster != null ? tbl_PRMaster.GetType() : null);
+                ret1 = 0;
+            }
+
+            msg = "end PRMasterDao=>UpdateDatePRMaster";
+            msg.WriteLog(null);
+
+            return ret1;
+        }
+
+        public static int BulkInsert(this tbl_PRMaster tbl_PRMaster)
+        {
+            string msg = "start PRMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            int ret = 1;
+
+            List<tbl_PRMaster> tbl_PRMasters = new List<tbl_PRMaster>();
+            tbl_PRMasters.Add(tbl_PRMaster);
+
+            var table = tbl_PRMasters.ToDataTable();
+            if (table != null && table.Rows.Count > 0)
+            {
+                using (var conn = new SqlConnection(Connection.ConnectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction trans = conn.BeginTransaction())
+                    {
+                        using (SqlBulkCopy bcp = new SqlBulkCopy(conn, SqlBulkCopyOptions.Default, trans))
+                        {
+                            try
+                            {
+                                bcp.DestinationTableName = "tbl_PRMaster";
+                                bcp.WriteToServer(table);
+                                trans.Commit();
+                            }
+                            catch (Exception)
+                            {
+                                trans.Rollback();
+                                conn.Close();
+                                ret = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            msg = "end PRMasterDao=>BulkInsert";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkUpdate(this tbl_PRMaster tbl_PRMaster)
+        {
+            string msg = "start PRMasterDao=>BulkUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_PRMaster WHERE DocNo = '" + tbl_PRMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = tbl_PRMaster.BulkInsert();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end PRMasterDao=>UpdateList";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int BulkRemove(this tbl_PRMaster tbl_PRMaster)
+        {
+            string msg = "start PRMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                string sql = " DELETE FROM tbl_PRMaster WHERE DocNo = '" + tbl_PRMaster.DocNo + "' ";
+
+                My_DataTable_Extensions.ExecuteSQL(CommandType.Text, sql);/////////////////////////
+
+                ret = 1;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+
+            msg = "end PRMasterDao=>BulkRemove";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static int PerformUpdate(this tbl_PRMaster tbl_PRMaster, DB_ALL_CASH_UNIEntities db)
+        {
+            string msg = "start PRMasterDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            int ret = 0;
+
+            try
+            {
+                var updateData = new tbl_PRMaster();
+                var docNo = tbl_PRMaster.DocNo;
+                updateData = db.tbl_PRMaster.FirstOrDefault(x => x.DocNo == docNo);
+
+                if (updateData != null)
+                {
+                    ret = tbl_PRMaster.BulkUpdate();
+                }
+                else
+                {
+                    ret = tbl_PRMaster.BulkInsert();
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+                ex.WriteLog(null);
+            }
+
+            msg = "end PRMasterDao=>PerformUpdate";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
+        public static List<tbl_PRMaster> GetPRMaster_AllBranch(this tbl_PRMaster tbl_PRMaster, Dictionary<string, object> Params)
+        {
+            List<tbl_PRMaster> list = new List<tbl_PRMaster>();
+            try
+            {
+                string sql = "proc_PRMaster_GetData_AllBranch";
+
+                List<dynamic> dynamicListReturned = My_DataTable_Extensions.ExecuteStoreToList(typeof(tbl_PRMaster), sql, Params);
+                list = dynamicListReturned.Cast<tbl_PRMaster>().ToList();
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_PRMaster != null ? tbl_PRMaster.GetType() : null);
+            }
+
+            return list;
         }
     }
 }

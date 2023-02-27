@@ -25,7 +25,6 @@ namespace AllCashUFormsApp.View.Page
         public frmCustomerMap()
         {
             InitializeComponent();
-
             //string ServerName = Connection.ConnectionString;
             //string imgPathTmp = ServerName.Split('=')[1].Split(',')[0].ToString();
             //imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
@@ -60,6 +59,7 @@ namespace AllCashUFormsApp.View.Page
                     _ServerNameFromCenter = _dt.Rows[0].Field<string>("ServerPath");
                     imgPathTmp = _ServerNameFromCenter.Split(',')[0].ToString();
                     imgPathTmp = @"http://" + imgPathTmp + @":82/CU";
+                    //imgPathTmp = @"http://192.168.2.10/" + @"/CU";
                 }
 
                 if (preOrderFlag) //เป็นศูนย์ที่ใช้ IP //pre-order
@@ -107,13 +107,14 @@ namespace AllCashUFormsApp.View.Page
             btnAdd.Enabled = false;
             btnEdit.Enabled = false;
             btnSave.Enabled = false;
+            btnPrint.Enabled = true;
 
             webBrowser1.AllowWebBrowserDrop = false;
-            webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            webBrowser1.WebBrowserShortcutsEnabled = false;
+            webBrowser1.IsWebBrowserContextMenuEnabled = true;
+            webBrowser1.WebBrowserShortcutsEnabled = true;
             webBrowser1.ObjectForScripting = this;
             //string _path = "D:\\United Foods\\SC_05-05-2022\\ALLC_UNI\\AllCashUFormsApp\\Map.html";
-            string path = Path.Combine(htmlPath, "Map.html");
+            string path = Path.Combine(htmlPath, "Map.html"); ;// Path.Combine(htmlPath, "Map.html");
             webBrowser1.Navigate(path);
 
             SetTreeView();
@@ -127,7 +128,11 @@ namespace AllCashUFormsApp.View.Page
                 Cursor.Current = Cursors.WaitCursor;
 
                 var dtCountCust = buCust.GetCountCustomer();
-                var _sumCust = dtCountCust.Compute("SUM(CountCust)", "CountCust <> 0");
+                var allCust = bu.GetCustomer().Where(x => !x.CustName.Contains("ไม่ระบุ")).ToList();
+
+                object _sumCust = null;
+                if (dtCountCust != null && dtCountCust.Rows.Count > 0)
+                    _sumCust = dtCountCust.Compute("SUM(CountCust)", "CountCust <> 0");
 
                 treeView1.Nodes.Clear();
                 var branch = bu.GetBranch();
@@ -158,7 +163,6 @@ namespace AllCashUFormsApp.View.Page
 
                 var _dtSaleArea = bu.GetSalAreaDistrict_BySendData();
 
-
                 for (int i = 0; i < _dtSaleArea.Rows.Count; i++)
                 {
                     string _whid = _dtSaleArea.Rows[i].Field<string>("WHID");
@@ -175,8 +179,73 @@ namespace AllCashUFormsApp.View.Page
                     xx = i;
 
                     if (index != -1 && !string.IsNullOrEmpty(_SalAreaID) && !string.IsNullOrEmpty(_SalAreaName)) //last edit by sailom .k 07/06/2022
+                    {
                         treeView1.Nodes[0].Nodes[index].Nodes.Add(_SalAreaID, _SalAreaName);
+
+                        var _dtCustomer = new List<tbl_ArCustomer>();
+                        var _tmpCust = allCust.Where(x => x.SalAreaID == _SalAreaID && x.Seq != 0).OrderBy(x => x.Seq).ThenBy(x => x.CustName).ToList();
+                        if (_tmpCust != null && _tmpCust.Count > 0)
+                            _dtCustomer.AddRange(_tmpCust);
+
+                        var _tempCustZeroSeq = allCust.Where(x => x.SalAreaID == _SalAreaID && x.Seq == 0).OrderBy(x => x.CustName).ToList();
+                        if (_tempCustZeroSeq != null && _tempCustZeroSeq.Count > 0)
+                            _dtCustomer.AddRange(_tempCustZeroSeq);
+
+                        for (int j = 0; j < _dtCustomer.Count; j++)
+                        {
+                            //string _cust_salAreaID = _dtCustomer[j].SalAreaID;
+                            string custID = _dtCustomer[j].CustomerID;
+                            string lat = _dtCustomer[j].Latitude;
+                            string lon = _dtCustomer[j].Longitude;
+                            int j_index = treeView1.Nodes[0].Nodes[index].Nodes.IndexOfKey(_SalAreaID);
+                            string custSeq = _dtCustomer[j].Seq.ToString();
+
+                            string _custName = "";
+                            if (!string.IsNullOrEmpty(custID))
+                            {
+                                _custName = "(" + custSeq + ")" + _dtCustomer[j].CustName;
+                            }
+
+                            if (j_index != -1 && !string.IsNullOrEmpty(custID) && !string.IsNullOrEmpty(_custName)) //last edit by sailom .k 07/06/2022
+                            {
+                                treeView1.Nodes[0].Nodes[index].Nodes[j_index].Nodes.Add(custID, _custName);
+
+                                //var _cust = allCust.FirstOrDefault(x => x.CustomerID == custID);
+                                //if (_cust != null)
+                                //{
+                                var currentNodes = treeView1.Nodes[0].Nodes[index].Nodes[j_index].Nodes.Count - 1;
+                                if (string.IsNullOrEmpty(lat) || string.IsNullOrEmpty(lon) || lat == "0.0" || lon == "0.0")
+                                    treeView1.Nodes[0].Nodes[index].Nodes[j_index].Nodes[currentNodes].ForeColor = Color.Red;
+                                else
+                                    treeView1.Nodes[0].Nodes[index].Nodes[j_index].Nodes[currentNodes].ForeColor = Color.Black;
+                                //}
+
+                            }
+                        }
+                    }
                 }
+
+                //var _dtCustomer = bu.GetCustomer().Where(x => x.FlagDel == false).OrderBy(x => x.WHID).ThenBy(x => x.SalAreaID).ThenBy(x => x.CustName).ToList();
+                //for (int i = 0; i < _dtCustomer.Count; i++)
+                //{
+                //    //string _whid = _dtCustomer[i].WHID;
+                //    string _SalAreaID = _dtCustomer[i].SalAreaID;
+                //    //var saleArea = bu.GetSaleArea(_SalAreaID);
+                //    string custID = _dtCustomer[i].CustomerID;
+                //    int index = treeView1.Nodes[0].Nodes[0].Nodes.IndexOfKey(_SalAreaID);
+
+
+                //    string _custName = "";
+                //    if (!string.IsNullOrEmpty(custID))
+                //    {
+                //        _custName = _dtCustomer[i].CustName;
+                //    }
+
+                //    xx = i;
+
+                //    if (index != -1 && !string.IsNullOrEmpty(custID) && !string.IsNullOrEmpty(_custName)) //last edit by sailom .k 07/06/2022
+                //        treeView1.Nodes[0].Nodes[0].Nodes[index].Nodes.Add(custID, _custName);
+                //}
 
                 Cursor.Current = Cursors.Default;
             }
@@ -220,7 +289,7 @@ namespace AllCashUFormsApp.View.Page
 
             foreach (DataRow row in dt.Rows)
             {
-                if (!string.IsNullOrEmpty(row["Latitude"].ToString()) && !string.IsNullOrEmpty(row["Longitude"].ToString()))
+                //if (!string.IsNullOrEmpty(row["Latitude"].ToString()) && !string.IsNullOrEmpty(row["Longitude"].ToString()))
                 {
                     string _CustImage = "";
                     //_CustImage = list[i].CustImage;
@@ -235,19 +304,23 @@ namespace AllCashUFormsApp.View.Page
                         _CustImage = "Images/no-photos.png";
                     }
 
-                    string _Lat = row["Latitude"].ToString();
-                    string _Long = row["Longitude"].ToString();
+                    string _Lat = string.IsNullOrEmpty(row["Latitude"].ToString()) ? "0.0" : row["Latitude"].ToString();
+                    string _Long = string.IsNullOrEmpty(row["Latitude"].ToString()) ? "0.0" : row["Longitude"].ToString();
+                    string _custID = row["CustomerID"].ToString();
 
                     string _billTo = row["BillTo"].ToString().Replace("\r", "");
                     _billTo = row["BillTo"].ToString().Replace("\r\n", "");
-                    if (listRow.FirstOrDefault(x => x.ToString().Contains(_Lat + "|" + _Long)) != null && listRow.Count > 0)
+
+                    //if (listRow.FirstOrDefault(x => x.ToString().Contains(_Lat + "|" + _Long)) != null && listRow.Count > 0)
+
+                    if (listRow.FirstOrDefault(x => x.ToString().Contains(_custID)) != null && listRow.Count > 0)
                     {
 
                     }
                     else
                     {
-                        var _row = string.Join("|", new string[] { row["Latitude"].ToString(), row["Longitude"].ToString()
-                        , _CustImage, row["CustName"].ToString(), _billTo, row["MarkerImage"].ToString()
+                        var _row = string.Join("|", new string[] { _Lat, _Long
+                        , _CustImage, row["CustName"].ToString(), row["CustomerID"].ToString(), _billTo, row["MarkerImage"].ToString()
                         , row["Telephone"].ToString(), row["Seq"].ToString() });
                         listRow.Add(_row);
                     }
@@ -265,18 +338,32 @@ namespace AllCashUFormsApp.View.Page
         #region Event
         private void frmCustomerMap_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
 
-        private void btnSearchMap_Click(object sender, EventArgs e)
+        private void SearchMap(bool isSearchClick = true)
         {
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
+                if (!isSearchClick)
+                {
+                    webBrowser1.Refresh();
+                    webBrowser1.AllowWebBrowserDrop = false;
+                    webBrowser1.IsWebBrowserContextMenuEnabled = true;
+                    webBrowser1.WebBrowserShortcutsEnabled = true;
+                    webBrowser1.ObjectForScripting = this;
+                    //string _path = "D:\\United Foods\\SC_05-05-2022\\ALLC_UNI\\AllCashUFormsApp\\Map.html";
+                    string path = Path.Combine(htmlPath, "Map.html"); // Path.Combine(htmlPath, "Map.html");
+                    webBrowser1.Navigate(path);
+                }
 
                 var listWHID = new List<string>();
                 var _listSalArea = new List<string>();
+                var customerList = new List<string>();
 
                 for (int i = 0; i < treeView1.Nodes[0].Nodes.Count; i++)
                 {
@@ -286,10 +373,20 @@ namespace AllCashUFormsApp.View.Page
 
                     for (int x = 0; x < treeView1.Nodes[0].Nodes[i].Nodes.Count; x++)
                     {
-                        if (treeView1.Nodes[0].Nodes[i].Nodes[x].Checked)
+                        //if (treeView1.Nodes[0].Nodes[i].Nodes[x].Checked)
                         {
-                            listWHID.Add(treeView1.Nodes[0].Nodes[i].Name);
-                            _listSalArea.Add(treeView1.Nodes[0].Nodes[i].Nodes[x].Name);
+                            for (int j = 0; j < treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes.Count; j++)
+                            {
+                                if (treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes[j].Checked)
+                                {
+                                    listWHID.Add(treeView1.Nodes[0].Nodes[i].Name);
+                                    _listSalArea.Add(treeView1.Nodes[0].Nodes[i].Nodes[x].Name);
+
+                                    var custID = treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes[j].Name;
+                                    customerList.Add(custID);
+                                }
+                            }
+
                         }
                     }
                     //}
@@ -298,8 +395,9 @@ namespace AllCashUFormsApp.View.Page
                 var distinctWHID = listWHID.Distinct().ToList();
                 var allWHID = string.Join(",", distinctWHID);
                 var allSalAreaID = string.Join(",", _listSalArea);
+                var allCustID = string.Join(",", customerList);
 
-                var dt = buCust.GetCustomerByWHID_DataTable(allWHID, allSalAreaID);
+                var dt = buCust.GetCustomerByWHID_DataTable(allWHID, allSalAreaID, allCustID);
                 //var list = buCust.GetCustomerByWHID(allWHID);//
 
                 //var list2 = new List<tbl_ArCustomer>();
@@ -313,6 +411,7 @@ namespace AllCashUFormsApp.View.Page
 
                 string sendData = GenerateLocationString(dt);
                 object[] args = { sendData };
+
                 webBrowser1.Document.InvokeScript("GenLocation", args);
 
                 Cursor.Current = Cursors.Default;
@@ -321,6 +420,11 @@ namespace AllCashUFormsApp.View.Page
             {
                 ex.Message.ShowErrorMessage();
             }
+        }
+
+        private void btnSearchMap_Click(object sender, EventArgs e)
+        {
+            SearchMap();
         }
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
@@ -347,6 +451,128 @@ namespace AllCashUFormsApp.View.Page
         private void frmCustomerMap_FormClosed(object sender, FormClosedEventArgs e)
         {
             MemoryManagement.FlushMemory();
+        }
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            //webBrowser1.GoBack();
+
+            SearchMap(false);
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            List<string> errList = new List<string>();
+
+            errList.SetErrMessageList(txtLatLong, label1);
+
+            if (errList.Count > 0)
+            {
+                string message = "กรุณากรอกข้อมูลพิกัด \n\n" + string.Join("\n", errList);
+                message.ShowWarningMessage();
+                return;
+            }
+
+            string link = @"http://maps.google.com/?q=" + txtLatLong.Text;
+            webBrowser1.Navigate(link);
+        }
+
+        private void btnUpdateLL_Click(object sender, EventArgs e)
+        {
+            //webBrowser1.Print();
+            //PrintHelpPage();
+
+            Cursor.Current = Cursors.WaitCursor;
+            List<string> errList = new List<string>();
+
+            errList.SetErrMessageList(txtCustomerID, label2);
+            errList.SetErrMessageList(txtLatLong, label1);
+
+            if (errList.Count > 0)
+            {
+                string message = "กรุณากรอกข้อมูลที่จำเป็น \n\n" + string.Join("\n", errList);
+                message.ShowWarningMessage();
+                return;
+            }
+
+            string cfMsg = "ต้องการบันทึกพิกัดใช่หรือไม่?";
+            string title = "ยืนยันการบันทึก!!";
+            if (!cfMsg.ConfirmMessageBox(title))
+                return;
+
+            try
+            {
+                var lat = txtLatLong.Text.Split(',')[0];
+                var lon = txtLatLong.Text.Split(',')[1].Trim();
+                var ret = buCust.UpdateCustomerLatLong(txtCustomerID.Text, lat, lon, Helper.tbl_Users.Username);
+                if (ret)
+                {
+                    string msg = "บันทึกข้อมูลพิกัดเรียบร้อยแล้ว!!";
+                    msg.ShowInfoMessage();
+                }
+                else
+                {
+                    string msg = "บันทึกข้อมูลพิกัดผิดพลาด!!";
+                    msg.ShowErrorMessage();
+                }
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
+            }
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            webBrowser1.ShowPrintPreviewDialog();
+        }
+
+        private void btnOpenCustomer_Click(object sender, EventArgs e)
+        {
+            MainForm mfrm = null;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f.Name.ToLower() == "mainform")
+                {
+                    mfrm = (MainForm)f;
+                }
+            }
+
+            frmCustomerInfo frm = new frmCustomerInfo();
+            frm.MdiParent = mfrm;
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.WindowState = FormWindowState.Maximized;
+            frm.Show();
+
+            var customerList = new List<string>();
+
+            for (int i = 0; i < treeView1.Nodes[0].Nodes.Count; i++)
+            {
+                for (int x = 0; x < treeView1.Nodes[0].Nodes[i].Nodes.Count; x++)
+                {
+                    for (int j = 0; j < treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes.Count; j++)
+                    {
+                        if (treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes[j].Checked)
+                        {
+                            var custID = treeView1.Nodes[0].Nodes[i].Nodes[x].Nodes[j].Name;
+                            customerList.Add(custID);
+                        }
+                    }
+                }
+            }
+
+            frm.BindCustomerInfo(customerList);
         }
     }
 }

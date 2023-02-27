@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using AllCashUFormsApp.Controller;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace AllCashUFormsApp.View.Page
 {
@@ -118,9 +119,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPOMaster(po);
             }
+
             if (poDts != null && poDts.Count > 0)
             {
                 BindPODetail(poDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, new string[] { txtSuppName.Name, txtCrUser.Name, txtAddress.Name }, cellEdit);
@@ -614,8 +620,11 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
-                if (!ValidateSave())
-                    return;
+                if (ddlDocStatus.SelectedValue.ToString() != "5")
+                {
+                    if (!ValidateSave())
+                        return;
+                }
 
                 string cfMsg = "ต้องการบันทึกข้อมูลใช่หรือไม่?";
                 string title = "ยืนยันการบันทึก!!";
@@ -653,9 +662,10 @@ namespace AllCashUFormsApp.View.Page
                     bu.tbl_POMaster.EdUser = Helper.tbl_Users.Username;
 
                     bu.tbl_PODetails.Clear();
-                    //List<tbl_PODetail> tbl_PODetails = bu.GetPODetails(docno);
+                    bu.tbl_PODetails = bu.GetPODetails(docno); //last edit by sailom.k 19/01/2023
                     List<tbl_PODetail> tbl_PODetails = bu.tbl_PODetails;
-                    PreparePODetail(editFlag);
+                    if (bu.tbl_PODetails.Count > 0)
+                        PreparePODetail(editFlag);
 
                     ret = bu.RemovePODetails(bu.tbl_POMaster.DocNo); //remove old po details befor save edit by sailom 10-06-2021
                     if (ret == 1)
@@ -805,7 +815,9 @@ namespace AllCashUFormsApp.View.Page
             var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
+            //!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)
+            //((!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && Helper.tbl_Users.RoleID != 5) && dtpDocDate.Value != null && docDate < cDate)
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -814,9 +826,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     ret = false;
                 }
@@ -889,6 +901,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmOD_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -964,7 +978,9 @@ namespace AllCashUFormsApp.View.Page
         {
             string msg = "start frmOD=>btnSave_Click";
             msg.WriteLog(this.GetType());
+
             Save();
+
             msg = "end frmOD=>btnSave_Click";
             msg.WriteLog(this.GetType());
         }
@@ -1411,6 +1427,11 @@ namespace AllCashUFormsApp.View.Page
                     }
                 }
             }
+
+        }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
 
         }
     }

@@ -88,6 +88,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmSendToHQ_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 
@@ -299,9 +301,18 @@ namespace AllCashUFormsApp.View.Page
         {
             try
             {
+                bool ret = false;
+                //last edit by sailom .k 22/12/2022
+                bool isCycle = false;
+                isCycle = (new Report()).CheckBranchCycle(bu.tbl_Branchs[0].BranchID);
+
+                var cycleNo = (new Report()).GetCycleNo(dtpDocDate.Value).ToString();
+                string _tmpCycleNo = cycleNo.Length == 1 ? ("0" + cycleNo) : cycleNo;
+                //last edit by sailom .k 22/12/2022
+
                 string dateC = dtpDocDate.Value.ToString("yyMM", new CultureInfo("en-US"));
-                string months = dtpDocDate.Value.Month.ToString();
-                string _months = dtpDocDate.Value.ToString("MM", new CultureInfo("en-US"));
+                string months = isCycle ? cycleNo : dtpDocDate.Value.Month.ToString(); //last edit by sailom .k 22/12/2022
+                string _months = isCycle ? _tmpCycleNo : dtpDocDate.Value.ToString("MM", new CultureInfo("en-US")); //last edit by sailom .k 22/12/2022
                 string date = dtpDocDate.Value.ToString("yyyyMMdd", new CultureInfo("en-US"));
 
                 string years = dtpDocDate.Value.Year.ToString(new CultureInfo("en-US"));
@@ -318,8 +329,6 @@ namespace AllCashUFormsApp.View.Page
                 _params.Add("@I", months);
                 _params.Add("@O", _months);
                 _params.Add("@DATE", date);
-
-                bool ret = false;
 
                 ret = bu.CallSendAmtArCustomerData(_params);
 

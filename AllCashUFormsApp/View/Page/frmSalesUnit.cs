@@ -68,6 +68,8 @@ namespace AllCashUFormsApp.View.Page
         #region Event_Method
         private void FrmSalePersonSetting_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }

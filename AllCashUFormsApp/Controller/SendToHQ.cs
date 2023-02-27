@@ -168,5 +168,42 @@ namespace AllCashUFormsApp.Controller
             return ret;
         }
 
+        public bool CallSendDataToCenter_OD(Dictionary<string, object> Params)
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_SendDataToCenter_OD";
+                DataTable dt = new DataTable();
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, Params);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        public bool CallSendDataToCenter_RL(Dictionary<string, object> Params)
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_SendDataToCenter_RL";
+                DataTable dt = new DataTable();
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, Params);
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
     }
 }

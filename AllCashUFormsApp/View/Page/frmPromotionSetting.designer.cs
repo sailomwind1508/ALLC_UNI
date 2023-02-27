@@ -34,7 +34,6 @@ namespace AllCashUFormsApp.View.Page
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPromotionSetting));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -69,6 +68,7 @@ namespace AllCashUFormsApp.View.Page
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPromotionSetting));
             this.pnlBackGround = new System.Windows.Forms.Panel();
             this.splitCenterMain = new System.Windows.Forms.Panel();
             this.splitCenter = new System.Windows.Forms.SplitContainer();
@@ -81,6 +81,7 @@ namespace AllCashUFormsApp.View.Page
             this.colBranchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colOnlineStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlRefresh = new System.Windows.Forms.Panel();
+            this.chkROP = new System.Windows.Forms.CheckBox();
             this.btnRefresh_Branch = new System.Windows.Forms.Button();
             this.chkBoxSelectBranch = new System.Windows.Forms.CheckBox();
             this.pnlSendData = new System.Windows.Forms.Panel();
@@ -285,6 +286,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnCancel = new AllCashUFormsApp.View.UControl.CancelButton(this.components);
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
+            this.btnUpdatePromotion = new System.Windows.Forms.Button();
             this.pnlBackGround.SuspendLayout();
             this.splitCenterMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCenter)).BeginInit();
@@ -497,6 +499,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlRefresh.BackColor = System.Drawing.Color.Azure;
             this.pnlRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlRefresh.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlRefresh.Controls.Add(this.chkROP);
             this.pnlRefresh.Controls.Add(this.btnRefresh_Branch);
             this.pnlRefresh.Controls.Add(this.chkBoxSelectBranch);
             this.pnlRefresh.Dock = System.Windows.Forms.DockStyle.Top;
@@ -504,6 +507,19 @@ namespace AllCashUFormsApp.View.Page
             this.pnlRefresh.Name = "pnlRefresh";
             this.pnlRefresh.Size = new System.Drawing.Size(335, 40);
             this.pnlRefresh.TabIndex = 169;
+            // 
+            // chkROP
+            // 
+            this.chkROP.AutoSize = true;
+            this.chkROP.Checked = true;
+            this.chkROP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkROP.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.chkROP.Location = new System.Drawing.Point(130, 8);
+            this.chkROP.Name = "chkROP";
+            this.chkROP.Size = new System.Drawing.Size(81, 20);
+            this.chkROP.TabIndex = 224;
+            this.chkROP.Text = "ลบโปรเก่า";
+            this.chkROP.UseVisualStyleBackColor = true;
             // 
             // btnRefresh_Branch
             // 
@@ -538,6 +554,7 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.pnlSendData.BackColor = System.Drawing.Color.Azure;
             this.pnlSendData.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlSendData.Controls.Add(this.btnUpdatePromotion);
             this.pnlSendData.Controls.Add(this.btnCancelSend);
             this.pnlSendData.Controls.Add(this.btnSendData);
             this.pnlSendData.Dock = System.Windows.Forms.DockStyle.Top;
@@ -2194,9 +2211,9 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.tabSkuGroup.Controls.Add(this.splitSkuGroup);
             this.tabSkuGroup.Controls.Add(this.pnlNameShowHQ_SKUGroup);
-            this.tabSkuGroup.Location = new System.Drawing.Point(4, 25);
+            this.tabSkuGroup.Location = new System.Drawing.Point(4, 22);
             this.tabSkuGroup.Name = "tabSkuGroup";
-            this.tabSkuGroup.Size = new System.Drawing.Size(1015, 640);
+            this.tabSkuGroup.Size = new System.Drawing.Size(1015, 643);
             this.tabSkuGroup.TabIndex = 2;
             this.tabSkuGroup.Text = "SKU-GROUP";
             this.tabSkuGroup.UseVisualStyleBackColor = true;
@@ -2217,7 +2234,7 @@ namespace AllCashUFormsApp.View.Page
             // splitSkuGroup.Panel2
             // 
             this.splitSkuGroup.Panel2.Controls.Add(this.panel12);
-            this.splitSkuGroup.Size = new System.Drawing.Size(1015, 612);
+            this.splitSkuGroup.Size = new System.Drawing.Size(1015, 615);
             this.splitSkuGroup.SplitterDistance = 578;
             this.splitSkuGroup.TabIndex = 167;
             // 
@@ -2234,7 +2251,7 @@ namespace AllCashUFormsApp.View.Page
             this.grdSkuGroup.Name = "grdSkuGroup";
             this.grdSkuGroup.ReadOnly = true;
             this.grdSkuGroup.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdSkuGroup.Size = new System.Drawing.Size(578, 543);
+            this.grdSkuGroup.Size = new System.Drawing.Size(578, 546);
             this.grdSkuGroup.TabIndex = 4;
             this.grdSkuGroup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSkuGroup_CellClick);
             this.grdSkuGroup.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdSkuGroup_RowPostPaint);
@@ -2268,7 +2285,7 @@ namespace AllCashUFormsApp.View.Page
             this.panel3.Controls.Add(this.lbl_Qty_grdSkuGroup);
             this.panel3.Controls.Add(this.label10);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 585);
+            this.panel3.Location = new System.Drawing.Point(0, 588);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(578, 27);
             this.panel3.TabIndex = 219;
@@ -2358,7 +2375,7 @@ namespace AllCashUFormsApp.View.Page
             this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(433, 612);
+            this.panel12.Size = new System.Drawing.Size(433, 615);
             this.panel12.TabIndex = 152;
             // 
             // mtbHQ_SKUGroupID
@@ -2967,6 +2984,24 @@ namespace AllCashUFormsApp.View.Page
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // btnUpdatePromotion
+            // 
+            this.btnUpdatePromotion.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnUpdatePromotion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUpdatePromotion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdatePromotion.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnUpdatePromotion.ForeColor = System.Drawing.Color.Black;
+            this.btnUpdatePromotion.Image = ((System.Drawing.Image)(resources.GetObject("btnUpdatePromotion.Image")));
+            this.btnUpdatePromotion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUpdatePromotion.Location = new System.Drawing.Point(243, 5);
+            this.btnUpdatePromotion.Name = "btnUpdatePromotion";
+            this.btnUpdatePromotion.Size = new System.Drawing.Size(87, 42);
+            this.btnUpdatePromotion.TabIndex = 122;
+            this.btnUpdatePromotion.Text = "อัพเดต";
+            this.btnUpdatePromotion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnUpdatePromotion.UseVisualStyleBackColor = false;
+            this.btnUpdatePromotion.Click += new System.EventHandler(this.btnUpdatePromotion_Click);
+            // 
             // frmPromotionSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -3292,5 +3327,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.DataGridViewTextBoxColumn colUpdateBy;
         private System.Windows.Forms.ComboBox cbbSaleType;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.CheckBox chkROP;
+        private System.Windows.Forms.Button btnUpdatePromotion;
     }
 }

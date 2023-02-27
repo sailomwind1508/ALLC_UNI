@@ -936,6 +936,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmRLSummary_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
 
             InitialData();

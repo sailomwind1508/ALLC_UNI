@@ -40,17 +40,17 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmReceiveTabletData));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.grdList = new System.Windows.Forms.DataGridView();
             this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colWHID2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,6 +67,7 @@
             this.sprcEmployee = new System.Windows.Forms.SplitContainer();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.btnMnlUpdateSendDate = new System.Windows.Forms.Button();
             this.txtWHName = new System.Windows.Forms.TextBox();
             this.txtWHCode = new System.Windows.Forms.TextBox();
             this.btnSearchWHCode = new System.Windows.Forms.Button();
@@ -80,6 +81,16 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.grdCalendar = new System.Windows.Forms.DataGridView();
+            this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDateSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSendFlag = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colPullFlag = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colReceiveDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colBtnCancelSend = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colBtnSent = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colBtnPull = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colBtnDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.FormPic = new System.Windows.Forms.PictureBox();
@@ -97,16 +108,6 @@
             this.btnCopy = new AllCashUFormsApp.View.UControl.CopyButton(this.components);
             this.btnSave = new AllCashUFormsApp.View.UControl.SaveButton(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
-            this.colBtnDel = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colBtnPull = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colBtnSent = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colBtnCancelSend = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colReceiveDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPullFlag = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colSendFlag = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colDateSend = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colWHID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.grdCalendar = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sprcEmployee)).BeginInit();
             this.sprcEmployee.Panel1.SuspendLayout();
@@ -116,13 +117,13 @@
             this.panel6.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdCalendar)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FormPic)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdCalendar)).BeginInit();
             this.SuspendLayout();
             // 
             // grdList
@@ -327,6 +328,7 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.btnMnlUpdateSendDate);
             this.panel6.Controls.Add(this.txtWHName);
             this.panel6.Controls.Add(this.txtWHCode);
             this.panel6.Controls.Add(this.btnSearchWHCode);
@@ -344,14 +346,34 @@
             this.panel6.Size = new System.Drawing.Size(431, 112);
             this.panel6.TabIndex = 166;
             // 
+            // btnMnlUpdateSendDate
+            // 
+            this.btnMnlUpdateSendDate.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnMnlUpdateSendDate.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnMnlUpdateSendDate.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMnlUpdateSendDate.Enabled = false;
+            this.btnMnlUpdateSendDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMnlUpdateSendDate.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnMnlUpdateSendDate.Image = ((System.Drawing.Image)(resources.GetObject("btnMnlUpdateSendDate.Image")));
+            this.btnMnlUpdateSendDate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMnlUpdateSendDate.Location = new System.Drawing.Point(152, 5);
+            this.btnMnlUpdateSendDate.Name = "btnMnlUpdateSendDate";
+            this.btnMnlUpdateSendDate.Size = new System.Drawing.Size(130, 33);
+            this.btnMnlUpdateSendDate.TabIndex = 235;
+            this.btnMnlUpdateSendDate.Text = "แก้ไข วันที่เตรียม";
+            this.btnMnlUpdateSendDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnMnlUpdateSendDate.UseVisualStyleBackColor = false;
+            this.btnMnlUpdateSendDate.Visible = false;
+            this.btnMnlUpdateSendDate.Click += new System.EventHandler(this.btnMnlUpdateSendDate_Click);
+            // 
             // txtWHName
             // 
             this.txtWHName.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.txtWHName.Location = new System.Drawing.Point(190, 41);
+            this.txtWHName.Location = new System.Drawing.Point(184, 41);
             this.txtWHName.MaxLength = 200;
             this.txtWHName.Name = "txtWHName";
             this.txtWHName.ReadOnly = true;
-            this.txtWHName.Size = new System.Drawing.Size(232, 23);
+            this.txtWHName.Size = new System.Drawing.Size(234, 23);
             this.txtWHName.TabIndex = 233;
             // 
             // txtWHCode
@@ -371,7 +393,7 @@
             this.btnSearchWHCode.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSearchWHCode.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchWHCode.Image")));
             this.btnSearchWHCode.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchWHCode.Location = new System.Drawing.Point(152, 41);
+            this.btnSearchWHCode.Location = new System.Drawing.Point(149, 41);
             this.btnSearchWHCode.Name = "btnSearchWHCode";
             this.btnSearchWHCode.Size = new System.Drawing.Size(32, 23);
             this.btnSearchWHCode.TabIndex = 232;
@@ -499,6 +521,163 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(440, 439);
             this.panel7.TabIndex = 167;
+            // 
+            // grdCalendar
+            // 
+            this.grdCalendar.AllowUserToAddRows = false;
+            this.grdCalendar.AllowUserToDeleteRows = false;
+            this.grdCalendar.AllowUserToResizeColumns = false;
+            this.grdCalendar.AllowUserToResizeRows = false;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdCalendar.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            this.grdCalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdCalendar.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colWHID,
+            this.colDateSend,
+            this.colSendFlag,
+            this.colPullFlag,
+            this.colReceiveDate,
+            this.colBtnCancelSend,
+            this.colBtnSent,
+            this.colBtnPull,
+            this.colBtnDel});
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle21.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdCalendar.DefaultCellStyle = dataGridViewCellStyle21;
+            this.grdCalendar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdCalendar.Location = new System.Drawing.Point(0, 0);
+            this.grdCalendar.Name = "grdCalendar";
+            this.grdCalendar.ReadOnly = true;
+            this.grdCalendar.Size = new System.Drawing.Size(798, 599);
+            this.grdCalendar.TabIndex = 1;
+            this.grdCalendar.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdCalendar_CellContentClick);
+            this.grdCalendar.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdCalendar_RowPostPaint);
+            // 
+            // colWHID
+            // 
+            this.colWHID.DataPropertyName = "WHID";
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colWHID.DefaultCellStyle = dataGridViewCellStyle12;
+            this.colWHID.HeaderText = "รหัสคลัง";
+            this.colWHID.Name = "colWHID";
+            this.colWHID.ReadOnly = true;
+            this.colWHID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colWHID.Width = 80;
+            // 
+            // colDateSend
+            // 
+            this.colDateSend.DataPropertyName = "DateSend";
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle13.Format = "dd/MM/yyyy";
+            dataGridViewCellStyle13.NullValue = null;
+            this.colDateSend.DefaultCellStyle = dataGridViewCellStyle13;
+            this.colDateSend.HeaderText = "วันที่เตรียม";
+            this.colDateSend.Name = "colDateSend";
+            this.colDateSend.ReadOnly = true;
+            this.colDateSend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colDateSend.Width = 80;
+            // 
+            // colSendFlag
+            // 
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle14.NullValue = false;
+            this.colSendFlag.DefaultCellStyle = dataGridViewCellStyle14;
+            this.colSendFlag.HeaderText = "ส่งยอด";
+            this.colSendFlag.Name = "colSendFlag";
+            this.colSendFlag.ReadOnly = true;
+            this.colSendFlag.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colSendFlag.Width = 55;
+            // 
+            // colPullFlag
+            // 
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle15.NullValue = false;
+            this.colPullFlag.DefaultCellStyle = dataGridViewCellStyle15;
+            this.colPullFlag.HeaderText = "ดึงยอด";
+            this.colPullFlag.Name = "colPullFlag";
+            this.colPullFlag.ReadOnly = true;
+            this.colPullFlag.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colPullFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colPullFlag.Width = 55;
+            // 
+            // colReceiveDate
+            // 
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colReceiveDate.DefaultCellStyle = dataGridViewCellStyle16;
+            this.colReceiveDate.HeaderText = "วันที่ส่งข้อมูล";
+            this.colReceiveDate.Name = "colReceiveDate";
+            this.colReceiveDate.ReadOnly = true;
+            this.colReceiveDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colReceiveDate.Width = 140;
+            // 
+            // colBtnCancelSend
+            // 
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBtnCancelSend.DefaultCellStyle = dataGridViewCellStyle17;
+            this.colBtnCancelSend.HeaderText = "";
+            this.colBtnCancelSend.Name = "colBtnCancelSend";
+            this.colBtnCancelSend.ReadOnly = true;
+            this.colBtnCancelSend.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colBtnCancelSend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colBtnCancelSend.Text = "ยังไม่ส่งยอด";
+            this.colBtnCancelSend.UseColumnTextForButtonValue = true;
+            // 
+            // colBtnSent
+            // 
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBtnSent.DefaultCellStyle = dataGridViewCellStyle18;
+            this.colBtnSent.HeaderText = "";
+            this.colBtnSent.Name = "colBtnSent";
+            this.colBtnSent.ReadOnly = true;
+            this.colBtnSent.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colBtnSent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colBtnSent.Text = "ส่งยอดแล้ว";
+            this.colBtnSent.UseColumnTextForButtonValue = true;
+            // 
+            // colBtnPull
+            // 
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBtnPull.DefaultCellStyle = dataGridViewCellStyle19;
+            this.colBtnPull.HeaderText = "";
+            this.colBtnPull.Name = "colBtnPull";
+            this.colBtnPull.ReadOnly = true;
+            this.colBtnPull.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colBtnPull.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colBtnPull.Text = "ดึงยอดแล้ว";
+            this.colBtnPull.UseColumnTextForButtonValue = true;
+            // 
+            // colBtnDel
+            // 
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colBtnDel.DefaultCellStyle = dataGridViewCellStyle20;
+            this.colBtnDel.HeaderText = "";
+            this.colBtnDel.Name = "colBtnDel";
+            this.colBtnDel.ReadOnly = true;
+            this.colBtnDel.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colBtnDel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colBtnDel.Text = "ลบ";
+            this.colBtnDel.UseColumnTextForButtonValue = true;
+            this.colBtnDel.Width = 80;
             // 
             // panel2
             // 
@@ -770,163 +949,6 @@
             this.panel1.Size = new System.Drawing.Size(1258, 28);
             this.panel1.TabIndex = 31;
             // 
-            // colBtnDel
-            // 
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBtnDel.DefaultCellStyle = dataGridViewCellStyle20;
-            this.colBtnDel.HeaderText = "";
-            this.colBtnDel.Name = "colBtnDel";
-            this.colBtnDel.ReadOnly = true;
-            this.colBtnDel.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colBtnDel.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colBtnDel.Text = "ลบ";
-            this.colBtnDel.UseColumnTextForButtonValue = true;
-            this.colBtnDel.Width = 80;
-            // 
-            // colBtnPull
-            // 
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBtnPull.DefaultCellStyle = dataGridViewCellStyle19;
-            this.colBtnPull.HeaderText = "";
-            this.colBtnPull.Name = "colBtnPull";
-            this.colBtnPull.ReadOnly = true;
-            this.colBtnPull.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colBtnPull.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colBtnPull.Text = "ดึงยอดแล้ว";
-            this.colBtnPull.UseColumnTextForButtonValue = true;
-            // 
-            // colBtnSent
-            // 
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBtnSent.DefaultCellStyle = dataGridViewCellStyle18;
-            this.colBtnSent.HeaderText = "";
-            this.colBtnSent.Name = "colBtnSent";
-            this.colBtnSent.ReadOnly = true;
-            this.colBtnSent.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colBtnSent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colBtnSent.Text = "ส่งยอดแล้ว";
-            this.colBtnSent.UseColumnTextForButtonValue = true;
-            // 
-            // colBtnCancelSend
-            // 
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colBtnCancelSend.DefaultCellStyle = dataGridViewCellStyle17;
-            this.colBtnCancelSend.HeaderText = "";
-            this.colBtnCancelSend.Name = "colBtnCancelSend";
-            this.colBtnCancelSend.ReadOnly = true;
-            this.colBtnCancelSend.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colBtnCancelSend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colBtnCancelSend.Text = "ยังไม่ส่งยอด";
-            this.colBtnCancelSend.UseColumnTextForButtonValue = true;
-            // 
-            // colReceiveDate
-            // 
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colReceiveDate.DefaultCellStyle = dataGridViewCellStyle16;
-            this.colReceiveDate.HeaderText = "วันที่ส่งข้อมูล";
-            this.colReceiveDate.Name = "colReceiveDate";
-            this.colReceiveDate.ReadOnly = true;
-            this.colReceiveDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colReceiveDate.Width = 140;
-            // 
-            // colPullFlag
-            // 
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle15.NullValue = false;
-            this.colPullFlag.DefaultCellStyle = dataGridViewCellStyle15;
-            this.colPullFlag.HeaderText = "ดึงยอด";
-            this.colPullFlag.Name = "colPullFlag";
-            this.colPullFlag.ReadOnly = true;
-            this.colPullFlag.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colPullFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colPullFlag.Width = 55;
-            // 
-            // colSendFlag
-            // 
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle14.NullValue = false;
-            this.colSendFlag.DefaultCellStyle = dataGridViewCellStyle14;
-            this.colSendFlag.HeaderText = "ส่งยอด";
-            this.colSendFlag.Name = "colSendFlag";
-            this.colSendFlag.ReadOnly = true;
-            this.colSendFlag.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colSendFlag.Width = 55;
-            // 
-            // colDateSend
-            // 
-            this.colDateSend.DataPropertyName = "DateSend";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle13.Format = "dd/MM/yyyy";
-            dataGridViewCellStyle13.NullValue = null;
-            this.colDateSend.DefaultCellStyle = dataGridViewCellStyle13;
-            this.colDateSend.HeaderText = "วันที่เตรียม";
-            this.colDateSend.Name = "colDateSend";
-            this.colDateSend.ReadOnly = true;
-            this.colDateSend.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colDateSend.Width = 80;
-            // 
-            // colWHID
-            // 
-            this.colWHID.DataPropertyName = "WHID";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colWHID.DefaultCellStyle = dataGridViewCellStyle12;
-            this.colWHID.HeaderText = "รหัสคลัง";
-            this.colWHID.Name = "colWHID";
-            this.colWHID.ReadOnly = true;
-            this.colWHID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colWHID.Width = 80;
-            // 
-            // grdCalendar
-            // 
-            this.grdCalendar.AllowUserToAddRows = false;
-            this.grdCalendar.AllowUserToDeleteRows = false;
-            this.grdCalendar.AllowUserToResizeColumns = false;
-            this.grdCalendar.AllowUserToResizeRows = false;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdCalendar.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
-            this.grdCalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdCalendar.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colWHID,
-            this.colDateSend,
-            this.colSendFlag,
-            this.colPullFlag,
-            this.colReceiveDate,
-            this.colBtnCancelSend,
-            this.colBtnSent,
-            this.colBtnPull,
-            this.colBtnDel});
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdCalendar.DefaultCellStyle = dataGridViewCellStyle21;
-            this.grdCalendar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdCalendar.Location = new System.Drawing.Point(0, 0);
-            this.grdCalendar.Name = "grdCalendar";
-            this.grdCalendar.ReadOnly = true;
-            this.grdCalendar.Size = new System.Drawing.Size(798, 599);
-            this.grdCalendar.TabIndex = 1;
-            this.grdCalendar.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdCalendar_CellContentClick);
-            this.grdCalendar.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdCalendar_RowPostPaint);
-            // 
             // frmReceiveTabletData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -951,6 +973,7 @@
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
             this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdCalendar)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
@@ -958,7 +981,6 @@
             this.panel3.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grdCalendar)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1020,5 +1042,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn colBtnSent;
         private System.Windows.Forms.DataGridViewButtonColumn colBtnPull;
         private System.Windows.Forms.DataGridViewButtonColumn colBtnDel;
+        private System.Windows.Forms.Button btnMnlUpdateSendDate;
     }
 }

@@ -63,7 +63,7 @@ namespace AllCashUFormsApp.View.UControl
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(219, 42);
+            this.btnCancel.Location = new System.Drawing.Point(195, 42);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(84, 37);
             this.btnCancel.TabIndex = 3;
@@ -80,7 +80,7 @@ namespace AllCashUFormsApp.View.UControl
             this.btnAdd.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.btnAdd.Image = ((System.Drawing.Image)(resources.GetObject("btnAdd.Image")));
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdd.Location = new System.Drawing.Point(112, 42);
+            this.btnAdd.Location = new System.Drawing.Point(105, 42);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(84, 37);
             this.btnAdd.TabIndex = 2;
@@ -100,6 +100,7 @@ namespace AllCashUFormsApp.View.UControl
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;

@@ -137,7 +137,43 @@ namespace AllCashUFormsApp.Controller
             dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
             return dt;
         }
-        
+
+        public bool ManualUpdateSendDate(string whid, DateTime sendDate)
+        {
+            bool ret = false;
+            //string sql = "select * from ReceiveTabletDataView_Lastest AS t1 ORDER BY t1.WHID,t1.DateSend ASC";
+
+            Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+            sqlParmas.Add("@WHID", whid);
+            sqlParmas.Add("@DateSend", sendDate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+            string sql = "proc_PreOrder_Update_SendDate"; //last edit by sailom.k 04/07/2022
+            var dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                ret = dt.Rows[0][0].ToString() == "1" ? true : false;
+            }
+
+            return ret;
+        }
+
+        public int RemovePrepareSalesDateLog(string user)
+        {
+            int ret = 0;
+
+            Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+            sqlParmas.Add("@User", user);
+
+            string sql = "proc_ReceiveTabletData_WriteLog"; //last edit by sailom.k 06/12/2022
+            var dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                ret = dt.Rows[0][0].ToString() == "1" ? 1 : 0;
+            }
+
+            return ret;
+        }
+
+
         public int RemoveData(tbl_SendData tbl_SendData)
         {
             return tbl_SendData.Delete();

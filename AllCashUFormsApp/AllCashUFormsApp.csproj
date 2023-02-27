@@ -150,6 +150,7 @@
   <ItemGroup>
     <Compile Include="Controller\AppVersion.cs" />
     <Compile Include="Controller\ArCustomerType.cs" />
+    <Compile Include="Controller\BackupDB.cs" />
     <Compile Include="Controller\BankNote.cs" />
     <Compile Include="Controller\BaseControl.cs" />
     <Compile Include="Controller\Branch.cs" />
@@ -203,7 +204,9 @@
     <Compile Include="Controller\SendData.cs" />
     <Compile Include="Controller\MigrateData.cs" />
     <Compile Include="Controller\SendToHQ.cs" />
+    <Compile Include="Controller\ShelfManagement.cs" />
     <Compile Include="Controller\ShopType.cs" />
+    <Compile Include="Controller\SQLPrompt.cs" />
     <Compile Include="Controller\SubDistict.cs" />
     <Compile Include="Controller\Supplier.cs" />
     <Compile Include="Controller\TabletSales.cs" />
@@ -317,6 +320,9 @@
     <Compile Include="Model\GetBranchWarehouse.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\GetCoreCardReason.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\GetCust_Routing.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -398,6 +404,9 @@
     <Compile Include="Model\tbl_ArCustomer.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\tbl_ArCustomerMapping.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\tbl_ArCustomerShelf.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -405,6 +414,9 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Branch.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_BranchCycle.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_BranchGroup.cs">
@@ -438,6 +450,12 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_Company.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CoreCard.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_CoreCardReason.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_CustQA.cs">
@@ -531,6 +549,12 @@
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_MstProvince_Mapping.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstWorkDate.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\tbl_MstWorkDate_HIS.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\tbl_PaidDetail.cs">
@@ -861,6 +885,7 @@
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Utilities\AnimatedCurs.cs" />
+    <Compile Include="Utilities\ButtonLogger.cs" />
     <Compile Include="Utilities\CCBoxItem.cs" />
     <Compile Include="Utilities\Connection.cs" />
     <Compile Include="Utilities\ConvertHelper.cs" />
@@ -879,6 +904,7 @@
     <Compile Include="Utilities\ObjectFactory.cs" />
     <Compile Include="Utilities\ObjectHelper.cs" />
     <Compile Include="Utilities\Printer.cs" />
+    <Compile Include="Utilities\PrinterHelper.cs" />
     <Compile Include="Utilities\PrintRDLCReport.cs" />
     <Compile Include="Utilities\SerializeHelper.cs" />
     <Compile Include="View\Page\frm1000SalesPre.cs">
@@ -886,6 +912,12 @@
     </Compile>
     <Compile Include="View\Page\frm1000SalesPre.Designer.cs">
       <DependentUpon>frm1000SalesPre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmBackup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmBackup.Designer.cs">
+      <DependentUpon>frmBackup.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmBrokenReason.cs">
       <SubType>Form</SubType>
@@ -899,11 +931,23 @@
     <Compile Include="View\Page\frmButtonTamplate.Designer.cs">
       <DependentUpon>frmButtonTamplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmCheckSendToCenterStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCheckSendToCenterStatus.Designer.cs">
+      <DependentUpon>frmCheckSendToCenterStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmCompany.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmCompany.designer.cs">
       <DependentUpon>frmCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerInfoCredit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmCustomerInfoCredit.designer.cs">
+      <DependentUpon>frmCustomerInfoCredit.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmCustomerMap.cs">
       <SubType>Form</SubType>
@@ -935,6 +979,12 @@
     <Compile Include="View\Page\FrmDocument.Designer.cs">
       <DependentUpon>FrmDocument.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmDocumentStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmDocumentStatus.designer.cs">
+      <DependentUpon>frmDocumentStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmEmpPosition.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -953,11 +1003,35 @@
     <Compile Include="View\Page\frmInventories.Designer.cs">
       <DependentUpon>frmInventories.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Page\frmLoadOD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmLoadOD.designer.cs">
+      <DependentUpon>frmLoadOD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmLoadRB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmLoadRB.designer.cs">
+      <DependentUpon>frmLoadRB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmLoadRL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmLoadRL.designer.cs">
+      <DependentUpon>frmLoadRL.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Page\frmOD.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Page\frmOD.designer.cs">
       <DependentUpon>frmOD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmPayCredit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmPayCredit.designer.cs">
+      <DependentUpon>frmPayCredit.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmPermission.cs">
       <SubType>Form</SubType>
@@ -1072,6 +1146,18 @@
     </Compile>
     <Compile Include="View\Page\frmSendUserData.designer.cs">
       <DependentUpon>frmSendUserData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmShelfManangement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmShelfManangement.designer.cs">
+      <DependentUpon>frmShelfManangement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Page\frmSQLPrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Page\frmSQLPrompt.Designer.cs">
+      <DependentUpon>frmSQLPrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Page\frmTabletSalesPre.cs">
       <SubType>Form</SubType>
@@ -1201,6 +1287,36 @@
     </Compile>
     <Compile Include="View\UControl\frmCrystalReportEx.Designer.cs">
       <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmDocDate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmDocDate.Designer.cs">
+      <DependentUpon>frmDocDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmRecoveryPOPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmRecoveryPOPopup.Designer.cs">
+      <DependentUpon>frmRecoveryPOPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchBranch.designer.cs">
+      <DependentUpon>frmSearchBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchCustomer.designer.cs">
+      <DependentUpon>frmSearchCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchVE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\UControl\frmSearchVE.Designer.cs">
+      <DependentUpon>frmSearchVE.cs</DependentUpon>
     </Compile>
     <Compile Include="View\UControl\frmSignaturePicture.cs">
       <SubType>Form</SubType>
@@ -1605,14 +1721,23 @@
     <EmbeddedResource Include="View\Page\frmAddMenu.resx">
       <DependentUpon>frmAddMenu.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmBackup.resx">
+      <DependentUpon>frmBackup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmBrokenReason.resx">
       <DependentUpon>frmBrokenReason.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmButtonTamplate.resx">
       <DependentUpon>frmButtonTamplate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCheckSendToCenterStatus.resx">
+      <DependentUpon>frmCheckSendToCenterStatus.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmCompany.resx">
       <DependentUpon>frmCompany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmCustomerInfoCredit.resx">
+      <DependentUpon>frmCustomerInfoCredit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmCustomerInfo.resx">
       <DependentUpon>frmCustomerInfo.cs</DependentUpon>
@@ -1635,6 +1760,9 @@
     <EmbeddedResource Include="View\Page\FrmDocument.resx">
       <DependentUpon>FrmDocument.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmDocumentStatus.resx">
+      <DependentUpon>frmDocumentStatus.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmEmployeeInfo.resx">
       <DependentUpon>frmEmployeeInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -1650,8 +1778,20 @@
     <EmbeddedResource Include="View\Page\frmInventories.resx">
       <DependentUpon>frmInventories.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmLoadOD.resx">
+      <DependentUpon>frmLoadOD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmLoadRB.resx">
+      <DependentUpon>frmLoadRB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmLoadRL.resx">
+      <DependentUpon>frmLoadRL.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmOD.resx">
       <DependentUpon>frmOD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmPayCredit.resx">
+      <DependentUpon>frmPayCredit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\FrmPay.resx">
       <DependentUpon>FrmPay.cs</DependentUpon>
@@ -1735,8 +1875,14 @@
     <EmbeddedResource Include="View\Page\frmSendUserData.resx">
       <DependentUpon>frmSendUserData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmShelfManangement.resx">
+      <DependentUpon>frmShelfManangement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmShelfPopup.resx">
       <DependentUpon>frmShelfPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Page\frmSQLPrompt.resx">
+      <DependentUpon>frmSQLPrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Page\frmSupplierInfo.resx">
       <DependentUpon>frmSupplierInfo.cs</DependentUpon>
@@ -1806,6 +1952,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmCrystalReportEx.resx">
       <DependentUpon>frmCrystalReportEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmDocDate.resx">
+      <DependentUpon>frmDocDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmRecoveryPOPopup.resx">
+      <DependentUpon>frmRecoveryPOPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchBranch.resx">
+      <DependentUpon>frmSearchBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchCustomer.resx">
+      <DependentUpon>frmSearchCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\UControl\frmSearchVE.resx">
+      <DependentUpon>frmSearchVE.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UControl\frmSignaturePicture.resx">
       <DependentUpon>frmSignaturePicture.cs</DependentUpon>
@@ -1968,11 +2129,18 @@
     <Content Include="UNI_LOGO1_ICON-1.ico" />
     <Content Include="UNI_LOGO1_ICON.ico" />
     <Content Include="UNI_LOGO7_ICON.ico" />
+    <Content Include="XSLT\ActualSales_By_Day.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\ActualSales_By_Day_Cycle.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Form_IV.xslt" />
     <Content Include="XSLT\Form_OD.xslt" />
     <Content Include="XSLT\Form_RE_XSLT.xslt" />
     <Content Include="XSLT\Form_V.xslt" />
     <Content Include="XSLT\Form_V_Copy.xslt" />
+    <Content Include="XSLT\GetCustomerData_AND_Shelf_XSLT.xslt" />
     <Content Include="XSLT\GetCustomer_DuplicateAddress_XSLT.xslt" />
     <Content Include="XSLT\GetCustomer_DuplicateName_XSLT.xslt" />
     <Content Include="XSLT\proc_ActualSalesByBill.xslt">
@@ -1980,25 +2148,54 @@
     </Content>
     <Content Include="XSLT\proc_GetCustomerDataToExcel.xslt" />
     <Content Include="XSLT\proc_GetProductDataToExcel.xslt" />
+    <Content Include="XSLT\proc_RPTStock_NoSalesProduct_XSLT.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\proc_RPTStock_Morning.xslt" />
     <Content Include="XSLT\proc_StockMovement_ByWH_RefCode.xslt" />
     <Content Include="XSLT\ProductMovement_Details.xslt" />
     <Content Include="XSLT\ProductMovement_Summary.xslt" />
     <Content Include="XSLT\Rep_ActualSale_By_Customer_Bath.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Bath_Cycle.xslt" />
     <Content Include="XSLT\Rep_ActualSale_By_Customer_Brick.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Brick_Cycle.xslt" />
     <Content Include="XSLT\Rep_ActualSale_By_Customer_Carton.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Customer_Carton_Cycle.xslt" />
     <Content Include="XSLT\Rep_ActualSale_By_Province.xslt" />
+    <Content Include="XSLT\Rep_ActualSale_By_Province_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Actual_Sale_By_Sku.xslt" />
     <Content Include="XSLT\Rep_BankNote_TotalSalePerMonth.xslt" />
     <Content Include="XSLT\Rep_Bank_Note.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_Bakn_Note.xslt" />
-    <Content Include="XSLT\Rep_Cust_Sale_By_Root.xslt" />
-    <Content Include="XSLT\Rep_Daily_Sales_OLD.xslt" />
-    <Content Include="XSLT\Rep_Distribution.xslt" />
-    <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI.xslt">
+    <Content Include="XSLT\Rep_BillByDate_AllBill.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_AllBill_Cycle.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Brick.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Brick_Cycle.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Carton.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_Carton_Cycle.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_ExcVat.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_ExcVat_Cycle.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_TotalDue.xslt" />
+    <Content Include="XSLT\Rep_BillByDate_TotalDue_Cycle.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_Count_Customer_Sales_By_Product.xslt" />
+    <Content Include="XSLT\Rep_Count_Cust_By_Branch.xslt" />
+    <Content Include="XSLT\Rep_Customer_By_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Customer_By_Cycle_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Customer_Detail_By_Branch.xslt" />
+    <Content Include="XSLT\Rep_Customer_List_By_WH.xslt" />
+    <Content Include="XSLT\Rep_Customer_List_By_WH_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Customer_Sales_Yearly.xslt" />
+    <Content Include="XSLT\Rep_Customer_Sales_Yearly_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Customer_Sale_By_Sku.xslt" />
+    <Content Include="XSLT\Rep_Cust_Sale_By_Root.xslt" />
+    <Content Include="XSLT\Rep_Cust_Sale_By_Root_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Daily_Sales_OLD.xslt" />
+    <Content Include="XSLT\Rep_Distribution.xslt" />
+    <Content Include="XSLT\Rep_Distribution_Cycle.xslt" />
     <Content Include="XSLT\proc_DSR_Sales_Summary.xslt">
       <SubType>Designer</SubType>
     </Content>
@@ -2011,38 +2208,52 @@
     <Content Include="XSLT\proc_StockMovement_ByWH.xslt">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="XSLT\Rep_BillByDate_AllBill.xslt" />
-    <Content Include="XSLT\Rep_BillByDate_Brick.xslt" />
-    <Content Include="XSLT\Rep_BillByDate_Carton.xslt" />
-    <Content Include="XSLT\Rep_BillByDate_ExcVat.xslt" />
-    <Content Include="XSLT\Rep_BillByDate_TotalDue.xslt" />
     <Content Include="XSLT\Rep_BillDuplicate.xslt" />
     <Content Include="XSLT\Rep_Check_Shelf.xslt">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="XSLT\Rep_Customer_By_Cycle.xslt" />
     <Content Include="XSLT\Rep_Customer_By_Sequence.xslt" />
-    <Content Include="XSLT\Rep_Customer_List_By_WH.xslt" />
     <Content Include="XSLT\Rep_Daily_Sales.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_Detail_Sales_By_Cust.xslt" />
+    <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI.xslt" />
+    <Content Include="XSLT\Rep_DSR_EffectiveCall_KPI_Cycle.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XSLT\Rep_DSR_EffectiveCall_SKU.xslt" />
+    <Content Include="XSLT\Rep_DSR_EffectiveCall_SKU_TEST.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Bath.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Bath_Cycle.xslt" />
     <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Carton.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Carton_Cycle.xslt" />
     <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Unit.xslt" />
+    <Content Include="XSLT\Rep_DSR_Sales_By_Sku_Unit_Cycle.xslt" />
+    <Content Include="XSLT\Rep_IV_Sales_By_Type_XSLT.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Rep_IV_Sales2.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_New_Customer.xslt" />
+    <Content Include="XSLT\Rep_New_Customer_Cycle.xslt" />
     <Content Include="XSLT\Rep_New_Customer_Detail.xslt" />
+    <Content Include="XSLT\Rep_New_Customer_Detail_Cycle.xslt" />
     <Content Include="XSLT\Rep_PreOrder_POStatus.xslt" />
     <Content Include="XSLT\Rep_ProductHero_ByDate_XSLT.xslt" />
+    <Content Include="XSLT\Rep_ProductHero_ByDate_XSLT_Cycle.xslt" />
+    <Content Include="XSLT\Rep_Product_Transfer_XSLT_Cycle.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XSLT\Rep_Product_Transfer.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_ReceiveStock.xslt" />
     <Content Include="XSLT\Rep_Rec_By_Doc.xslt" />
     <Content Include="XSLT\Rep_Rec_By_Subb.xslt" />
+    <Content Include="XSLT\Rep_RJ_By_Doc_Detail_Cycle.xslt" />
     <Content Include="XSLT\Rep_Sales_By_Customer.xslt" />
     <Content Include="XSLT\Rep_RJ_By_Doc_Detail.xslt">
       <SubType>Designer</SubType>
@@ -2050,20 +2261,24 @@
     <Content Include="XSLT\Rep_Sales_By_Doc_Detail.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_Sales_By_Pay.xslt" />
+    <Content Include="XSLT\Rep_Sales_By_VanType_Cycle.xslt" />
     <Content Include="XSLT\Rep_Sales_Per_Emp.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_Sales_By_VanType.xslt" />
     <Content Include="XSLT\Rep_Sum_Shelf.xslt" />
+    <Content Include="XSLT\Rep_Sum_Shelf_Cycle.xslt" />
     <Content Include="XSLT\Rep_Sum_Shelf_Daily.xslt">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="XSLT\ActualSales_By_Day.xslt">
+    <Content Include="XSLT\Rep_Sum_Shelf_Daily_Cycle.xslt">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="XSLT\Rep_Visit_Per_Day.xslt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="XSLT\Rep_Visit_Per_Day_Cycle.xslt" />
     <Content Include="XSLT\Rep_V_Sales.xslt">
       <SubType>Designer</SubType>
     </Content>

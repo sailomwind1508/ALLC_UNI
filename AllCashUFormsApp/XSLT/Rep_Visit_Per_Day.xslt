@@ -180,8 +180,7 @@ grouping-separator="'" digit="#" zero-digit="0" decimal-separator="."/>
                 "//Rep_Visit_Per_Day_XSLT
                 [generate-id() = 
                  generate-id(key('kRows', WHID))]">
-							<xsl:sort select="WHID" />
-							
+							<xsl:sort select="WHID"/>
 						</xsl:apply-templates>
 
 					</tbody>

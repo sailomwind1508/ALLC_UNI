@@ -26,7 +26,7 @@ namespace AllCashUFormsApp.Model
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+
         public virtual DbSet<tbl_AdmControlList> tbl_AdmControlList { get; set; }
         public virtual DbSet<tbl_AdmFormList> tbl_AdmFormList { get; set; }
         public virtual DbSet<tbl_AdmMenuList> tbl_AdmMenuList { get; set; }
@@ -34,9 +34,11 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_ApSupplier> tbl_ApSupplier { get; set; }
         public virtual DbSet<tbl_ApSupplierType> tbl_ApSupplierType { get; set; }
         public virtual DbSet<tbl_ArCustomer> tbl_ArCustomer { get; set; }
+        public virtual DbSet<tbl_ArCustomerMapping> tbl_ArCustomerMapping { get; set; }
         public virtual DbSet<tbl_ArCustomerShelf> tbl_ArCustomerShelf { get; set; }
         public virtual DbSet<tbl_ArCustomerType> tbl_ArCustomerType { get; set; }
         public virtual DbSet<tbl_Branch> tbl_Branch { get; set; }
+        public virtual DbSet<tbl_BranchCycle> tbl_BranchCycle { get; set; }
         public virtual DbSet<tbl_BranchGroup> tbl_BranchGroup { get; set; }
         public virtual DbSet<tbl_BranchWarehouse> tbl_BranchWarehouse { get; set; }
         public virtual DbSet<tbl_Cause> tbl_Cause { get; set; }
@@ -45,6 +47,8 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_CfgPosMachine> tbl_CfgPosMachine { get; set; }
         public virtual DbSet<tbl_CfgSetting> tbl_CfgSetting { get; set; }
         public virtual DbSet<tbl_Company> tbl_Company { get; set; }
+        public virtual DbSet<tbl_CoreCard> tbl_CoreCard { get; set; }
+        public virtual DbSet<tbl_CoreCardReason> tbl_CoreCardReason { get; set; }
         public virtual DbSet<tbl_CustQA> tbl_CustQA { get; set; }
         public virtual DbSet<tbl_Department> tbl_Department { get; set; }
         public virtual DbSet<tbl_DiscountType> tbl_DiscountType { get; set; }
@@ -78,10 +82,10 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_PaidDetail> tbl_PaidDetail { get; set; }
         public virtual DbSet<tbl_PaidMaster> tbl_PaidMaster { get; set; }
         public virtual DbSet<tbl_PayDetail> tbl_PayDetail { get; set; }
+        public virtual DbSet<tbl_PayMaster> tbl_PayMaster { get; set; }
         public virtual DbSet<tbl_PODetail> tbl_PODetail { get; set; }
         public virtual DbSet<tbl_PODetail_PRE> tbl_PODetail_PRE { get; set; }
         public virtual DbSet<tbl_POMaster> tbl_POMaster { get; set; }
-        public virtual DbSet<tbl_POMaster_PRE> tbl_POMaster_PRE { get; set; }
         public virtual DbSet<tbl_Position> tbl_Position { get; set; }
         public virtual DbSet<tbl_PRDetail> tbl_PRDetail { get; set; }
         public virtual DbSet<tbl_PreSaleWarehouse> tbl_PreSaleWarehouse { get; set; }
@@ -149,12 +153,15 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<tbl_CfgFixedHolidays> tbl_CfgFixedHolidays { get; set; }
         public virtual DbSet<tbl_CfgFloatingHolidays> tbl_CfgFloatingHolidays { get; set; }
         public virtual DbSet<tbl_MstGrade> tbl_MstGrade { get; set; }
+        public virtual DbSet<tbl_MstWorkDate> tbl_MstWorkDate { get; set; }
+        public virtual DbSet<tbl_MstWorkDate_HIS> tbl_MstWorkDate_HIS { get; set; }
         public virtual DbSet<tbl_ReportGroup> tbl_ReportGroup { get; set; }
         public virtual DbSet<tbl_ReportMenu> tbl_ReportMenu { get; set; }
         public virtual DbSet<Temp_Rep_Visit_Per_Day_PO> Temp_Rep_Visit_Per_Day_PO { get; set; }
         public virtual DbSet<AllSaleEmployeeView> AllSaleEmployeeViews { get; set; }
         public virtual DbSet<ArCustomerView> ArCustomerViews { get; set; }
         public virtual DbSet<GetBranchWarehouse> GetBranchWarehouses { get; set; }
+        public virtual DbSet<GetCoreCardReason> GetCoreCardReasons { get; set; }
         public virtual DbSet<GetCust_Routing> GetCust_Routing { get; set; }
         public virtual DbSet<GetProduct> GetProducts { get; set; }
         public virtual DbSet<GetPromotion> GetPromotions { get; set; }
@@ -179,6 +186,6 @@ namespace AllCashUFormsApp.Model
         public virtual DbSet<V_SummaryRL_Get> V_SummaryRL_Get { get; set; }
         public virtual DbSet<V_SummaryRL_Stock> V_SummaryRL_Stock { get; set; }
         public virtual DbSet<V_UBNDashboard> V_UBNDashboard { get; set; }
-        public virtual DbSet<tbl_PayMaster> tbl_PayMaster { get; set; }
+        public virtual DbSet<tbl_POMaster_PRE> tbl_POMaster_PRE { get; set; }
     }
 }

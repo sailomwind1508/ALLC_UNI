@@ -568,12 +568,44 @@ namespace AllCashUFormsApp
             }
         }
 
+        public static DataTable GetCustomerData_AllMoney(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_GetCustomerData_AllMoney";
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+                return null;
+            }
+        }
+
         public static DataTable GetCustomerData(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)//
         {
             try
             {
                 DataTable dt = new DataTable();
                 string sql = "proc_GetCustomerData_New";
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+                return null;
+            }
+        }
+
+        public static DataTable GetCustomerByNames(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)//
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_GetCustomerData_ByNames";
                 dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
                 return dt;
             }
@@ -773,9 +805,76 @@ namespace AllCashUFormsApp
                     sql += " AND t1.WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _WHID + "', ','))";
                 }
 
-                sql += "  AND t1.FlagDel = 0";
-                sql += @"  AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
-                           AND Latitude <> '0.0' AND Longitude <> '0.0' ";
+                sql += "  AND t1.FlagDel = 0 AND CustName NOT LIKE '%ไม่ระบุ%' ";
+
+                //last edit by sailom .k 10/10/2022
+                //sql += @"  AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
+                //           AND Latitude <> '0.0' AND Longitude <> '0.0' ";
+
+                ret = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+            }
+
+            return ret;
+        }
+
+        public static DataTable GetCustomerByWHID_DataTable(this tbl_ArCustomer tbl_ArCustomer, string _WHID = "", string _SalAreaID = "", string customerID = "")
+        {
+            DataTable ret = new DataTable();
+            try
+            {
+                string sql = "";
+                sql = @"SELECT [CustomerID]
+                    ,REPLACE(REPLACE([CustName],',',''), '|', '') AS CustName
+                    ,REPLACE(REPLACE(ISNULL([BillTo],''),',',''), '|', '') AS BillTo
+                    ,REPLACE(REPLACE(ISNULL([Telephone],''),',',''), '|', '') AS Telephone
+                    ,t1.Seq
+                    ,Latitude
+                    ,Longitude
+                    ,t2.SalAreaName ";
+
+                if (_WHID.Length > 6)
+                {
+                    sql += " ,'pin_mark' + CAST(CAST(SUBSTRING(t1.WHID, 5, 2) AS INT) AS NVARCHAR(5))  + '.png' AS [MarkerImage]";
+                }
+                else
+                {
+                    sql += " ,'pin_mark' + CAST(t2.Seq AS NVARCHAR) + '.png' AS [MarkerImage]";
+                }
+
+                sql += @" , (CASE WHEN ISNULL(CAST(t1.CustImage AS NVARCHAR), '') = '' then NULL
+                    ELSE 
+	                    IIF(CAST(t1.CustImage AS NVARCHAR) LIKE '%Images%', t1.CustImage, NULL) 
+                    END) AS CustImage
+                    , t1.FlagDel
+                    , t1.WHID
+                    FROM tbl_ArCustomer t1 
+                    INNER JOIN tbl_SalArea t2 ON t1.SalAreaID = t2.SalAreaID ";
+
+
+                sql += "  WHERE 1=1";
+                if (!string.IsNullOrEmpty(customerID))
+                {
+                    sql += " AND t1.CustomerID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + customerID + "', ','))";
+                }
+                else if(!string.IsNullOrEmpty(_SalAreaID))
+                {
+                    sql += " AND t1.SalAreaID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _SalAreaID + "', ','))";
+                    
+                }
+                else
+                {
+                    sql += " AND t1.WHID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _WHID + "', ','))";
+                }
+
+                sql += "  AND t1.FlagDel = 0 AND CustName NOT LIKE '%ไม่ระบุ%' ";
+
+                //last edit by sailom .k 10/10/2022
+                //sql += @"  AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
+                //           AND Latitude <> '0.0' AND Longitude <> '0.0' ";
 
                 ret = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
             }
@@ -802,15 +901,29 @@ namespace AllCashUFormsApp
                 //                ORDER BY WHID,SalAreaID";
 
                 //last edit by sailom .k 07/06/2022
+                //          //last edit by sailom .k 07/06/2022
+                //          sql += @"SELECT COUNT(CustomerID) AS 'CountCust'
+                //, ISNULL(WHID, '') AS 'WHID'
+                //, ISNULL(SalAreaID, '') AS 'SalAreaID'
+                //                  FROM tbl_ArCustomer
+                //                  WHERE FlagDel = 0
+                //                  AND ISNULL(WHID, '') <> '' AND ISNULL(SalAreaID, '') <> ''
+                //                  AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
+                //                  AND Latitude <> '0.0' AND Longitude <> '0.0'
+                //                  GROUP BY WHID,SalAreaID
+                //                  ORDER BY WHID, SalAreaID";
+
+
+                //last edit by sailom .k 10/10/2022
                 sql += @"SELECT COUNT(CustomerID) AS 'CountCust'
 						, ISNULL(WHID, '') AS 'WHID'
 						, ISNULL(SalAreaID, '') AS 'SalAreaID'
+                        , FlagDel
                         FROM tbl_ArCustomer
                         WHERE FlagDel = 0
                         AND ISNULL(WHID, '') <> '' AND ISNULL(SalAreaID, '') <> ''
-                        AND Latitude LIKE '%.%' AND Longitude LIKE '%.%'
-                        AND Latitude <> '0.0' AND Longitude <> '0.0'
-                        GROUP BY WHID,SalAreaID
+                        AND CustName NOT LIKE '%ไม่ระบุ%' 
+                        GROUP BY WHID,SalAreaID, FlagDel
                         ORDER BY WHID, SalAreaID";
 
                 dt = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
@@ -865,5 +978,26 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+        public static bool CheckLimit_UpdateCustomer(this tbl_ArCustomer tbl_ArCustomer, Dictionary<string, object> _params)
+        {
+            bool ret = false;
+            try
+            {
+                string sql = "proc_CheckLimit_UpdateCustomer";
+                DataTable dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+
+                if (dt.Rows[0].Field<int>("Column1").ToString() == "1")
+                {
+                    ret = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomer.GetType());
+                ret = false;
+            }
+
+            return ret;
+        }
     }
 }

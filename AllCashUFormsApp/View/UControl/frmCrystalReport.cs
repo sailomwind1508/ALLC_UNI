@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,6 +25,7 @@ namespace AllCashUFormsApp.View.UControl
         //private string formName = "";
         private string StoreName = "";
         private string ReportName = "";
+        public string reportHeader { get; set; }
         bool autoGenEx = false;
         Dictionary<string, object> Params = new Dictionary<string, object>();
         private string ReportPath = ConfigurationManager.AppSettings["ReportPath"];
@@ -596,7 +596,12 @@ namespace AllCashUFormsApp.View.UControl
                     dtClone.Columns.Add(item);
                 }
 
-                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+                var nDay = dayGroup.Where(x => x.data.Field<int>("day") != 99).ToList();
+                var sDay = dayGroup.Where(x => x.data.Field<int>("day") == 99).ToList();
+                var _dayGroup = sDay;
+                _dayGroup.AddRange(nDay.OrderByDescending(x => Convert.ToInt32(x.data.Field<string>("Year"))).ThenByDescending(x => x.data.Field<int>("Month")).ThenByDescending(x => x.data.Field<int>("day")).ToList());
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
                 int dof = _dayGroup.Count;
                 foreach (var day in _dayGroup)
                 {
@@ -619,9 +624,13 @@ namespace AllCashUFormsApp.View.UControl
                     for (int i = 0; i < tempDataRow.Count; i++)
                     {
                         var r = tempDataRow[i];
+                        string visit_per_day = (sheetName == "สัดส่วน") ? (Convert.ToDecimal(r["visit_cust"]) / (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1)).ToString() : r["visit_cust"].ToString();
+                        string bought_per_day = (sheetName == "สัดส่วน") ? (Convert.ToDecimal(r["boughtperday"]) / (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1)).ToString() : r["boughtperday"].ToString();
+
                         dtClone.Rows.Add(r["branchname"].ToString(), r["BranchID"].ToString(), r["actualexvat"].ToString(), r["actualincvat"].ToString(), r["actualperday"].ToString(), r["percentage"].ToString()
-                        , r["visit_cust"].ToString(), r["visit_cust"].ToString(), r["perc_visit"].ToString(), r["custbought"].ToString(), r["boughtperday"].ToString(), r["sku"].ToString()
+                        , r["visit_cust"].ToString(), visit_per_day, r["perc_visit"].ToString(), r["custbought"].ToString(), bought_per_day, r["sku"].ToString()
                         , r["invoice"].ToString(), r["sku/inv"].ToString());
+
                     }
                     //Add total row
                     var total_actualexvat = tempDataRow.Sum(x => x.Field<decimal>("actualexvat"));
@@ -629,10 +638,10 @@ namespace AllCashUFormsApp.View.UControl
                     var total_actualperday = tempDataRow.Sum(x => x.Field<decimal>("actualperday"));
                     var total_percentage = tempDataRow.Sum(x => x.Field<decimal>("percentage"));
                     var total_visit_cust = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
-                    var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
+                    var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust")) / ((sheetName == "สัดส่วน") ? (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1) : 1);
 
                     var total_custbought = tempDataRow.Sum(x => x.Field<decimal>("custbought"));
-                    var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday"));
+                    var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday")) / ((sheetName == "สัดส่วน") ? (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1) : 1);
                     var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
                     var total_invoice = tempDataRow.Sum(x => x.Field<decimal>("invoice"));
                     var total_sku_inv = tempDataRow.Sum(x => x.Field<decimal>("sku/inv"));
@@ -667,7 +676,7 @@ namespace AllCashUFormsApp.View.UControl
                         //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
 
                         string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), "CENTER"
-                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+                        , reportHeader, row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
 
                         CreateRatioWorkSheet(worKbooK, dtClone, header);
                     }
@@ -762,8 +771,15 @@ namespace AllCashUFormsApp.View.UControl
                     dtClone.Columns.Add(item);
                 }
 
-                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+                var nDay = dayGroup.Where(x => x.data.Field<int>("day") != 99).ToList();
+                var sDay = dayGroup.Where(x => x.data.Field<int>("day") == 99).ToList();
+                var _dayGroup = sDay;
+                _dayGroup.AddRange(nDay.OrderByDescending(x => Convert.ToInt32(x.data.Field<string>("Year"))).ThenByDescending(x => x.data.Field<int>("Month")).ThenByDescending(x => x.data.Field<int>("day")).ToList());
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
                 int dof = _dayGroup.Count;
+
                 foreach (var day in _dayGroup)
                 {
                     var vanInDay = enumList.Where(a => a.Field<int>("day") == day.data.Field<int>("day")).ToList();
@@ -786,8 +802,12 @@ namespace AllCashUFormsApp.View.UControl
                     for (int i = 0; i < tempDataRow.Count; i++)
                     {
                         var r = tempDataRow[i];
+                        string visit_per_day = (sheetName == "สัดส่วน") ? (Convert.ToDecimal(r["visit_cust"]) / (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1)).ToString() : r["visit_cust"].ToString();
+                        string bought_per_day = (sheetName == "สัดส่วน") ? (Convert.ToDecimal(r["boughtperday"]) / (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1)).ToString() : r["boughtperday"].ToString();
+
+
                         dtClone.Rows.Add(r["empname"].ToString(), r["van"].ToString(), r["actualexvat"].ToString(), r["actualincvat"].ToString(), r["actualperday"].ToString(), r["percentage"].ToString()
-                        , r["visit_cust"].ToString(), r["visit_cust"].ToString(), r["perc_visit"].ToString(), r["custbought"].ToString(), r["boughtperday"].ToString(), r["sku"].ToString()
+                        , r["visit_cust"].ToString(), visit_per_day, r["perc_visit"].ToString(), r["custbought"].ToString(), bought_per_day, r["sku"].ToString()
                         , r["invoice"].ToString(), r["sku/inv"].ToString());
                     }
                     //Add total row
@@ -796,10 +816,10 @@ namespace AllCashUFormsApp.View.UControl
                     var total_actualperday = tempDataRow.Sum(x => x.Field<decimal>("actualperday"));
                     var total_percentage = tempDataRow.Sum(x => x.Field<decimal>("percentage"));
                     var total_visit_cust = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
-                    var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust"));
+                    var total_visit_cust2 = tempDataRow.Sum(x => x.Field<decimal>("visit_cust")) / ((sheetName == "สัดส่วน") ? (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1) : 1);
 
                     var total_custbought = tempDataRow.Sum(x => x.Field<decimal>("custbought"));
-                    var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday"));
+                    var total_boughtperday = tempDataRow.Sum(x => x.Field<decimal>("boughtperday")) / ((sheetName == "สัดส่วน") ? (_dayGroup.Count - 1 == 0 ? 1 : _dayGroup.Count - 1) : 1);
                     var total_sku = tempDataRow.Sum(x => x.Field<decimal>("sku"));
                     var total_invoice = tempDataRow.Sum(x => x.Field<decimal>("invoice"));
                     var total_sku_inv = tempDataRow.Sum(x => x.Field<decimal>("sku/inv"));
@@ -834,7 +854,7 @@ namespace AllCashUFormsApp.View.UControl
                         //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
 
                         string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), row1["branchname"].ToString()
-                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+                        , reportHeader, row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
 
                         CreateRatioWorkSheet(worKbooK, dtClone, header);
                     }
@@ -1075,7 +1095,13 @@ namespace AllCashUFormsApp.View.UControl
                     dtClone.Columns.Add(item);
                 }
 
-                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+                var nDay = dayGroup.Where(x => x.data.Field<int>("day") != 99).ToList();
+                var sDay = dayGroup.Where(x => x.data.Field<int>("day") == 99).ToList();
+                var _dayGroup = sDay;
+                _dayGroup.AddRange(nDay.OrderByDescending(x => Convert.ToInt32(x.data.Field<string>("Year"))).ThenByDescending(x => x.data.Field<int>("Month")).ThenByDescending(x => x.data.Field<int>("day")).ToList());
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+
                 int dof = _dayGroup.Count;
                 foreach (var day in _dayGroup)
                 {
@@ -1140,7 +1166,7 @@ namespace AllCashUFormsApp.View.UControl
                         //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
 
                         string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), "CENTER"
-                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+                        , reportHeader, row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
 
                         CreateRatioKPIWorkSheet(worKbooK, dtClone, header);
                     }
@@ -1234,7 +1260,16 @@ namespace AllCashUFormsApp.View.UControl
                     dtClone.Columns.Add(item);
                 }
 
-                var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                //var _dayGroup = dayGroup.OrderByDescending(x => x.data.Field<int>("day")).ToList();
+                //var _dayGroup = dayGroup.OrderByDescending(x => Convert.ToInt32(x.data.Field<string>("Year"))).ThenByDescending(x => x.data.Field<int>("Month")).ThenByDescending(x => x.data.Field<int>("day")).ToList(); //last edit by sailom.k 20/12/2022
+
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+                var nDay = dayGroup.Where(x => x.data.Field<int>("day") != 99).ToList();
+                var sDay = dayGroup.Where(x => x.data.Field<int>("day") == 99).ToList();
+                var _dayGroup = sDay;  
+                _dayGroup.AddRange(nDay.OrderByDescending(x => Convert.ToInt32(x.data.Field<string>("Year"))).ThenByDescending(x => x.data.Field<int>("Month")).ThenByDescending(x => x.data.Field<int>("day")).ToList());
+                //last edit by sailom.k 20/12/2022---------------------------------------------------
+
                 int dof = _dayGroup.Count;
                 foreach (var day in _dayGroup)
                 {
@@ -1299,7 +1334,8 @@ namespace AllCashUFormsApp.View.UControl
                         //string headerDate = tempDataRow[0]["day"].ToString() == "99" ? fDate + "-" + lDate : tempDataRow[0]["HDate"].ToString();
 
                         string[] header = new string[] { sheetName, row1["CompanyName"].ToString(), row1["branchname"].ToString()
-                        , row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+                            , reportHeader, row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
+                        //, row1["month"].ToString(), row1["year"].ToString(), tempDataRow[0]["HDate"].ToString()};
 
                         CreateRatioKPIWorkSheet(worKbooK, dtClone, header);
                     }

@@ -136,6 +136,18 @@
     <value>True</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnUpdatePromotion.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAFASURBVFhH7ZWxSgNBFEXXRhFbQQS/IIVgIVgksyAEUkTZ
+        SQh+iqBNynyHnemUnRE7G8HGP7AQwV5Q7DS+BzeIctUU2RfFOXCK5M7suyQvJEv8K3IfRkzE9rAyKmJ7
+        WBkVcSJzvtxnIraHfV0qYntYGRWxPXkRBkzEibRDP8LKqIjtYWVUxPawMipie1gZFXF1bPWGi86HKzZ8
+        Iotw3WyeL+Fx06Hhz1ZzX97Rgd97n/u4hsdMF9eNG/Ln+USGcovw7HzcxPVqcEXZkUEvtMAHy9dGJ+zh
+        WrVIqUNe4l3ZuQMct2A054pwxIrAYz2DwzbUesN52acLUuay1YoLOGZL3j5dllI34zLyqd1u75ysIJ4N
+        9d1Yk516EB/r3biOt2eL/OraKl4mbJHl7I+X1MA+xn6NHvp0qUr/YKHE7ybL3gDFmDUW954sUAAAAABJ
+        RU5ErkJggg==
+</value>
+  </data>
   <data name="btnCancelSend.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

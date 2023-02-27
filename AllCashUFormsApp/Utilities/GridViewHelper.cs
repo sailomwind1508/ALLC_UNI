@@ -332,7 +332,7 @@ namespace AllCashUFormsApp
 
                 if (rowIndex != 0)
                 {
-                    if (Helper.tbl_Users.RoleID != 10) //aloow super admin add duplicate item for support promotion 24022021
+                    if (Helper.tbl_Users.RoleID != 10) //allow super admin add duplicate item for support promotion 24022021
                     {
                         grd.ValidateDuplicateSKU(id, colIndex, rowIndex, ref validateNewRow);
                     }
@@ -962,6 +962,22 @@ namespace AllCashUFormsApp
             SetDefaultGridViewEvent(grid);
         }
 
+        public static void SetRowPostPaintNoRowColor(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
+        {
+            var grid = sender as DataGridView;
+            var rowIdx = (e.RowIndex + 1).ToString();
+
+            var centerFormat = new StringFormat()
+            {
+                // right alignment might actually make more sense for numbers
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics.DrawString(rowIdx, font, SystemBrushes.ControlText, headerBounds, centerFormat);
+        }
+
         public static void SetRowPostPaintUControl(this DataGridView grd, object sender, DataGridViewRowPostPaintEventArgs e, Font font)
         {
             var grid = sender as DataGridView;
@@ -1210,7 +1226,26 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+        public static bool ValidateSendToHQ(this DateTimePicker docDate, BaseControl bu)
+        {
+            bool ret = false;
+            var comp = bu.tbl_Companies.First(); // bu.GetCompany(); //Last edit by sailom .k 07/02/2022
+            DateTime cDate = docDate.Value.ToDateTimeFormat();
 
+            //Func<tbl_SaleBranchSummary, bool> predicate = (x => x.BranchID == comp.CompanyCode && x.SaleDate == cDate && x.FlagDel == false);
+            //var tbl_SaleBranchSummary = bu.GetSaleBranchSummary(predicate);
+            var tbl_SaleBranchSummary = bu.ValidateCheckEndDay(comp.CompanyCode, cDate); //Last edit by sailom .k 07/02/2022
+            if (tbl_SaleBranchSummary != null) // is end day
+            {
+                ret = false;
+            }
+            else //not end say
+            {
+                ret = true;
+            }
+
+            return ret;
+        }
 
         public static void BindComboBoxCell(this DataGridView grd, DataGridViewRow row, int rowIndex, bool flagNewRow, int comboBoxIndex, List<tbl_ProductUom> prodUOMs, Form frm, BaseControl bu, int prdCellIndex, bool isMinUOM = false)
         {

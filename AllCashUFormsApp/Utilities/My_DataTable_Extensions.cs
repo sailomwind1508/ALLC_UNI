@@ -31,9 +31,16 @@ namespace AllCashUFormsApp
         public static DataTable ExecuteSQLToDataTable(string cSql)
         {
             MemoryManagement.FlushMemory();
+            try
+            {
+                var conn = new SqlConnection(Connection.ConnectionString);
+                return GetDataTable(cSql, conn);
+            }
+            catch (Exception ex)
+            {
 
-            var conn = new SqlConnection(Connection.ConnectionString);
-            return GetDataTable(cSql, conn);
+                throw ex;
+            }         
         }
 
         public static DataTable ExecuteStoreToDataTable(string cSql)
@@ -42,6 +49,18 @@ namespace AllCashUFormsApp
 
             var conn = new SqlConnection(Connection.ConnectionString);
             return GetDataTable(cSql, conn, CommandType.StoredProcedure);
+        }
+
+        public static List<dynamic> ExecuteStoreToList(Type type, string cSql, Dictionary<string, object> sqlParmas)
+        {
+            MemoryManagement.FlushMemory();
+
+            var conn = new SqlConnection(Connection.ConnectionString);
+            DataTable dt = GetDataTable(cSql, conn, CommandType.StoredProcedure, sqlParmas);
+
+            List<dynamic> dynamicListReturned = ConvertHelper.GetListFromDT(type, dt);
+
+            return dynamicListReturned;
         }
 
         public static DataTable ExecuteCenterStoreToDataTable(string cSql, Dictionary<string, object> sqlParmas)
@@ -181,33 +200,41 @@ namespace AllCashUFormsApp
             //}// this will dispose and close connection
 
             //return GetDataTableFast(cSql, oCnn); //last edit by sailom.k 19/04/2022
-
-            oCnn.Open();
-            using (var command = new SqlCommand(cSql, oCnn, null))
+            try
             {
-                var source = new TaskCompletionSource<DataTable>();
-                var resultTable = new DataTable(command.CommandText);
-                SqlDataReader dataReader = null;
-                try
+                oCnn.Open();
+                using (var command = new SqlCommand(cSql, oCnn, null))
                 {
-                    // CommandBehavior.SingleRow - This is the secret to execute the datareader to return only one row  
-                    command.CommandTimeout = 0;
-                    dataReader = command.ExecuteReader(CommandBehavior.Default);
-                    resultTable.Load(dataReader);
-                    source.SetResult(resultTable);                  
-                }
-                catch (Exception ex)
-                {
-                    oCnn.Close();
-                    source.SetException(ex);
-                }
-                finally
-                {
-                    oCnn.Close();
-                    dataReader?.Close();
-                }
+                    var source = new TaskCompletionSource<DataTable>();
+                    var resultTable = new DataTable(command.CommandText);
+                    SqlDataReader dataReader = null;
+                    try
+                    {
+                        // CommandBehavior.SingleRow - This is the secret to execute the datareader to return only one row  
+                        command.CommandTimeout = 0;
+                        dataReader = command.ExecuteReader(CommandBehavior.Default);
+                        resultTable.Load(dataReader);
+                        source.SetResult(resultTable);
+                    }
+                    catch (Exception ex)
+                    {
+                        oCnn.Close();
+                        source.SetException(ex);
+                        throw ex;
+                    }
+                    finally
+                    {
+                        oCnn.Close();
+                        dataReader?.Close();
+                    }
 
-                return resultTable;
+                    return resultTable;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
 
@@ -432,6 +459,40 @@ namespace AllCashUFormsApp
                     foreach (DataTable _dt in _reportDTList)
                     {
                         if (_dt.Rows.Count > 2)
+                        {
+                            if (string.IsNullOrEmpty(_dt.TableName))
+                                _dt.TableName = "Sheet1";
+
+                            _wb.Worksheets.Add(_dt, _dt.TableName);
+                        }
+                    }
+
+                    wb = _wb;
+                }
+
+                wb.SaveAs(ExcelFilePath);
+                System.Diagnostics.Process.Start(ExcelFilePath, excelReportName);
+
+                //string msg = "Save File Complete";
+                //msg.ShowInfoMessage();
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ShowWarningMessage();
+            }
+        }
+
+        public static void ExportToExcelR3(List<DataTable> _reportDTList, string ExcelFilePath = null, string excelReportName = null)
+        {
+            try
+            {
+                ClosedXML.Excel.XLWorkbook wb = new ClosedXML.Excel.XLWorkbook();
+
+                using (ClosedXML.Excel.XLWorkbook _wb = new ClosedXML.Excel.XLWorkbook())
+                {
+                    foreach (DataTable _dt in _reportDTList)
+                    {
+                        if (_dt.Rows.Count > 0)
                         {
                             if (string.IsNullOrEmpty(_dt.TableName))
                                 _dt.TableName = "Sheet1";

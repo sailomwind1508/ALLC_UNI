@@ -142,6 +142,55 @@ namespace AllCashUFormsApp
             msg.WriteLog(null);
         }
 
+        public static int UpdateShelf(this tbl_ArCustomerShelf tbl_ArCustomerShelf)
+        {
+            string msg = "start ArCustomerShelfDao=>UpdateShelf";
+            msg.WriteLog(null);
+
+            int ret = 0;
+            try
+            {
+                using (DB_ALL_CASH_UNIEntities db = new DB_ALL_CASH_UNIEntities(Helper.ConnectionString))
+                {
+                    var updateData = db.tbl_ArCustomerShelf.FirstOrDefault(x => x.CustomerID == tbl_ArCustomerShelf.CustomerID && x.ShelfID == tbl_ArCustomerShelf.ShelfID);
+                    if (updateData != null)
+                    {
+                        foreach (PropertyInfo updateDataItem in updateData.GetType().GetProperties())
+                        {
+                            foreach (PropertyInfo tbl_ArCustomerShelfItem in tbl_ArCustomerShelf.GetType().GetProperties())
+                            {
+                                if (updateDataItem.Name == tbl_ArCustomerShelfItem.Name)
+                                {
+                                    var value = tbl_ArCustomerShelfItem.GetValue(tbl_ArCustomerShelf, null);
+
+                                    Type t = Nullable.GetUnderlyingType(updateDataItem.PropertyType) ?? updateDataItem.PropertyType;
+                                    object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+
+                                    updateDataItem.SetValue(updateData, safeValue, null);
+                                }
+                            }
+                        }
+
+                        db.Entry(updateData).State = System.Data.Entity.EntityState.Modified;
+                        ret = db.SaveChanges();
+                    }
+                    else
+                    {
+                        ret = tbl_ArCustomerShelf.Insert();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+            }
+
+            msg = "end ArCustomerShelfDao=>UpdateShelf";
+            msg.WriteLog(null);
+
+            return ret;
+        }
+
         public static int UpdateEntity(this tbl_ArCustomerShelf tbl_ArCustomerShelf, DB_ALL_CASH_UNIEntities db)
         {
             string msg = "start ArCustomerShelfDao=>UpdateEntity";
@@ -326,11 +375,14 @@ namespace AllCashUFormsApp
             SqlConnection con = new SqlConnection(Connection.ConnectionString);
             try
             {
-                string sql = "UPDATE tbl_ArCustomerShelf SET ShelfID = @ShelfID, EdDate = @EdDate, EdUser = @EdUser WHERE AutoID = @AutoID";
+                string sql = "UPDATE tbl_ArCustomerShelf";
+                sql += " SET ShelfID = @ShelfID, EdDate = @EdDate, EdUser = @EdUser, ImagePath = @ImagePath";
+                sql += " WHERE AutoID = @AutoID";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 con.Open();
                 cmd.Parameters.AddWithValue("@ShelfID", tbl_ArCustomerShelf.ShelfID);
                 cmd.Parameters.AddWithValue("@AutoID", tbl_ArCustomerShelf.AutoID);
+                cmd.Parameters.AddWithValue("@ImagePath", tbl_ArCustomerShelf.ImagePath);
                 cmd.Parameters.AddWithValue("@EdDate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@EdUser", Helper.tbl_Users.Username);
 
@@ -345,5 +397,36 @@ namespace AllCashUFormsApp
             return ret;
         }
 
+        public static DataTable GetShelfData(this tbl_ArCustomerShelf tbl_ArCustomerShelf, Dictionary<string, object> _params)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_GetShelfManagement";
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+                return null;
+            }
+        }
+
+        public static int UpdateShelfManagement(this tbl_ArCustomerShelf tbl_ArCustomerShelf, Dictionary<string, object> _params)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                string sql = "proc_Update_ShelfManagement";
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, _params);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_ArCustomerShelf.GetType());
+                return 0;
+            }
+        }
     }
 }

@@ -135,18 +135,18 @@
   </data>
   <data name="btnUpdateProduct.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI7SURBVDhPrZQ/T9tQFMVdKBIMbKAWqVJJ3gO6s5XYFl+h
-        BKkt+aNGiIWqncpQiD11ZEGRQlnKwkDstq7E3i/QqWCTdACpOwMjQsI99/nGOMSJItQjXcXxffeXc9+7
-        L9ogWvs8P0LBX++n0jcpSg2xWnTFbsmVHoV6xjvKaaH2gJf216uD2YmiK62SK84ACXvE/nJDG+aS3ioc
-        zmaKjjhKASRCXJVdufTpT27yY6BPcWm3lLO7MEe28FkrOGKdgtvfy28/GbN8433V14+rvrFht3JZO9SG
-        GBUparMNEtdwUi9/n5vmdKzyl6ej9FkN9B0rMEIKQFvWib4SQ9UBdOwZYFyYJvun+RAgLwYGxkW1mVvg
-        NIB0crE72aK95FSqPpw+HwfEgbNLBfWNmy3fqHAaQDi6dSdr/Lqn1n7Nj9gn5mPA6m2X9BwlMbCA0Jwp
-        IG2+SgwgK9DXE0CPfuj/A0mdLYv6yx+ZR4NcNexhLQGMWiYVHVnBYdww8BLz6FS8uXFOp8o+NafVuDBw
-        K9BXOYXZcrMLGNqLW5fSMzEanO6SfW6OkqM2DKd8tnm8KKKkrQ1hqF/zrYiAjtxpF6pFCW029QzBMNjX
-        bSBGyOJ0JIK+cWeyBVduAP677My82/6bH8PV2sPiXRS/VYE9S7apwjeO7KY5wahurXx9NpU/lJN2YLwA
-        7Kqj+G4ARo65tLca4fIwnOynQhBwfk5t9nXWIfx50ibTyVHLgNC99eiZ3uGWSF55P9HAxkPbV5r2D9+Y
-        qde7ckTlAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAjtJREFUOE+tlD9P21AUxV0oEgxsoBapUkneA7qzldgWX6EEqS35o0aIhaqdylCI
+        PXVkQZFCWcrCQOy2rsTeL9CpYJN0AKk7AyNCwj33+cY4xIki1CNdxfF995dz37sv2iBa+zw/QsFf76fS
+        NylKDbFadMVuyZUehXrGO8ppofaAl/bXq4PZiaIrrZIrzgAJe8T+ckMb5pLeKhzOZoqOOEoBJEJclV25
+        9OlPbvJjoE9xabeUs7swR7bwWSs4Yp2C29/Lbz8Zs3zjfdXXj6u+sWG3clk71IYYFSlqsw0S13BSL3+f
+        m+Z0rPKXp6P0WQ30HSswQgpAW9aJvhJD1QF07BlgXJgm+6f5ECAvBgbGRbWZW+A0gHRysTvZor3kVKo+
+        nD4fB8SBs0sF9Y2bLd+ocBpAOLp1J2v8uqfWfs2P2CfmY8DqbZf0HCUxsIDQnCkgbb5KDCAr0NcTQI9+
+        6P8DSZ0ti/rLH5lHg1w17GEtAYxaJhUdWcFh3DDwEvPoVLy5cU6nyj41p9W4MHAr0Fc5hdlyswsY2otb
+        l9IzMRqc7pJ9bo6SozYMp3y2ebwooqStDWGoX/OtiICO3GkXqkUJbTb1DMEw2NdtIEbI4nQkgr5xZ7IF
+        V24A/rvszLzb/psfw9Xaw+JdFL9VgT1LtqnCN47spjnBqG6tfH02lT+Uk3ZgvADsqqP4bgBGjrm0txrh
+        8jCc7KdCEHB+Tm32ddYh/HnSJtPJUcuA0L316Jne4ZZIXnk/0cDGQ9tXmvYP35ip17tyROUAAAAASUVO
+        RK5CYII=
 </value>
   </data>
   <data name="btnPrdCheck.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

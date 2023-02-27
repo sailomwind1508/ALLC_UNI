@@ -304,6 +304,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblDistrict_);
             this.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;

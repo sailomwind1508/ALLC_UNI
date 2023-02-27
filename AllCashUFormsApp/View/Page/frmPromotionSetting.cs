@@ -253,6 +253,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmPromotionSetting_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
@@ -2336,6 +2338,7 @@ namespace AllCashUFormsApp.View.Page
 
             bool ret = false;
 
+            Cursor.Current = Cursors.WaitCursor;
             List<string> selectList_Branch = new List<string>();
 
             SelectBranchList(selectList_Branch);
@@ -2373,10 +2376,17 @@ namespace AllCashUFormsApp.View.Page
             _params.Add("@SKU_IDs", allSKU_ID);
             _params.Add("@SKU_ID_EXCs", allSKU_EXC);
 
+
+            if (chkROP.Checked)
+                _params.Add("@FlagRemove", 1);
+            else
+                _params.Add("@FlagRemove", 0);
+
             ret = bu.CallSendAllPromotionInfo(_params);
 
             if (ret == true)
             {
+                Cursor.Current = Cursors.Default;
                 string msg = "ส่งข้อมูลเรียบร้อยแล้ว!!";
                 msg.ShowInfoMessage();
 
@@ -2385,6 +2395,7 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
+                Cursor.Current = Cursors.Default;
                 string msg = "ส่งข้อมูลล้มเหลว!!";
                 msg.ShowErrorMessage();
                 return;
@@ -2467,6 +2478,36 @@ namespace AllCashUFormsApp.View.Page
         private void btnRemove_Click(object sender, EventArgs e)
         {
             //Remove();
+        }
+
+        private void btnUpdatePromotion_Click(object sender, EventArgs e)
+        {
+            bool completeFlag = false;
+            var dt = new DataTable();
+
+            Cursor.Current = Cursors.WaitCursor;
+            dt = bu.UpdatePromotionFromCenter(chkROP.Checked);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                if (dt.Rows[0][0].ToString() == "1")
+                {
+                    completeFlag = true;
+                }
+            }
+
+            if (completeFlag)
+            {
+                Cursor.Current = Cursors.Default;
+                string message = "ดึงโปรโมชั่นจาก Center เรียบร้อยแล้ว!!!";
+                message.ShowInfoMessage();
+            }
+            else
+            {
+                Cursor.Current = Cursors.Default;
+                string message = "ไม่สามารถดึงโปรโมชั่นจาก Center ได้!!!";
+                message.ShowWarningMessage();
+            }
         }
     }
 }

@@ -82,6 +82,8 @@ namespace AllCashUFormsApp.View.Page
             dtpSendDate.Value = cDate;
             //last edit by sailom .k 05/07/2022-----------------------
 
+            btnMnlUpdateSendDate.Visible = (new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value);
+            btnMnlUpdateSendDate.Enabled = (new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value);
             //var comp = bu.GetCompany();
             //btnPullSalesAmt.Enabled = (comp.CompanyCode == "104" && (Helper.tbl_Users.Username == "Admin" || Helper.tbl_Users.Username == "superadmin"));
         }
@@ -265,6 +267,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmReceiveTabletData_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
 
             InitialData();
@@ -303,8 +307,8 @@ namespace AllCashUFormsApp.View.Page
         {
             BindSendData();
 
-            if (grdCalendar.Rows.Count != 0)
-                btnRemove.Enabled = true;
+            //if (grdCalendar.Rows.Count != 0)
+            //    btnRemove.Enabled = true;
 
             BindTLGridview();
         }
@@ -337,12 +341,15 @@ namespace AllCashUFormsApp.View.Page
 
                 if (e.ColumnIndex == 4) //update date tbl_POMaster, tbl_SendData
                 {
-                    frmUpdateSendDate.whcode = _whid;
-                    frmUpdateSendDate.dateSend = Convert.ToDateTime(sendDate.Value);
-                    frmUpdateSendDate frm = new frmUpdateSendDate();
-                    frm.ShowDialog();
+                    if ((new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //edit by sailom .k 02/12/2022
+                    {
+                        frmUpdateSendDate.whcode = _whid;
+                        frmUpdateSendDate.dateSend = Convert.ToDateTime(sendDate.Value);
+                        frmUpdateSendDate frm = new frmUpdateSendDate();
+                        frm.ShowDialog();
 
-                    btnSearch.PerformClick();
+                        btnSearch.PerformClick();
+                    }
                 }
                 else if (e.ColumnIndex == 5) //ยังไม่ส่งยอด
                 {
@@ -369,6 +376,13 @@ namespace AllCashUFormsApp.View.Page
                 }
                 else if (e.ColumnIndex == 8) //ลบ
                 {
+                    //if (!(new List<int> { 2, 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //edit by sailom .k 02/12/2022
+                    //{
+                    //    string message = "ท่านไม่มีสิทธ์ในการลบข้อมูล กรุณาแจ้ง แอดมิน แอดมินภาค หรือ IT เพื่อลบข้อมูลให้!!!";
+                    //    message.ShowWarningMessage();
+                    //    return;
+                    //}
+
                     string cfMsg = "คุณแน่ใจหรือไม่ที่จะลบข้อมูลรายการนี้?";
                     string title = "ทำการยืนยัน!!";
 
@@ -395,7 +409,10 @@ namespace AllCashUFormsApp.View.Page
                         List<tbl_SendData> tbl_SendDatas = new List<tbl_SendData>();
                         tbl_SendDatas = bu.GetSendData(x => x.WHID == _whid && x.DateSend.ToShortDateString() == datesend);
 
-                        ret = bu.RemoveData(tbl_SendDatas.First());
+                        ret = bu.RemovePrepareSalesDateLog(Helper.tbl_Users.Username); //Write log when remove prepare sales date data from back-end edit by sailom.k 06/12/2022
+
+                        if (ret == 1)
+                            ret = bu.RemoveData(tbl_SendDatas.First());
 
                         if (ret == 1)
                         {
@@ -440,6 +457,12 @@ namespace AllCashUFormsApp.View.Page
                     {
                         row.DefaultCellStyle.BackColor = Color.LightYellow;
                         row.DefaultCellStyle.ForeColor = Color.Red;
+                        for (int i = 0; i < row.Cells.Count; i++)
+                        {
+                            if (i <= 4)
+                                row.Cells[i].Style.Font = new Font(this.Font, FontStyle.Bold);
+                        }
+                        //row.DefaultCellStyle.Font = new Font(this.Font, FontStyle.Bold);
                     }
                 }
             }
@@ -616,6 +639,62 @@ namespace AllCashUFormsApp.View.Page
             {
                 grdList.Rows[0].Cells[0].Selected = false;
                 grdList.Rows[0].Cells[1].Selected = true;
+            }
+        }
+
+        private void btnMnlUpdateSendDate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string cfMsg = "คุณแน่ใจหรือไม่ ที่จะแก้ไข วันที่เตรียมข้อมูล?";
+                string title = "ข้อความ";
+
+                if (!cfMsg.ConfirmMessageBox(title))
+                    return;
+
+                bool ret = false;
+                string whid = "";
+                foreach (DataGridViewRow row in grdCalendar.Rows)
+                {                   
+                    if (row.Selected)
+                    {
+                        whid = row.Cells["colWHID"].Value.ToString();
+                        break;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(whid))
+                {
+                    ret = bu.ManualUpdateSendDate(whid, dtpSendDate.Value);
+                    if (ret)
+                    {
+                        string msg = "แก้ไขข้อมูลเรียบร้อยแล้ว!!";
+                        msg.ShowInfoMessage();
+
+                        InitPage();
+
+                        InitialData();
+
+                        btnSearch.PerformClick();
+                    }
+                    else
+                    {
+                        string msg = "แก้ไขข้อมูลไม่สำเร็จ!!";
+                        msg.ShowErrorMessage();
+                    }
+                }
+                else
+                {
+                    string msg = "กรุณาเลือกแวน!!!";
+                    msg.ShowWarningMessage();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+
+                string msg = ex.Message;
+                msg.ShowErrorMessage();
             }
         }
     }

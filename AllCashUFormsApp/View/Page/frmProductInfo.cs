@@ -23,6 +23,8 @@ namespace AllCashUFormsApp.View.Page
         Dictionary<Control, Label> validateCtrls = new Dictionary<Control, Label>(); // Validate Save
         Dictionary<int, string> initDataGridList = new Dictionary<int, string>();
         bool flagNew = true;
+        DataTable tbl_ProductPriceGroupList = new DataTable();
+
         public frmProductInfo()
         {
             InitializeComponent();
@@ -266,7 +268,7 @@ namespace AllCashUFormsApp.View.Page
 
             txtProductRefCode.Focus();
 
-            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
                 rdoCancel.Enabled = true;
             else
                 rdoCancel.Enabled = false;
@@ -436,7 +438,9 @@ namespace AllCashUFormsApp.View.Page
 
                 if (ret.All(x => x == 1))
                 {
-                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว";
+                    UpdateMasterData(); //last edit by sailom .k 04/10/2022
+
+                    msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!!"; // \nกรณีที่มีการ เพิ่ม แก้ไข ลบ สินค้า ให้กดปุ่มอัพเดตสินค้า หรือปิด-เปิด ระบบใหม่เพื่ออัพเดตสินค้าทุกครั้ง!!!";
                     msg.ShowInfoMessage();
 
                     pnlGridView.Enabled = true;
@@ -599,6 +603,8 @@ namespace AllCashUFormsApp.View.Page
         #region Event Method
         private void frmProductInfo_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
             InitialData();
         }
@@ -993,6 +999,10 @@ namespace AllCashUFormsApp.View.Page
             PrdType.AddRange(bu.GetProductType(x => x.FlagDel == false));
             ddlPrdType.BindDropdownList(PrdType, "ProductTypeName", "ProductTypeID");
 
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            _params.Add("ProductID", "");
+            tbl_ProductPriceGroupList = bu.GetProductGroupPriceData(_params);
+
             //กลุ่มสินค้า -grd
             ddlProGroupNoData(ddlPrdGroup);
 
@@ -1093,7 +1103,7 @@ namespace AllCashUFormsApp.View.Page
                 btnAdd.Enabled = false;
 
             //09/09/2022 adisorn -> admin and superadmin will delete customer data only 
-            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+            if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
                 btnRemove.Enabled = true;
             else
                 btnRemove.Enabled = false;
@@ -1104,7 +1114,7 @@ namespace AllCashUFormsApp.View.Page
             try
             {
                 //09/09/2022 adisorn -> admin and superadmin will delete customer data only 
-                if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
+                if (Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 5 || Helper.tbl_Users.RoleID == 10)
                     btnRemove.Enabled = true;
                 else
                     btnRemove.Enabled = false;
@@ -1209,29 +1219,53 @@ namespace AllCashUFormsApp.View.Page
         {
             grdPrdUom.Rows.Clear();
 
-            Dictionary<string, object> _params = new Dictionary<string, object>();
-            _params.Add("ProductID", _ProductID);
-            var dt = bu.GetProductGroupPriceData(_params);
-            if (dt.Rows.Count > 0)
+            //Dictionary<string, object> _params = new Dictionary<string, object>();
+            //_params.Add("ProductID", _ProductID);
+            //var dt = bu.GetProductGroupPriceData(_params);
+            //if (dt.Rows.Count > 0)
+            //{
+            //    for (int i = 0; i < dt.Rows.Count; i++)
+            //    {
+            //        grdPrdUom.Rows.Add(1);
+            //        grdPrdUom.Rows[i].Cells["colProductID2"].Value = dt.Rows[i].Field<string>("ProductID");
+            //        grdPrdUom.BindComboBoxCell(grdPrdUom.Rows[i], i, true, 0, uoms, this, bu, 1);
+            //        grdPrdUom.Rows[i].Cells["colUnit"].Value = dt.Rows[i].Field<int>("UomSetID");
+            //        grdPrdUom.Rows[i].Cells["colBaseQty"].Value = dt.Rows[i].Field<int>("BaseQty").ToString();
+            //        grdPrdUom.Rows[i].Cells["colBuyPrice"].Value = dt.Rows[i].Field<decimal>("BuyPrice");
+            //        grdPrdUom.Rows[i].Cells["colSellPrice"].Value = dt.Rows[i].Field<decimal>("SellPrice");
+            //        grdPrdUom.Rows[i].Cells["colSellPriceVat"].Value = dt.Rows[i].Field<decimal>("SellPriceVat");
+            //        grdPrdUom.Rows[i].Cells["colComPrice"].Value = dt.Rows[i].Field<decimal>("ComPrice");
+            //        grdPrdUom.Rows[i].Cells["colWeight"].Value = dt.Rows[i].Field<decimal>("Weight").ToDecimalN2();
+            //    }
+            //}
+            //else
+            //{
+            //    SetProductUomTable();
+            //}
+
+            //last edit by sialom .k 14/10/2022---------------------
+            var dt = tbl_ProductPriceGroupList.Select("ProductID = '"+_ProductID + "'");
+            if (dt != null && dt.Count() > 0)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                for (int i = 0; i < dt.Count(); i++)
                 {
                     grdPrdUom.Rows.Add(1);
-                    grdPrdUom.Rows[i].Cells["colProductID2"].Value = dt.Rows[i].Field<string>("ProductID");
+                    grdPrdUom.Rows[i].Cells["colProductID2"].Value = dt[i].Field<string>("ProductID");
                     grdPrdUom.BindComboBoxCell(grdPrdUom.Rows[i], i, true, 0, uoms, this, bu, 1);
-                    grdPrdUom.Rows[i].Cells["colUnit"].Value = dt.Rows[i].Field<int>("UomSetID");
-                    grdPrdUom.Rows[i].Cells["colBaseQty"].Value = dt.Rows[i].Field<int>("BaseQty").ToString();
-                    grdPrdUom.Rows[i].Cells["colBuyPrice"].Value = dt.Rows[i].Field<decimal>("BuyPrice");
-                    grdPrdUom.Rows[i].Cells["colSellPrice"].Value = dt.Rows[i].Field<decimal>("SellPrice");
-                    grdPrdUom.Rows[i].Cells["colSellPriceVat"].Value = dt.Rows[i].Field<decimal>("SellPriceVat");
-                    grdPrdUom.Rows[i].Cells["colComPrice"].Value = dt.Rows[i].Field<decimal>("ComPrice");
-                    grdPrdUom.Rows[i].Cells["colWeight"].Value = dt.Rows[i].Field<decimal>("Weight").ToDecimalN2();
+                    grdPrdUom.Rows[i].Cells["colUnit"].Value = dt[i].Field<int>("UomSetID");
+                    grdPrdUom.Rows[i].Cells["colBaseQty"].Value = dt[i].Field<int>("BaseQty").ToString();
+                    grdPrdUom.Rows[i].Cells["colBuyPrice"].Value = dt[i].Field<decimal>("BuyPrice");
+                    grdPrdUom.Rows[i].Cells["colSellPrice"].Value = dt[i].Field<decimal>("SellPrice");
+                    grdPrdUom.Rows[i].Cells["colSellPriceVat"].Value = dt[i].Field<decimal>("SellPriceVat");
+                    grdPrdUom.Rows[i].Cells["colComPrice"].Value = dt[i].Field<decimal>("ComPrice");
+                    grdPrdUom.Rows[i].Cells["colWeight"].Value = dt[i].Field<decimal>("Weight").ToDecimalN2();
                 }
             }
             else
             {
                 SetProductUomTable();
             }
+            //last edit by sialom .k 14/10/2022---------------------
         }
 
         private void SetProductUomTable()
@@ -1502,7 +1536,7 @@ namespace AllCashUFormsApp.View.Page
 
         #endregion
 
-        private void btnUpdateProduct_Click(object sender, EventArgs e)
+        private void UpdateMasterData()
         {
             try
             {
@@ -1535,6 +1569,11 @@ namespace AllCashUFormsApp.View.Page
                 bu.tbl_ProductGroup = bu.GetProductGroup();
                 bu.tbl_ProductSubGroup = bu.GetProductSubGroup();
 
+
+                Dictionary<string, object> _params = new Dictionary<string, object>();
+                _params.Add("ProductID", "");
+                tbl_ProductPriceGroupList = bu.GetProductGroupPriceData(_params);
+
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception ex)
@@ -1542,6 +1581,83 @@ namespace AllCashUFormsApp.View.Page
                 ex.WriteLog(this.GetType());
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void btnUpdateProduct_Click(object sender, EventArgs e)
+        {
+            UpdateMasterData();
+        }
+
+        private void ValidateCloseProduct(Control ctrl)
+        {
+            //edit by sailom .k 17/02/2023----------------------------------------------
+            if (Helper.BranchName != "CENTER")
+            {
+                bool isChecked = false;
+                if (ctrl is CheckBox)
+                {
+                    isChecked = ((CheckBox)ctrl).Checked;
+                }
+                else if (ctrl is RadioButton)
+                {
+                    isChecked = ((RadioButton)ctrl).Checked;
+                }
+
+                if (isChecked)
+                {
+                    bool validateClose = false;
+                    decimal qty = 0;
+                    string validateMsg = "";
+                    var stockVan = bu.GetInvWarehouse().Where(x => x.ProductID == txtProductID.Text && x.WHID.Contains("V")).ToList();
+                    if (stockVan != null && stockVan.Count > 0)
+                    {
+                        foreach (tbl_InvWarehouse item in (List<tbl_InvWarehouse>)stockVan)
+                        {
+                            if (item.QtyOnHand != 0)
+                                validateMsg += "\n แวน : " + item.WHID +  " => " + Convert.ToInt32(item.QtyOnHand).ToNumberFormat() + " (หน่วยเล็ก)";
+                        }
+
+                        qty = stockVan.Sum(x => x.QtyOnHand);
+                        if (qty != 0)
+                        {
+                            validateClose = true;
+                        }
+                    }
+
+                    if (validateClose)
+                    {
+                        if (ctrl is CheckBox)
+                        {
+                            ((CheckBox)ctrl).Checked = false;
+                        }
+                        else if (ctrl is RadioButton)
+                        {
+                            ((RadioButton)ctrl).Checked = false;
+                            rdoNormal.Checked = true;
+                        }
+
+                        string msg = "ไม่สามารถปิดโค้ดสินค้า  '" + txtProductID.Text + " : " + txtProductShortName.Text + " ' !!! \n เนื่องจากยังมีสินค้าคงเหลือที่ \n " 
+                            //+ Convert.ToInt32(qty).ToNumberFormat()
+                            //+ " (หน่วยเล็ก) ที่คลังแวน " +
+                            + validateMsg +
+                            "\n\n กรุณาทำ RB ลงจากแวนให้เรียบร้อยก่อน!!!";
+                        msg.ShowWarningMessage();
+                        return;
+                    }
+                }
+            }
+
+            //edit by sailom .k 17/02/2023----------------------------------------------
+        }
+
+        private void chkTablet_MouseClick(object sender, MouseEventArgs e)
+        {
+            ValidateCloseProduct(chkTablet);
+        }
+
+        private void rdoCancel_MouseClick(object sender, MouseEventArgs e)
+        {
+            ValidateCloseProduct(rdoCancel);
         }
     }
 }

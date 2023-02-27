@@ -35,18 +35,18 @@ namespace AllCashUFormsApp.View.UControl
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmALLShopType));
             this.pnlCenter = new System.Windows.Forms.Panel();
             this.grdList = new System.Windows.Forms.DataGridView();
+            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colShopTypeCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colShopTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colShopTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlBottomPage = new System.Windows.Forms.Panel();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnAccept = new System.Windows.Forms.Button();
             this.lbl_RowCount = new System.Windows.Forms.Label();
             this.lblQtyList = new System.Windows.Forms.Label();
             this.pnlTopPage = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colShopTypeCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colShopTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colShopTypeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnAccept = new System.Windows.Forms.Button();
             this.pnlCenter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             this.pnlBottomPage.SuspendLayout();
@@ -81,6 +81,46 @@ namespace AllCashUFormsApp.View.UControl
             this.grdList.TabIndex = 2;
             this.grdList.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.grdList_RowPostPaint);
             // 
+            // colSelect
+            // 
+            this.colSelect.DataPropertyName = "colSelect";
+            this.colSelect.FillWeight = 30F;
+            this.colSelect.HeaderText = "";
+            this.colSelect.Name = "colSelect";
+            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.colSelect.Width = 30;
+            // 
+            // colShopTypeCode
+            // 
+            this.colShopTypeCode.DataPropertyName = "ShopTypeCode";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colShopTypeCode.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colShopTypeCode.HeaderText = "รหัสประเภทร้านค้า";
+            this.colShopTypeCode.MaxInputLength = 2;
+            this.colShopTypeCode.Name = "colShopTypeCode";
+            this.colShopTypeCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colShopTypeCode.Width = 135;
+            // 
+            // colShopTypeName
+            // 
+            this.colShopTypeName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colShopTypeName.DataPropertyName = "ShopTypeName";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colShopTypeName.HeaderText = "ชื่อประเภทร้านค้า";
+            this.colShopTypeName.MaxInputLength = 50;
+            this.colShopTypeName.Name = "colShopTypeName";
+            // 
+            // colShopTypeID
+            // 
+            this.colShopTypeID.DataPropertyName = "ShopTypeID";
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.colShopTypeID.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colShopTypeID.HeaderText = "ShopTypeID";
+            this.colShopTypeID.MaxInputLength = 20;
+            this.colShopTypeID.Name = "colShopTypeID";
+            this.colShopTypeID.Visible = false;
+            // 
             // pnlBottomPage
             // 
             this.pnlBottomPage.BackColor = System.Drawing.Color.Azure;
@@ -93,6 +133,44 @@ namespace AllCashUFormsApp.View.UControl
             this.pnlBottomPage.Name = "pnlBottomPage";
             this.pnlBottomPage.Size = new System.Drawing.Size(559, 37);
             this.pnlBottomPage.TabIndex = 4;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(481, 3);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(74, 28);
+            this.btnCancel.TabIndex = 15;
+            this.btnCancel.Text = "ยกเลิก";
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnAccept
+            // 
+            this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAccept.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnAccept.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAccept.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAccept.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnAccept.Image = ((System.Drawing.Image)(resources.GetObject("btnAccept.Image")));
+            this.btnAccept.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAccept.Location = new System.Drawing.Point(401, 3);
+            this.btnAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnAccept.Name = "btnAccept";
+            this.btnAccept.Size = new System.Drawing.Size(74, 28);
+            this.btnAccept.TabIndex = 16;
+            this.btnAccept.Text = "ตกลง";
+            this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAccept.UseVisualStyleBackColor = false;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
             // lbl_RowCount
             // 
@@ -146,84 +224,6 @@ namespace AllCashUFormsApp.View.UControl
             this.label1.TabIndex = 11;
             this.label1.Text = "ค้นหารหัส";
             // 
-            // colSelect
-            // 
-            this.colSelect.DataPropertyName = "colSelect";
-            this.colSelect.FillWeight = 30F;
-            this.colSelect.HeaderText = "";
-            this.colSelect.Name = "colSelect";
-            this.colSelect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.colSelect.Width = 30;
-            // 
-            // colShopTypeCode
-            // 
-            this.colShopTypeCode.DataPropertyName = "ShopTypeCode";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colShopTypeCode.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colShopTypeCode.HeaderText = "รหัสประเภทร้านค้า";
-            this.colShopTypeCode.MaxInputLength = 2;
-            this.colShopTypeCode.Name = "colShopTypeCode";
-            this.colShopTypeCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colShopTypeCode.Width = 135;
-            // 
-            // colShopTypeName
-            // 
-            this.colShopTypeName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colShopTypeName.DataPropertyName = "ShopTypeName";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colShopTypeName.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colShopTypeName.HeaderText = "ชื่อประเภทร้านค้า";
-            this.colShopTypeName.MaxInputLength = 50;
-            this.colShopTypeName.Name = "colShopTypeName";
-            // 
-            // colShopTypeID
-            // 
-            this.colShopTypeID.DataPropertyName = "ShopTypeID";
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.colShopTypeID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.colShopTypeID.HeaderText = "ShopTypeID";
-            this.colShopTypeID.MaxInputLength = 20;
-            this.colShopTypeID.Name = "colShopTypeID";
-            this.colShopTypeID.Visible = false;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
-            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(481, 3);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(74, 28);
-            this.btnCancel.TabIndex = 15;
-            this.btnCancel.Text = "ยกเลิก";
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnAccept
-            // 
-            this.btnAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAccept.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnAccept.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAccept.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAccept.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.btnAccept.Image = ((System.Drawing.Image)(resources.GetObject("btnAccept.Image")));
-            this.btnAccept.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAccept.Location = new System.Drawing.Point(401, 3);
-            this.btnAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnAccept.Name = "btnAccept";
-            this.btnAccept.Size = new System.Drawing.Size(74, 28);
-            this.btnAccept.TabIndex = 16;
-            this.btnAccept.Text = "ตกลง";
-            this.btnAccept.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnAccept.UseVisualStyleBackColor = false;
-            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
-            // 
             // frmALLShopType
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -235,6 +235,7 @@ namespace AllCashUFormsApp.View.UControl
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MinimizeBox = false;
             this.Name = "frmALLShopType";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ค้นหาประเภทร้านค้า";

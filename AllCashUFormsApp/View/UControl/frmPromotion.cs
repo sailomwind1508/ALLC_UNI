@@ -288,8 +288,13 @@ namespace AllCashUFormsApp.View.UControl
 
                     if (proInfo.Count > 0)
                     {
-                        _frm.PreparePopupForm("PromotionProduct", _frm.Name, "เลือกของแถม", colList, mmchPro, null, null, null);
-                        _frm.ShowDialog();
+                        var reward = pro.GetHQ_Reward(x => x.RewardID == mmchPro[0].RewardID);
+                        if (reward != null && reward.Count > 0)
+                        {
+                            _frm.PreparePopupForm("PromotionProduct", _frm.Name, reward[0].RewardName, colList, mmchPro, null, null, null);
+                            _frm.ShowDialog();
+                        }
+                       
                     }
                 }
 

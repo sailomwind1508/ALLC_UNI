@@ -645,5 +645,101 @@ namespace AllCashUFormsApp
             }
 
         }
+
+        public static DataTable GetProductDataForReport_Popup(this tbl_Product tbl_Product, string _ProductSubGroupID, string Search)
+        {
+            try
+            {
+                DataTable newTable = new DataTable(); //22-06-2022 adisorn หน้าค้นหาสินค้า ในรายงาน 6.1
+
+                string sql = "SELECT ProductCode, ProductName FROM tbl_Product";
+                sql += " WHERE 1 = 1 ";
+
+                if (!string.IsNullOrEmpty(_ProductSubGroupID))
+                {
+                    sql += " AND ProductSubGroupID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _ProductSubGroupID + "', ','))";
+                }
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    sql += " AND ProductID LIKE '%" + Search + "%' OR ProductName LIKE '%" + Search + "%' ";
+                }
+
+                sql += " ORDER BY ProductGroupID, ProductSubGroupID, Seq ";
+
+                newTable = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+                return null;
+            }
+
+        }
+
+        public static DataTable GetProductDataMovement_Popup(this tbl_Product tbl_Product, string _ProductSubGroupID, string Search)
+        {
+            try
+            {
+                DataTable newTable = new DataTable(); //22-06-2022 adisorn หน้าค้นหาสินค้า ในรายงาน 6.1
+
+                string sql = "SELECT ProductCode, ProductName FROM tbl_Product";
+                sql += " WHERE FlagDel = 0";
+
+                if (!string.IsNullOrEmpty(_ProductSubGroupID))
+                {
+                    sql += " AND ProductSubGroupID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _ProductSubGroupID + "', ','))";
+                }
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    sql += " AND ProductID LIKE '%" + Search + "%' OR ProductName LIKE '%" + Search + "%' ";
+                }
+
+                sql += " ORDER BY ProductID ";
+
+                newTable = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+                return null;
+            }
+
+        }
+
+        public static DataTable GetProductDataMovementForReport_Popup(this tbl_Product tbl_Product, string _ProductSubGroupID, string Search)
+        {
+            try
+            {
+                DataTable newTable = new DataTable(); //22-06-2022 adisorn หน้าค้นหาสินค้า ในรายงาน 6.1
+
+                string sql = "SELECT ProductCode, ProductName FROM tbl_Product";
+                sql += " WHERE 1 = 1";
+
+                if (!string.IsNullOrEmpty(_ProductSubGroupID))
+                {
+                    sql += " AND ProductSubGroupID IN (SELECT [value] FROM dbo.fn_split_string_to_column('" + _ProductSubGroupID + "', ','))";
+                }
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    sql += " AND ProductID LIKE '%" + Search + "%' OR ProductName LIKE '%" + Search + "%' ";
+                }
+
+                sql += " ORDER BY ProductID ";
+
+                newTable = My_DataTable_Extensions.ExecuteSQLToDataTable(sql);
+                return newTable;
+
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(tbl_Product.GetType());
+                return null;
+            }
+
+        }        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AllCashUFormsApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -356,6 +357,126 @@ namespace AllCashUFormsApp.Controller
             //_tbl_Companies = new List<tbl_Company>();
         }
 
+        public Dictionary<string, string> GetConfigData()
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            ret.Add("=== เลือก ===", "");
+            try
+            {
+                var conStrList = ConfigurationManager.ConnectionStrings;
+                List<string> depoList = new List<string>();
+
+                foreach (var item in conStrList)
+                {
+                    string name = ((ConnectionStringSettings)item).Name;
+                    if (name.Contains("UNI"))
+                    {
+                        string depoName = name.Substring(4, (name.Length - 4));
+                        ret.Add(depoName, item.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+
+            return ret;
+        }
+
+        public Dictionary<string, string> GetConfigDataNonChose()
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            try
+            {
+                var conStrList = ConfigurationManager.ConnectionStrings;
+                List<string> depoList = new List<string>();
+
+                foreach (var item in conStrList)
+                {
+                    string name = ((ConnectionStringSettings)item).Name;
+                    if (name.Contains("UNI"))
+                    {
+                        string depoName = name.Substring(4, (name.Length - 4));
+                        ret.Add(depoName, item.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+            }
+
+            return ret;
+        }
+
+        public string RecoveryPO(string docNo, string userName, bool calStockFlag)
+        {
+            string msg = "start BaseControl=>RecoveryPO";
+            msg.WriteLog(this.GetType());
+
+            string ret = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocNo", docNo);
+                sqlParmas.Add("@UserName", userName);
+                sqlParmas.Add("@CalStockFlag", calStockFlag);
+
+                string sql = "proc_tbl_POMaster_Recovery";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString();
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return "";
+            }
+
+            msg = "end BaseControl=>RecoveryPO";
+            msg.WriteLog(this.GetType());
+        }
+
+        public string RecoveryData(string docNo, string userName)
+        {
+            string msg = "start BaseControl=>RecoveryData";
+            msg.WriteLog(this.GetType());
+
+            string ret = "";
+            try
+            {
+                DataTable newTable = new DataTable();
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocNo", docNo);
+                sqlParmas.Add("@UserName", userName);
+
+                string sql = "proc_tbl_POMaster_ReversData";
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (newTable != null && newTable.Rows.Count > 0)
+                {
+                    ret = newTable.Rows[0][0].ToString();
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return "";
+            }
+
+            msg = "end BaseControl=>RecoveryData";
+            msg.WriteLog(this.GetType());
+        }
+
         public List<tbl_MstMenu> GetAllMenuData()
         {
             return (new tbl_MstMenu()).SelectAll();
@@ -597,6 +718,35 @@ namespace AllCashUFormsApp.Controller
                         tbl_PRDetails.Clear();
                     }
                 }
+            }
+        }
+
+        public virtual void GetDocData_AllBranch(Dictionary<string, object> Params, string docTypeCode)
+        {
+            if (docTypeCode == "OD")
+            {
+                var _tbl_POMaster = new tbl_POMaster().GetPOMaster_AllBranch(Params);
+                if (_tbl_POMaster != null && _tbl_POMaster.Count > 0)
+                    tbl_POMaster = _tbl_POMaster[0];
+                else
+                    tbl_POMaster = new tbl_POMaster();
+
+                tbl_PODetails = new tbl_PODetail().GetPODetail_AllBranch(Params);
+            }
+            else if (docTypeCode == "RL" || docTypeCode == "RB")
+            {
+                var _tbl_PRMaster = new tbl_PRMaster().GetPRMaster_AllBranch(Params);
+                if (_tbl_PRMaster != null && _tbl_PRMaster.Count > 0)
+                    tbl_PRMaster = _tbl_PRMaster[0];
+                else
+                    tbl_PRMaster = new tbl_PRMaster();
+
+                var _tbl_PRDetails = new tbl_PRDetail().GetPRDetail_AllBranch(Params);
+
+                if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
+                    tbl_PRDetails = _tbl_PRDetails;
+                else
+                    tbl_PRDetails.Clear();
             }
         }
 
@@ -888,8 +1038,9 @@ namespace AllCashUFormsApp.Controller
                 //PO--------------------------------------------------------------------------------
                 if (_tbl_POMaster != null && !string.IsNullOrEmpty(_tbl_POMaster.DocNo))
                 {
-                    ret.Add(_tbl_POMaster.UpdateEntity(db));
+                    ret.Add(_tbl_POMaster.UpdateEntity(db)); //do not change!!!!!!!!!!!!!!!!!!!!!!!!!
                     isUpdateEntity = true;
+                    //ret.Add(_tbl_POMaster.PerformUpdate(db)); this code error when get max auto id
                 }
 
                 if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
@@ -905,7 +1056,8 @@ namespace AllCashUFormsApp.Controller
 
                 //PO Pre-Odrer--------------------------------------------------------------------------------
                 if (_tbl_POMaster_PRE != null && !string.IsNullOrEmpty(_tbl_POMaster_PRE.DocNo))
-                { 
+                {
+                    //ret.Add(_tbl_POMaster_PRE.PerformUpdate(db));
                     ret.Add(_tbl_POMaster_PRE.UpdateEntity(db));
                     isUpdateEntity = true;
                 }
@@ -924,6 +1076,7 @@ namespace AllCashUFormsApp.Controller
                 //PR--------------------------------------------------------------------------------
                 if (_tbl_PRMaster != null && !string.IsNullOrEmpty(_tbl_PRMaster.DocNo))
                 {
+                    //ret.Add(_tbl_PRMaster.PerformUpdate(db));
                     ret.Add(_tbl_PRMaster.UpdateEntity(db));
                     isUpdateEntity = true;
                 }
@@ -965,6 +1118,7 @@ namespace AllCashUFormsApp.Controller
                 //IV--------------------------------------------------------------------------------
                 if (_tbl_IVMaster != null && !string.IsNullOrEmpty(_tbl_IVMaster.DocNo))
                 {
+                    //ret.Add(_tbl_IVMaster.PerformUpdate(db));
                     ret.Add(_tbl_IVMaster.UpdateEntity(db));
                     isUpdateEntity = true;
                 }
@@ -994,6 +1148,7 @@ namespace AllCashUFormsApp.Controller
                     //}
                 }
                 //DocRunning--------------------------------------------------------------------------------
+                
                 //PriceGroup--------------------------------------------------------------------------------
                 if (_tbl_PriceGroups != null && _tbl_PriceGroups.Count > 0)
                 {
@@ -1037,7 +1192,6 @@ namespace AllCashUFormsApp.Controller
                     isUpdateEntity = true;
                 }
                 //---------------------------------------------------------------------------------------------
-
 
                 //PayDetail--------------------------------------------------------------------------------
                 if (_tbl_PayDetails != null && _tbl_PayDetails.Count > 0)
@@ -1098,7 +1252,7 @@ namespace AllCashUFormsApp.Controller
 
                 if (ret.Any(x => x == 0)) //reverse data
                 {
-                    ReverseData(docTypeCode);
+                    ReverseData(docTypeCode);  
                 }
 
             }
@@ -1119,78 +1273,26 @@ namespace AllCashUFormsApp.Controller
             List<int> ret = new List<int>();
             try
             {
-                //PO--------------------------------------------------------------------------------
+                string docNo = "";
+                //Revers stock data only when save fail!!! edit by sailom .k 28/09/2022----------------------
                 if (_tbl_POMaster != null && !string.IsNullOrEmpty(_tbl_POMaster.DocNo))
-                    ret.Add(_tbl_POMaster.Delete());
-
-                if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
                 {
-                    //foreach (var tbl_PODetail in _tbl_PODetails)
-                    //{
-                    //    ret.Add(tbl_PODetail.Delete());
-                    //}
-                    ret.Add(_tbl_PODetails.BulkRemove());
+                    docNo = _tbl_POMaster.DocNo;
                 }
-                //PO--------------------------------------------------------------------------------
 
-                //PR--------------------------------------------------------------------------------
                 if (_tbl_PRMaster != null && !string.IsNullOrEmpty(_tbl_PRMaster.DocNo))
-                    ret.Add(_tbl_PRMaster.Delete());
-
-                if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
                 {
-                    //foreach (var tbl_PRDetail in _tbl_PRDetails)
-                    //{
-                    //    ret.Add(tbl_PRDetail.Delete());
-                    //}
-                    ret.Add(_tbl_PRDetails.BulkRemove());
+                    docNo = _tbl_PRMaster.DocNo;
                 }
-                //PR--------------------------------------------------------------------------------
 
-                //InvTransactions--------------------------------------------------------------------------------
-                if (_tbl_InvTransactions != null && _tbl_InvTransactions.Count > 0)
-                {
-                    //foreach (var tbl_InvTransactions in _tbl_InvTransactions)
-                    //{
-                    //    ret.Add(tbl_InvTransactions.Delete());
-                    //}
-                    ret.Add(_tbl_InvTransactions.BulkRemove());
-                }
-                //InvTransactions--------------------------------------------------------------------------------
-
-                //InvMovements--------------------------------------------------------------------------------
-                if (_tbl_InvMovements != null && _tbl_InvMovements.Count > 0)
-                {
-                    //foreach (var tbl_InvMovement in _tbl_InvMovements)
-                    //{
-                    //    ret.Add(tbl_InvMovement.Delete());
-                    //}
-                    ret.Add(_tbl_InvMovements.BulkRemove());
-                }
-                //InvMovements--------------------------------------------------------------------------------
-
-                //IV--------------------------------------------------------------------------------
                 if (_tbl_IVMaster != null && !string.IsNullOrEmpty(_tbl_IVMaster.DocNo))
-                    ret.Add(_tbl_IVMaster.Delete());
-
-                if (_tbl_IVDetails != null && _tbl_IVDetails.Count > 0)
                 {
-                    //foreach (var _tbl_IVDetail in _tbl_IVDetails)
-                    //{
-                    //    ret.Add(_tbl_IVDetail.Delete());
-                    //}
-                    ret.Add(_tbl_IVDetails.BulkRemove());
+                    docNo = _tbl_IVMaster.DocNo;
                 }
-                //IV--------------------------------------------------------------------------------
 
-                //DocRunning--------------------------------------------------------------------------------
-                this.PrepareDocRunning(docTypeCode, true);
-                if (_tbl_DocRunning != null && _tbl_DocRunning.Count > 0)
+                if (!string.IsNullOrEmpty(docNo))
                 {
-                    foreach (var tbl_DocRunning in _tbl_DocRunning)
-                    {
-                        ret.Add(tbl_DocRunning.Update());
-                    }
+                    RecoveryData(docNo, Helper.tbl_Users.Username);
                 }
             }
             catch (Exception ex)
@@ -1202,6 +1304,108 @@ namespace AllCashUFormsApp.Controller
             msg = "end BaseControl=>ReverseData";
             msg.WriteLog(this.GetType());
         }
+
+        //private void ReverseData(string docTypeCode = "")
+        //{
+        //    string msg = "start BaseControl=>ReverseData";
+        //    msg.WriteLog(this.GetType());
+
+        //    List<int> ret = new List<int>();
+        //    try
+        //    {
+        //        //PO--------------------------------------------------------------------------------
+        //        string poDocNo = ""; //last edit by sailom .k 20/09/2022
+        //        if (_tbl_POMaster != null && !string.IsNullOrEmpty(_tbl_POMaster.DocNo))
+        //        {
+        //            poDocNo = _tbl_POMaster.DocNo; //last edit by sailom .k 20/09/2022
+        //            ret.Add(_tbl_POMaster.Delete());
+        //        }
+
+        //        if (_tbl_PODetails != null && _tbl_PODetails.Count > 0)
+        //        {
+        //            //foreach (var tbl_PODetail in _tbl_PODetails)
+        //            //{
+        //            //    ret.Add(tbl_PODetail.Delete());
+        //            //}
+        //            ret.Add(_tbl_PODetails.BulkRemove());
+        //        }
+
+        //        //PO--------------------------------------------------------------------------------
+
+        //        //PR--------------------------------------------------------------------------------
+        //        if (_tbl_PRMaster != null && !string.IsNullOrEmpty(_tbl_PRMaster.DocNo))
+        //            ret.Add(_tbl_PRMaster.Delete());
+
+        //        if (_tbl_PRDetails != null && _tbl_PRDetails.Count > 0)
+        //        {
+        //            //foreach (var tbl_PRDetail in _tbl_PRDetails)
+        //            //{
+        //            //    ret.Add(tbl_PRDetail.Delete());
+        //            //}
+        //            ret.Add(_tbl_PRDetails.BulkRemove());
+        //        }
+        //        //PR--------------------------------------------------------------------------------
+
+        //        //InvTransactions--------------------------------------------------------------------------------
+        //        if (_tbl_InvTransactions != null && _tbl_InvTransactions.Count > 0)
+        //        {
+        //            //foreach (var tbl_InvTransactions in _tbl_InvTransactions)
+        //            //{
+        //            //    ret.Add(tbl_InvTransactions.Delete());
+        //            //}
+        //            ret.Add(_tbl_InvTransactions.BulkRemove());
+        //        }
+        //        //InvTransactions--------------------------------------------------------------------------------
+
+        //        //InvMovements--------------------------------------------------------------------------------
+        //        if (_tbl_InvMovements != null && _tbl_InvMovements.Count > 0)
+        //        {
+        //            //foreach (var tbl_InvMovement in _tbl_InvMovements)
+        //            //{
+        //            //    ret.Add(tbl_InvMovement.Delete());
+        //            //}
+        //            ret.Add(_tbl_InvMovements.BulkRemove());
+        //        }
+        //        //InvMovements--------------------------------------------------------------------------------
+
+        //        //IV--------------------------------------------------------------------------------
+        //        if (_tbl_IVMaster != null && !string.IsNullOrEmpty(_tbl_IVMaster.DocNo))
+        //            ret.Add(_tbl_IVMaster.Delete());
+
+        //        if (_tbl_IVDetails != null && _tbl_IVDetails.Count > 0)
+        //        {
+        //            //foreach (var _tbl_IVDetail in _tbl_IVDetails)
+        //            //{
+        //            //    ret.Add(_tbl_IVDetail.Delete());
+        //            //}
+        //            ret.Add(_tbl_IVDetails.BulkRemove());
+        //        }
+        //        //IV--------------------------------------------------------------------------------
+
+        //        //DocRunning--------------------------------------------------------------------------------
+        //        this.PrepareDocRunning(docTypeCode, true);
+        //        if (_tbl_DocRunning != null && _tbl_DocRunning.Count > 0)
+        //        {
+        //            foreach (var tbl_DocRunning in _tbl_DocRunning)
+        //            {
+        //                ret.Add(tbl_DocRunning.Update());
+        //            }
+        //        }
+
+        //        if (!string.IsNullOrEmpty(poDocNo)) //last edit by sailom .k 20/09/2022
+        //        {
+        //            RecoveryPO(poDocNo, Helper.tbl_Users.Username, false);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ex.Message.ShowErrorMessage();
+        //        ex.WriteLog(this.GetType());
+        //    }
+
+        //    msg = "end BaseControl=>ReverseData";
+        //    msg.WriteLog(this.GetType());
+        //}
 
         public virtual int RemovePODetails(string docNo)
         {
@@ -1667,6 +1871,24 @@ namespace AllCashUFormsApp.Controller
             return new tbl_PriceGroup().Select(pgPredicate).Count > 0;
         }
 
+        /// <summary>
+        /// for support max docno from tablet sales transaction by sailom .k 21/11/2022
+        /// </summary>
+        /// <param name="docTypeCode"></param>
+        /// <param name="whCode"></param>
+        /// <param name="docdate"></param>
+        /// <returns></returns>
+        public string GenDocNo(string docTypeCode, string whCode, DateTime docdate)
+        {
+            return new DocTypeCode().GenDocNo(docTypeCode, whCode, docdate);
+        }
+
+        public string GenManualDocNo(string docTypeCode, string whCode, DateTime docdate)
+        {
+            return new DocTypeCode().GenManualDocNo(docTypeCode, whCode, docdate);
+        }
+
+
         public string GenDocNo(string docTypeCode, string whCode = null)
         {
             return new DocTypeCode().GenDocNo(docTypeCode, whCode);
@@ -1677,9 +1899,19 @@ namespace AllCashUFormsApp.Controller
             return new DocTypeCode().GenDocNoPre(docTypeCode, whCode);
         }
 
+        public string GenNewDocNoPre(string docTypeCode, string whCode, DateTime docdate)
+        {
+            return new DocTypeCode().GenNewDocNoPre(docTypeCode, whCode, docdate);
+        }
+
         public string GenDocNoPreEx(string docTypeCode, string whCode = null)
         {
             return new DocTypeCode().GenDocNoPreEX(docTypeCode, whCode);
+        }
+
+        public string GenDocNewNoPreEx(string docTypeCode, string whCode, DateTime docdate)
+        {
+            return new DocTypeCode().GenNewDocNoPreEX(docTypeCode, whCode, docdate);
         }
 
         public string GenCustSAPCode(string docTypeCode, string whCode = null)
@@ -2538,6 +2770,9 @@ namespace AllCashUFormsApp.Controller
         /// </summary>
         public bool ReverseVE(string ivDocNo)
         {
+            string msg = "start BaseControl=>ReverseVE";
+            msg.WriteLog(this.GetType());
+
             bool ret = false;
 
             try
@@ -2561,6 +2796,9 @@ namespace AllCashUFormsApp.Controller
                 ex.WriteLog(this.GetType());
                 ret = false;
             }
+
+            msg = "end BaseControl=>ReverseVE";
+            msg.WriteLog(this.GetType());
 
             return ret;
         }

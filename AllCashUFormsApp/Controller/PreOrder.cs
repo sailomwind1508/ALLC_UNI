@@ -126,6 +126,35 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
+        public bool ReCalcRL(string whid, DateTime docdate, string rlDocNo)
+        {
+            string ret = "";
+            try
+            {
+                DataTable dt = new DataTable();
+
+                string sql = "proc_PreOrder_ReCalcRL";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@WHID", whid);
+                sqlParmas.Add("@DocDate", docdate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                sqlParmas.Add("@RLDocNo", rlDocNo);
+
+                dt = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    ret = dt.Rows[0]["Result"].ToString();
+                }
+
+                return (!string.IsNullOrEmpty(ret) && ret == "1") ? true : false;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return false;
+            }
+        }
+
         public DateTime GetDefaultDocDate()
         {
             DateTime ret = new DateTime();

@@ -172,9 +172,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPRMaster(pr);
             }
+
             if (prDts != null && prDts.Count > 0)
             {
                 BindPRDetail(prDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
@@ -627,6 +632,7 @@ namespace AllCashUFormsApp.View.Page
             var branch = bu.tbl_Branchs;
 
             var pr = bu.tbl_PRMaster;
+            bool checkEditMode = bu.CheckExistsPR(txdDocNo.Text);
 
             if (ddlDocStatus.SelectedValue != null && ddlDocStatus.SelectedValue.ToString() == "3")
             {
@@ -634,15 +640,13 @@ namespace AllCashUFormsApp.View.Page
             }
             else
             {
-
-                bool checkEditMode = bu.CheckExistsPR(txdDocNo.Text);
                 if (checkEditMode)
                 {
                     pr.DocNo = txdDocNo.Text;
                 }
                 else
                 {
-                    pr.DocNo = bu.GenDocNo(docTypeCode, txtWHCode.Text);
+                    pr.DocNo = bu.GenDocNo(docTypeCode, txtWHCode.Text, dtpDocDate.Value); //edit by sailom .k 30/11/2022
                 }
             }
 
@@ -689,14 +693,17 @@ namespace AllCashUFormsApp.View.Page
             pr.CrDate = DateTime.Now;
             pr.CrUser = Helper.tbl_Users.Username;
 
-            if (editFlag)
+            if (checkEditMode)
             {
                 pr.EdDate = DateTime.Now;
                 pr.EdUser = Helper.tbl_Users.Username;
             }
+            else
+            {               
+                pr.EdDate = null;
+                pr.EdUser = null;
+            }
 
-            pr.EdDate = null;
-            pr.EdUser = null;
             pr.FlagDel = false;
             pr.FlagSend = false;
 
@@ -1077,7 +1084,8 @@ namespace AllCashUFormsApp.View.Page
 
                     //docno = bu.GenDocNo(docTypeCode, txtWHCode.Text);
                     //editFlag = false;
-                    bu.PrepareDocRunning(docTypeCode);
+                    //bu.PrepareDocRunning(docTypeCode);
+                    bu.PrepareDocRunning(docTypeCode, txtWHCode.Text, dtpDocDate.Value); //last edit by sailom .k 30/11/2022
 
                     docno = PreparePRMaster(editFlag);
 
@@ -1122,23 +1130,35 @@ namespace AllCashUFormsApp.View.Page
 
                 if (ret == 1)
                 {
-                    this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
+                    //edit by sailom.k 06/12/2022
+                    if (ddlDocStatus.SelectedValue.ToString() == "5")
+                        ret = bu.FixRLWhenCancel(docno, Helper.tbl_Users.Username) ? 1 : 0; 
 
-                    btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
-                    btnPrintCrys.Enabled = btnPrint.Enabled;
+                    if (ret == 1)
+                    {
+                        this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
 
-                    txdDocNo.Text = docno;
+                        btnSave.EnableButton(btnEdit, btnRemove, btnCancel, btnAdd, btnCopy, btnPrint, btnExcel, txdDocNo.Text);
+                        btnPrintCrys.Enabled = btnPrint.Enabled;
 
-                    grdList.CellContentClick -= grdList_CellContentClick;
+                        txdDocNo.Text = docno;
 
-                    string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
-                    msg.ShowInfoMessage();
+                        grdList.CellContentClick -= grdList_CellContentClick;
 
-                    var poTmp = bu.GetPRMaster(txdDocNo.Text);
-                    if (poTmp != null)
-                        ddlDocStatus.SelectedValue = poTmp.DocStatus;
+                        string msg = "บันทึกข้อมูลเรียบร้อยแล้ว!!";
+                        msg.ShowInfoMessage();
 
-                    ddlDocStatus.SelectedValue.ToString().CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
+                        var poTmp = bu.GetPRMaster(txdDocNo.Text);
+                        if (poTmp != null)
+                            ddlDocStatus.SelectedValue = poTmp.DocStatus;
+
+                        ddlDocStatus.SelectedValue.ToString().CheckCancelDoc(checkEditMode, btnAdd, btnCopy, btnEdit);
+                    }
+                    else
+                    {
+                        this.ShowProcessErr();
+                        return;
+                    }
                 }
                 else
                 {
@@ -1235,7 +1255,7 @@ namespace AllCashUFormsApp.View.Page
             var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -1244,9 +1264,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     ret = false;
                 }
@@ -1385,6 +1405,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmRL_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 

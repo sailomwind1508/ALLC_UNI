@@ -380,6 +380,21 @@ namespace AllCashUFormsApp.Controller
             return (new tbl_Product()).GetProductData_Popup(_ProductSubGroupID, Search);
         }
 
+        public DataTable GetProductDataForReport_Popup(string _ProductSubGroupID, string Search)
+        {
+            return (new tbl_Product()).GetProductDataForReport_Popup(_ProductSubGroupID, Search);
+        }
+
+        public DataTable GetProductDataMovement_Popup(string _ProductSubGroupID, string Search)
+        {
+            return (new tbl_Product()).GetProductDataMovement_Popup(_ProductSubGroupID, Search);
+        }
+
+        public DataTable GetProductDataMovementForReport_Popup(string _ProductSubGroupID, string Search)
+        {
+            return (new tbl_Product()).GetProductDataMovementForReport_Popup(_ProductSubGroupID, Search);
+        }
+
         public List<tbl_ProductUomSet> GetProductUomSet_Single(string ProductID)//Modified By ADISORN 10/08/2565
         {
             return (new tbl_ProductUomSet()).GetProductUomSet_Single(ProductID);

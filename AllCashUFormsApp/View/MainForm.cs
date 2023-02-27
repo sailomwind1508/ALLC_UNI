@@ -119,7 +119,7 @@ namespace AllCashUFormsApp.View
 
                     foreach (var menuParent2 in menuList.Where(x => x.MenuParent == menuParent.MenuID))
                     {
-                        var mpr2_perm = permission.FirstOrDefault(x => x.ControlID == menuParent.MenuID);
+                        var mpr2_perm = permission.FirstOrDefault(x => x.ControlID == menuParent2.MenuID);//last edit by sailom.k 12/01/2023
                         var parentItem2 = new System.Windows.Forms.ToolStripMenuItem()
                         {
                             Name = menuParent2.MenuName,
@@ -159,6 +159,46 @@ namespace AllCashUFormsApp.View
         {
             bool isOpen = false;
             string name = ((ToolStripItem)sender).Name;
+
+            //check all money credit by sailom.k 22/02/2023--------------
+            if (name == "FrmPay")
+            {
+                bool allMoneyCreditFlag = false;
+                BankNote bu = new BankNote();
+                var wh = bu.GetAllBranchWarehouse();
+                if (wh != null && wh.Count > 0)
+                {
+                    if (wh.Any(x => x.DriverEmpID == "allmoney_credit"))
+                    {
+                        allMoneyCreditFlag = true;
+                    }
+                }
+                
+                if (allMoneyCreditFlag)
+                {
+                    name = "frmPayCredit";
+                }
+            }
+            else if (name == "frmCustomerInfo")
+            {
+                bool allMoneyCreditFlag = false;
+                BankNote bu = new BankNote();
+                var wh = bu.GetAllBranchWarehouse();
+                if (wh != null && wh.Count > 0)
+                {
+                    if (wh.Any(x => x.DriverEmpID == "allmoney_credit"))
+                    {
+                        allMoneyCreditFlag = true;
+                    }
+                }
+
+                if (allMoneyCreditFlag)
+                {
+                    name = "frmCustomerInfoCredit";
+                }
+            }
+            //check all money credit by sailom.k 22/02/2023--------------
+
             List<Form> openForms = new List<Form>();
 
             foreach (Form f in Application.OpenForms)
@@ -236,7 +276,6 @@ namespace AllCashUFormsApp.View
             {
                 this.LayoutMdi(MdiLayout.TileVertical);
             }
-
             if (!isOpen)
             {
                 if (name == "frmLogOff")
@@ -267,16 +306,23 @@ namespace AllCashUFormsApp.View
                 Form frm = name.GetFormByName();
                 if (frm != null)
                 {
-                    frm.MdiParent = this;
-                    frm.StartPosition = FormStartPosition.CenterParent;
-                    frm.WindowState = FormWindowState.Minimized;
-                    //frm.Dock = DockStyle.Fill;
-                    frm.Text = ((ToolStripItem)sender).Text;
+                    try
+                    {
+                        frm.MdiParent = this;
+                        frm.StartPosition = FormStartPosition.CenterParent;
+                        frm.WindowState = FormWindowState.Minimized;
+                        //frm.Dock = DockStyle.Fill;
+                        frm.Text = ((ToolStripItem)sender).Text;
 
-                    MemoryManagement.FlushMemory();
+                        MemoryManagement.FlushMemory();
 
-                    frm.Show();
-                    frm.WindowState = FormWindowState.Maximized;
+                        frm.Show();
+                        frm.WindowState = FormWindowState.Maximized;
+                    }
+                    catch {
+                        frm.WindowState = FormWindowState.Maximized;
+                    }
+                    
                 }
 
             }
@@ -286,6 +332,49 @@ namespace AllCashUFormsApp.View
         {
             string cTime = DateTime.Now.ToString("dd MMMM yyyy hh:mm:ss", cultures);
             toolStripStatusLabel1.Text = "ฐานข้อมูล : " + Helper.BranchName + ", ผู้ใช้งานระบบ : " + Helper.tbl_Users.Username + ", วันที่ : " + cTime;
+        }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Application.Restart();
+
+                ////string appName = Application.ProductName;
+                //string _name = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                //// Get the name of the application that we want to restart
+                ////string applicationName = _name;
+
+                //// Get a list of all processes with the specified name
+                //Process[] processes = Process.GetProcessesByName(_name);
+
+                //// Check if any processes with the specified name were found
+                //if (processes.Length > 0)
+                //{
+                //    // If at least one process was found, then we can restart the application by
+                //    // killing all processes with the specified name and starting a new instance
+                //    // of the application.
+
+                //    // Kill all processes with the specified name
+                //    foreach (Process process in processes)
+                //    {
+                //        process.Kill();
+                //    }
+
+                //    // Start a new instance of the application
+                //    Process.Start(_name);
+                //}
+                //else
+                //{
+                //    // If no processes with the specified name were found, then the application
+                //    // is not currently running and cannot be restarted.
+                //    Console.WriteLine("The application is not currently running.");
+                //}
+            }
+            catch (Exception ex)
+            {
+                ex.Message.WarnningMessageBox("Warning");
+            }
         }
     }
 }

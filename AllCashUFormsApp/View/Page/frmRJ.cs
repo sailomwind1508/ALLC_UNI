@@ -153,9 +153,14 @@ namespace AllCashUFormsApp.View.Page
             {
                 BindPRMaster(pr);
             }
+
             if (prDts != null && prDts.Count > 0)
             {
                 BindPRDetail(prDts);
+            }
+            else
+            {
+                grdList.Rows.Clear(); //last edit by sailom .k 28/09/2022
             }
 
             this.OpenControl(false, readOnlyControls.ToArray(), cellEdit);
@@ -726,6 +731,8 @@ namespace AllCashUFormsApp.View.Page
                     }
 
                     bu.tbl_PRMaster.DocStatus = ddlDocStatus.SelectedValue.ToString();
+                    bu.tbl_PRMaster.EdDate = DateTime.Now;
+                    bu.tbl_PRMaster.EdUser = Helper.tbl_Users.Username;
 
                     bu.tbl_InvMovements.Clear();
                     bu.tbl_InvMovements.AddRange(bu.GetInvMovement(docno));
@@ -929,7 +936,7 @@ namespace AllCashUFormsApp.View.Page
             var cDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).Ticks;
             var docDate = new DateTime(dtpDocDate.Value.Year, dtpDocDate.Value.Month, dtpDocDate.Value.Day).Ticks;
 
-            if (Helper.tbl_Users.RoleID != 10 && dtpDocDate.Value != null && docDate < cDate)
+            if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && dtpDocDate.Value != null && docDate < cDate)
             {
                 string message = "ห้ามเลือกวันที่ย้อนหลัง !!!";
                 message.ShowWarningMessage();
@@ -938,9 +945,9 @@ namespace AllCashUFormsApp.View.Page
 
             if (ret)
             {
-                if (Helper.tbl_Users.RoleID != 10 && !dtpDocDate.ValidateEndDay(bu))
+                if (!(new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value) && !dtpDocDate.ValidateEndDay(bu))
                 {
-                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!!";
+                    string message = "ระบบปิดวันไปแล้ว ไม่สามารถเลือกวันที่นี้ได้ !!! \n ***หากต้องการทำรายการนี้ต้องแจ้งทาง IT เท่านั้น***";
                     message.ShowWarningMessage();
                     ret = false;
                 }
@@ -1064,6 +1071,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmRJ_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             InitPage();
         }
 

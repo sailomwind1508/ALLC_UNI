@@ -374,6 +374,7 @@ namespace AllCashUFormsApp
                 {
                     DataTable newTable = new DataTable("DepoTable");
                     newTable.Columns.Add("รหัสพนักงาน", typeof(string));
+                    newTable.Columns.Add("แวน", typeof(string));
                     newTable.Columns.Add("ชื่อ-นามสกุล", typeof(string));
                     newTable.Columns.Add("แผนก", typeof(string));
                     newTable.Columns.Add("ตำแหน่ง", typeof(string));
@@ -389,8 +390,13 @@ namespace AllCashUFormsApp
                     {
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
-                            newTable.Rows.Add(dt.Rows[i]["EmpCode"], dt.Rows[i]["FullName"], dt.Rows[i]["DepartmentName"], dt.Rows[i]["PositionName"], "",
-                                dt.Rows[i]["Mobile"], dt.Rows[i]["CrDate"], dt.Rows[i]["CrUser"],
+                            newTable.Rows.Add(dt.Rows[i]["EmpCode"]
+                                , dt.Rows[i]["WHName"]
+                                , dt.Rows[i]["FullName"]
+                                , dt.Rows[i]["DepartmentName"]
+                                , dt.Rows[i]["PositionName"]
+                                , ""
+                                ,dt.Rows[i]["Mobile"], dt.Rows[i]["CrDate"], dt.Rows[i]["CrUser"],
                                 dt.Rows[i]["EdDate"], dt.Rows[i]["EdUser"], dt.Rows[i]["FlagDel"]);
                         }
                     }

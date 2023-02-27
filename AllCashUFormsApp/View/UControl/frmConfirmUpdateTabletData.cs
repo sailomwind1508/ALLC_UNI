@@ -46,13 +46,13 @@ namespace AllCashUFormsApp.View.UControl
                 var tbl_Users = bu.GetAllData().FirstOrDefault(x => x.Username.ToLower() == txtUserName.Text.ToLower() && x.Password == txtPassword.Text);
                 if (tbl_Users != null)
                 {
-                    if (tbl_Users.RoleID == 10)
+                    if ((new List<int> { 5, 10 }).Contains(Helper.tbl_Users.RoleID.Value)) //edit by sailom .k 02/12/2022
                     {
                         frmUpdateSendDate.UserName = tbl_Users.Username;
                         frmUpdateSendDate.confirmUpdate = true;
                         this.Close();
                     }
-                    else if (tbl_Users.FirstName.Contains("สุกัญญา") && tbl_Users.LastName.Contains("วิเชียรวรรณ"))
+                    else if (Helper.tbl_Users.Username.ToLower() == "sanook") //(tbl_Users.FirstName.Contains("สุกัญญา") && tbl_Users.LastName.Contains("วิเชียรวรรณ")) //edit by sailom .k 02/12/2022
                     {
                         frmUpdateSendDate.UserName = tbl_Users.Username;
                         frmUpdateSendDate.confirmUpdate = true;

@@ -171,6 +171,9 @@ namespace AllCashUFormsApp.View.UControl
                 case "PreOrder": { _objType = ObjectType.PreOrder; } break;
                 case "IVPrePO": { _objType = ObjectType.IVPrePO; } break;
                 case "V": { _objType = ObjectType.V; } break;
+                case "AllBranchOD": { _objType = ObjectType.AllBranchOD; } break; //adisorn 05/10/2022
+                case "AllBranchRL": { _objType = ObjectType.AllBranchRL; } break;
+                case "AllBranchRB": { _objType = ObjectType.AllBranchRB; } break;
                 default:
                     break;
             }
@@ -184,139 +187,179 @@ namespace AllCashUFormsApp.View.UControl
 
         private void frmSearchSupp_Load(object sender, EventArgs e)
         {
-            this.Text = formText;
-            var obj = objectFactory.Get(_objType, null);
+            try
+            {
+                this.Text = formText;
+                var obj = objectFactory.Get(_objType, null);
 
-            if (predicate != null)
-            {
-                BranchWarehouse bwh = obj as BranchWarehouse;
-                dt = bwh.GetDataTableByCondition(predicate);
-            }
-            else if (predicateEmp != null)
-            {
-                Employee emp = obj as Employee;
-                dt = emp.GetDataTableByCondition(predicateEmp);
-            }
-            else if (predicateCust != null)
-            {
-                Customer c = obj as Customer;
-                dt = c.GetDataTableByCondition(predicateCust);
-            }
-            else if (predicateDistrict != null)
-            {
-                SubDistict pro = obj as SubDistict;
-                dt = pro.GetDataTableByCondition(predicateDistrict);
-            }
-            else if (_objType == ObjectType.CustomerPre)
-            {
-                Customer c = obj as Customer;
-                dt = c.GetDataTableByCondition(predicateCust);
-            }
-            else if (_objType == ObjectType.IVPrePO)
-            {
-                IVPre c = obj as IVPre;
-                c = new IVPre();
-                dt = c.GetDataTableByCondition(null);
-            }
-            //else if (predicateSAR != null)
-            //{
-            //    SaleAreaDistrict s = obj as SaleAreaDistrict;
-            //    dt = s.GetDataTableByCondition(predicateSAR);
-            //}
-            else
-            {
-                //edit by sailom .k 14/12/2021-----------------------------------
-                if (_objType == ObjectType.IV || _objType == ObjectType.IVPre || _objType == ObjectType.IVPreRB)
+                if (predicate != null)
                 {
-                    if (conditionString != null)
+                    BranchWarehouse bwh = obj as BranchWarehouse;
+                    dt = bwh.GetDataTableByCondition(predicate);
+                }
+                else if (predicateEmp != null)
+                {
+                    Employee emp = obj as Employee;
+                    dt = emp.GetDataTableByCondition(predicateEmp);
+                }
+                else if (predicateCust != null)
+                {
+                    Customer c = obj as Customer;
+                    dt = c.GetDataTableByCondition(predicateCust);
+                }
+                else if (predicateDistrict != null)
+                {
+                    SubDistict pro = obj as SubDistict;
+                    dt = pro.GetDataTableByCondition(predicateDistrict);
+                }
+                else if (_objType == ObjectType.CustomerPre)
+                {
+                    Customer c = obj as Customer;
+                    dt = c.GetDataTableByCondition(predicateCust);
+                }
+                else if (_objType == ObjectType.IVPrePO)
+                {
+                    IVPre c = obj as IVPre;
+                    c = new IVPre();
+                    dt = c.GetDataTableByCondition(null);
+                }
+                //else if (predicateSAR != null)
+                //{
+                //    SaleAreaDistrict s = obj as SaleAreaDistrict;
+                //    dt = s.GetDataTableByCondition(predicateSAR);
+                //}
+                else
+                {
+                    //edit by sailom .k 14/12/2021-----------------------------------
+                    if (_objType == ObjectType.IV || _objType == ObjectType.IVPre || _objType == ObjectType.IVPreRB)
                     {
-                        conditionString = new string[] { "19000101" };
+                        if (conditionString != null)
+                        {
+                            conditionString = new string[] { "19000101" };
+                            dt = obj.GetDataTableByCondition(conditionString);
+                        }
+                        else
+                            dt = obj.GetDataTableByCondition(null);
+                    }//edit by sailom .k 14/12/2021-----------------------------------
+
+                    //adisorn 05/10/2022-----------------------------------------------
+                    else if (_objType == ObjectType.AllBranchOD)
+                    {
+                        Dictionary<string, object> Params = new Dictionary<string, object>();
+                        Params.Add("@BranchID", frmLoadOD._branchID);
+                        dt = odBU.GetDataTable_AllBranch(Params);
+                    }
+                    else if (_objType == ObjectType.AllBranchRL)
+                    {
+                        RL buRL = new RL();
+                        Dictionary<string, object> Params = new Dictionary<string, object>();
+                        Params.Add("@BranchID", frmLoadRL._branchID);
+                        dt = buRL.GetDataTable_AllBranch(Params);
+                    }
+                    else if (_objType == ObjectType.AllBranchRB)
+                    {
+                        RB buRB = new RB();
+                        Dictionary<string, object> Params = new Dictionary<string, object>();
+                        Params.Add("@BranchID", frmLoadRB._branchID);
+                        dt = buRB.GetDataTable_AllBranch(Params);
+                    }
+                    //adisorn 05/10/2022-----------------------------------------------
+
+                    else
+                    {
                         dt = obj.GetDataTableByCondition(conditionString);
                     }
-                    else
-                        dt = obj.GetDataTableByCondition(null);
-                }//edit by sailom .k 14/12/2021-----------------------------------
-                else
-                {
-                    dt = obj.GetDataTableByCondition(conditionString);
+
+                    searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
+                    searchBWHControls = new List<Control> { txtWHCode, txtWHName };
+
+                    if (txtWHCode != null)
+                        txtWHCode.KeyDown += TxtWHCode_KeyDown;
+
+                    if (txtCustomerCode != null)
+                        txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
                 }
 
-                searchCustControls = new List<Control> { txtCustomerCode, txtCustName };
-                searchBWHControls = new List<Control> { txtWHCode, txtWHName };
+                foreach (DataGridColumn item in _gridColumn)
+                {
+                    grdList.Columns.Add(item.SetSearchDataGridViewProperties());
+                }
 
-                if (txtWHCode != null)
-                    txtWHCode.KeyDown += TxtWHCode_KeyDown;
+                if (_gridColumn[0].AddNumberInFirstRow)
+                {
+                    //grdList.RowPostPaint += gridView_RowPostPaint;
+                    grdList.RowHeadersVisible = true;
 
-                if (txtCustomerCode != null)
-                    txtCustomerCode.KeyDown += TxtCustomerCode_KeyDown;
-            }
+                    dtpDocDate.SetDateTimePickerFormat();
 
-            foreach (DataGridColumn item in _gridColumn)
-            {
-                grdList.Columns.Add(item.SetSearchDataGridViewProperties());
-            }
+                    var allDocStatus = new List<tbl_DocumentStatus>();
+                    allDocStatus.Add(new tbl_DocumentStatus { DocStatusCode = "-1", DocStatusName = "==เลือก==" });
 
-            if (_gridColumn[0].AddNumberInFirstRow)
-            {
-                //grdList.RowPostPaint += gridView_RowPostPaint;
-                grdList.RowHeadersVisible = true;
+                    if (_objType == ObjectType.RL || _objType == ObjectType.PreOrder || _objType == ObjectType.AllBranchRL)//adisorn 05/10/2022
+                        allDocStatus.AddRange(odBU.GetDocStatus().Where(x => x.DocStatusCode == "3" || x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList());
+                    else
+                        allDocStatus.AddRange(odBU.GetDocStatus().Where(x => x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList());
 
-                dtpDocDate.SetDateTimePickerFormat();
+                    Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == "4"; };
+                    ddlDocStatus.BindDropdownList(allDocStatus, "DocStatusName", "DocStatusCode", 0);
 
-                var allDocStatus = new List<tbl_DocumentStatus>();
-                allDocStatus.Add(new tbl_DocumentStatus { DocStatusCode = "-1", DocStatusName = "==เลือก==" });
+                    if (_objType == ObjectType.PreOrder)
+                        condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == "3"; };// last edit by sailom 08-06-2021
 
-                if (_objType == ObjectType.RL || _objType == ObjectType.PreOrder)
-                    allDocStatus.AddRange(odBU.GetDocStatus().Where(x => x.DocStatusCode == "3" || x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList());
+                    ddlDocStatus.SelectedValueDropdownList(condition);
+
+                    pnlAdcSearch.Visible = true;
+                    pnlAdcSearch.Show();
+
+                    //if (_gridColumn[0].AddSearchAddOn)
+                    //{
+                    //    lnkSearchAddOn.Visible = true;
+                    //    lnkSearchAddOn.Show();
+                    //}
+                }
                 else
-                    allDocStatus.AddRange(odBU.GetDocStatus().Where(x => x.DocStatusCode == "4" || x.DocStatusCode == "5").ToList());
+                {
+                    //grdList.RowPostPaint -= gridView_RowPostPaint;
+                    grdList.RowHeadersVisible = false;
+                }
 
-                Predicate<tbl_DocumentStatus> condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == "4"; };
-                ddlDocStatus.BindDropdownList(allDocStatus, "DocStatusName", "DocStatusCode", 0);
+                if (_gridColumn[0].AddSearchAddOn)
+                {
 
-                if (_objType == ObjectType.PreOrder)
-                    condition = delegate (tbl_DocumentStatus x) { return x.DocStatusCode == "3"; };// last edit by sailom 08-06-2021
+                    pnlAdcSearch.Hide();
+                    pnlAdcSearch.Visible = true;
 
-                ddlDocStatus.SelectedValueDropdownList(condition);
+                    lnkSearchAddOn.Hide();
+                    lnkSearchAddOn.Visible = true;
+                }
+                else
+                {
+                    pnlAdcSearch.Hide();
+                    pnlAdcSearch.Visible = false;
 
-                pnlAdcSearch.Visible = true;
-                pnlAdcSearch.Show();
+                    lnkSearchAddOn.Hide();
+                    lnkSearchAddOn.Visible = false;
+                }
 
-                //if (_gridColumn[0].AddSearchAddOn)
-                //{
-                //    lnkSearchAddOn.Visible = true;
-                //    lnkSearchAddOn.Show();
-                //}
+                if (_objType == ObjectType.AllBranchOD || _objType == ObjectType.AllBranchRB || _objType == ObjectType.AllBranchRL)//adisorn 05/10/2022
+                {
+                    lnkSearchAddOn.Hide();
+                }
+
+                //BindDataGrid(dt);
+                //if (_objType != ObjectType.IV)
+                //btnSearchSupp.PerformClick();
+                Search();
+                this.ActiveControl = txtSSuppCode;
             }
-            else
+            catch (Exception ex)
             {
-                //grdList.RowPostPaint -= gridView_RowPostPaint;
-                grdList.RowHeadersVisible = false;
+
+                ex.WriteLog(this.GetType());
+                string msg = "เกิดข้อผิดพลาดในระบบ กรุณาปิด-เปิด โปรแกรมใหม่อีกครั้ง!!!";
+                msg.ShowErrorMessage();
             }
 
-            if (_gridColumn[0].AddSearchAddOn)
-            {
-
-                pnlAdcSearch.Hide();
-                pnlAdcSearch.Visible = true;
-
-                lnkSearchAddOn.Hide();
-                lnkSearchAddOn.Visible = true;
-            }
-            else
-            {
-                pnlAdcSearch.Hide();
-                pnlAdcSearch.Visible = false;
-
-                lnkSearchAddOn.Hide();
-                lnkSearchAddOn.Visible = false;
-            }
-
-            //BindDataGrid(dt);
-            //if (_objType != ObjectType.IV)
-            //btnSearchSupp.PerformClick();
-            Search();
-            this.ActiveControl = txtSSuppCode;
         }
 
         private void gridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -358,7 +401,7 @@ namespace AllCashUFormsApp.View.UControl
                         row.DefaultCellStyle.ForeColor = Color.Red;
                     }
                 }
-                catch { }   
+                catch { }
             }
         }
 
@@ -474,6 +517,9 @@ namespace AllCashUFormsApp.View.UControl
                 case ObjectType.PreOrder: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.IVPrePO: FilterItem(text, ref _dt, ref filteredRows); break;
                 case ObjectType.V: FilterItem(text, ref _dt, ref filteredRows); break;
+                case ObjectType.AllBranchOD: FilterItem(text, ref _dt, ref filteredRows); break;
+                case ObjectType.AllBranchRL: FilterItem(text, ref _dt, ref filteredRows); break;
+                case ObjectType.AllBranchRB: FilterItem(text, ref _dt, ref filteredRows); break;
                 default:
                     break;
             }
@@ -486,39 +532,58 @@ namespace AllCashUFormsApp.View.UControl
 
         private void SubSelectItem(string text, ref DataTable _dt, ref DataRow[] filteredRows, string code, string name, string name2)
         {
-            if (!string.IsNullOrEmpty(text))
+            try
             {
-                //last edit by sailom .k 05/08/2022
-                if (!string.IsNullOrEmpty(name2))
-                    filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%'", code, text, name, text, name2, text));
+                if (!string.IsNullOrEmpty(text))
+                {
+                    //last edit by sailom .k 05/08/2022
+                    if (!string.IsNullOrEmpty(name2))
+                        filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%'", code, text, name, text, name2, text));
+                    else
+                        filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", code, text, name, text));
+
+                    if (filteredRows != null)
+                    {
+                        _dt.AddDataTableRow(ref filteredRows);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                string msg = "เกิดข้อผิดพลาดในระบบ กรุณาปิด-เปิด โปรแกรมใหม่อีกครั้ง!!!";
+                msg.ShowErrorMessage();
+            }
+
+        }
+
+        private void SubSelectItem(string text, ref DataTable _dt, ref DataRow[] filteredRows, string code, string name, string saleArea, string whid)
+        {
+            try
+            {
+                List<DataRow> filteredRowsTemp = new List<DataRow>();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var tmp = string.Format("({0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%' OR {6} LIKE '%{7}%') AND " + "{8} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{8}" : " '{9}' ") + " AND {10} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{10}" : " '{11}' ")
+                        , code, text, name, text, saleArea, text, whid, text, whid, txtWHCode.Text, code, txtCustomerCode.Text);
+                    filteredRows = dt.Select(tmp);
+                }
                 else
-                    filteredRows = dt.Select(string.Format("{0} LIKE '%{1}%' OR {2} LIKE '%{3}%'", code, text, name, text));
+                {
+                    var tmp = string.Format("{0} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{0}" : " '{1}' ") + " AND {2} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{2}" : " '{3}' "), whid, txtWHCode.Text, code, txtCustomerCode.Text);
+                    filteredRows = dt.Select(tmp);
+                }
 
                 if (filteredRows != null)
                 {
                     _dt.AddDataTableRow(ref filteredRows);
                 }
             }
-        }
-
-        private void SubSelectItem(string text, ref DataTable _dt, ref DataRow[] filteredRows, string code, string name, string saleArea, string whid)
-        {
-            List<DataRow> filteredRowsTemp = new List<DataRow>();
-            if (!string.IsNullOrEmpty(text))
+            catch (Exception ex)
             {
-                var tmp = string.Format("({0} LIKE '%{1}%' OR {2} LIKE '%{3}%' OR {4} LIKE '%{5}%' OR {6} LIKE '%{7}%') AND " + "{8} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{8}" : " '{9}' ") + " AND {10} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{10}" : " '{11}' ")
-                    , code, text, name, text, saleArea, text, whid, text, whid, txtWHCode.Text, code, txtCustomerCode.Text);
-                filteredRows = dt.Select(tmp);
-            }
-            else
-            {
-                var tmp = string.Format("{0} = " + (string.IsNullOrEmpty(txtWHCode.Text) ? "{0}" : " '{1}' ") + " AND {2} = " + (string.IsNullOrEmpty(txtCustomerCode.Text) ? "{2}" : " '{3}' "), whid, txtWHCode.Text, code, txtCustomerCode.Text);
-                filteredRows = dt.Select(tmp);
-            }
-
-            if (filteredRows != null)
-            {
-                _dt.AddDataTableRow(ref filteredRows);
+                ex.WriteLog(this.GetType());
+                string msg = "เกิดข้อผิดพลาดในระบบ กรุณาปิด-เปิด โปรแกรมใหม่อีกครั้ง!!!";
+                msg.ShowErrorMessage();
             }
         }
 
@@ -563,6 +628,25 @@ namespace AllCashUFormsApp.View.UControl
                         x.Field<string>("DocStatus") == docStatus)).ToArray();
                     }
                     //last edit by sailom 11-06-2021---------------------------------------------------------
+                }
+                else
+                {
+                    //adisorn 07-10-2022---------------------------------------------------------
+                    filteredRows = dt.AsEnumerable().Where(x => (x.Field<string>("DocNo").Contains(text))).ToArray();
+
+                    if (filteredRows.Count() == 0)
+                    {
+                        filteredRows = dt.AsEnumerable().Where(x => ((x.Field<string>("CustomerID") != null && x.Field<string>("CustomerID").Contains(text)))).ToArray();
+                    }
+                    if (filteredRows.Count() == 0)
+                    {
+                        filteredRows = dt.AsEnumerable().Where(x => ((x.Field<string>("CustomerName") != null && x.Field<string>("CustomerName").Contains(text)))).ToArray();
+                    }
+                    if (filteredRows.Count() == 0)
+                    {
+                        filteredRows = dt.AsEnumerable().Where(x => ((x.Field<string>("WHID") != null && x.Field<string>("WHID").Contains(text)))).ToArray();
+                    }
+                    //adisorn 07-10-2022---------------------------------------------------------
                 }
             }
             else
@@ -664,80 +748,93 @@ namespace AllCashUFormsApp.View.UControl
 
         private void grdList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var grd = (DataGridView)sender;
-            if (grd != null & grd.Rows.Count > 0)
+            try
             {
-                if (e.RowIndex >= 0)
+                var grd = (DataGridView)sender;
+                if (grd != null & grd.Rows.Count > 0)
                 {
-                    var selectRow = grd.Rows[e.RowIndex];
-
-                    string selectCode = "";
-                    selectCode = selectRow.Cells[0].Value.ToString();
-
-                    if (!string.IsNullOrEmpty(selectCode))
+                    if (e.RowIndex >= 0)
                     {
-                        foreach (Form f in Application.OpenForms)
+                        var selectRow = grd.Rows[e.RowIndex];
+
+                        string selectCode = "";
+                        selectCode = selectRow.Cells[0].Value.ToString();
+
+                        if (!string.IsNullOrEmpty(selectCode))
                         {
-                            if (f.Name.ToLower() == formName.ToLower())
+                            foreach (Form f in Application.OpenForms)
                             {
-                                Form frm = (Form)f;
-
-                                switch (_objType)
+                                if (f.Name.ToLower() == formName.ToLower())
                                 {
-                                    case ObjectType.BranchWarehouseID: frm.BindData("BranchWarehouseID", controlList, selectCode); break;
-                                    case ObjectType.Supplier: frm.BindData("Supplier", controlList, selectCode); break;
-                                    case ObjectType.SubDistict: frm.BindData("SubDistict", controlList, selectCode); break;
-                                    case ObjectType.Promotion: frm.BindData("Promotion", controlList, selectCode); break;
-                                    case ObjectType.PromotionTemp: frm.BindData("PromotionTemp", controlList, selectRow.Cells["PromotionID"].Value.ToString()); break;
-                                    case ObjectType.ODProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.REProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.RLProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.RBProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.RJProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.RTProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.TRProduct: frm.BindData("TRProduct", controlList, selectCode); break;
-                                    case ObjectType.CCProduct: frm.BindData("CCProduct", controlList, selectCode); break;
-                                    case ObjectType.IVProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.IMProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.VEProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.IVPreProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.IMPreProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.PreOrderProduct: BindProduct(frm, _objType, selectCode); break;
-                                    case ObjectType.OD: ((frmOD)frm).BindODData(selectCode); break;
-                                    case ObjectType.RE: ((frmRE)frm).BindREData(selectCode); break;
-                                    case ObjectType.REOD: ((frmRE)frm).BindODData(selectCode); break;
-                                    case ObjectType.RL: ((frmRL)frm).BindRLData(selectCode); break;
-                                    case ObjectType.RB: ((frmRB)frm).BindRBData(selectCode); break;
-                                    case ObjectType.RJ: ((frmRJ)frm).BindRJData(selectCode); break;
-                                    case ObjectType.RT: ((frmRT)frm).BindRTData(selectCode); break;
-                                    case ObjectType.TR: ((frmTR)frm).BindTRData(selectCode); break;
-                                    case ObjectType.RJRB: ((frmRJ)frm).BindRBData(selectCode); break;
-                                    case ObjectType.IM: ((frmVanSales)frm).BindVanSalesData(selectCode); break;
-                                    case ObjectType.IV: ((frmTabletSales)frm).BindTabletSalesData(selectCode); break;
-                                    case ObjectType.CCIV: ((frmCancelPOItem)frm).BindTabletSalesData(selectCode); break;
-                                    case ObjectType.IVPre: ((frmTabletSalesPre)frm).BindTabletSalesData(selectCode); break;
-                                    case ObjectType.IVPreRB: ((frmRB)frm).BindRBFromPOData(selectCode, "IV"); break;
-                                    case ObjectType.IMPre: ((frm1000SalesPre)frm).BindVanSalesData(selectCode); break;
-                                    case ObjectType.PreOrder: ((frmPreOrder)frm).BindVanSalesData(selectCode, "IV2"); break;
-                                    case ObjectType.IVPrePO: ((frmPreOrder)frm).BindVanSalesPOData(selectCode); break;
-                                    case ObjectType.V: ((frmVE)frm).BindVEData(selectCode); break;
-                                    case ObjectType.BranchWarehouse: frm.BindData("BranchWarehouse", controlList, selectCode); break;
-                                    case ObjectType.FromBranchID: frm.BindData("FromBranchID", controlList, selectCode); break;
-                                    case ObjectType.Employee: frm.BindData("Employee", controlList, selectCode); break;
-                                    case ObjectType.EmployeeName: frm.BindData("EmployeeName", controlList, selectCode); break;
-                                    case ObjectType.Customer: frm.BindData("Customer", controlList, selectCode); break;
-                                    case ObjectType.CustomerPre: frm.BindData("Customer", controlList, selectCode); break;
-                                    case ObjectType.SaleAreaDistrict: BindProduct(frm, _objType, selectRow.Cells[2].Value.ToString()); break;
-                                    default:
-                                        break;
-                                }
+                                    Form frm = (Form)f;
 
-                                this.Close();
-                                break;
+                                    switch (_objType)
+                                    {
+                                        case ObjectType.BranchWarehouseID: frm.BindData("BranchWarehouseID", controlList, selectCode); break;
+                                        case ObjectType.Supplier: frm.BindData("Supplier", controlList, selectCode); break;
+                                        case ObjectType.SubDistict: frm.BindData("SubDistict", controlList, selectCode); break;
+                                        case ObjectType.Promotion: frm.BindData("Promotion", controlList, selectCode); break;
+                                        case ObjectType.PromotionTemp: frm.BindData("PromotionTemp", controlList, selectRow.Cells["PromotionID"].Value.ToString()); break;
+                                        case ObjectType.ODProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.REProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.RLProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.RBProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.RJProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.RTProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.TRProduct: frm.BindData("TRProduct", controlList, selectCode); break;
+                                        case ObjectType.CCProduct: frm.BindData("CCProduct", controlList, selectCode); break;
+                                        case ObjectType.IVProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.IMProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.VEProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.IVPreProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.IMPreProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.PreOrderProduct: BindProduct(frm, _objType, selectCode); break;
+                                        case ObjectType.OD: ((frmOD)frm).BindODData(selectCode); break;
+                                        case ObjectType.RE: ((frmRE)frm).BindREData(selectCode); break;
+                                        case ObjectType.REOD: ((frmRE)frm).BindODData(selectCode); break;
+                                        case ObjectType.RL: ((frmRL)frm).BindRLData(selectCode); break;
+                                        case ObjectType.RB: ((frmRB)frm).BindRBData(selectCode); break;
+                                        case ObjectType.RJ: ((frmRJ)frm).BindRJData(selectCode); break;
+                                        case ObjectType.RT: ((frmRT)frm).BindRTData(selectCode); break;
+                                        case ObjectType.TR: ((frmTR)frm).BindTRData(selectCode); break;
+                                        case ObjectType.RJRB: ((frmRJ)frm).BindRBData(selectCode); break;
+                                        case ObjectType.IM: ((frmVanSales)frm).BindVanSalesData(selectCode); break;
+                                        case ObjectType.IV: ((frmTabletSales)frm).BindTabletSalesData(selectCode); break;
+                                        case ObjectType.CCIV: ((frmCancelPOItem)frm).BindTabletSalesData(selectCode); break;
+                                        case ObjectType.IVPre: ((frmTabletSalesPre)frm).BindTabletSalesData(selectCode); break;
+                                        case ObjectType.IVPreRB: ((frmRB)frm).BindRBFromPOData(selectCode, "IV"); break;
+                                        case ObjectType.IMPre: ((frm1000SalesPre)frm).BindVanSalesData(selectCode); break;
+                                        case ObjectType.PreOrder: ((frmPreOrder)frm).BindVanSalesData(selectCode, "IV2"); break;
+                                        case ObjectType.IVPrePO: ((frmPreOrder)frm).BindVanSalesPOData(selectCode); break;
+                                        case ObjectType.V: ((frmVE)frm).BindVEData(selectCode); break;
+                                        case ObjectType.BranchWarehouse: frm.BindData("BranchWarehouse", controlList, selectCode); break;
+                                        case ObjectType.FromBranchID: frm.BindData("FromBranchID", controlList, selectCode); break;
+                                        case ObjectType.Employee: frm.BindData("Employee", controlList, selectCode); break;
+                                        case ObjectType.EmployeeName: frm.BindData("EmployeeName", controlList, selectCode); break;
+                                        case ObjectType.Customer: frm.BindData("Customer", controlList, selectCode); break;
+                                        case ObjectType.CustomerPre: frm.BindData("Customer", controlList, selectCode); break;
+                                        case ObjectType.SaleAreaDistrict: BindProduct(frm, _objType, selectRow.Cells[2].Value.ToString()); break;
+                                        case ObjectType.AllBranchOD: ((frmLoadOD)frm).BindData(selectCode); break;
+                                        case ObjectType.AllBranchRL: ((frmLoadRL)frm).BindData(selectCode); break;
+                                        case ObjectType.AllBranchRB: ((frmLoadRB)frm).BindData(selectCode); break;
+                                        default:
+                                            break;
+                                    }
+
+                                    this.Close();
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+
+                ex.WriteLog(this.GetType());
+                string msg = "เกิดข้อผิดพลาดในระบบ กรุณาปิด-เปิด โปรแกรมใหม่อีกครั้ง!!!";
+                msg.ShowErrorMessage();
             }
         }
 

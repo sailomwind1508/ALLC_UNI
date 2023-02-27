@@ -511,5 +511,41 @@ namespace AllCashUFormsApp.Controller
             }
             return ret;
         }
+
+        public int Remove_ProductPriceGroup(string ProductID, int PriceGroupID)
+        {
+            return new tbl_ProductPriceGroup().Remove_ProductPriceGroup(ProductID, PriceGroupID);
+        }
+
+        public int UpdateProductPriceGroupData(List<tbl_ProductPriceGroup> tbl_ProductPriceGroup)
+        {
+            return tbl_ProductPriceGroup.UpdateDataList();
+        }
+
+        public DataTable GetProductPriceGroup(string ProductID, int PriceGroupID)
+        {
+            return new tbl_ProductPriceGroup().SelectSingle(ProductID, PriceGroupID);
+        }
+
+        public DataTable UpdatePromotionFromCenter(bool delFlag)
+        {
+            DataTable newTable = new DataTable();
+            try
+            {
+                string sql = "proc_manual_update_promotion_from_center";
+
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@FlagRemove", delFlag);
+
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
     }
 }

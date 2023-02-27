@@ -30,18 +30,18 @@ namespace AllCashUFormsApp.View.Page
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm1000SalesPre));
             this.nudCreditDay = new System.Windows.Forms.NumericUpDown();
             this.colReceivedQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,28 +73,28 @@ namespace AllCashUFormsApp.View.Page
             this.btnUpdateAddress = new System.Windows.Forms.Button();
             this.pnlTL = new System.Windows.Forms.Panel();
             this.cboRemark = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.txtCrUser = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtWHName = new System.Windows.Forms.TextBox();
             this.txtWHCode = new System.Windows.Forms.TextBox();
             this.btnSearchWHCode = new System.Windows.Forms.Button();
-            this.lblWHCode = new System.Windows.Forms.Label();
             this.txtEmpCode = new System.Windows.Forms.TextBox();
             this.btnSearchEmpCode = new System.Windows.Forms.Button();
             this.ddlSaleArea = new System.Windows.Forms.ComboBox();
             this.btnCustInfo = new System.Windows.Forms.Button();
             this.lblEmpCode = new System.Windows.Forms.Label();
-            this.lblSaleArea = new System.Windows.Forms.Label();
             this.txtTelephone = new System.Windows.Forms.TextBox();
-            this.lblTelephone = new System.Windows.Forms.Label();
             this.txtContact = new System.Windows.Forms.TextBox();
             this.lblContact = new System.Windows.Forms.Label();
             this.txtBillTo = new System.Windows.Forms.TextBox();
-            this.lblBillTo = new System.Windows.Forms.Label();
             this.txtCustName = new System.Windows.Forms.TextBox();
             this.txtCustomerID = new System.Windows.Forms.TextBox();
             this.btnSearchCust = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblWHCode = new System.Windows.Forms.Label();
+            this.lblSaleArea = new System.Windows.Forms.Label();
+            this.lblTelephone = new System.Windows.Forms.Label();
+            this.lblBillTo = new System.Windows.Forms.Label();
             this.lblCustomerCode = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.dtpDocDate = new System.Windows.Forms.DateTimePicker();
@@ -117,21 +117,21 @@ namespace AllCashUFormsApp.View.Page
             this.label12 = new System.Windows.Forms.Label();
             this.pnlBR = new System.Windows.Forms.Panel();
             this.txnCommission = new System.Windows.Forms.TextBox();
+            this.txnDiscountAmt = new System.Windows.Forms.TextBox();
+            this.txnTotalDue = new System.Windows.Forms.TextBox();
+            this.txnAmount = new System.Windows.Forms.TextBox();
+            this.txnBeforeVat = new System.Windows.Forms.TextBox();
+            this.txnExcVat = new System.Windows.Forms.TextBox();
+            this.txnVatAmt = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnShowPromotion = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.lblVatType = new System.Windows.Forms.Label();
-            this.txnDiscountAmt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txnTotalDue = new System.Windows.Forms.TextBox();
-            this.txnAmount = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.txnBeforeVat = new System.Windows.Forms.TextBox();
-            this.txnExcVat = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.txnVatAmt = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlTR = new System.Windows.Forms.Panel();
@@ -140,14 +140,16 @@ namespace AllCashUFormsApp.View.Page
             this.txdDocNo = new System.Windows.Forms.MaskedTextBox();
             this.btnGenCustIVNo = new System.Windows.Forms.Button();
             this.txtCustInvNO = new System.Windows.Forms.TextBox();
-            this.lblCustInvNO = new System.Windows.Forms.Label();
             this.txtCustPONo = new System.Windows.Forms.TextBox();
+            this.ddlDocStatus = new System.Windows.Forms.ComboBox();
+            this.dtpDueDate = new System.Windows.Forms.DateTimePicker();
+            this.lblCustInvNO = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.ddlDocStatus = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.dtpDueDate = new System.Windows.Forms.DateTimePicker();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnRecovery = new System.Windows.Forms.Button();
+            this.txtRecoDocNo = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudCreditDay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grdList)).BeginInit();
             this.pnlCen.SuspendLayout();
@@ -182,10 +184,10 @@ namespace AllCashUFormsApp.View.Page
             // colReceivedQty
             // 
             this.colReceivedQty.DataPropertyName = "ReceivedQty";
-            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle37.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle37.Format = "N0";
-            this.colReceivedQty.DefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle25.Format = "N0";
+            this.colReceivedQty.DefaultCellStyle = dataGridViewCellStyle25;
             this.colReceivedQty.HeaderText = "จำนวนขาย";
             this.colReceivedQty.MaxInputLength = 5;
             this.colReceivedQty.Name = "colReceivedQty";
@@ -195,9 +197,9 @@ namespace AllCashUFormsApp.View.Page
             // colUnit
             // 
             this.colUnit.DataPropertyName = "UomSetName";
-            dataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle38.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colUnit.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colUnit.DefaultCellStyle = dataGridViewCellStyle26;
             this.colUnit.HeaderText = "หน่วย";
             this.colUnit.Name = "colUnit";
             this.colUnit.ReadOnly = true;
@@ -208,9 +210,9 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.colProductName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colProductName.DataPropertyName = "ProductName";
-            dataGridViewCellStyle39.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle39.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductName.DefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle27.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductName.DefaultCellStyle = dataGridViewCellStyle27;
             this.colProductName.HeaderText = "รายการ";
             this.colProductName.Name = "colProductName";
             this.colProductName.ReadOnly = true;
@@ -218,9 +220,9 @@ namespace AllCashUFormsApp.View.Page
             // 
             // colSearchProduct
             // 
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle40.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colSearchProduct.DefaultCellStyle = dataGridViewCellStyle28;
             this.colSearchProduct.HeaderText = "";
             this.colSearchProduct.Name = "colSearchProduct";
             this.colSearchProduct.ReadOnly = true;
@@ -231,8 +233,8 @@ namespace AllCashUFormsApp.View.Page
             // colProductCode
             // 
             this.colProductCode.DataPropertyName = "ProductID";
-            dataGridViewCellStyle41.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle41;
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colProductCode.DefaultCellStyle = dataGridViewCellStyle29;
             this.colProductCode.HeaderText = "รหัสสินค้า";
             this.colProductCode.MaxInputLength = 15;
             this.colProductCode.Name = "colProductCode";
@@ -243,14 +245,14 @@ namespace AllCashUFormsApp.View.Page
             this.grdList.AllowUserToAddRows = false;
             this.grdList.AllowUserToResizeColumns = false;
             this.grdList.AllowUserToResizeRows = false;
-            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle42.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle42;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle30;
             this.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colProductCode,
@@ -265,29 +267,29 @@ namespace AllCashUFormsApp.View.Page
             this.colTotal,
             this.colUomSetID,
             this.colSellPrice});
-            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle48.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle48.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle48.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle48.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle48.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdList.DefaultCellStyle = dataGridViewCellStyle48;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle36.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdList.DefaultCellStyle = dataGridViewCellStyle36;
             this.grdList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdList.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.grdList.Location = new System.Drawing.Point(0, 0);
             this.grdList.MultiSelect = false;
             this.grdList.Name = "grdList";
-            this.grdList.Size = new System.Drawing.Size(992, 123);
+            this.grdList.Size = new System.Drawing.Size(992, 148);
             this.grdList.TabIndex = 14;
             // 
             // colSellPriceVat
             // 
             this.colSellPriceVat.DataPropertyName = "SellPriceVat";
-            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle43.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle43.Format = "N2";
-            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle43;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle31.Format = "N2";
+            this.colSellPriceVat.DefaultCellStyle = dataGridViewCellStyle31;
             this.colSellPriceVat.HeaderText = "หน่วยละ";
             this.colSellPriceVat.MaxInputLength = 10;
             this.colSellPriceVat.Name = "colSellPriceVat";
@@ -298,10 +300,10 @@ namespace AllCashUFormsApp.View.Page
             // colVAT
             // 
             this.colVAT.DataPropertyName = "VatType";
-            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle44.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colVAT.DefaultCellStyle = dataGridViewCellStyle44;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colVAT.DefaultCellStyle = dataGridViewCellStyle32;
             this.colVAT.HeaderText = "ภาษี";
             this.colVAT.Name = "colVAT";
             this.colVAT.ReadOnly = true;
@@ -310,8 +312,8 @@ namespace AllCashUFormsApp.View.Page
             // 
             // colLineDiscountType
             // 
-            dataGridViewCellStyle45.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            this.colLineDiscountType.DefaultCellStyle = dataGridViewCellStyle45;
+            dataGridViewCellStyle33.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.colLineDiscountType.DefaultCellStyle = dataGridViewCellStyle33;
             this.colLineDiscountType.HeaderText = "ประเภทการลด";
             this.colLineDiscountType.Name = "colLineDiscountType";
             this.colLineDiscountType.ReadOnly = true;
@@ -319,11 +321,11 @@ namespace AllCashUFormsApp.View.Page
             // colLineDiscount
             // 
             this.colLineDiscount.DataPropertyName = "LineDiscount";
-            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle46.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle46.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle46.Format = "N2";
-            this.colLineDiscount.DefaultCellStyle = dataGridViewCellStyle46;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle34.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle34.Format = "N2";
+            this.colLineDiscount.DefaultCellStyle = dataGridViewCellStyle34;
             this.colLineDiscount.HeaderText = "ส่วนลด";
             this.colLineDiscount.Name = "colLineDiscount";
             this.colLineDiscount.ReadOnly = true;
@@ -332,11 +334,11 @@ namespace AllCashUFormsApp.View.Page
             // colTotal
             // 
             this.colTotal.DataPropertyName = "LineTotal";
-            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle47.BackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle47.Font = new System.Drawing.Font("Tahoma", 9.5F);
-            dataGridViewCellStyle47.Format = "N2";
-            this.colTotal.DefaultCellStyle = dataGridViewCellStyle47;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle35.BackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle35.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            dataGridViewCellStyle35.Format = "N2";
+            this.colTotal.DefaultCellStyle = dataGridViewCellStyle35;
             this.colTotal.HeaderText = "จำนวนเงิน";
             this.colTotal.Name = "colTotal";
             this.colTotal.ReadOnly = true;
@@ -371,7 +373,7 @@ namespace AllCashUFormsApp.View.Page
             this.pnlCen.Controls.Add(this.grdList);
             this.pnlCen.Location = new System.Drawing.Point(0, 220);
             this.pnlCen.Name = "pnlCen";
-            this.pnlCen.Size = new System.Drawing.Size(992, 123);
+            this.pnlCen.Size = new System.Drawing.Size(992, 148);
             this.pnlCen.TabIndex = 115;
             // 
             // panel1
@@ -671,15 +673,6 @@ namespace AllCashUFormsApp.View.Page
             this.cboRemark.Size = new System.Drawing.Size(493, 24);
             this.cboRemark.TabIndex = 155;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 172);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(71, 16);
-            this.label5.TabIndex = 141;
-            this.label5.Text = "หมายเหตุ : ";
-            // 
             // txtCrUser
             // 
             this.txtCrUser.Location = new System.Drawing.Point(81, 193);
@@ -687,15 +680,6 @@ namespace AllCashUFormsApp.View.Page
             this.txtCrUser.Name = "txtCrUser";
             this.txtCrUser.Size = new System.Drawing.Size(493, 23);
             this.txtCrUser.TabIndex = 138;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(26, 196);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(57, 16);
-            this.label6.TabIndex = 139;
-            this.label6.Text = "ผู้จำทำ : ";
             // 
             // txtWHName
             // 
@@ -729,15 +713,6 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchWHCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchWHCode.UseVisualStyleBackColor = false;
             this.btnSearchWHCode.Click += new System.EventHandler(this.btnSearchWHCode_Click);
-            // 
-            // lblWHCode
-            // 
-            this.lblWHCode.AutoSize = true;
-            this.lblWHCode.Location = new System.Drawing.Point(40, 148);
-            this.lblWHCode.Name = "lblWHCode";
-            this.lblWHCode.Size = new System.Drawing.Size(43, 16);
-            this.lblWHCode.TabIndex = 137;
-            this.lblWHCode.Text = "แวน : ";
             // 
             // txtEmpCode
             // 
@@ -797,15 +772,6 @@ namespace AllCashUFormsApp.View.Page
             this.lblEmpCode.TabIndex = 135;
             this.lblEmpCode.Text = "พนักงานขาย : ";
             // 
-            // lblSaleArea
-            // 
-            this.lblSaleArea.AutoSize = true;
-            this.lblSaleArea.Location = new System.Drawing.Point(32, 123);
-            this.lblSaleArea.Name = "lblSaleArea";
-            this.lblSaleArea.Size = new System.Drawing.Size(51, 16);
-            this.lblSaleArea.TabIndex = 134;
-            this.lblSaleArea.Text = "ตลาด : ";
-            // 
             // txtTelephone
             // 
             this.txtTelephone.Location = new System.Drawing.Point(81, 96);
@@ -813,15 +779,6 @@ namespace AllCashUFormsApp.View.Page
             this.txtTelephone.Name = "txtTelephone";
             this.txtTelephone.Size = new System.Drawing.Size(190, 23);
             this.txtTelephone.TabIndex = 122;
-            // 
-            // lblTelephone
-            // 
-            this.lblTelephone.AutoSize = true;
-            this.lblTelephone.Location = new System.Drawing.Point(15, 99);
-            this.lblTelephone.Name = "lblTelephone";
-            this.lblTelephone.Size = new System.Drawing.Size(68, 16);
-            this.lblTelephone.TabIndex = 133;
-            this.lblTelephone.Text = "เบอร์โทร : ";
             // 
             // txtContact
             // 
@@ -848,15 +805,6 @@ namespace AllCashUFormsApp.View.Page
             this.txtBillTo.Name = "txtBillTo";
             this.txtBillTo.Size = new System.Drawing.Size(493, 66);
             this.txtBillTo.TabIndex = 121;
-            // 
-            // lblBillTo
-            // 
-            this.lblBillTo.AutoSize = true;
-            this.lblBillTo.Location = new System.Drawing.Point(37, 32);
-            this.lblBillTo.Name = "lblBillTo";
-            this.lblBillTo.Size = new System.Drawing.Size(46, 16);
-            this.lblBillTo.TabIndex = 131;
-            this.lblBillTo.Text = "ที่อยู่ : ";
             // 
             // txtCustName
             // 
@@ -890,6 +838,60 @@ namespace AllCashUFormsApp.View.Page
             this.btnSearchCust.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchCust.UseVisualStyleBackColor = false;
             this.btnSearchCust.Click += new System.EventHandler(this.btnSearchCust_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 172);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 16);
+            this.label5.TabIndex = 141;
+            this.label5.Text = "หมายเหตุ : ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(26, 196);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 16);
+            this.label6.TabIndex = 139;
+            this.label6.Text = "ผู้จำทำ : ";
+            // 
+            // lblWHCode
+            // 
+            this.lblWHCode.AutoSize = true;
+            this.lblWHCode.Location = new System.Drawing.Point(40, 148);
+            this.lblWHCode.Name = "lblWHCode";
+            this.lblWHCode.Size = new System.Drawing.Size(43, 16);
+            this.lblWHCode.TabIndex = 137;
+            this.lblWHCode.Text = "แวน : ";
+            // 
+            // lblSaleArea
+            // 
+            this.lblSaleArea.AutoSize = true;
+            this.lblSaleArea.Location = new System.Drawing.Point(32, 123);
+            this.lblSaleArea.Name = "lblSaleArea";
+            this.lblSaleArea.Size = new System.Drawing.Size(51, 16);
+            this.lblSaleArea.TabIndex = 134;
+            this.lblSaleArea.Text = "ตลาด : ";
+            // 
+            // lblTelephone
+            // 
+            this.lblTelephone.AutoSize = true;
+            this.lblTelephone.Location = new System.Drawing.Point(15, 99);
+            this.lblTelephone.Name = "lblTelephone";
+            this.lblTelephone.Size = new System.Drawing.Size(68, 16);
+            this.lblTelephone.TabIndex = 133;
+            this.lblTelephone.Text = "เบอร์โทร : ";
+            // 
+            // lblBillTo
+            // 
+            this.lblBillTo.AutoSize = true;
+            this.lblBillTo.Location = new System.Drawing.Point(37, 32);
+            this.lblBillTo.Name = "lblBillTo";
+            this.lblBillTo.Size = new System.Drawing.Size(46, 16);
+            this.lblBillTo.TabIndex = 131;
+            this.lblBillTo.Text = "ที่อยู่ : ";
             // 
             // lblCustomerCode
             // 
@@ -1025,23 +1027,27 @@ namespace AllCashUFormsApp.View.Page
             this.pnlBot.Controls.Add(this.pnlBL);
             this.pnlBot.Controls.Add(this.pnlBR);
             this.pnlBot.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBot.Location = new System.Drawing.Point(0, 344);
+            this.pnlBot.Location = new System.Drawing.Point(0, 369);
             this.pnlBot.Name = "pnlBot";
-            this.pnlBot.Size = new System.Drawing.Size(992, 186);
+            this.pnlBot.Size = new System.Drawing.Size(992, 161);
             this.pnlBot.TabIndex = 118;
             // 
             // pnlBL
             // 
             this.pnlBL.BackColor = System.Drawing.Color.Azure;
+            this.pnlBL.Controls.Add(this.txtRecoDocNo);
+            this.pnlBL.Controls.Add(this.btnRecovery);
+            this.pnlBL.Controls.Add(this.txnCommission);
             this.pnlBL.Controls.Add(this.btnReCalc);
             this.pnlBL.Controls.Add(this.panel6);
             this.pnlBL.Controls.Add(this.txtComment);
             this.pnlBL.Controls.Add(this.label12);
+            this.pnlBL.Controls.Add(this.label1);
             this.pnlBL.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlBL.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlBL.Location = new System.Drawing.Point(0, 0);
             this.pnlBL.Name = "pnlBL";
-            this.pnlBL.Size = new System.Drawing.Size(656, 186);
+            this.pnlBL.Size = new System.Drawing.Size(653, 161);
             this.pnlBL.TabIndex = 116;
             // 
             // btnReCalc
@@ -1104,7 +1110,7 @@ namespace AllCashUFormsApp.View.Page
             this.txtComment.Multiline = true;
             this.txtComment.Name = "txtComment";
             this.txtComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtComment.Size = new System.Drawing.Size(491, 149);
+            this.txtComment.Size = new System.Drawing.Size(491, 123);
             this.txtComment.TabIndex = 17;
             // 
             // label12
@@ -1119,14 +1125,12 @@ namespace AllCashUFormsApp.View.Page
             // pnlBR
             // 
             this.pnlBR.BackColor = System.Drawing.Color.Azure;
-            this.pnlBR.Controls.Add(this.txnCommission);
             this.pnlBR.Controls.Add(this.txnDiscountAmt);
             this.pnlBR.Controls.Add(this.txnTotalDue);
             this.pnlBR.Controls.Add(this.txnAmount);
             this.pnlBR.Controls.Add(this.txnBeforeVat);
             this.pnlBR.Controls.Add(this.txnExcVat);
             this.pnlBR.Controls.Add(this.txnVatAmt);
-            this.pnlBR.Controls.Add(this.label1);
             this.pnlBR.Controls.Add(this.btnShowPromotion);
             this.pnlBR.Controls.Add(this.label3);
             this.pnlBR.Controls.Add(this.lblVatType);
@@ -1140,91 +1144,31 @@ namespace AllCashUFormsApp.View.Page
             this.pnlBR.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlBR.Location = new System.Drawing.Point(659, 0);
             this.pnlBR.Name = "pnlBR";
-            this.pnlBR.Size = new System.Drawing.Size(333, 186);
+            this.pnlBR.Size = new System.Drawing.Size(333, 161);
             this.pnlBR.TabIndex = 22;
             // 
             // txnCommission
             // 
             this.txnCommission.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnCommission.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnCommission.Location = new System.Drawing.Point(164, 160);
+            this.txnCommission.Location = new System.Drawing.Point(618, 130);
             this.txnCommission.MaxLength = 5;
             this.txnCommission.Name = "txnCommission";
             this.txnCommission.ReadOnly = true;
-            this.txnCommission.Size = new System.Drawing.Size(163, 23);
+            this.txnCommission.Size = new System.Drawing.Size(22, 23);
             this.txnCommission.TabIndex = 144;
             this.txnCommission.Visible = false;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(44, 163);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(122, 16);
-            this.label1.TabIndex = 145;
-            this.label1.Text = "ค่าคอมมิชชั่นทั้งสิ้น : ";
-            this.label1.Visible = false;
-            // 
-            // btnShowPromotion
-            // 
-            this.btnShowPromotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnShowPromotion.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnShowPromotion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnShowPromotion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShowPromotion.ForeColor = System.Drawing.SystemColors.Control;
-            this.btnShowPromotion.Image = ((System.Drawing.Image)(resources.GetObject("btnShowPromotion.Image")));
-            this.btnShowPromotion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnShowPromotion.Location = new System.Drawing.Point(11, 30);
-            this.btnShowPromotion.Name = "btnShowPromotion";
-            this.btnShowPromotion.Size = new System.Drawing.Size(35, 23);
-            this.btnShowPromotion.TabIndex = 143;
-            this.btnShowPromotion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnShowPromotion.UseVisualStyleBackColor = false;
-            this.btnShowPromotion.Click += new System.EventHandler(this.btnShowPromotion_Click);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(133, 85);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(33, 16);
-            this.label3.TabIndex = 140;
-            this.label3.Text = "% : ";
-            // 
-            // lblVatType
-            // 
-            this.lblVatType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblVatType.AutoSize = true;
-            this.lblVatType.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVatType.ForeColor = System.Drawing.Color.Blue;
-            this.lblVatType.Location = new System.Drawing.Point(113, 85);
-            this.lblVatType.Name = "lblVatType";
-            this.lblVatType.Size = new System.Drawing.Size(17, 17);
-            this.lblVatType.TabIndex = 139;
-            this.lblVatType.Text = "7";
             // 
             // txnDiscountAmt
             // 
             this.txnDiscountAmt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnDiscountAmt.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnDiscountAmt.Location = new System.Drawing.Point(164, 30);
+            this.txnDiscountAmt.Location = new System.Drawing.Point(164, 31);
             this.txnDiscountAmt.MaxLength = 5;
             this.txnDiscountAmt.Name = "txnDiscountAmt";
             this.txnDiscountAmt.ReadOnly = true;
             this.txnDiscountAmt.Size = new System.Drawing.Size(163, 23);
             this.txnDiscountAmt.TabIndex = 138;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 16);
-            this.label2.TabIndex = 137;
-            this.label2.Text = "มูลค่าอัตราภาษี";
             // 
             // txnTotalDue
             // 
@@ -1241,18 +1185,111 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.txnAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txnAmount.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnAmount.Location = new System.Drawing.Point(164, 4);
+            this.txnAmount.Location = new System.Drawing.Point(164, 5);
             this.txnAmount.MaxLength = 5;
             this.txnAmount.Name = "txnAmount";
             this.txnAmount.ReadOnly = true;
             this.txnAmount.Size = new System.Drawing.Size(163, 23);
             this.txnAmount.TabIndex = 126;
             // 
+            // txnBeforeVat
+            // 
+            this.txnBeforeVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txnBeforeVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txnBeforeVat.Location = new System.Drawing.Point(164, 57);
+            this.txnBeforeVat.MaxLength = 5;
+            this.txnBeforeVat.Name = "txnBeforeVat";
+            this.txnBeforeVat.ReadOnly = true;
+            this.txnBeforeVat.Size = new System.Drawing.Size(163, 23);
+            this.txnBeforeVat.TabIndex = 127;
+            // 
+            // txnExcVat
+            // 
+            this.txnExcVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txnExcVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txnExcVat.Location = new System.Drawing.Point(164, 109);
+            this.txnExcVat.MaxLength = 5;
+            this.txnExcVat.Name = "txnExcVat";
+            this.txnExcVat.ReadOnly = true;
+            this.txnExcVat.Size = new System.Drawing.Size(163, 23);
+            this.txnExcVat.TabIndex = 129;
+            // 
+            // txnVatAmt
+            // 
+            this.txnVatAmt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txnVatAmt.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txnVatAmt.Location = new System.Drawing.Point(164, 83);
+            this.txnVatAmt.MaxLength = 5;
+            this.txnVatAmt.Name = "txnVatAmt";
+            this.txnVatAmt.ReadOnly = true;
+            this.txnVatAmt.Size = new System.Drawing.Size(163, 23);
+            this.txnVatAmt.TabIndex = 128;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(503, 137);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(122, 16);
+            this.label1.TabIndex = 145;
+            this.label1.Text = "ค่าคอมมิชชั่นทั้งสิ้น : ";
+            this.label1.Visible = false;
+            // 
+            // btnShowPromotion
+            // 
+            this.btnShowPromotion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowPromotion.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnShowPromotion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnShowPromotion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowPromotion.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnShowPromotion.Image = ((System.Drawing.Image)(resources.GetObject("btnShowPromotion.Image")));
+            this.btnShowPromotion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnShowPromotion.Location = new System.Drawing.Point(11, 31);
+            this.btnShowPromotion.Name = "btnShowPromotion";
+            this.btnShowPromotion.Size = new System.Drawing.Size(35, 23);
+            this.btnShowPromotion.TabIndex = 143;
+            this.btnShowPromotion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnShowPromotion.UseVisualStyleBackColor = false;
+            this.btnShowPromotion.Click += new System.EventHandler(this.btnShowPromotion_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(133, 86);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(33, 16);
+            this.label3.TabIndex = 140;
+            this.label3.Text = "% : ";
+            // 
+            // lblVatType
+            // 
+            this.lblVatType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVatType.AutoSize = true;
+            this.lblVatType.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVatType.ForeColor = System.Drawing.Color.Blue;
+            this.lblVatType.Location = new System.Drawing.Point(113, 86);
+            this.lblVatType.Name = "lblVatType";
+            this.lblVatType.Size = new System.Drawing.Size(17, 17);
+            this.lblVatType.TabIndex = 139;
+            this.lblVatType.Text = "7";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 86);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 16);
+            this.label2.TabIndex = 137;
+            this.label2.Text = "มูลค่าอัตราภาษี";
+            // 
             // label13
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(37, 7);
+            this.label13.Location = new System.Drawing.Point(37, 8);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(129, 16);
             this.label13.TabIndex = 131;
@@ -1272,60 +1309,27 @@ namespace AllCashUFormsApp.View.Page
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(52, 33);
+            this.label14.Location = new System.Drawing.Point(52, 34);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(114, 16);
             this.label14.TabIndex = 132;
             this.label14.Text = "ส่วนลด/โปรโมชั่น : ";
             // 
-            // txnBeforeVat
-            // 
-            this.txnBeforeVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txnBeforeVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnBeforeVat.Location = new System.Drawing.Point(164, 56);
-            this.txnBeforeVat.MaxLength = 5;
-            this.txnBeforeVat.Name = "txnBeforeVat";
-            this.txnBeforeVat.ReadOnly = true;
-            this.txnBeforeVat.Size = new System.Drawing.Size(163, 23);
-            this.txnBeforeVat.TabIndex = 127;
-            // 
-            // txnExcVat
-            // 
-            this.txnExcVat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txnExcVat.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnExcVat.Location = new System.Drawing.Point(164, 108);
-            this.txnExcVat.MaxLength = 5;
-            this.txnExcVat.Name = "txnExcVat";
-            this.txnExcVat.ReadOnly = true;
-            this.txnExcVat.Size = new System.Drawing.Size(163, 23);
-            this.txnExcVat.TabIndex = 129;
-            // 
             // label15
             // 
             this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(97, 59);
+            this.label15.Location = new System.Drawing.Point(97, 60);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(69, 16);
             this.label15.TabIndex = 133;
             this.label15.Text = "ก่อนภาษี : ";
             // 
-            // txnVatAmt
-            // 
-            this.txnVatAmt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txnVatAmt.Font = new System.Drawing.Font("Tahoma", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txnVatAmt.Location = new System.Drawing.Point(164, 82);
-            this.txnVatAmt.MaxLength = 5;
-            this.txnVatAmt.Name = "txnVatAmt";
-            this.txnVatAmt.ReadOnly = true;
-            this.txnVatAmt.Size = new System.Drawing.Size(163, 23);
-            this.txnVatAmt.TabIndex = 128;
-            // 
             // label16
             // 
             this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(57, 111);
+            this.label16.Location = new System.Drawing.Point(57, 112);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(109, 16);
             this.label16.TabIndex = 134;
@@ -1397,7 +1401,7 @@ namespace AllCashUFormsApp.View.Page
             this.btnRL.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnRL.Image = ((System.Drawing.Image)(resources.GetObject("btnRL.Image")));
             this.btnRL.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRL.Location = new System.Drawing.Point(59, 172);
+            this.btnRL.Location = new System.Drawing.Point(52, 172);
             this.btnRL.Name = "btnRL";
             this.btnRL.Size = new System.Drawing.Size(94, 42);
             this.btnRL.TabIndex = 155;
@@ -1426,9 +1430,9 @@ namespace AllCashUFormsApp.View.Page
             this.btnGenCustIVNo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnGenCustIVNo.Image = ((System.Drawing.Image)(resources.GetObject("btnGenCustIVNo.Image")));
             this.btnGenCustIVNo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGenCustIVNo.Location = new System.Drawing.Point(159, 172);
+            this.btnGenCustIVNo.Location = new System.Drawing.Point(148, 172);
             this.btnGenCustIVNo.Name = "btnGenCustIVNo";
-            this.btnGenCustIVNo.Size = new System.Drawing.Size(131, 42);
+            this.btnGenCustIVNo.Size = new System.Drawing.Size(142, 42);
             this.btnGenCustIVNo.TabIndex = 151;
             this.btnGenCustIVNo.Text = "ออกใบกำกับภาษี";
             this.btnGenCustIVNo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1444,16 +1448,6 @@ namespace AllCashUFormsApp.View.Page
             this.txtCustInvNO.Size = new System.Drawing.Size(163, 23);
             this.txtCustInvNO.TabIndex = 114;
             // 
-            // lblCustInvNO
-            // 
-            this.lblCustInvNO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCustInvNO.AutoSize = true;
-            this.lblCustInvNO.Location = new System.Drawing.Point(20, 126);
-            this.lblCustInvNO.Name = "lblCustInvNO";
-            this.lblCustInvNO.Size = new System.Drawing.Size(109, 16);
-            this.lblCustInvNO.TabIndex = 115;
-            this.lblCustInvNO.Text = "เลขใบกำกับภาษี : ";
-            // 
             // txtCustPONo
             // 
             this.txtCustPONo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1463,6 +1457,36 @@ namespace AllCashUFormsApp.View.Page
             this.txtCustPONo.Name = "txtCustPONo";
             this.txtCustPONo.Size = new System.Drawing.Size(163, 23);
             this.txtCustPONo.TabIndex = 111;
+            // 
+            // ddlDocStatus
+            // 
+            this.ddlDocStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlDocStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlDocStatus.Enabled = false;
+            this.ddlDocStatus.FormattingEnabled = true;
+            this.ddlDocStatus.Location = new System.Drawing.Point(127, 147);
+            this.ddlDocStatus.Name = "ddlDocStatus";
+            this.ddlDocStatus.Size = new System.Drawing.Size(163, 24);
+            this.ddlDocStatus.TabIndex = 13;
+            // 
+            // dtpDueDate
+            // 
+            this.dtpDueDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtpDueDate.CustomFormat = "dd/MM/yyyy";
+            this.dtpDueDate.Location = new System.Drawing.Point(127, 99);
+            this.dtpDueDate.Name = "dtpDueDate";
+            this.dtpDueDate.Size = new System.Drawing.Size(163, 23);
+            this.dtpDueDate.TabIndex = 12;
+            // 
+            // lblCustInvNO
+            // 
+            this.lblCustInvNO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCustInvNO.AutoSize = true;
+            this.lblCustInvNO.Location = new System.Drawing.Point(20, 126);
+            this.lblCustInvNO.Name = "lblCustInvNO";
+            this.lblCustInvNO.Size = new System.Drawing.Size(109, 16);
+            this.lblCustInvNO.TabIndex = 115;
+            this.lblCustInvNO.Text = "เลขใบกำกับภาษี : ";
             // 
             // label4
             // 
@@ -1484,41 +1508,50 @@ namespace AllCashUFormsApp.View.Page
             this.label11.TabIndex = 110;
             this.label11.Text = "สถานะเอกสาร : ";
             // 
-            // ddlDocStatus
-            // 
-            this.ddlDocStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlDocStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlDocStatus.Enabled = false;
-            this.ddlDocStatus.FormattingEnabled = true;
-            this.ddlDocStatus.Location = new System.Drawing.Point(127, 147);
-            this.ddlDocStatus.Name = "ddlDocStatus";
-            this.ddlDocStatus.Size = new System.Drawing.Size(163, 24);
-            this.ddlDocStatus.TabIndex = 13;
-            // 
             // label10
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(48, 104);
+            this.label10.Location = new System.Drawing.Point(48, 102);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(81, 16);
             this.label10.TabIndex = 108;
             this.label10.Text = "ครบกำหนด : ";
-            // 
-            // dtpDueDate
-            // 
-            this.dtpDueDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtpDueDate.CustomFormat = "dd/MM/yyyy";
-            this.dtpDueDate.Location = new System.Drawing.Point(127, 99);
-            this.dtpDueDate.Name = "dtpDueDate";
-            this.dtpDueDate.Size = new System.Drawing.Size(163, 23);
-            this.dtpDueDate.TabIndex = 12;
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Font = new System.Drawing.Font("Tahoma", 9.5F);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // btnRecovery
+            // 
+            this.btnRecovery.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRecovery.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.btnRecovery.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnRecovery.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRecovery.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRecovery.Font = new System.Drawing.Font("Tahoma", 9.5F);
+            this.btnRecovery.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnRecovery.Image = ((System.Drawing.Image)(resources.GetObject("btnRecovery.Image")));
+            this.btnRecovery.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRecovery.Location = new System.Drawing.Point(503, 83);
+            this.btnRecovery.Name = "btnRecovery";
+            this.btnRecovery.Size = new System.Drawing.Size(104, 45);
+            this.btnRecovery.TabIndex = 156;
+            this.btnRecovery.Text = "กู้คืนข้อมูล";
+            this.btnRecovery.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRecovery.UseVisualStyleBackColor = false;
+            this.btnRecovery.Visible = false;
+            this.btnRecovery.Click += new System.EventHandler(this.btnRecovery_Click);
+            // 
+            // txtRecoDocNo
+            // 
+            this.txtRecoDocNo.Location = new System.Drawing.Point(313, 7);
+            this.txtRecoDocNo.MaxLength = 13;
+            this.txtRecoDocNo.Name = "txtRecoDocNo";
+            this.txtRecoDocNo.Size = new System.Drawing.Size(181, 23);
+            this.txtRecoDocNo.TabIndex = 157;
             // 
             // frm1000SalesPre
             // 
@@ -1666,5 +1699,7 @@ namespace AllCashUFormsApp.View.Page
         private System.Windows.Forms.ComboBox cboRemark;
         private System.Windows.Forms.Button btnShowVE;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Button btnRecovery;
+        private System.Windows.Forms.TextBox txtRecoDocNo;
     }
 }

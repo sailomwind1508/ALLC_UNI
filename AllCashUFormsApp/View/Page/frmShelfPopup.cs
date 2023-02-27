@@ -27,6 +27,8 @@ namespace AllCashUFormsApp.View.Page
 
         private void frmShelfPopup_Load(object sender, EventArgs e)
         {
+            Application.AddMessageFilter(new ButtonLogger()); //last edit by sailom.k 17/10/2022
+
             var temps = bu.tbl_HQ_Promotion_Hit_Temps;
             if (temps != null && temps.Count> 0)
             {

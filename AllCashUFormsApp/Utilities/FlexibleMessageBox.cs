@@ -40,6 +40,12 @@ namespace AllCashUFormsApp
         /// </summary>
         public static Font FONT = SystemFonts.MessageBoxFont;
 
+        public static int SCROLLBAR_WIDTH_OFFSET = 15;
+
+        public static int Manual_Width = 0;
+
+        public static int Manual_Height = 0;
+
         #endregion
 
         #region Public show functions
@@ -123,6 +129,13 @@ namespace AllCashUFormsApp
         /// <returns></returns>
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
+            return FlexibleMessageBoxForm.Show(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1);
+        }
+
+        public static DialogResult ShowLargeMsg(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            Manual_Width = 500;
+            Manual_Height = 300;
             return FlexibleMessageBoxForm.Show(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1);
         }
 
@@ -475,7 +488,7 @@ namespace AllCashUFormsApp
                 var textHeight = TextRenderer.MeasureText(text, FONT).Height;
 
                 //Calculate width for longest text line
-                const int SCROLLBAR_WIDTH_OFFSET = 15;
+                
                 var longestTextRowWidth = stringRows.Max(textForRow => TextRenderer.MeasureText(textForRow, FONT).Width);
                 var captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
                 var textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
@@ -487,6 +500,11 @@ namespace AllCashUFormsApp
                 //Set calculated dialog size (if the calculated values exceed the maximums, they were cut by windows forms automatically)
                 flexibleMessageBoxForm.Size = new Size(textWidth + marginWidth,
                                                        textHeight + marginHeight);
+
+                if (Manual_Width != 0 && Manual_Height != 0)
+                {
+                    flexibleMessageBoxForm.Size = new Size(Manual_Width, Manual_Height);
+                }
             }
 
             /// <summary>

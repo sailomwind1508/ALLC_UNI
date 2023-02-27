@@ -55,6 +55,27 @@ namespace AllCashUFormsApp.Controller
         }
 
 
+        public DataTable CheckSendToCenterStatus(DateTime docdateF, DateTime docdateT)
+        {
+            DataTable newTable = new DataTable();
+            try
+            {
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocDateFrom", docdateF.ToString("yyyyMMdd", new CultureInfo("en-US")));
+                sqlParmas.Add("@DocDateTo", docdateT.ToString("yyyyMMdd", new CultureInfo("en-US")));
+
+                string sql = "proc_Send_Data_Center_CheckStatus";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
         public DataTable VerifyQtyAmt()
         {
             DataTable newTable = new DataTable();
@@ -78,6 +99,23 @@ namespace AllCashUFormsApp.Controller
             try
             {
                 string sql = "proc_Send_Data_To_DBCenter_CheckVE";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
+
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
+        public DataTable VerifyVEDiffData()
+        {
+            DataTable newTable = new DataTable();
+            try
+            {
+                string sql = "proc_Send_Data_To_DBCenter_Verify_VE";
                 newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql);
 
                 return newTable;
@@ -128,6 +166,27 @@ namespace AllCashUFormsApp.Controller
             }
         }
 
+        public DataTable SearchInvSendToCenter(string txt, DateTime docdate)
+        {
+            DataTable newTable = new DataTable();
+            try
+            {
+                Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
+                sqlParmas.Add("@DocNo", txt);
+                sqlParmas.Add("@DocDate", docdate.ToString("yyyyMMdd", new CultureInfo("en-US")));
+
+                string sql = "proc_Send_Data_Center_Search_INV";
+                newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
+
+                return newTable;
+            }
+            catch (Exception ex)
+            {
+                ex.WriteLog(this.GetType());
+                return null;
+            }
+        }
+
         public DataTable SearchInv(string txt)
         {
             DataTable newTable = new DataTable();
@@ -135,7 +194,7 @@ namespace AllCashUFormsApp.Controller
             {
                 Dictionary<string, object> sqlParmas = new Dictionary<string, object>();
                 sqlParmas.Add("@DocNum", txt);
-               
+
                 string sql = "proc_Send_Data_To_DBCenter_Search_INV";
                 newTable = My_DataTable_Extensions.ExecuteStoreToDataTable(sql, sqlParmas);
 
