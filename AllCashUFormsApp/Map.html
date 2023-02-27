@@ -1,0 +1,606 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html class="showmap " xmlns="http://www.w3.org/1999/xhtml" xml:lang="th" lang="th">
+<head>
+
+    <!-- <meta property="og:type" content="place" />
+    <meta property="place:location:latitude"  content="13.66734" />
+    <meta property="place:location:longitude" content="100.50293" /> -->
+    <!--<meta property="og:email" content="webmaster@map.longdo.com"/>-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Multiple Markers Google Maps</title>
+
+
+    <style>
+        #map_canvas {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Style the Image Used to Trigger the Modal */
+        #myImg {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            #myImg:hover {
+                opacity: 0.7;
+            }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (Image) */
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        /* Caption of Modal Image (Image Text) - Same Width as the Image */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        /* Add Animation - Zoom in the Modal */
+        .modal-content, #caption {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        /* The Close Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        /* 100% Image Width on Smaller Screens */
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                width: 100%;
+            }
+        }
+
+        .K2_CBox {
+            position: relative;
+            background: #fff;
+            width: 100%;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            padding: 10px;
+            margin: 30px 0 30px
+        }
+
+            .K2_CBox .CB_Heading {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px
+            }
+
+                .K2_CBox .CB_Heading span {
+                    margin: 0;
+                    font-weight: 700;
+                    font-family: inherit;
+                    font-size: 1.1rem
+                }
+
+            .K2_CBox .C_box_main {
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                padding: 12px;
+                outline: 0;
+                border: 0;
+                border-radius: 50%;
+                background: #004cbd;
+                transition: all .3s ease;
+                -webkit-transition: all .3s ease
+            }
+
+                .K2_CBox .C_box_main:hover {
+                    opacity: .8
+                }
+
+                .K2_CBox .C_box_main .CBox_icn {
+                    flex-shrink: 0;
+                    display: inline-block;
+                    width: 18px;
+                    height: 18px;
+                    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><rect x='5.54615' y='5.54615' width='16.45385' height='16.45385' rx='4'/><path d='M171.33311,181.3216v-8.45385a4,4,0,0,1,4-4H183.787' transform='translate(-169.33311 -166.86775)'/></svg>");
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center
+                }
+
+                .K2_CBox .C_box_main.copied {
+                    background: #2dcda7
+                }
+
+                    .K2_CBox .C_box_main.copied .CBox_icn {
+                        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><path d='M22 11.07V12a10 10 0 1 1-5.93-9.14'/><polyline points='23 3 12 14 9 11'/></svg>")
+                    }
+
+            .K2_CBox pre {
+                margin: 0;
+                background: #f6f6f6;
+                padding: 15px;
+                border-radius: 5px;
+                color: #08102b;
+                font-size: .8rem;
+                font-family: monospace;
+                overflow: scroll;
+                scroll-behavior: smooth;
+                scroll-snap-type: x mandatory;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
+                white-space: pre-wrap;
+            }
+
+                .K2_CBox pre::before, .K2_CBox pre::after {
+                    content: ''
+                }
+
+        .dark-Mode .K2_CBox {
+            background: #2d2d30
+        }
+
+            .dark-Mode .K2_CBox pre {
+                background: #252526;
+                color: #fffdfc
+            }
+
+        .tNtf span {
+            position: fixed;
+            left: 24px;
+            bottom: -70px;
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            z-index: 99981;
+            background: #323232;
+            color: rgba(255,255,255,.8);
+            font-size: 14px;
+            font-family: inherit;
+            border-radius: 3px;
+            padding: 13px 24px;
+            box-shadow: 0 5px 35px rgba(149,157,165,.3);
+            opacity: 0;
+            transition: all .1s ease;
+            animation: slideinwards 2s ease forwards;
+            -webkit-animation: slideinwards 2s ease forwards
+        }
+
+        @media screen and (max-width:500px) {
+            .tNtf span {
+                margin-bottom: 20px;
+                left: 20px;
+                right: 20px;
+                font-size: 13px
+            }
+        }
+
+        @keyframes slideinwards {
+            0% {
+                opacity: 0
+            }
+
+            20% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            50% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            80% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            100% {
+                opacity: 0;
+                bottom: -70px;
+                visibility: hidden
+            }
+        }
+
+        @-webkit-keyframes slideinwards {
+            0% {
+                opacity: 0
+            }
+
+            20% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            50% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            80% {
+                opacity: 1;
+                bottom: 0
+            }
+
+            100% {
+                opacity: 0;
+                bottom: -70px;
+                visibility: hidden
+            }
+        }
+
+        .darkMode .tNtf span {
+            box-shadow: 0 10px 40px rgba(0,0,0,.2)
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACuCBVPmskPtdqdP-cl9do0-W3ZEr6OVc&sensor=false" type="text/javascript"></script>
+    <script type="text/javascript" src="https://api.longdo.com/map/?key=8a76770cfbc7306d00e330d581be2ad2"></script>
+
+    <script type="text/javascript">
+        var map;
+        function init() {
+
+        }
+
+        //function copyURI(evt) {
+        //    evt.preventDefault();
+        //    navigator.clipboard.writeText('test').then(() => {
+        //        /* clipboard successfully set */
+        //    }, () => {
+        //        /* clipboard write failed */
+        //    });
+
+        //    //navigator.clipboard.writeText(evt.target.getAttribute('href')).then(() => {
+        //    //    /* clipboard successfully set */
+        //    //}, () => {
+        //    //    /* clipboard write failed */
+        //    //});
+        //}
+
+        function myFunction() {
+            //var text = document.getElementById('div_latlon');
+            //text.text;
+            //document.execCommand("copy");
+        }
+
+        var result = [
+            { lat: 15.2792792792793, lng: 104.840971637079, custImg: "http://UBN.DNSDOJO.NET:82/CU/Images/V01/4123301011577.jpg", name: "ศรายุทธ การค้า", address: "91 ม.6 ต.หัวเรือ อ.เมืองอุบลราชธานี จ.อุบลราชธานี" },
+            { lat: 15.3873873873874, lng: 104.839162672111, custImg: "http://UBN.DNSDOJO.NET:82/CU/Images/V01/4123301011578.jpg", name: "น้องนำโชค", address: "215 ม.11 ต.หัวเรือ อ.เมืองอุบลราชธานี จ.อุบลราชธานี" },
+            { lat: 15.3398009, lng: 104.8618632, custImg: "http://UBN.DNSDOJO.NET:82/CU/Images/V01/4123301011579.jpg", name: "สุนันท์เจริญทรัพย์ พาณิชย์", address: "148 ม.2 ต.หัวเรือ อ.เมืองอุบลราชธานี จ.อุบลราชธานี" },
+            { lat: 15.3333333333333, lng: 104.98014372194, custImg: "http://UBN.DNSDOJO.NET:82/CU/Images/V01/4123301012730.jpg", name: "ทวีโชค", address: "35 ม.6 ต.กระโสบ อ.เมืองอุบลราชธานี จ.อุบลราชธานี" },
+            { lat: 15.2612612612613, lng: 104.88800082532, custImg: "http://UBN.DNSDOJO.NET:82/CU/Images/V01/4123301012733.jpg", name: "ปทุมวัน", address: "326 ม.1 ต.กระโสบ อ.เมืองอุบลราชธานี จ.อุบลราชธานี" }
+        ];
+
+        $(document).ready(function () { //jquery
+            map = new longdo.Map({ placeholder: document.getElementById('map_canvas') });
+            map.Ui.DPad.visible(true);
+            map.Ui.Zoombar.visible(true);
+            map.Ui.Geolocation.visible(true);
+            map.Ui.Toolbar.visible(true);
+            map.Ui.LayerSelector.visible(true);
+            map.Ui.Fullscreen.visible(true);
+            map.Ui.Crosshair.visible(true);
+            map.Ui.Scale.visible(true);
+
+            //var zone47N = new longdo.Rectangle({ lon: 96, lat: 84 }, { width: 6, height: 84 }, { label: '47N', fillColor: false });
+            //var zone48N = new longdo.Rectangle({ lon: 102, lat: 84 }, { width: 6, height: 84 }, { label: '48N', fillColor: false });
+            //var zoneW = longdo.Util.boundOfGeohash('w');
+            //zoneW = new longdo.Rectangle({ lon: zoneW.minLon, lat: zoneW.maxLat }, longdo.Util.sizeOfBound(zoneW), { label: 'w', fillColor: false });
+
+            //map.Overlays.add(zoneW);
+            //map.Overlays.add(zone47N);
+            //map.Overlays.add(zone48N);
+
+            //map.Event.bind('mousemove', function () {
+            //    var location = map.location(longdo.LocationMode.Pointer);
+            //    if (location) {
+            //        // wgs84
+            //        //document.getElementById('wgs84').innerHTML = new Number(location.lon).toFixed(6) + ', ' + new Number(location.lat).toFixed(6);
+
+            //        //// dms
+            //        //var dms = longdo.Util.locationToDMS(location);
+            //        //document.getElementById('dms').innerHTML = dms.latDegree + '° ' + dms.latMinute + '\' ' + dms.latSecond + '" ' + dms.latHemisphere
+            //        //    + ' ' + dms.lonDegree + '° ' + dms.lonMinute + '\' ' + dms.lonSecond + '" ' + dms.lonHemisphere;
+
+            //        //// utm
+            //        //var utmZone = longdo.Util.locationToUTMZone(location);
+            //        //if (utmZone) {
+            //        //    var utmProj = '+proj=utm +zone=' + utmZone.zone + (utmZone.hemisphere == 'S' ? ' +south' : '') + ' +datum=WGS84 +units=m +no_defs'
+            //        //    var utmPoint = proj4(utmProj, [location.lon, location.lat]);
+            //        //    document.getElementById('utm').innerHTML = utmZone.zone + utmZone.hemisphere + ' ' + parseInt(utmPoint[0]) + ' ' + parseInt(utmPoint[1]);
+            //        //} else {
+            //        //    document.getElementById('utm').innerHTML = 'Out of bound';
+            //        //}
+
+            //        //// geohash
+            //        //document.getElementById('geohash').innerHTML = longdo.Util.locationToGeohash(location, Math.ceil((map.zoom() / 3)) + 3);
+            //    }
+            //});
+        });
+
+        var allData;
+        function GenLocation(result) {
+            var index = 0;
+            var data = '';
+            try {
+
+                map = new longdo.Map({ placeholder: document.getElementById('map_canvas') });
+                map.Ui.DPad.visible(true);
+                map.Ui.Zoombar.visible(true);
+                map.Ui.Geolocation.visible(true);
+                map.Ui.Toolbar.visible(true);
+                map.Ui.LayerSelector.visible(true);
+                map.Ui.Fullscreen.visible(true);
+                map.Ui.Crosshair.visible(true);
+                map.Ui.Scale.visible(true);
+
+                //alert(result);
+                allData = result;
+                var row = result.split(",");
+                for (var i = 0; i < row.length; i++) {
+                    index = i;
+
+                    //data = row[i];
+                    var columns = row[i].split("|");
+                    //alert(columns);
+                    var _lat = columns[0];
+                    var _long = columns[1];
+                    var img = columns[2];
+                    var name = columns[3];
+                    var cust_id = columns[4];
+                    var adds = columns[5];
+                    var markerImg = columns[6];
+                    var Tel = columns[7];
+                    var Seq = columns[8];
+
+                    //var tmpImg = img.replace('/', ',');
+                    var imgIndex = "ShowFullSizeImg(" + i + ")";
+                    //alert(imgstr);
+                    //alert(_lat);
+
+                    if (_lat != "" && _long != "") {
+                        var _latlon = '<label style="color:black;font-size:10px;white-space:nowrap;"> (พิกัด : ' + _lat + ', ' + _long + ')</>';
+                        var _title = '<label style="color:black;font-weight:bold;font-size:14px;white-space:nowrap;">' + name + ' </>';
+
+                        var marker = new longdo.Marker({ lon: _long, lat: _lat },
+                            {
+                                title: "("+cust_id+ ") " + _title + _latlon,
+                                //icon: 'https://map.longdo.com/mmmap/images/pin_mark.png',//'pin_mark2.png',
+                                //icon: {
+                                //    url: 'https://map.longdo.com/mmmap/images/pin_mark.png',
+                                //    offset: { x: 12, y: 45 }
+                                //},
+                                icon: {
+                                    html: '<label style="color:red;font-weight:bold;font-size:14px;white-space:nowrap;">(' + Seq + ')</><label style="color:black;font-weight:bold;font-size:12px;white-space:nowrap;">' + name + '</><img src="MarkerImages/' + markerImg + '" alt="" />',
+                                    offset: { x: 12, y: 45 }
+                                },
+                                detail: '<div><img src="' + img + '" alt="" height="180" width="250" style="cursor: pointer;" onclick="' + imgIndex + '" ></img></div><br/><div style="background: #eeeeff;">ที่อยู่ : ' + adds + '</div> <div style="background: #eeeeff;">เบอร์โทรศัพท์ : ' + Tel + '</div><div id="div_latlon" style="background: #eeeeff;"><a href="http://maps.google.com/?q=' + _lat + ',' + _long + '">'+ _lat + ', ' + _long +'</a></div>',
+                                //detail: '<div><img src="' + img + '" alt="" height="180" width="250" style="cursor: pointer;" onclick="window.open("'+img+'");" ></img></div><br/><div style="background: #eeeeff;">ที่อยู่ : ' + adds + '</div> <div style="background: #eeeeff;">เบอร์โทรศัพท์ : ' + Tel + '</div>',
+
+                                draggable: true,
+                            });
+                        /*marker.setIcon('Images/pin_mark2.png')*/
+                        map.Overlays.add(marker);
+
+                        map.location({ lon: _long, lat: _lat }, true);
+                        map.zoom(10, true);
+
+                    }
+                }
+
+                map.Event.bind('overlayMove', function (overlay) {
+                    console.log(overlay);
+                });
+
+                map.Event.bind('overlayHover', function (overlay) {
+                    console.log(overlay);
+                    //ShowLatLonTitle(txt);
+
+                });
+
+                map.Event.bind('overlayDrop', function (overlay) {
+                    console.log(overlay);
+                });
+
+                map.Event.bind("overlayClick", function (overlay) {
+
+                    var location = overlay.location();
+
+                    var _latitude = location.lat;
+                    var _longitude = location.lon;
+                    var txt = 'พิกัด : ' + _latitude + ', ' + _longitude;
+
+                    //var copyText = document.getElementById("myInput");
+
+                    //// Select the text field
+                    //copyText.select();
+                    //copyText.setSelectionRange(0, 99999); // For mobile devices
+
+                    //// Copy the text inside the text field
+                    //navigator.clipboard.writeText(copyText.value);
+
+                    //alert(txt);
+
+                    //var captionText = document.getElementById("div_latlon");
+                    //alert(captionText);
+                    //if (captionText != null && captionText != undefined) {
+                    //    captionText.innerText = txt;
+                    //}
+
+
+                    //alert('<label style="color:red;font-weight:bold;font-size:14px;white-space:nowrap;">(' + _latitude + ', ' + _longitude + ')</>');
+
+                    //var marker = new longdo.Marker({ lon: _longitude, lat: _latitude },
+                    //    {
+                    //        title: _latitude + ', ' + _longitude,
+                    //        icon: 'https://map.longdo.com/mmmap/images/pin_mark.png',//'pin_mark2.png',
+                    //        draggable: true,
+                    //    });
+
+                    //map.Overlays.add(marker);
+
+                    //map.location({ lon: _longitude, lat: _latitude }, true);
+                    //map.zoom(10, true);
+                });
+
+
+                //map.Event.bind('click', function () {
+                //    var mouseLocation = map.location(longdo.LocationMode.Pointer);
+
+                //    var _latitude = longdo.LocationMode.lat;
+                //    var _longitude = longdo.LocationMode.lon;
+                //    alert(_latitude + ', ' + _longitude);
+                //    //map.Overlays.add(new longdo.Marker(mouseLocation));
+
+                //    //var marker = new longdo.Marker({ lon: _longitude, lat: _latitude },
+                //    //    {
+                //    //        title: _latitude + ', ' + _longitude,
+                //    //        icon: 'https://map.longdo.com/mmmap/images/pin_mark.png',//'pin_mark2.png',
+                //    //        detail: '<div><img src="' + img + '" alt="" height="180" width="250" style="cursor: pointer;" onclick="' + imgIndex + '" ></img></div><br/><div style="background: #eeeeff;">ที่อยู่ : ' + adds + '</div> <div style="background: #eeeeff;">เบอร์โทรศัพท์ : ' + Tel + '</div>',
+                //    //        //detail: '<div><img src="' + img + '" alt="" height="180" width="250" style="cursor: pointer;" onclick="window.open("'+img+'");" ></img></div><br/><div style="background: #eeeeff;">ที่อยู่ : ' + adds + '</div> <div style="background: #eeeeff;">เบอร์โทรศัพท์ : ' + Tel + '</div>',
+
+                //    //        draggable: false,
+                //    //    });
+                //    ///*marker.setIcon('Images/pin_mark2.png')*/
+                //    //map.Overlays.add(marker);
+
+                //    //map.location({ lon: _longitude, lat: _latitude }, true);
+                //    //map.zoom(10, true);
+
+                //});
+
+            } catch (e) {
+                alert(e);
+                //alert(data);
+                //alert(index);
+            }
+
+        }
+
+        function ShowFullSizeImg(imgIndex) {
+            try {
+
+                var row = allData.split(",");
+                var columns = row[imgIndex].split("|");
+                var _img = columns[2];
+
+                // Get the modal
+                var modal = document.getElementById("myModal");
+
+                // Get the image and insert it inside the modal - use its "alt" text as a caption
+                var img = document.getElementById("myImg");
+                img.src = _img;
+                var modalImg = document.getElementById("img01");
+                var captionText = document.getElementById("caption");
+
+                modal.style.display = "block";
+
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    modal.style.display = "none";
+                }
+
+
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        function ShowLatLonTitle(txt) {
+            try {
+
+                var captionText = document.getElementById("div_latlon");
+                captionText.innerText = txt;
+
+
+            } catch (e) {
+                alert(e);
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+
+    <div id="map_canvas"></div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="myImg">
+
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+    </div>
+
+</body>
+</html>
